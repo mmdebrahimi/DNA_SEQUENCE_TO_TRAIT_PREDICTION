@@ -369,11 +369,22 @@ def fit_encoder(train, test, *, widths=DEFAULT_WIDTHS, protocol: TrainingProtoco
                 bad_epochs += 1
                 if bad_epochs >= protocol.early_stop_patience:
                     break
-        if best_state is not None:
-            model.load_state_dict(best_state)
+        # NO EPOCH IMPROVED -> there is no best state, so the predictions below would come from whatever
+        # the last step left behind (at max_epochs=0, from random init). That path scores ~0.0, which is
+        # INDISTINGUISHABLE FROM A CLEAN NULL -- and the shuffled-label arm cannot catch it, because ~0.0
+        # is exactly what that arm is supposed to report. Refuse instead of returning a number.
+        if best_state is None:
+            raise EncoderDataError(
+                f"no epoch improved the inner-validation loss in {epochs_ran} epoch(s), so there is no "
+                f"trained state to score. A fit that never improved would report a near-zero Spearman "
+                f"that reads as a clean null rather than as a failure; refusing instead.")
+        model.load_state_dict(best_state)
         model.eval()
         with torch.no_grad():
             pred = [float(v) for v in model(Xte).cpu()]
+        if not all(v == v for v in pred):  # NaN check -- spearman maps NaN to 0.0, i.e. to a clean null
+            raise EncoderDataError("the fit produced non-finite predictions (diverged); refusing to "
+                                   "report a score that spearman would silently map to 0.0")
 
     return {
         "spearman": spearman(pred, yte_raw),

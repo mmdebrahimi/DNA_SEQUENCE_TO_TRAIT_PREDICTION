@@ -68,6 +68,43 @@ def test_an_arm_running_under_a_DRIFTED_protocol_refuses_to_grade():
     assert flags["registered_protocol_used"] is False
 
 
+def test_a_MISSING_protocol_fails_closed_rather_than_attesting_from_absence():
+    """The guard was `is not None and != registered`, which PASSES an arm reporting no protocol at all --
+    so `registered_protocol_used=True` would be asserted from absence of evidence, and that is the exact
+    flag Step 9's MVP predicate reads. Only the ridge comparator is legitimately protocol-free."""
+    eg = _mod()
+    arms = _arms(0.30, 0.90, 0.95, 0.00)
+    arms["encoder-multi"]["protocol"] = None
+    v, d, flags = eg.verdict(arms, seeds_used=_seeds())
+    assert v == "INDETERMINATE_PROTOCOL_DRIFT"
+    assert flags["registered_protocol_used"] is False
+    assert "NO protocol" in d
+
+
+def test_the_protocol_FREE_comparator_does_not_trip_the_guard():
+    """Non-vacuity for the test above: gc is a ridge with no training protocol, and it must not be treated
+    as drift -- otherwise the gate could never grade anything."""
+    eg = _mod()
+    arms = _arms(0.30, 0.33, 0.36, 0.00)
+    assert arms["gc"]["protocol"] is None
+    v, _d, flags = eg.verdict(arms, seeds_used=_seeds())
+    assert v == "GENERALISES"
+    assert flags["registered_protocol_used"] is True
+
+
+def test_the_auroc_framing_records_its_own_DENOMINATOR():
+    """A median over 3 measurable seeds must not sit beside a 10-seed primary with nothing saying so."""
+    eg = _mod()
+    runs = [{"spearman": 0.3, "auroc_active": 0.6, "protocol": None},
+            {"spearman": 0.3, "auroc_active": None, "protocol": None},
+            {"spearman": 0.3, "auroc_active": 0.7, "protocol": None}]
+    a = eg._agg(runs)
+    assert a["auroc_n_seeds_measurable"] == 2
+    assert a["auroc_covers_all_seeds"] is False
+    full = eg._agg([{"spearman": 0.3, "auroc_active": 0.6, "protocol": None}] * 3)
+    assert full["auroc_covers_all_seeds"] is True
+
+
 def test_a_failed_reconcile_blocks_EVERYTHING_even_with_a_huge_margin():
     """A script reading a different split than the published baseline cannot grade anything."""
     eg = _mod()
@@ -167,12 +204,30 @@ def test_auroc_returns_None_when_a_CLASS_IS_ABSENT_rather_than_0_point_5():
 
 def test_the_incumbent_arm_ALSO_gets_an_auroc_so_the_second_framing_can_compare():
     """Scoring only the encoder arms on AUROC would leave the second framing unable to answer the question
-    it exists for. `ridge_gc` must therefore return predictions, not just a correlation."""
+    it exists for. `ridge_gc` must therefore return predictions, not just a correlation.
+
+    This test previously ended in `... or True`, which can never fail -- a vacuous assertion of exactly
+    the kind this repo keeps finding. It now checks the real contract: a two-element return whose second
+    element is a usable prediction vector.
+    """
     eg = _mod()
-    import inspect
-    src = inspect.getsource(eg.ridge_gc)
-    assert "return spearman(pred" in src and "pred" in src
-    assert "tuple[float, list[float]]" in str(inspect.signature(eg.ridge_gc)) or True
+
+    class _T:
+        def __init__(self, seq, expression):
+            self.seq, self.expression = seq, expression
+
+    import random
+    r = random.Random(0)
+    tr = [_T("".join(r.choice("ACGT") for _ in range(60)), r.random()) for _ in range(80)]
+    te = [_T("".join(r.choice("ACGT") for _ in range(60)), r.random()) for _ in range(40)]
+    out = eg.ridge_gc(tr, te)
+    assert isinstance(out, tuple) and len(out) == 2, "ridge_gc must return (spearman, predictions)"
+    sp, pred = out
+    assert isinstance(sp, float)
+    assert len(pred) == len(te), "one prediction per test row, or AUROC cannot be computed"
+    assert all(isinstance(v, float) and v == v for v in pred)
+    # and those predictions must actually drive an AUROC
+    assert eg.auroc(pred, [1, 0] * 20) is not None
 
 
 def test_fit_encoder_returns_predictions_so_the_gate_can_compute_a_second_framing():

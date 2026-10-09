@@ -72,6 +72,11 @@ linear oracle** (student–teacher agreement **1.0000**) → **forbidden until a
 then only with its real-data validation half. `wiki/alphagenome_lessons_actionable_2026-10-07.md` +
 `glm_oracle_selection_result_2026-10-07.md`.
 
+**G-A + G-C ran to VALID negatives 2026-10-08 — the learned representation did NOT land, so the
+self-distillation ban above STAYS.** Conv encoder vs one GC number: median +0.0122 but paired CI includes
+zero (6/10 seeds); conditioning on medium +0.0001. **Do NOT quote +0.0122 as a win.**
+`wiki/glm_encoder_gate_result_2026-10-08.md` + `glm_condition_conditioning_result_2026-10-08.md`.
+
 Design `wiki/glm_architecture_design_2026-10-06.md` · decomposition `wiki/glm_decomposition_2026-10-06.md` ·
 prior art + the 4 forced design changes `wiki/glm_prior_art_synthesis_2026-10-06.md`. Keystone shipped:
 `dna_decode/glm/edit.py` (`GenomeEdit`/`EditSet`, one span-replacement primitive, 46 tests). **Mandatory

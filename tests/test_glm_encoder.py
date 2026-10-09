@@ -347,6 +347,44 @@ def test_determinism_flag_is_RESTORED_after_a_fit():
     assert torch.are_deterministic_algorithms_enabled() == before
 
 
+def test_a_fit_where_NO_EPOCH_IMPROVED_refuses_instead_of_scoring_an_untrained_model():
+    """The nastiest silent-failure path in the module: with no best state, the predictions come from
+    whatever the last step left behind (at max_epochs=0, random init). That scores ~0.0, which is
+    INDISTINGUISHABLE FROM A CLEAN NULL -- and the shuffled-label arm cannot catch it, because ~0.0 is
+    exactly what that arm is supposed to report. It also left `best_inner_val_mse` as inf, which
+    serialises to the non-spec JSON token `Infinity`."""
+    pytest.importorskip("torch")
+    from dna_decode.glm.encoder import fit_encoder
+    data = _planted(n=200, seed=11)
+    tr = [t for t in data if int(t.peak[1:]) < 16]
+    te = [t for t in data if int(t.peak[1:]) >= 16]
+    with pytest.raises(EncoderDataError) as e:
+        fit_encoder(tr, te, widths=(6,), seed=0, protocol=TrainingProtocol(max_epochs=0))
+    assert "no epoch improved" in str(e.value)
+
+
+def test_a_normal_fit_reports_a_FINITE_inner_val_loss():
+    """Non-vacuity for the test above, and a guard on JSON validity: inf would serialise as `Infinity`."""
+    pytest.importorskip("torch")
+    import math
+    from dna_decode.glm.encoder import fit_encoder
+    data = _planted(n=200, seed=12)
+    tr = [t for t in data if int(t.peak[1:]) < 16]
+    te = [t for t in data if int(t.peak[1:]) >= 16]
+    r = fit_encoder(tr, te, widths=(6,), seed=0, protocol=TrainingProtocol(max_epochs=3))
+    assert math.isfinite(r["best_inner_val_mse"])
+    assert math.isfinite(r["spearman"])
+
+
+def test_the_parameter_count_helper_matches_the_REAL_model():
+    """`count_parameters` is the sole source of the artifact's n_parameters and the honest-limits capacity
+    claim, but was only ever compared against itself. Pin it against the built module."""
+    pytest.importorskip("torch")
+    from dna_decode.glm.encoder import build_encoder
+    m = build_encoder(DEFAULT_WIDTHS, channels=32)
+    assert sum(p.numel() for p in m.parameters()) == count_parameters(DEFAULT_WIDTHS, channels=32)
+
+
 def test_empty_train_and_empty_test_are_refused():
     pytest.importorskip("torch")
     from dna_decode.glm.encoder import fit_encoder

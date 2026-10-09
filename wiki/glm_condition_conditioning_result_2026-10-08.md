@@ -77,6 +77,24 @@ picking noise**. Read that as *pooling strength is not a lever on this substrate
 the right amount of pooling*. Reporting the curve is what makes this visible instead of hidden behind an
 argmax — and 1.0 is deliberately IN the grid so that "no pooling is best" is a sayable outcome.
 
+### One seed's primary arm silently BECAME the comparator, and that is a consequence of the flat curve
+
+Found by an independent coverage audit of this code, then verified against the committed numbers.
+**Scale 1.0 means no pooling is applied at all**, so on a seed whose argmax lands there, `partial_pooling`
+is byte-identical to the degenerate `interaction` arm — the one documented above as equal to the two-model
+comparator by construction. That happened on **seed 5**, where `partial_pooling` and `interaction` are
+exactly equal at **+0.2161**.
+
+It does **not** overturn the verdict: 9 of 10 seeds selected 0.03 or 0.1 (genuine partial pooling), and a
+collapsed seed pulls the primary arm *toward* the comparator, which is the direction of the `NO_GAIN`
+result already reported. But it has to be visible, because it is the sharp form of "the argmax is noise":
+when that noise lands on the no-pooling endpoint, the primary arm stops being partial pooling at all.
+
+**Disclosed rather than tie-broken.** Re-pointing the argmax after seeing which scales it chose would be
+editing the method post-hoc. `selection_collapsed_to_comparator` + a `n_seeds_collapsed_to_comparator`
+count now ship in the script so a future run states it directly; the committed artifact predates those
+fields, and its per-seed `selected_scale` list is where a reader can count the collapses today.
+
 ## A partial mechanistic account, and one caveat upgraded from asserted to demonstrated
 
 **The design is rank-deficient by construction, and sklearn says so** (`LinAlgWarning`, rcond ~1e-8). The

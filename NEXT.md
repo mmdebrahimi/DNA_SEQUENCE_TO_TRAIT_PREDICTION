@@ -60,16 +60,41 @@ UNCHANGED to human, AUROC 0.5805) into a 5-rung ladder, to separate **(A)** deca
 wants a W0 schema probe before any parser, and the functional-class step demoted to a provenance-gated
 audit — it is otherwise a second adjudication system.)
 
-## IN FLIGHT — GLM G-A + G-C v2 build plan (executing 2026-10-08; 6 of 9 steps done)
+## DONE — GLM G-A + G-C v2 build plan (all 9 steps, 2026-10-08)
 
-`plans/GLM_G_A_And_G_C_V2_Build_Plan/technical-plan.md`, state in
-`.claude/execute-plan-state/`. Steps 1–5 + 8 complete; **6, 7, 9 are parked on ONE authority call**
-(fork 4 below). Commits `e2aaf54` → `86b5ef2`.
+`plans/GLM_G_A_And_G_C_V2_Build_Plan/technical-plan.md`. Commits `e2aaf54` → `f015cff`.
+**Both families answered, both negative, both VALID negatives** (clean nulls + registered protocols,
+stamped machine-readably so a broken run could not satisfy the bar). Derivations in the two memos; this
+entry is the pointer.
 
 | step | outcome |
 |---|---|
-| 3 — G-A stop gate | **`NO_POSITIONAL_HEADROOM`.** Position gain **−0.0068** against a bar of +0.02 — negative, not merely short. One GC feature (0.3112) beat the 11-, 17- and 26-feature arms. Trustworthy because the reconcile anchor landed on **0.3000 exactly**, proving the script reads the same split as the published baseline. `wiki/glm_tile_headroom_2026-10-08.json`. |
-| 8 — G-C verdict | **`NO_GAIN`.** partial_pooling +0.2033 vs two_model +0.2032 = **+0.0001** against a bar of 0.02. Null CLEAN, protocol used, so D1's validity predicates hold. `wiki/glm_condition_conditioning_result_2026-10-08.md`. |
+| 3 — G-A stop gate | **`NO_POSITIONAL_HEADROOM`.** Position gain **−0.0068** against +0.02. One GC feature (0.3112) beat the 11-, 17- and 26-feature arms. Reconcile anchor **0.3000 exactly**. `wiki/glm_tile_headroom_2026-10-08.json`. |
+| 8 — G-C verdict | **`NO_GAIN`.** partial_pooling +0.2033 vs two_model +0.2032 = **+0.0001** against 0.02. `wiki/glm_condition_conditioning_result_2026-10-08.md`. |
+| 9 — G-A gate | **`WEAK` by the frozen median rule, NOT distinguishable from zero when paired.** `wiki/glm_encoder_gate_result_2026-10-08.md`. |
+
+**The user resolved the ratification fork as BUILD ANYWAY, and that was the right call even though the
+gate's prediction held.** A real conv encoder (13,217 params, widths 6/20/75) reached median +0.3234 vs
+gc +0.3112 — margin +0.0122 against a 0.05 bar — but **paired on identical splits it wins only 6/10
+seeds, sign-test p=0.754, CI95 [−0.0099, +0.0349] INCLUDING ZERO**; the single-width arm is a literal
+coin flip (5/10, p=1.000). **Do not quote the +0.0122 median as the encoder beating the baseline** — the
+first two seeds looked like a clean win (+0.024, +0.038) and ten seeds plus a paired test are what
+resolved it. The null's own CI *excludes* zero (p=0.002), so the instrument can resolve a real difference
+and simply does not resolve one here.
+
+**Why building it was still worth it:** Step 3's proxy was positional GC in 10 bins under a **linear**
+ridge, so it could neither see a precise-offset motif nor represent a composition×position interaction.
+An encoder escapes both limits and still does not win — which converts a predicted-negative from a weak
+proxy into a **measured** one from the model class the proxy stood in for. The encoder is demonstrably
+not broken: it learns a planted fixed-offset motif to 0.84 against a computed ceiling of 1.0, its null
+collapses 10/10, and both framings agree (AUROC 0.6774 vs 0.6672).
+
+**Scope, do not over-read:** this is THIS encoder at THIS size on THIS substrate. Capacity has already
+hurt here (6-mers scored worst at 0.2022), so a larger encoder is a *different* experiment — and it says
+nothing about G-B. GA-H1 falsified · GA-H3 confirmed · **GA-H2 under-investigation because two
+instruments disagree** (multi-vs-w20 7/10 wins, normal-approx CI barely excludes zero at +0.0007, sign
+test p=0.344) · GA-H4 open (the run shows the conclusion is framing-ROBUST, which is not the same as
+showing classification is the better framing).
 
 **Two of the G-C arms were degenerate and the tests, not the run, caught it.** A full `seq × medium`
 interaction over a BINARY medium spans the same hypothesis space as two per-medium models (corr
@@ -123,23 +148,24 @@ scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
 3. **Whether a single-source cell warrants more than disclosure.** 3 of 10 SCORED AMR cells rest on one
    BioProject. Current answer is *disclose*, namespace-separate. Demoting them is a scope decision.
 
-4. **Ratify the G-A stop gate, or build the conv encoder anyway?** (new 2026-10-08 — **this is what
-   blocks plan steps 6, 7 and 9**)
-   The gate fired `NO_POSITIONAL_HEADROOM`: adding POSITION to composition on real genomic promoter tiles
-   buys **−0.0068** against a +0.02 bar, so a conv encoder's core advantage does not measurably exist on
-   this substrate and building it is a **predicted-negative**. The honest scope limit is in the artifact:
-   positional GC in 10 bins is the MINIMAL positional feature and ridge cannot represent a
-   composition×position interaction, so this makes the encoder a predicted-negative — it does **not prove**
-   it must fail. Hence a gate that *recommends ratification* rather than closing G-A unilaterally.
-   **Executor default if ratified:** stop G-A, leave steps 6/7/9 unbuilt, and the G-A ledger records a
-   measured stop rather than an abandonment.
+4. **Do the two valid negatives CLOSE G-A and G-C, or defer them?** (new 2026-10-08; replaces the
+   now-RESOLVED ratification fork, which the user answered *build the conv encoder anyway*)
+   Both families now have a valid recorded negative, so the remaining question is purely an
+   acceptance-bar one and it is the same shape for both. **G-C:** a `NO_GAIN` at n=2 media rules out
+   conditioning *as tested on two growth media with 3-mer interactions* — not conditioning in general,
+   and specifically not a model whose **representation** is modulated by condition. **G-A:** `WEAK`-but-
+   not-distinguishable-from-zero rules out *this* encoder at *this* size on *this* substrate; a larger
+   encoder is a different experiment and the result says nothing about G-B. Closing either is a scope
+   decision; the executor default is to leave both as recorded negatives and start nothing new.
 
-5. **Does a NO_GAIN at n=2 media close G-C, or defer it?** (new 2026-10-08)
-   Already flagged in that ledger's own Open Questions as an acceptance-bar call. The null is valid, but it
-   rules out conditioning *as tested on two growth media with 3-mer interactions* — not conditioning in
-   general, and specifically not a model whose **representation** is modulated by condition.
-
-6. **Whether to compress the other long CLAUDE.md bullets.** The file loads every session; several long
+5. **Whether to compress the other long CLAUDE.md bullets — NOW BINDING, not optional (escalated
+   2026-10-08).** The growth-ceiling guard fired on an ordinary 60-word finding, because the file had
+   arrived at **12 words of headroom**. The ceiling was raised 35,400 → 35,460 on the record (which is
+   what the guard's docstring prescribes), but it is now constraining real findings rather than drift, and
+   every future addition hits the same wall. `scripts/claude_md_weight.py` reports **43 bullets / 24,892
+   words — 70% of the file — PROVABLY stored elsewhere in `wiki/`**, so the diet is available and would
+   buy years of headroom. Compressing other sessions' bullets is a scope decision, which is why it is
+   still here rather than done. Original note follows. The file loads every session; several long
    bullets cite a resolvable memo, so their derivations could become pointers. Measure first:
    `uv run python scripts/claude_md_weight.py`. Two long bullets have no external store and must stay
    whole — the tool already protects them.

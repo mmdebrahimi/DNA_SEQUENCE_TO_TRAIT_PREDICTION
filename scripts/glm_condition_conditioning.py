@@ -167,6 +167,13 @@ def build_design(S, medium_flags, *, arm: str):
     S = np.asarray(S, dtype=np.float64)
     m = np.asarray(medium_flags, dtype=np.float64).reshape(-1, 1)
     n, w = S.shape
+    # REFUSE a length mismatch. numpy would BROADCAST a length-1 flags list over every row, which sets the
+    # medium column to one constant -- destroying the conditioning variable while still returning a
+    # plausible number. Same reason `fit_ridge` validates `col_scale`'s length.
+    if m.shape[0] != n:
+        raise ValueError(f"medium_flags has {m.shape[0]} entries for {n} rows; refusing to broadcast, "
+                         f"which would set the medium column to a constant and silently remove the "
+                         f"conditioning variable")
     if arm == "sequence_only":
         return S.astype(np.float32)
     if arm == "indicator":
@@ -362,6 +369,26 @@ def select_pooling_scale(frag, S, idx_tr, *, seed: int, n_blocks: int, held_bloc
     return best, {str(c): round(v, 4) for c, v in curve.items()}, held
 
 
+def selection_collapsed_to_comparator(selected_scale: float) -> bool:
+    """Did the selection pick the NO-POOLING endpoint, i.e. collapse the primary arm into the comparator?
+
+    **MEASURED on the committed run: seed 5 selected 1.0, and `partial_pooling` there is EXACTLY
+    `interaction` (+0.2161) — which the script's own comments document as equal to the two-model
+    comparator by construction.** So on that seed the "primary" arm was the comparator, reached through
+    the live selection path rather than through an edit.
+
+    It does not overturn the NO_GAIN verdict (a collapsed seed pulls the primary arm toward the
+    comparator, i.e. toward the null that was reported, and 9 of 10 seeds selected 0.03 or 0.1), but it
+    has to be VISIBLE: with a FLAT inner curve the argmax is noise, and when that noise lands on 1.0 the
+    arm silently stops being partial pooling at all.
+
+    Deliberately a DISCLOSURE rather than a tie-rule change: re-pointing the argmax after seeing which
+    scales it chose would be editing the method post-hoc. The per-seed selected scales ship in the
+    artifact so a reader can count the collapses.
+    """
+    return float(selected_scale) == 1.0
+
+
 def verdict(arms: dict) -> tuple[str, str]:
     """Frozen four-branch rule. VALIDITY IS CHECKED FIRST (decision D1)."""
     key = PREREGISTERED["primary_metric"]
@@ -456,7 +483,8 @@ def main() -> int:
                                                    held_blocks=args.held_blocks, shuffle_medium=True)
         selections.append({"seed": s, "selected_scale": sel, "inner_curve": curve,
                            "inner_held_blocks": inner_held, "selected_scale_shuffled": sel_sh,
-                           "inner_curve_shuffled": curve_sh})
+                           "inner_curve_shuffled": curve_sh,
+                           "collapsed_to_comparator": selection_collapsed_to_comparator(sel)})
         print(f"           pooling scale selected on inner split: {sel} "
               f"(curve {curve}) | shuffled-null selected {sel_sh}")
 
@@ -511,6 +539,14 @@ def main() -> int:
             "selected_on": "inner position-blocked split of the TRAINING rows only",
             "per_seed": selections,
             "superseded_asserted_value": SUPERSEDED_ASSERTED_SCALE,
+            "n_seeds_collapsed_to_comparator": sum(
+                1 for x in selections if x["collapsed_to_comparator"]),
+            "collapse_note": "a seed whose inner argmax lands on scale 1.0 has NO pooling applied, so "
+                             "partial_pooling is byte-identical to the degenerate `interaction` arm on "
+                             "that seed. With a FLAT inner curve the argmax is noise, so this is a "
+                             "property of the substrate, not a bug. Disclosed rather than tie-broken, "
+                             "because re-pointing the argmax after seeing its choices edits the method "
+                             "post-hoc.",
         },
         "honest_limits": [
             "TWO conditions only. A null result is weak evidence against conditioning in general; it rules "

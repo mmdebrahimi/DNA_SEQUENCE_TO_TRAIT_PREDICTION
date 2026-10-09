@@ -28,7 +28,21 @@ CLAUDE_MD = ROOT / "CLAUDE.md"
 # Measured 2026-09-29: 34,758 words after the first proof-of-format compression (was 36,861 / ~68,665 tok).
 # LOWERED with that gain -- leaving a ceiling sized for the pre-diet file would silently stop guarding.
 # Headroom is deliberately THIN (~2%). A thick allowance is how 41k became 277k.
-WORD_CEILING = 35_400
+#
+# RAISED 2026-10-08: 35_400 -> 35_460, on the record exactly as this guard's docstring prescribes.
+# Cost: a 60-word pointer recording that GLM families G-A and G-C closed as valid negatives, which exists
+# to stop a future session re-proposing a conv encoder or re-running self-distillation (the paragraph it
+# attaches to says self-distillation is "forbidden until a learned representation lands", and leaving
+# that unqualified now reads as an open invitation). Derivations are NOT in CLAUDE.md -- they are in two
+# wiki memos the pointer names.
+#
+# THE SIGNAL WORTH ACTING ON: the file arrived at this edit with **12 words of headroom**, so the ceiling
+# is now binding on ordinary findings rather than on drift, and every future addition will face the same
+# choice. `scripts/claude_md_weight.py` reports **43 bullets / 24,892 words (70% of the file) PROVABLY
+# stored elsewhere in wiki/**, so the diet is available and is a USER AUTHORITY call (NEXT.md fork 5),
+# not something to take unilaterally. Prefer compressing a candidate bullet over raising this number
+# again.
+WORD_CEILING = 35_460
 MEASURED_AT_WRITE = 34_758
 
 

@@ -177,6 +177,46 @@ def test_indicator_can_only_add_an_offset_column():
     assert cc.build_design(S, [1.0], arm="interaction").shape[1] == 129
 
 
+def test_a_LENGTH_MISMATCHED_flags_list_is_refused_rather_than_broadcast():
+    """numpy would broadcast a length-1 flags list over every row, setting the medium column to one
+    constant -- destroying the conditioning variable while still returning a plausible number. The
+    sibling guard on `col_scale` exists for exactly this reason."""
+    import numpy as np
+    cc = _mod()
+    S = np.random.default_rng(0).random((50, 4))
+    with pytest.raises(ValueError) as e:
+        cc.build_design(S, [1.0], arm="interaction")
+    assert "broadcast" in str(e.value)
+    # the correct length still works
+    assert cc.build_design(S, [1.0] * 50, arm="interaction").shape == (50, 9)
+
+
+def test_a_selected_scale_of_1_point_0_is_FLAGGED_as_collapsing_into_the_comparator():
+    """MEASURED on the committed run: seed 5 selected 1.0 and partial_pooling there is EXACTLY the
+    degenerate interaction arm (+0.2161). With a flat inner curve the argmax is noise, and when that noise
+    lands on the no-pooling endpoint the primary arm silently stops being partial pooling at all."""
+    cc = _mod()
+    assert cc.selection_collapsed_to_comparator(1.0) is True
+    assert cc.selection_collapsed_to_comparator(0.03) is False
+    assert cc.selection_collapsed_to_comparator(0.1) is False
+
+
+def test_the_committed_artifact_discloses_how_many_seeds_collapsed():
+    """The disclosure has to be in the artifact a future session re-derives from, not only in prose."""
+    import json
+    from pathlib import Path
+    p = Path("wiki/glm_condition_conditioning_2026-10-08.json")
+    if not p.exists():
+        pytest.skip("conditioning artifact not present")
+    d = json.loads(p.read_text(encoding="utf-8"))
+    sel = [s["selected_scale"] for s in d["pooling_scale_selection"]["per_seed"]]
+    assert 1.0 in sel, "the measured run DID select 1.0 on one seed; if this changes, re-read the memo"
+    # and on that seed the two arms are identical, which is the whole point
+    i = sel.index(1.0)
+    assert (d["arms"]["partial_pooling"]["per_seed_pmm"][i]
+            == d["arms"]["interaction"]["per_seed_pmm"][i])
+
+
 def test_an_unknown_arm_raises_rather_than_silently_returning_sequence_only():
     """A typo'd arm name must not quietly score as the sequence-only baseline and look like a null."""
     import numpy as np

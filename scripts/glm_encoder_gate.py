@@ -158,8 +158,20 @@ def verdict(arms: dict, *, seeds_used: list[int]) -> tuple[str, str, dict]:
                 f"{PREREGISTERED['registered_seeds']}; a median over a different seed set is not the "
                 f"registered gate.", flags)
 
+    # FAIL-CLOSED on a MISSING protocol, not just a drifted one. `... is not None and != registered`
+    # passes an arm that reports no protocol at all, so the flag would attest from ABSENCE OF EVIDENCE --
+    # and this is the flag Step 9's MVP predicate reads. Only the ridge comparator is legitimately
+    # protocol-free, so it is named explicitly rather than inferred from a null.
     for name, a in arms.items():
-        if a.get("protocol") is not None and a["protocol"] != REGISTERED_PROTOCOL.as_dict():
+        if name == PREREGISTERED["comparator"]:
+            continue
+        p = a.get("protocol")
+        if p is None:
+            flags["registered_protocol_used"] = False
+            return ("INDETERMINATE_PROTOCOL_DRIFT",
+                    f"arm {name} reports NO protocol, so the registered protocol cannot be attested. "
+                    f"Refusing rather than inferring compliance from a missing field.", flags)
+        if p != REGISTERED_PROTOCOL.as_dict():
             flags["registered_protocol_used"] = False
             return ("INDETERMINATE_PROTOCOL_DRIFT",
                     f"arm {name} ran under a protocol other than the registered one; the artifact must "
@@ -244,6 +256,10 @@ def _agg(runs: list[dict], key: str = "spearman") -> dict:
     }
     au = [r["auroc_active"] for r in runs if r.get("auroc_active") is not None]
     out["auroc_active_median"] = round(statistics.median(au), 4) if au else None
+    # RECORD the denominator. A median over 3 measurable seeds must not sit beside a 10-seed primary with
+    # nothing saying so -- the seed-count discipline applies to the second framing too.
+    out["auroc_n_seeds_measurable"] = len(au)
+    out["auroc_covers_all_seeds"] = len(au) == len(runs)
     out["protocol"] = runs[0].get("protocol")
     if runs[0].get("n_parameters") is not None:
         out["n_parameters"] = runs[0]["n_parameters"]
