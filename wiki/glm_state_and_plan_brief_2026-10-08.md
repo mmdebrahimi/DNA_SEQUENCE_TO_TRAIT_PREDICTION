@@ -179,11 +179,23 @@ portfolio currently attacks that. This is the most promising *unframed* directio
 
 ## 4. Lessons from the AlphaGenome / ChatGPT discussion
 
-**Provenance, stated honestly:** the pasted material was a **circulated ChatGPT summary of AlphaGenome**. It
-was processed on 2026-10-07 against **primary sources** — the Pushmeet Kohli interview transcript (28,293
-chars) and a DeepMind research-scientist technical talk (52,417 chars), both read in full — into
-`wiki/alphagenome_integration_analysis_2026-10-07.md` and `wiki/alphagenome_lessons_actionable_2026-10-07.md`.
-What follows is from those artifacts, with statuses **updated for today's results**.
+> **UPDATE 2026-10-09 — there were TWO ChatGPT inputs, and the second one is the plan's actual origin.**
+> (a) A *circulated summary* of AlphaGenome, processed 2026-10-07 into the two artifacts named below.
+> (b) A **deep architecture discussion** — the transformer's Query/Key/Value mechanics plus 16 proposed
+> improvements and a "hierarchical biological world model" framing. **That second one is where G-A and G-C
+> came from**, and the ledgers prove it verbatim: G-A's originating goal is *"a LEARNED **multi-resolution**
+> encoder plus a trivial head"* (its **priority #1**) and G-C's is *"the bacterial analogue of
+> **AlphaGenome's cell-state conditioning**"* (its **priority #3**). It is now archived verbatim at
+> `wiki/refs/chatgpt_alphagenome_architecture_discussion_2026-10-09.md` and screened item-by-item against
+> our measurements at `wiki/chatgpt_architecture_discussion_lessons_2026-10-09.md`. **Read the screen
+> alongside this section** — in particular that both of today's negatives tested the *weakest form* of the
+> proposals they came from, and that the 3 proposals it got right were already shipped here.
+
+**Provenance of (a), stated honestly:** it was processed on 2026-10-07 against **primary sources** — the
+Pushmeet Kohli interview transcript (28,293 chars) and a DeepMind research-scientist technical talk (52,417
+chars), both read in full — into `wiki/alphagenome_integration_analysis_2026-10-07.md` and
+`wiki/alphagenome_lessons_actionable_2026-10-07.md`. What follows is from those artifacts, with statuses
+**updated for today's results**.
 
 ### First: two claims in that ChatGPT summary were WRONG
 
