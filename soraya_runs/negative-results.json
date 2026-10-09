@@ -109,10 +109,12 @@
       "candidate_id": "hand-ae5e739625fdb418",
       "claim_hash": "ae5e739625fdb418",
       "scope": "One eukaryote, one trait (FT10), 3 seeds, n=1003 NATURAL accessions -- a natural population, which is the regime this project has measured as closed FOR EVERY ORGANISM. Within-group r-squared was NEGATIVE (-0.13 avg) and spearman 0.22 against a structure-only 0.48, i.e. the embedding learned POPULATION STRUCTURE rather than the causal signal. This is NOT evidence that eukaryotes are harder: the only clean organism-level positive in this project is also a eukaryote (yeast segregant cross, 12/12 traits at r 0.46-0.80) on a CONSTRUCTED panel.",
-      "revival_condition": "a learned representation is tested on a CONSTRUCTED eukaryotic panel (a segregant cross, a MAGIC/NAM population, or a mutagenesis library) where ancestry is randomised by design rather than on natural accessions",
+      "revival_condition": "a learned representation is tested on a constructed panel WHERE THE MARKERS ARE NOT A SUFFICIENT STATISTIC -- i.e. a mutagenesis library or a multi-parent/novel-allele panel, NOT a bi-parental cross. On a bi-parental cross the +/-1 marker already encodes allele identity, so a sequence model is EXPECTED TO TIE by construction and a tie would revive nothing (scripts/yeast_bloom_fm_prep.py states this prior explicitly).",
       "provenance": "hand-entered",
       "evidence": "wiki/phase2_arabidopsis_result_2026-06-12.md + wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md",
-      "foreclosure_kind": "measured"
+      "foreclosure_kind": "measured",
+      "revival_condition_corrected_from": "a learned representation is tested on a CONSTRUCTED eukaryotic panel (a segregant cross, a MAGIC/NAM population, or a mutagenesis library) where ancestry is randomised by design rather than on natural accessions",
+      "revival_correction_reason": "2026-10-09 re-assessment: the original revival said 'a CONSTRUCTED eukaryotic panel', which is satisfiable on a bi-parental cross where the result is a foregone tie. A revival condition that can be met uninformatively is not a revival condition."
     },
     {
       "token": "neg-a5daddbc",
@@ -151,10 +153,12 @@
       "candidate_id": "hand-1d3cda4b6ab86566",
       "claim_hash": "1d3cda4b6ab86566",
       "scope": "FIVE instantiations, all sharing the SAME four qualifiers: frozen weights, zero-shot, used as fixed features, and scored on NATURAL populations with a de-confounding control (within-lineage or within-group). Instances span bacteria (cipro within-lineage), pathotype, Arabidopsis flowering time, and dog/Drosophila panels. NONE of the five fine-tuned anything, and NONE used a constructed panel. This was originally filed as 'a MODEL ceiling' -- a claim about the whole class -- and that wording cost ~4 months.",
-      "revival_condition": "any of the four shared qualifiers is broken: a FINE-TUNED representation, or a CONSTRUCTED panel where ancestry is randomised by design (the yeast segregant cross is the measured positive in this class), or a learned head rather than fixed features",
+      "revival_condition": "any of the four shared qualifiers is broken IN AN INFORMATIVE WAY: a FINE-TUNED representation; a learned head rather than fixed features; or a CONSTRUCTED panel whose markers are NOT a sufficient statistic (mutagenesis / multi-parent / novel-allele -- NOT a bi-parental cross, where a sequence model is expected to tie by construction).",
       "provenance": "hand-entered",
       "evidence": "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md + wiki/negative_results_map_2026-06-13.md",
-      "foreclosure_kind": "measured"
+      "foreclosure_kind": "measured",
+      "revival_condition_corrected_from": "any of the four shared qualifiers is broken: a FINE-TUNED representation, or a CONSTRUCTED panel where ancestry is randomised by design (the yeast segregant cross is the measured positive in this class), or a learned head rather than fixed features",
+      "revival_correction_reason": "2026-10-09: same defect as the Arabidopsis record -- 'a constructed panel' alone is satisfiable uninformatively on a bi-parental cross."
     },
     {
       "token": "neg-0a5a6746",
