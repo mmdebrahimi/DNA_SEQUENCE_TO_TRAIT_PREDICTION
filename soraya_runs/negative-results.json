@@ -108,6 +108,46 @@
       "revival_condition": "a learned representation is tested on a CONSTRUCTED eukaryotic panel (a segregant cross, a MAGIC/NAM population, or a mutagenesis library) where ancestry is randomised by design rather than on natural accessions",
       "provenance": "hand-entered",
       "evidence": "wiki/phase2_arabidopsis_result_2026-06-12.md + wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md"
+    },
+    {
+      "token": "neg-a5daddbc",
+      "claim": "A CURATED-DETERMINANT alphabet beats a FIXED TOP-N K-MER VOCABULARY on 5 drugs (p<0.0001) -- a comparison in which NO learned representation was trained",
+      "operator": "hand-entered",
+      "kill_test_kind": "",
+      "kill_test_arg": "",
+      "reason": "",
+      "executed": false,
+      "valid": false,
+      "discriminating": null,
+      "verdict_raw": "killed-historical",
+      "recorded_at": "2026-10-09",
+      "project": "dna_decode",
+      "candidate_id": "hand-e5e52e0ced97f234",
+      "claim_hash": "e5e52e0ced97f234",
+      "scope": "The losing arm was a FIXED top-N-most-frequent k-mer vocabulary used as the stand-in for a learned representation; the probe TRAINED NOTHING ('neural #3' appears once in the closeout, as the thing not done). The same document explains WHY that arm lost: the top-N k-mer vocab IS the core genome, so it misses signal WITHIN a lineage -- a VOCABULARY-CONSTRUCTION failure, not a learning failure. Headroom was also measured only on mechanisms the catalog already covers, while the project's own doubt layer later located the catalog's real gap as COMPLETENESS (V179F: 15/15 carriers resistant, rule says S) -- exactly where a learned model would earn its keep, and exactly where this probe never looked.",
+      "revival_condition": "a learned representation is ACTUALLY TRAINED on raw sequence and compared to the curated alphabet, scored on the catalog's COMPLETENESS gap rather than on mechanisms the catalog already covers",
+      "provenance": "hand-entered",
+      "evidence": "wiki/functional_alphabet_probe_closeout_2026-06-26.md + wiki/functional_alphabet_5drug_synthesis_2026-06-27.md"
+    },
+    {
+      "token": "neg-48c02f43",
+      "claim": "FROZEN pretrained nucleotide embeddings, used ZERO-SHOT as FIXED FEATURES on NATURAL populations, fail de-confounded organism-level g->p prediction (0-for-5)",
+      "operator": "hand-entered",
+      "kill_test_kind": "",
+      "kill_test_arg": "",
+      "reason": "",
+      "executed": false,
+      "valid": false,
+      "discriminating": null,
+      "verdict_raw": "killed-historical",
+      "recorded_at": "2026-10-09",
+      "project": "dna_decode",
+      "candidate_id": "hand-1d3cda4b6ab86566",
+      "claim_hash": "1d3cda4b6ab86566",
+      "scope": "FIVE instantiations, all sharing the SAME four qualifiers: frozen weights, zero-shot, used as fixed features, and scored on NATURAL populations with a de-confounding control (within-lineage or within-group). Instances span bacteria (cipro within-lineage), pathotype, Arabidopsis flowering time, and dog/Drosophila panels. NONE of the five fine-tuned anything, and NONE used a constructed panel. This was originally filed as 'a MODEL ceiling' -- a claim about the whole class -- and that wording cost ~4 months.",
+      "revival_condition": "any of the four shared qualifiers is broken: a FINE-TUNED representation, or a CONSTRUCTED panel where ancestry is randomised by design (the yeast segregant cross is the measured positive in this class), or a learned head rather than fixed features",
+      "provenance": "hand-entered",
+      "evidence": "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md + wiki/negative_results_map_2026-06-13.md"
     }
   ]
 }
