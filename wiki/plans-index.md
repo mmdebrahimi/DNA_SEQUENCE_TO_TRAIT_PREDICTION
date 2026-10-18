@@ -653,3 +653,12 @@
 - The grid arm is demoted to a consistency check only: the designed grid separates from genomic sequence at AUROC 1.0000 via element-vocabulary recombination (median 13bp shared block, no constant scaffold), so grid performance is not evidence of transferable grammar.
 
 ---
+## [plan_file: CABBAGE_G8_Closure_Lineage_Corrected_Effective_N_For_The_Four_Scored_Cells_Plan/] 2026-10-17
+**Summary:** Close the one open label gate (G8) on the project's strongest label substrate by computing minority-class effective lineage counts for the four scored CABBAGE cells and feeding them into the existing code-owned `rejection_gates.g8_dedup_collapses_balance`, which returns INSUFFICIENT_DATA today because nothing supplies `min_effective_lineages` -- written into a namespace-separate sidecar because two of the four cells collide exactly with keys already in `wiki/provdisjoint_lineage_metrics.json`.
+**Key decisions:**
+- The sidecar is namespace-separate (`wiki/cabbage_lineage_metrics.json`, schema `cabbage-lineage-metrics-v1`) because the collision is MEASURED, not hypothetical: the CABBAGE cells key on `amrfinder_organism` and the provdisjoint lineage file already holds `Campylobacter x ciprofloxacin` and `Escherichia_coli_Shigella x gentamicin`, so a shared-key write would silently overwrite two provdisjoint cells.
+- Clustering by determinant profile is explicitly forbidden as circular -- the portal's pre-computed AMRFinderPlus tree is the cheap-looking lineage proxy, but the decoder's prediction is a function of those same determinants, so lineages must come from genome distance (Mash) at the fixed (0.001, 0.005) thresholds with NO threshold search.
+- `min_effective_lineages` is defined as the MINORITY class's effective lineage count, on G8's own "smallest class" wording; the majority class is ~100x larger and is not separately clustered, and because lineage count is not monotone in isolate count this is recorded as a scoped reading rather than a proof.
+- Merge-or-refuse semantics are defined BEFORE the first increment (per the 2026-10-14 lesson that staged writes over a shared artifact are silently lossy), and a G8 TRIP is pre-committed as a valid finding about the substrate rather than a failure to tune away.
+
+---

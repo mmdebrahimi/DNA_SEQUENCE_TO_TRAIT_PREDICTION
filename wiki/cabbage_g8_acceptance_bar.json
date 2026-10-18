@@ -1,0 +1,52 @@
+{
+  "schema": "cabbage-g8-acceptance-bar-v1",
+  "frozen": "2026-10-17",
+  "frozen_before_any_lineage_number_existed": true,
+  "frozen_before_any_assembly_was_fetched": true,
+
+  "question": "Does the minority class of each scored CABBAGE cell survive deduplication — i.e. does it carry at least MIN_EFFECTIVE_LINEAGES effective lineages? G8 is the last open label gate on this substrate and currently returns INSUFFICIENT_DATA because nothing supplies `min_effective_lineages`.",
+
+  "the_bar_is_not_restated_here": {
+    "source": "dna_decode.eval.rejection_gates.MIN_EFFECTIVE_LINEAGES",
+    "value_at_freeze": 3,
+    "why_imported": "A literal in this file could drift from the gate that owns the verdict. The value is recorded only so a reader knows what it was at freeze time; the runtime bar is always the import.",
+    "verdict_owner": "rejection_gates.g8_dedup_collapses_balance — TRIP if n < bar else PASS; INSUFFICIENT_DATA when n is absent"
+  },
+
+  "TRIP_is_a_valid_pre_committed_outcome": {
+    "statement": "A cell whose minority class collapses to fewer than MIN_EFFECTIVE_LINEAGES effective lineages is a FINDING ABOUT THE SUBSTRATE, not a defect to tune away.",
+    "why_this_is_written_down_first": "Two of the four cells have minority classes of 61 and 67 isolates, and the provdisjoint Klebsiella x ciprofloxacin R class was 60 isolates that collapsed to roughly 3 lineages. A trip is therefore a live possibility, and pre-committing it is what stops it being re-read afterwards as a bug in the clustering or a reason to relax the threshold.",
+    "forbidden_responses_to_a_trip": [
+      "lowering MIN_EFFECTIVE_LINEAGES",
+      "searching the Mash threshold until the cluster count clears the bar",
+      "substituting the portal's pre-computed AMRFinderPlus tree for genome distance"
+    ]
+  },
+
+  "definitional_decision_min_effective_lineages": {
+    "decision": "min_effective_lineages is the MINORITY class's effective lineage count.",
+    "basis": "G8's own text is 'smallest class has N effective lineages'. In all four cells the minority class is R: 1018, 61, 627 and 67 isolates against majority classes of 3247, 7887, 7205 and 7767.",
+    "what_is_NOT_measured": "The majority class is not separately clustered. It is roughly 100x larger (~26,000 further assemblies across the four cells), and lineage count is NOT monotone in isolate count, so a large S class could in principle collapse further than its R sibling.",
+    "honest_status": "This is a SCOPED READING of the gate, not a proof that the minority class is the true minimum. Recorded here so the scope travels with the number."
+  },
+
+  "method_commitments": {
+    "clustering": "clonality.greedy_representative_clusters_from_matrix — greedy-representative, chaining-resistant. NOT phylogeny.cluster_by_ani, whose single-linkage union-find chains A~B~C into one cluster.",
+    "thresholds": "FIXED (0.001, 0.005), inherited verbatim from scripts/compute_lineage_metrics.py:50. No search.",
+    "why_no_search": "variance_ratio = intra/inter tends to 0 as clusters tend to singletons, so MINIMISING it is monotonically biased toward over-splitting; extending the grid downward without an over-split guard picks a degenerate partition. The coarse fixed grid is the documented fix.",
+    "distance_source": "genome distance via Mash. The portal's pre-computed AMRFinderPlus tree is FORBIDDEN as a lineage proxy — the decoder's prediction is a function of those same determinants, so a determinant-derived partition would manufacture agreement.",
+    "incompleteness": "A cell whose minority-class assemblies cannot all be resolved is marked partial with n_genomes_missing and emits NO lineage number, leaving G8 at INSUFFICIENT_DATA rather than reporting a figure from a subset."
+  },
+
+  "reporting_commitments": [
+    "Cluster STRUCTURE ships beside the count: largest_cluster_fraction and discordant_isolate_fraction. A count alone looked healthy in the TB arm while 43 discordant clusters hid 97% of the isolates.",
+    "Every cluster-weighted point carries a Wilson interval; a weighted point without one is refused. Weighted N is small, so the interval is the point.",
+    "Discordant (mixed-label) clusters are excluded from both class counts and reported separately — never majority-voted."
+  ],
+
+  "what_a_PASS_would_NOT_license": [
+    "Calling these cells lineage-independent external validation. They remain an isolate-level stress test with a disclosed clonality layer.",
+    "Treating the `database` column as a BioProject. It is an overlapping aggregator label, so source-concentration on these cells is not this repo's per-BioProject figure.",
+    "Any claim about the majority class, which this run does not cluster."
+  ]
+}
