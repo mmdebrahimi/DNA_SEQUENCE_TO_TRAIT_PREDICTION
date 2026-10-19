@@ -297,18 +297,52 @@ def find_refseq_cache(repo: Path = REPO) -> Path | None:
     return None
 
 
-def resolve_genomes(accessions: dict[str, int], cache: Path | None) -> tuple[dict, list]:
-    """`({accession: fasta_path}, missing)`."""
+def genome_roots(cache: Path | None, cohort_dir: Path | None = None) -> list[Path]:
+    """Roots searched for `<acc>/genome.fna`, in priority order.
+
+    THE PROVDISJOINT COHORTS STORE THEIR ASSEMBLIES PER COHORT at
+    `data/raw/<cohort>/refseq/<acc>/`, NOT in a shared cache. Measured
+    2026-10-19 on two independent machines: of the 490 unique accessions in the
+    ten reference cohorts, ZERO have even a DIRECTORY in a global refseq cache
+    (680 entries here, 1204 on the other host) -- that cache holds a different
+    genome population entirely.
+
+    Searching only the global cache therefore yields `INSUFFICIENT_DATA` on all
+    ten cohorts even when every assembly is present, and that is the SAME
+    verdict the bar pre-commits for genuinely-absent genomes. So a wrong path
+    model is INDISTINGUISHABLE from the honest data-absent outcome -- the same
+    shape as a filter that removes nothing reading as a clean control. The
+    per-cohort root is searched FIRST because that is where the data measurably
+    is; the global cache is kept as a fallback rather than removed, since it is
+    the layout other cells in this repo use.
+    """
+    roots: list[Path] = []
+    if cohort_dir is not None:
+        roots.append(cohort_dir / "refseq")
+    if cache is not None:
+        roots.append(cache)
+    return roots
+
+
+def resolve_genomes(
+    accessions: dict[str, int],
+    cache: Path | None,
+    cohort_dir: Path | None = None,
+) -> tuple[dict, list]:
+    """`({accession: fasta_path}, missing)`, searching `genome_roots` in order."""
+    roots = genome_roots(cache, cohort_dir)
     found: dict[str, Path] = {}
     missing: list[str] = []
     for acc in accessions:
         hit = None
-        if cache is not None:
+        for root in roots:
             for name in ("genome.fna", f"{acc}.fna", f"{acc}_genomic.fna"):
-                candidate = cache / acc / name
+                candidate = root / acc / name
                 if candidate.is_file():
                     hit = candidate
                     break
+            if hit is not None:
+                break
         if hit is None:
             missing.append(acc)
         else:
@@ -396,18 +430,23 @@ def main(argv: list[str] | None = None) -> int:
                             "n_accessions": len(labels),
                             "n_resistant": sum(labels.values())})
             continue
-        genomes, missing = resolve_genomes(labels, cache)
+        genomes, missing = resolve_genomes(labels, cache, cohort_dir=cohort_dir)
+        searched = [str(r).replace(chr(92), '/') for r in genome_roots(cache, cohort_dir)]
         if missing or not genomes:
             cells.append({
                 "cohort": cohort, "status": INSUFFICIENT_DATA,
-                "reason": "assemblies did not all resolve",
+                "reason": ("no assembly resolved under any searched root"
+                           if not genomes else "assemblies did not all resolve"),
                 "n_accessions": len(labels),
                 "n_genomes_missing": len(missing),
+                "searched_roots": searched,
+                "n_resolved": len(genomes),
                 "note": ("a partial cohort yields LOWER-BOUND effective-lineage "
                          "counts, which cannot be compared for exact equality"),
             })
             blocked.append({"cohort": cohort, "reason": "missing assemblies",
-                            "n_missing": len(missing)})
+                            "n_missing": len(missing), "n_resolved": len(genomes),
+                            "searched_roots": searched})
             continue
 
         try:

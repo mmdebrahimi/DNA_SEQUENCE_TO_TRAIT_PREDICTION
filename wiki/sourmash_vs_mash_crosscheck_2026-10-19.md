@@ -11,16 +11,16 @@ A cohort whose assemblies do not all resolve produces LOWER-BOUND effective-line
 
 | cohort | reason |
 |---|---|
-| campylobacter_provdisjoint_ciprofloxacin | no selected.tsv |
-| escherichia_coli_shigella_provdisjoint_ceftriaxone | no selected.tsv |
-| escherichia_coli_shigella_provdisjoint_ciprofloxacin | no selected.tsv |
-| escherichia_coli_shigella_provdisjoint_gentamicin | no selected.tsv |
-| escherichia_coli_shigella_provdisjoint_tetracycline | no selected.tsv |
-| klebsiella_provdisjoint_ceftriaxone | no selected.tsv |
-| klebsiella_provdisjoint_ciprofloxacin | no selected.tsv |
-| klebsiella_provdisjoint_gentamicin | no selected.tsv |
-| klebsiella_provdisjoint_meropenem | no selected.tsv |
-| klebsiella_provdisjoint_tetracycline | no selected.tsv |
+| campylobacter_provdisjoint_ciprofloxacin | missing assemblies |
+| escherichia_coli_shigella_provdisjoint_ceftriaxone | missing assemblies |
+| escherichia_coli_shigella_provdisjoint_ciprofloxacin | missing assemblies |
+| escherichia_coli_shigella_provdisjoint_gentamicin | missing assemblies |
+| escherichia_coli_shigella_provdisjoint_tetracycline | missing assemblies |
+| klebsiella_provdisjoint_ceftriaxone | missing assemblies |
+| klebsiella_provdisjoint_ciprofloxacin | missing assemblies |
+| klebsiella_provdisjoint_gentamicin | missing assemblies |
+| klebsiella_provdisjoint_meropenem | missing assemblies |
+| klebsiella_provdisjoint_tetracycline | missing assemblies |
 
 ## Clauses
 

@@ -23,6 +23,7 @@ from scripts.sourmash_vs_mash_crosscheck import (
     mash_reference,
     near_bar_labels,
     read_selected,
+    genome_roots,
     resolve_genomes,
     trip_labels,
     verify_derived_from,
@@ -281,6 +282,69 @@ def test_resolve_genomes_reports_what_is_missing(tmp_path):
 def test_resolve_genomes_with_no_cache_reports_everything_missing():
     found, missing = resolve_genomes({"GCA_1": 1}, None)
     assert found == {} and missing == ["GCA_1"]
+
+
+# --------------------------------------------------------------------------- #
+# the PER-COHORT assembly layout (regression, 2026-10-19)
+#
+# The ten reference cohorts keep their assemblies at
+# `data/raw/<cohort>/refseq/<acc>/`, not in a shared cache. Measured on two
+# independent hosts: ZERO of the 490 unique accessions have a directory in a
+# global refseq cache. Resolving only against that cache reports
+# INSUFFICIENT_DATA on every cohort WITH THE DATA FULLY PRESENT -- the same
+# verdict the bar pre-commits for absent genomes, so the bug cannot be told
+# apart from the honest outcome by reading the artifact.
+# --------------------------------------------------------------------------- #
+
+
+def test_resolve_genomes_finds_the_per_cohort_layout(tmp_path):
+    """THE REGRESSION: assemblies under `<cohort>/refseq/<acc>/` must resolve."""
+    cohort_dir = tmp_path / "klebsiella_provdisjoint_meropenem"
+    acc = "GCA_000567225.2"
+    (cohort_dir / "refseq" / acc).mkdir(parents=True)
+    (cohort_dir / "refseq" / acc / "genome.fna").write_text(">c" + chr(10) + "ACGT" + chr(10), encoding="utf-8")
+    # No global cache at all -- the per-cohort root alone must be enough.
+    found, missing = resolve_genomes({acc: 1}, None, cohort_dir=cohort_dir)
+    assert set(found) == {acc}
+    assert missing == []
+
+
+def test_the_per_cohort_lookup_is_not_vacuous(tmp_path):
+    """NON-VACUITY: an accession absent from BOTH roots is still reported missing.
+
+    Without this, a lookup that accepted anything would satisfy the test above.
+    """
+    cohort_dir = tmp_path / "cohort"
+    (cohort_dir / "refseq" / "GCA_present.1").mkdir(parents=True)
+    (cohort_dir / "refseq" / "GCA_present.1" / "genome.fna").write_text(">c" + chr(10) + "ACGT" + chr(10), encoding="utf-8")
+    cache = tmp_path / "refseq_cache"
+    cache.mkdir()
+    found, missing = resolve_genomes(
+        {"GCA_present.1": 1, "GCA_absent.1": 0}, cache, cohort_dir=cohort_dir
+    )
+    assert set(found) == {"GCA_present.1"}
+    assert missing == ["GCA_absent.1"]
+
+
+def test_a_directory_without_a_fasta_does_not_resolve(tmp_path):
+    """An EMPTY accession dir is not a genome -- 214 of this host's 680 cache
+    entries are exactly that, and a directory count read as a genome count is
+    what overstated local coverage in the first place."""
+    cohort_dir = tmp_path / "cohort"
+    (cohort_dir / "refseq" / "GCA_1.1").mkdir(parents=True)  # dir, no ">c" + chr(10) + "ACGT" + chr(10)
+    found, missing = resolve_genomes({"GCA_1.1": 1}, None, cohort_dir=cohort_dir)
+    assert found == {} and missing == ["GCA_1.1"]
+
+
+def test_genome_roots_searches_the_cohort_before_the_shared_cache(tmp_path):
+    """Priority order is load-bearing: the per-cohort root is where the data
+    measurably is, so it must be consulted first."""
+    cohort_dir = tmp_path / "cohort"
+    cache = tmp_path / "refseq_cache"
+    assert genome_roots(cache, cohort_dir) == [cohort_dir / "refseq", cache]
+    assert genome_roots(None, cohort_dir) == [cohort_dir / "refseq"]
+    assert genome_roots(cache, None) == [cache]
+    assert genome_roots(None, None) == []
 
 
 # --------------------------------------------------------------------------- #

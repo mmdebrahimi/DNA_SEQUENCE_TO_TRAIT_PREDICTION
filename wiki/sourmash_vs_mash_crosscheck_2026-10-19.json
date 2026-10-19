@@ -39,114 +39,234 @@
     {
       "cohort": "campylobacter_provdisjoint_ciprofloxacin",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 40,
+      "n_genomes_missing": 40,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/campylobacter_provdisjoint_ciprofloxacin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_gentamicin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_tetracycline",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_tetracycline/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "klebsiella_provdisjoint_ceftriaxone",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ceftriaxone/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "klebsiella_provdisjoint_ciprofloxacin",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ciprofloxacin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "klebsiella_provdisjoint_gentamicin",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_gentamicin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "klebsiella_provdisjoint_meropenem",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_meropenem/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     },
     {
       "cohort": "klebsiella_provdisjoint_tetracycline",
       "status": "INSUFFICIENT_DATA",
-      "reason": "cohort manifest (selected.tsv) not present",
-      "n_genomes_missing": null
+      "reason": "no assembly resolved under any searched root",
+      "n_accessions": 60,
+      "n_genomes_missing": 60,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_tetracycline/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ],
+      "n_resolved": 0,
+      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
     }
   ],
   "blocked": [
     {
       "cohort": "campylobacter_provdisjoint_ciprofloxacin",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/campylobacter_provdisjoint_ciprofloxacin/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 40,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/campylobacter_provdisjoint_ciprofloxacin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_gentamicin/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_gentamicin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_tetracycline",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_tetracycline/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_tetracycline/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "klebsiella_provdisjoint_ceftriaxone",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ceftriaxone/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ceftriaxone/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "klebsiella_provdisjoint_ciprofloxacin",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ciprofloxacin/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ciprofloxacin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "klebsiella_provdisjoint_gentamicin",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_gentamicin/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_gentamicin/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "klebsiella_provdisjoint_meropenem",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_meropenem/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_meropenem/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     },
     {
       "cohort": "klebsiella_provdisjoint_tetracycline",
-      "reason": "no selected.tsv",
-      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_tetracycline/selected.tsv"
+      "reason": "missing assemblies",
+      "n_missing": 60,
+      "n_resolved": 0,
+      "searched_roots": [
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_tetracycline/refseq",
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
+      ]
     }
   ],
   "agreement_number_withheld": true,
