@@ -140,10 +140,17 @@ drive for the signature dirs and **REFUSES to auto-substitute** (a right NAME is
 CONTENTS — adopting `E:` would convert a loud missing-ROOT into a quiet missing-DATASET); its report is
 attached to every `data_inventory` run. Locally: `data/` is a REAL C: directory (`dir /AL data` finds no
 reparse point) with ~4.0 GB `refseq_cache` (680 entries but only **465 hold a `genome.fna`** -- 214 are EMPTY shells, measured 2026-10-19: a DIRECTORY count is not a genome count), `raw/`+`processed/`
-**EMPTY**. **The 580-accession cohort labels `data/raw/*/selected.tsv` are gitignored (`/data/*`,
-`.gitignore:4`) — 0 tracked, absent from `E:`, and the committed validation artifacts carry only aggregate
-counts — so they are NOT recoverable from this repo, and rebuilding the cohort would change the accession
-set, which clause 2 of a derived bar compares for EXACT equality.** **RESOLVED the same day: the 61
+**EMPTY**. **The cohort labels `data/raw/*_provdisjoint_*/selected.tsv` are gitignored (`/data/*`,
+`.gitignore:4`) — 0 tracked, absent from `E:`, and the committed validation artifacts hold only aggregate
+counts (0 accessions in all 10 provdisjoint artifacts) — NOT recoverable from this repo.
+**RECOVERED 2026-10-19 from server2** (`DESKTOP-SJG795O`, Seagate Portable USB as its `D:`), md5-
+verified per file, 10 cohorts / **580 lines / 490 UNIQUE accessions** / 290 R / 290 S, CRLF, headerless
+`<acc>\t<label>`; 62 accessions recur across cohorts (max 4x) because the same isolate is scored against
+different drugs — **so accession is NOT a key for the label and these must stay per-cohort; any merge keyed
+on accession silently collapses contradictory labels.** Still gitignored, so still not in git.
+**CORRECTION: clause 2 does NOT compare an accession set.** It compares the **minority effective-lineage
+COUNT** for exact equality on near-bar pairs; the bar says `accession` zero times. The accession set still
+matters, but indirectly — it is the clustering input, so a rebuilt cohort would silently move those counts.** **RESOLVED the same day: the 61
 tracked files that were missing locally are RESTORED from HEAD** (`git restore --source=HEAD`, 4.45 MB —
 they were in git all along, absent only because the vanished junction took the worktree copies with it),
 which took the suite from 101 failures to 22. `git commit -a` no longer records deletions. The D: rule STANDS wherever the right disk is attached. **The project is also NOW its own git repo
