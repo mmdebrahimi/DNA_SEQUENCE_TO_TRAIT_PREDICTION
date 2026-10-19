@@ -1,34 +1,17 @@
-# sourmash vs Mash crosscheck — INSUFFICIENT_DATA
+# sourmash vs Mash crosscheck — OK
 
 - bar: `wiki\sourmash_vs_mash_crosscheck_bar.json`
 - sourmash: ksize=21 scaled=1000
 - refseq cache: `C:\Users\Laptop Portable\pythonprojects\dna_decode\data\refseq_cache`
-- pairs observed: 0 / 20
-
-## INSUFFICIENT_DATA — no agreement number
-
-A cohort whose assemblies do not all resolve produces LOWER-BOUND effective-lineage counts. Reporting an agreement rate over a partial cohort would compare a lower bound against an exact-equality clause, so no agreement number is emitted. INSUFFICIENT_DATA is a valid result.
-
-| cohort | reason |
-|---|---|
-| campylobacter_provdisjoint_ciprofloxacin | missing assemblies |
-| escherichia_coli_shigella_provdisjoint_ceftriaxone | missing assemblies |
-| escherichia_coli_shigella_provdisjoint_ciprofloxacin | missing assemblies |
-| escherichia_coli_shigella_provdisjoint_gentamicin | missing assemblies |
-| escherichia_coli_shigella_provdisjoint_tetracycline | missing assemblies |
-| klebsiella_provdisjoint_ceftriaxone | missing assemblies |
-| klebsiella_provdisjoint_ciprofloxacin | missing assemblies |
-| klebsiella_provdisjoint_gentamicin | missing assemblies |
-| klebsiella_provdisjoint_meropenem | missing assemblies |
-| klebsiella_provdisjoint_tetracycline | missing assemblies |
+- pairs observed: 20 / 20
 
 ## Clauses
 
 | # | clause | met | detail |
 |---|---|---|---|
-| 1 | verdict_identity | — | not evaluated -- INSUFFICIENT_DATA |
-| 2 | exact_minority_count_near_the_bar | — | not evaluated -- INSUFFICIENT_DATA |
-| 3 | the_trip_must_reproduce | — | not evaluated -- INSUFFICIENT_DATA |
+| 1 | verdict_identity | yes | 20/20 verdicts identical (NECESSARY BUT NEARLY VACUOUS -- 19/20 PASS by margin alone) |
+| 2 | exact_minority_count_near_the_bar | yes | 3/3 near-bar pairs matched exactly (DISCRIMINATING) |
+| 3 | the_trip_must_reproduce | yes | 1/1 TRIP pair(s) reproduced (implied by clause 1; retained as a severity pre-commitment) |
 
 ## Honest limits
 

@@ -1,276 +1,339 @@
 {
   "_schema": "sourmash-vs-mash-crosscheck-v1",
   "generated": "2026-10-19",
-  "status": "INSUFFICIENT_DATA",
-  "exit_code": 2,
+  "status": "OK",
+  "exit_code": 0,
   "bar": "wiki/sourmash_vs_mash_crosscheck_bar.json",
   "bar_sha256": "8e26d23e536c6d8a954e9ca9af89361f9bd031d32fee970bff8ce56e908f1dfa",
   "sourmash_params": {
     "ksize": 21,
     "scaled": 1000
   },
-  "refseq_cache": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache",
+  "refseq_cache_found": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache",
+  "refseq_cache_note": "the GLOBAL fallback root that find_refseq_cache() located. It is NOT necessarily where any genome came from -- read genome_sources for that.",
+  "genome_sources": {
+    "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0,
+    "E:/dna_decode_xfer/raw/campylobacter_provdisjoint_ciprofloxacin/refseq": 40,
+    "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/refseq": 60,
+    "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/refseq": 60,
+    "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_gentamicin/refseq": 60,
+    "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_tetracycline/refseq": 60,
+    "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_ceftriaxone/refseq": 60,
+    "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_ciprofloxacin/refseq": 60,
+    "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_gentamicin/refseq": 60,
+    "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_meropenem/refseq": 60,
+    "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_tetracycline/refseq": 60
+  },
   "n_pairs_expected": 20,
-  "n_pairs_observed": 0,
+  "n_pairs_observed": 20,
   "clauses": [
     {
       "clause_id": 1,
       "name": "verdict_identity",
-      "met": null,
-      "detail": "not evaluated -- INSUFFICIENT_DATA",
+      "met": true,
+      "detail": "20/20 verdicts identical (NECESSARY BUT NEARLY VACUOUS -- 19/20 PASS by margin alone)",
       "failures": []
     },
     {
       "clause_id": 2,
       "name": "exact_minority_count_near_the_bar",
-      "met": null,
-      "detail": "not evaluated -- INSUFFICIENT_DATA",
+      "met": true,
+      "detail": "3/3 near-bar pairs matched exactly (DISCRIMINATING)",
       "failures": []
     },
     {
       "clause_id": 3,
       "name": "the_trip_must_reproduce",
-      "met": null,
-      "detail": "not evaluated -- INSUFFICIENT_DATA",
+      "met": true,
+      "detail": "1/1 TRIP pair(s) reproduced (implied by clause 1; retained as a severity pre-commitment)",
       "failures": []
     }
   ],
   "cells": [
     {
       "cohort": "campylobacter_provdisjoint_ciprofloxacin",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 40,
-      "n_genomes_missing": 40,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/campylobacter_provdisjoint_ciprofloxacin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 16,
+          "verdict": "pass",
+          "n_clusters": 33,
+          "largest_cluster_fraction": 0.075,
+          "discordant_isolate_fraction": 0.0,
+          "effective_lineage_N_R": 16,
+          "effective_lineage_N_S": 17
+        },
+        "0.005": {
+          "minority": 14,
+          "verdict": "pass",
+          "n_clusters": 30,
+          "largest_cluster_fraction": 0.075,
+          "discordant_isolate_fraction": 0.0,
+          "effective_lineage_N_R": 16,
+          "effective_lineage_N_S": 14
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/campylobacter_provdisjoint_ciprofloxacin/refseq": 40,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 22,
+          "verdict": "pass",
+          "n_clusters": 47,
+          "largest_cluster_fraction": 0.1,
+          "discordant_isolate_fraction": 0.1,
+          "effective_lineage_N_R": 22,
+          "effective_lineage_N_S": 24
+        },
+        "0.005": {
+          "minority": 11,
+          "verdict": "pass",
+          "n_clusters": 31,
+          "largest_cluster_fraction": 0.3333,
+          "discordant_isolate_fraction": 0.4167,
+          "effective_lineage_N_R": 11,
+          "effective_lineage_N_S": 17
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 14,
+          "verdict": "pass",
+          "n_clusters": 41,
+          "largest_cluster_fraction": 0.1167,
+          "discordant_isolate_fraction": 0.0,
+          "effective_lineage_N_R": 14,
+          "effective_lineage_N_S": 27
+        },
+        "0.005": {
+          "minority": 4,
+          "verdict": "pass",
+          "n_clusters": 25,
+          "largest_cluster_fraction": 0.35,
+          "discordant_isolate_fraction": 0.35,
+          "effective_lineage_N_R": 4,
+          "effective_lineage_N_S": 20
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_gentamicin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 14,
+          "verdict": "pass",
+          "n_clusters": 39,
+          "largest_cluster_fraction": 0.2,
+          "discordant_isolate_fraction": 0.1833,
+          "effective_lineage_N_R": 14,
+          "effective_lineage_N_S": 23
+        },
+        "0.005": {
+          "minority": 5,
+          "verdict": "pass",
+          "n_clusters": 18,
+          "largest_cluster_fraction": 0.6,
+          "discordant_isolate_fraction": 0.75,
+          "effective_lineage_N_R": 5,
+          "effective_lineage_N_S": 9
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_gentamicin/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "escherichia_coli_shigella_provdisjoint_tetracycline",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_tetracycline/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 23,
+          "verdict": "pass",
+          "n_clusters": 50,
+          "largest_cluster_fraction": 0.0667,
+          "discordant_isolate_fraction": 0.0333,
+          "effective_lineage_N_R": 23,
+          "effective_lineage_N_S": 26
+        },
+        "0.005": {
+          "minority": 17,
+          "verdict": "pass",
+          "n_clusters": 41,
+          "largest_cluster_fraction": 0.0833,
+          "discordant_isolate_fraction": 0.2167,
+          "effective_lineage_N_R": 17,
+          "effective_lineage_N_S": 19
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/escherichia_coli_shigella_provdisjoint_tetracycline/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "klebsiella_provdisjoint_ceftriaxone",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ceftriaxone/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 22,
+          "verdict": "pass",
+          "n_clusters": 52,
+          "largest_cluster_fraction": 0.0667,
+          "discordant_isolate_fraction": 0.0,
+          "effective_lineage_N_R": 22,
+          "effective_lineage_N_S": 30
+        },
+        "0.005": {
+          "minority": 16,
+          "verdict": "pass",
+          "n_clusters": 39,
+          "largest_cluster_fraction": 0.1,
+          "discordant_isolate_fraction": 0.0833,
+          "effective_lineage_N_R": 16,
+          "effective_lineage_N_S": 21
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_ceftriaxone/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "klebsiella_provdisjoint_ciprofloxacin",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ciprofloxacin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 10,
+          "verdict": "pass",
+          "n_clusters": 33,
+          "largest_cluster_fraction": 0.2,
+          "discordant_isolate_fraction": 0.0,
+          "effective_lineage_N_R": 10,
+          "effective_lineage_N_S": 23
+        },
+        "0.005": {
+          "minority": 2,
+          "verdict": "trip",
+          "n_clusters": 21,
+          "largest_cluster_fraction": 0.4833,
+          "discordant_isolate_fraction": 0.4833,
+          "effective_lineage_N_R": 2,
+          "effective_lineage_N_S": 18
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_ciprofloxacin/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "klebsiella_provdisjoint_gentamicin",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_gentamicin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 13,
+          "verdict": "pass",
+          "n_clusters": 32,
+          "largest_cluster_fraction": 0.2,
+          "discordant_isolate_fraction": 0.0833,
+          "effective_lineage_N_R": 17,
+          "effective_lineage_N_S": 13
+        },
+        "0.005": {
+          "minority": 7,
+          "verdict": "pass",
+          "n_clusters": 20,
+          "largest_cluster_fraction": 0.5333,
+          "discordant_isolate_fraction": 0.5667,
+          "effective_lineage_N_R": 11,
+          "effective_lineage_N_S": 7
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_gentamicin/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "klebsiella_provdisjoint_meropenem",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_meropenem/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 14,
+          "verdict": "pass",
+          "n_clusters": 40,
+          "largest_cluster_fraction": 0.2333,
+          "discordant_isolate_fraction": 0.3,
+          "effective_lineage_N_R": 14,
+          "effective_lineage_N_S": 23
+        },
+        "0.005": {
+          "minority": 5,
+          "verdict": "pass",
+          "n_clusters": 30,
+          "largest_cluster_fraction": 0.2333,
+          "discordant_isolate_fraction": 0.4667,
+          "effective_lineage_N_R": 5,
+          "effective_lineage_N_S": 21
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_meropenem/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     },
     {
       "cohort": "klebsiella_provdisjoint_tetracycline",
-      "status": "INSUFFICIENT_DATA",
-      "reason": "no assembly resolved under any searched root",
-      "n_accessions": 60,
-      "n_genomes_missing": 60,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_tetracycline/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ],
-      "n_resolved": 0,
-      "note": "a partial cohort yields LOWER-BOUND effective-lineage counts, which cannot be compared for exact equality"
+      "status": "OK",
+      "thresholds": {
+        "0.001": {
+          "minority": 25,
+          "verdict": "pass",
+          "n_clusters": 53,
+          "largest_cluster_fraction": 0.0667,
+          "discordant_isolate_fraction": 0.0,
+          "effective_lineage_N_R": 25,
+          "effective_lineage_N_S": 28
+        },
+        "0.005": {
+          "minority": 18,
+          "verdict": "pass",
+          "n_clusters": 46,
+          "largest_cluster_fraction": 0.1,
+          "discordant_isolate_fraction": 0.05,
+          "effective_lineage_N_R": 18,
+          "effective_lineage_N_S": 27
+        }
+      },
+      "genome_source_counts": {
+        "E:/dna_decode_xfer/raw/klebsiella_provdisjoint_tetracycline/refseq": 60,
+        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache": 0
+      }
     }
   ],
-  "blocked": [
-    {
-      "cohort": "campylobacter_provdisjoint_ciprofloxacin",
-      "reason": "missing assemblies",
-      "n_missing": 40,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/campylobacter_provdisjoint_ciprofloxacin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_gentamicin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "escherichia_coli_shigella_provdisjoint_tetracycline",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_tetracycline/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "klebsiella_provdisjoint_ceftriaxone",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ceftriaxone/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "klebsiella_provdisjoint_ciprofloxacin",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ciprofloxacin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "klebsiella_provdisjoint_gentamicin",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_gentamicin/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "klebsiella_provdisjoint_meropenem",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_meropenem/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    },
-    {
-      "cohort": "klebsiella_provdisjoint_tetracycline",
-      "reason": "missing assemblies",
-      "n_missing": 60,
-      "n_resolved": 0,
-      "searched_roots": [
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_tetracycline/refseq",
-        "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache"
-      ]
-    }
-  ],
-  "agreement_number_withheld": true,
-  "why_withheld": "A cohort whose assemblies do not all resolve produces LOWER-BOUND effective-lineage counts. Reporting an agreement rate over a partial cohort would compare a lower bound against an exact-equality clause, so no agreement number is emitted. INSUFFICIENT_DATA is a valid result.",
+  "blocked": [],
+  "agreement_number_withheld": false,
+  "why_withheld": null,
   "honest_limits": [
     "FracMinHash is not Mash's bottom-sketch MinHash, so agreement on these cohorts does not make the two estimators interchangeable in general.",
     "The thresholds (0.001, 0.005) were calibrated against MASH distances. Passing this bar shows sourmash reproduces Mash's PARTITION VERDICTS at those thresholds on these cohorts; it does not re-derive the thresholds.",

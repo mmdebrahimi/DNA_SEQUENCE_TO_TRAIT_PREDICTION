@@ -15,6 +15,7 @@ import pytest
 from dna_decode.eval import rejection_gates
 from scripts.sourmash_vs_mash_crosscheck import (
     INSUFFICIENT_DATA,
+    OK,
     BarRefused,
     eol_renderings,
     evaluate_clauses,
@@ -430,14 +431,52 @@ def test_sourmash_absent_exits_3_without_a_verdict(tmp_path, monkeypatch):
     assert not Path(f"{stem}.json").exists(), "exit 3 must not write a verdict"
 
 
-def test_the_live_run_is_insufficient_data_today():
-    """The committed artifact records the drive-gated state, not a silent pass."""
+def test_the_live_artifact_is_SELF_CONSISTENT_in_whatever_state_it_records():
+    """The committed artifact's status, exit code, blocked set and clauses must AGREE.
+
+    REWRITTEN 2026-10-19. The previous version asserted
+    `status == INSUFFICIENT_DATA and len(blocked) == 10`, with the reason
+    "all ten cohorts are blocked while D: is offline" -- a TRANSIENT state pinned as a
+    test. The assemblies arrived the same day (pulled from server2 over SSH), the run
+    scored OK on 20/20 pairs, and the assertion inverted. That is the exact trap this
+    repo already recorded elsewhere: a test that asserted two pgx regions were
+    unmeasurable, which flipped when both were fetched hours later. TEST THE BEHAVIOUR.
+
+    The durable invariant is INTERNAL AGREEMENT, which holds in every state and cannot
+    go stale: a verdict must never be reported alongside a blocked cohort, and an
+    INSUFFICIENT_DATA artifact must never carry a met clause. Both directions are
+    checked, so this cannot pass by the artifact simply being empty.
+    """
     path = REPO / "wiki" / "sourmash_vs_mash_crosscheck_2026-10-19.json"
     payload = json.loads(path.read_text(encoding="utf-8"))
-    assert payload["status"] == INSUFFICIENT_DATA
-    assert payload["exit_code"] == 2
-    assert payload["agreement_number_withheld"] is True
-    assert len(payload["blocked"]) == 10, "all ten cohorts are blocked while D: is offline"
+    status, code = payload["status"], payload["exit_code"]
+    blocked, clauses = payload["blocked"], payload["clauses"]
+    met = [c["met"] for c in clauses]
+
+    assert status in {OK, INSUFFICIENT_DATA, "CLAUSE_FAILED"}, status
+    assert clauses, "an artifact with no clauses records nothing"
+
+    if status == INSUFFICIENT_DATA:
+        assert code == 2
+        assert blocked, "INSUFFICIENT_DATA with nothing blocked is a contradiction"
+        assert all(m is None for m in met), "a blocked run must not evaluate a clause"
+        assert payload["agreement_number_withheld"] is True
+    elif status == OK:
+        assert code == 0
+        assert not blocked, "OK with a blocked cohort is a contradiction"
+        assert all(m is True for m in met), "OK requires every clause met"
+        assert payload["agreement_number_withheld"] is False
+    else:
+        assert code == 1
+        assert any(m is False for m in met), "CLAUSE_FAILED needs a failed clause"
+
+    # Provenance, only when the artifact is new enough to carry it: a root named as a
+    # genome source must actually have supplied genomes. Guarded on PRESENCE so an
+    # artifact written before the field existed is not retroactively failed -- the
+    # schema-drift version of the transient-state trap this test was rewritten to avoid.
+    if status == OK and "genome_sources" in payload:
+        sources = payload["genome_sources"] or {}
+        assert sum(sources.values()) > 0, "an OK run scored genomes from somewhere"
 
 
 # --------------------------------------------------------------------------- #

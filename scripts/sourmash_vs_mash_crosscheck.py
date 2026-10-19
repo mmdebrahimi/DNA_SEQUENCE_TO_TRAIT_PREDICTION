@@ -350,6 +350,28 @@ def resolve_genomes(
     return found, missing
 
 
+def genome_provenance(found: dict, roots: list[Path]) -> dict:
+    """`{root_as_posix: n_genomes}` -- WHICH root actually supplied each FASTA.
+
+    The artifact used to record only `find_refseq_cache()`'s answer, which names the
+    global cache that was FOUND, not the one that was USED. On 2026-10-19 that made the
+    artifact say the genomes came from `data/refseq_cache` while ZERO of the 490 cohort
+    accessions exist there -- every one resolved from the per-cohort root. A provenance
+    field that names a root contributing nothing is worse than no field, because a reader
+    cannot tell it apart from one that did the work. Counting per root is cheap and exact.
+    """
+    counts = {str(r).replace(chr(92), "/"): 0 for r in roots}
+    for path in found.values():
+        for r in roots:
+            try:
+                path.relative_to(r)
+            except ValueError:
+                continue
+            counts[str(r).replace(chr(92), "/")] += 1
+            break
+    return counts
+
+
 # --------------------------------------------------------------------------- #
 # main
 # --------------------------------------------------------------------------- #
@@ -476,7 +498,9 @@ def main(argv: list[str] | None = None) -> int:
                 "effective_lineage_N_R": structure["effective_lineage_N_R"],
                 "effective_lineage_N_S": structure["effective_lineage_N_S"],
             }
-        cells.append({"cohort": cohort, "status": OK, "thresholds": per_threshold})
+        cells.append({"cohort": cohort, "status": OK, "thresholds": per_threshold,
+                      "genome_source_counts": genome_provenance(
+                          genomes, genome_roots(cache, cohort_dir))})
 
     if blocked:
         status, exit_code = INSUFFICIENT_DATA, 2
@@ -498,7 +522,14 @@ def main(argv: list[str] | None = None) -> int:
         "bar_sha256": hashlib.sha256(
             (REPO / args.bar).read_bytes()).hexdigest(),
         "sourmash_params": {"ksize": args.ksize, "scaled": args.scaled},
-        "refseq_cache": str(cache).replace("\\", "/") if cache else None,
+        "refseq_cache_found": str(cache).replace(chr(92), "/") if cache else None,
+        "refseq_cache_note": ("the GLOBAL fallback root that find_refseq_cache() located. It is "
+                              "NOT necessarily where any genome came from -- read "
+                              "genome_sources for that."),
+        "genome_sources": {
+            root: sum(c.get("genome_source_counts", {}).get(root, 0) for c in cells)
+            for root in sorted({r for c in cells for r in c.get("genome_source_counts", {})})
+        },
         "n_pairs_expected": len(reference),
         "n_pairs_observed": len(observed),
         "clauses": clauses,
