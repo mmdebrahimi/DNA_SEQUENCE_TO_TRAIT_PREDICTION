@@ -573,3 +573,32 @@
 **Lesson:** When code must agree with an existing artifact, **delegate to the module that produced that artifact rather than re-reading its input** — and treat a green suite over fixtures you authored as evidence about your fixtures, not about the format, because a parser built on an invented schema and tests built on the same invented schema are one claim asserted twice. The failure mode to fear is not the crash: this would have returned a well-formed, in-range, confidently-worded negative result that the script's own documentation pre-labelled as a finding. Second: a content hash is only as pinned as the file's line endings — hashing a file that `.gitattributes` does not normalise produces a digest that is a property of the checkout, so record both digests and compare the normalised one. Third: when an agent hands back a causal attribution, test it before repeating it; "missing data, not git" and "git is the enabling cause" were both defensible from the error text, and only one names the change that flipped the result.
 
 ---
+
+## [retrospective: a pre-committed honest verdict that was byte-identical to a path bug's output] 2026-10-19
+**Salience:** HIGH
+**Session:** freeform (/soraya, cross-session recovery from server2)
+**Modules:** scripts/sourmash_vs_mash_crosscheck.py, tests/test_sourmash_vs_mash_crosscheck.py, CLAUDE.md, data/raw/*_provdisjoint_*/
+**Corrections:** (1) I reported Step 5 as an EXTERNAL wall needing a physically-absent third disk. Wrong --
+all four assets were on server2 (`DESKTOP-SJG795O`) on an attached Seagate Portable USB drive as its `D:`.
+(2) I asserted twice -- to the user and to a peer session -- that *the accession set is compared for exact
+equality by clause 2*. The bar contains the string `accession` ZERO times: clause 2 compares the MINORITY
+EFFECTIVE-LINEAGE COUNT on 3 near-bar pairs, clause 1 compares verdicts and is self-labelled nearly vacuous,
+clause 3 requires the one TRIP to reproduce. The false claim lived in CLAUDE.md and I inherited it.
+(3) CLAUDE.md said `680 entries, so the GENOMES are here`; 214 of those 680 are EMPTY dirs and only 465 hold
+a genome.fna. (4) The cohorts are 580 LINES but 490 UNIQUE accessions -- 62 recur across cohorts, max 4x.
+**Reversals:** none.
+**Discoveries:** `resolve_genomes` searched only a GLOBAL refseq cache (`<cache>/<acc>/`), but the ten
+provdisjoint cohorts store assemblies PER COHORT at `data/raw/<cohort>/refseq/<acc>/`. Measured on two
+independent hosts: 0 of the 490 accessions have even a DIRECTORY in a global cache (680 entries here, 1204
+on server2). Also: with `data/raw` empty, `build_manifest()` returns 0 cohorts with `incomplete=False`, so
+`prior_accessions` is EMPTY and consumers stamp `manifest_complete: true` -- a leakage gate that passes
+because it has nothing to check. Recovering the labels moved it 0 -> 490, but the latent class remains and
+`cohort_manifest.py` is one of the five sha256-pinned files, so a guard there is a USER AUTHORITY call.
+**Lesson:** When a bar PRE-COMMITS a benign verdict for missing inputs (`INSUFFICIENT_DATA` is a valid
+result), a wrong path model produces that exact verdict and the artifact cannot distinguish the two. The
+fix is not a better guess at the path but RECORDING WHAT WAS LOOKED FOR -- `searched_roots` + `n_resolved`
+in the record -- so a future reader can tell `absent data` from `wrong directory`. Before trusting a clean-
+looking total failure, check that the lookup could have succeeded at all: old path finds 0, new finds 1 on
+the same fixture. Same family as this repo's vacuous-filter and vacuous-guard retractions.
+
+---
