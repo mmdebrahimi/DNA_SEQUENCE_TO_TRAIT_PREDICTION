@@ -10,3 +10,16 @@ dna_decode/data/shipped_decoder_surface.py text eol=lf
 dna_decode/eval/cohort_manifest.py      text eol=lf
 dna_decode/data/sarscov2_amr.py         text eol=lf
 scripts/sarscov2_caller.py              text eol=lf
+
+# Integrity-pinned DATA. `data/raw/tb_lineage_barcode/CHECKSUMS` pins the UPSTREAM
+# (tbdb commit 618cf0ff) sha256, which is the LF digest -- so a Windows CRLF checkout
+# fails the pin with 'barcode drift' when not one character has changed. Measured
+# 2026-10-19: on-disk CRLF hashed f8357f509e7a, LF-normalised 9c0567304561, and the pin
+# is 9c0567304561. Third instance of this class in one day (the other two: the frozen
+# AMR surface above, and wiki/provdisjoint_lineage_metrics.json, whose scorer was taught
+# to compare EOL renderings because its bar is a frozen pre-commitment that must not be
+# edited). Only genuinely TEXT files belong here: `data/` also holds .gz/.zip/.xlsx/.docx
+# /.pdf whose compressed bytes contain 0d0a, and declaring those `text` would CORRUPT
+# them on checkout -- git already auto-detects them as binary (verified: on-disk size ==
+# blob size after a restore).
+data/raw/tb_lineage_barcode/barcode.bed text eol=lf
