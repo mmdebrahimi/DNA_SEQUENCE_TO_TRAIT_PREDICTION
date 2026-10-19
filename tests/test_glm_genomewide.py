@@ -288,3 +288,76 @@ def test_the_REAL_expression_column_is_ALREADY_dna_normalised():
             if i >= 20000:
                 break
     assert abs(spearman(rna, dna)) < 0.15, "RNA_exp_ave must be independent of DNA_ave"
+
+
+# ---------------------------------------------------------------------------------------------------
+# artifact SELF-CONSISTENCY: prose numbers must match the file's own derived fields
+#
+# The committed artifact's `honest_limits` restated the fragment length range as "48-475 bp with 280
+# distinct lengths" -- a 40,000-row SAMPLE figure -- while its OWN `load_stats.LB` recorded the full
+# file as 48-499 / 359. A hardcoded prose string contradicting a derived field in the same document.
+# The producer was fixed to derive the string, but NOTHING pinned it, so a future edit could
+# re-hardcode it silently. These guards are artifact-level on purpose: they catch the defect CLASS
+# (prose disagreeing with the data beside it) rather than one string's spelling.
+# ---------------------------------------------------------------------------------------------------
+ORACLE = Path(__file__).resolve().parent.parent / "wiki" / "glm_genomewide_oracle_2026-10-07.json"
+
+
+def _fragment_limit_line(artifact):
+    hits = [x for x in artifact["honest_limits"] if x.startswith("Fragments are ")]
+    assert len(hits) == 1, f"expected exactly one fragment-length honest_limit, got {len(hits)}"
+    return hits[0]
+
+
+@pytest.mark.skipif(not ORACLE.is_file(), reason="oracle artifact not present")
+def test_the_oracle_prose_length_range_matches_its_OWN_load_stats():
+    """THE REGRESSION: the restated range must equal the file's own derived LB stats."""
+    import json
+    import re
+
+    art = json.loads(ORACLE.read_text(encoding="utf-8"))
+    st = art["load_stats"]["LB"]
+    line = _fragment_limit_line(art)
+    m = re.search(r"Fragments are (\d+)-(\d+) bp with (\d+) distinct lengths", line)
+    assert m, f"could not parse the length claim from: {line[:120]}"
+    lo, hi, nd = (int(g) for g in m.groups())
+    assert (lo, hi, nd) == (st["length_min"], st["length_max"], st["n_distinct_lengths"]), (
+        f"prose says {lo}-{hi}/{nd} but this artifact's own load_stats.LB says "
+        f"{st['length_min']}-{st['length_max']}/{st['n_distinct_lengths']} -- a document "
+        "contradicting itself. Derive the string from load_stats; do not restate it.")
+
+
+@pytest.mark.skipif(not ORACLE.is_file(), reason="oracle artifact not present")
+def test_the_self_consistency_guard_is_not_vacuous():
+    """NON-VACUITY: the regex must really extract three numbers that COULD disagree.
+
+    Without this, a guard whose regex silently failed to match would pass forever.
+    """
+    import json
+    import re
+
+    art = json.loads(ORACLE.read_text(encoding="utf-8"))
+    line = _fragment_limit_line(art)
+    m = re.search(r"Fragments are (\d+)-(\d+) bp with (\d+) distinct lengths", line)
+    assert m and len(m.groups()) == 3
+    lo, hi, nd = (int(g) for g in m.groups())
+    assert hi > lo and nd > 1, "a degenerate range would make the comparison meaningless"
+    # and the stale SAMPLE figures must not have come back
+    assert (lo, hi, nd) != (48, 475, 280), "the superseded 40k-row sample figure is back"
+
+
+@pytest.mark.skipif(not ORACLE.is_file(), reason="oracle artifact not present")
+def test_a_post_hoc_edit_to_the_oracle_is_RECORDED_not_silent():
+    """A committed result artifact that was corrected after the run must say so, with the old value.
+
+    Editing a run record silently is worse than the contradiction it fixes: a reader cannot tell a
+    measurement from a later repair.
+    """
+    import json
+
+    art = json.loads(ORACLE.read_text(encoding="utf-8"))
+    corrections = art.get("post_hoc_corrections")
+    assert corrections, "the oracle was corrected post-hoc; the correction must be recorded"
+    for c in corrections:
+        for key in ("date", "field", "was", "now", "why"):
+            assert c.get(key), f"correction record missing {key!r}"

@@ -201,10 +201,20 @@
   },
   "honest_limits": [
     "The model arms run on a SUBSAMPLE (6-mers are 4096 features); the ceiling and the condition effect use the FULL data.",
-    "Fragments are 48-475 bp with 280 distinct lengths, so the designed grid's winning positional-onehot feature is NOT applicable without an anchor, and no anchor is obviously right. Only length-invariant k-mer features are used -- the comparison to the grid's 0.5914 one-hot number is therefore NOT like-for-like.",
+    "Fragments are 48-499 bp with 359 distinct lengths (derived from load_stats, not restated), so the designed grid's winning positional-onehot feature is NOT applicable without an anchor, and no anchor is obviously right. Only length-invariant k-mer features are used for the fragment arm -- the comparison to the grid's 0.5914 one-hot number is therefore NOT like-for-like.",
     "The designed-grid numbers cannot be ceiling-normalised (GSE108535 has no replicates), so 'fraction of ceiling' exists only on this substrate. Do not compare the two fractions.",
     "A fragment straddling a held-block boundary is assigned by midpoint, so a little sequence can cross the seam; with 10 blocks that is 2 seams over ~4.64 Mb.",
     "Expression is RNA_exp_ave, which is ALREADY DNA-normalised (measured: spearman with DNA_ave = -0.039). It is NOT divided by DNA_ave again.",
     "97% of fragments carry a single integrated barcode, which is why the replicate-derived ceiling is low (~0.79) and why it must be quoted with every model number."
+  ],
+  "post_hoc_corrections": [
+    {
+      "date": "2026-10-19",
+      "field": "honest_limits[1]",
+      "was": "Fragments are 48-475 bp with 280 distinct lengths, so the designed grid's winning positional-onehot feature is NOT applicable without an anchor, and no anchor is obviously right. Only length-invariant k-mer features are used -- the comparison to the grid's 0.5914 one-hot number is therefore NOT like-for-like.",
+      "now": "Fragments are 48-499 bp with 359 distinct lengths (derived from load_stats, not restated), so the designed grid's winning positional-onehot feature is NOT applicable without an anchor, and no anchor is obviously right. Only length-invariant k-mer features are used for the fragment arm -- the comparison to the grid's 0.5914 one-hot number is therefore NOT like-for-like.",
+      "why": "the prose restated a 40,000-row SAMPLE figure (48-475 bp / 280 distinct lengths) and CONTRADICTED this artifact's own full-file load_stats.LB (48-499 / 359). Corrected from THIS FILE's own load_stats -- no new data was used and the run was not re-executed. scripts/glm_genomewide_oracle.py was already fixed to derive the string; only this committed artifact was stale, because regenerating it needs the absent D:/dna_decode_cache/mpra substrate.",
+      "numbers_unchanged": "every measured value is untouched; this corrects a prose restatement only"
+    }
   ]
 }
