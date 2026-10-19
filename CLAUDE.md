@@ -139,7 +139,7 @@ nothing and the only symptom is datasets reporting absent. `dna_decode/data/exte
 drive for the signature dirs and **REFUSES to auto-substitute** (a right NAME is not evidence of the right
 CONTENTS — adopting `E:` would convert a loud missing-ROOT into a quiet missing-DATASET); its report is
 attached to every `data_inventory` run. Locally: `data/` is a REAL C: directory (`dir /AL data` finds no
-reparse point) with ~4.0 GB `refseq_cache` (680 entries, so the GENOMES are here), `raw/`+`processed/`
+reparse point) with ~4.0 GB `refseq_cache` (680 entries but only **465 hold a `genome.fna`** -- 214 are EMPTY shells, measured 2026-10-19: a DIRECTORY count is not a genome count), `raw/`+`processed/`
 **EMPTY**. **The 580-accession cohort labels `data/raw/*/selected.tsv` are gitignored (`/data/*`,
 `.gitignore:4`) — 0 tracked, absent from `E:`, and the committed validation artifacts carry only aggregate
 counts — so they are NOT recoverable from this repo, and rebuilding the cohort would change the accession
