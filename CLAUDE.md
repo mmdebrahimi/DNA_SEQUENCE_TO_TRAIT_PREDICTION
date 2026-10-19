@@ -113,7 +113,7 @@ Plus `tools/` (Stage 2 bioinformatics-tool runner via Docker Desktop — `docker
 
 ## Where files live on this host (D: rule, enforced 2026-09-01)
 
-**Every heavy/extra file for this project lives on D:, never C:.** C: runs at ~85-99% full; D: has ~4.1 TB
+**Every heavy/extra file for this project lives on D:, never C:.** C: runs at ~85-99% full (measured 2026-10-19: 476 GB, 66 GB free); the D: disk had ~4.1 TB
 free. This is a standing user rule and it is not tidiness — it changes what work is possible.
 
 | what | where |
@@ -126,14 +126,29 @@ free. This is a standing user rule and it is not tidiness — it changes what wo
 
 Junction created 2026-09-01; recreate with `MSYS_NO_PATHCONV=1 cmd /c "mklink /J data D:\dna_decode_data"`.
 
-**STATE HERE, measured 2026-10-19 — the junction is GONE and the rule UNSATISFIABLE here.** `D:` enumerates
-as removable with no media, no `E:` either, so no `D:/` path resolves; `data/` is a REAL C: directory
-(`dir /AL data` finds no reparse point), ~4.0 GB of `refseq_cache`, `raw/`+`processed/` EMPTY.
-**52 of 59 files tracked under `data/` in origin/main are MISSING locally (61 repo-wide);
-`git commit -a` would record deletions.** The rule STANDS wherever D: is attached. **The project is also
-NOW its own git repo (init'd in place 2026-10-19; `origin` = `DNA_SEQUENCE_TO_TRAIT_PREDICTION.git`,
-HEAD == `origin/main` cba3125, nothing committed)** — `git rev-parse --show-toplevel` used to return HOME, remote
-`Guided-Capstone.git`: the anchoring hazard that made ad-hoc `git diff --quiet` frozen-checks vacuous.
+**STATE HERE, measured 2026-10-19 (pm) — the junction is GONE, and THE DRIVE LETTER IS NOT RELIABLE.**
+`D:` is a card-reader slot with **no media** (disk 1, `Generic Mass-Storage`, 0 GB, RAW), so no `D:/` path
+resolves — and an earlier version of this line said *"no `E:` either"*, which is now FALSE: **`E:` is a
+931.5 GB ST1000LM024 with 925.4 GB free**. It is **NOT the dna_decode data drive** — it holds
+`PythonProjects/` + `Recovery/` + `Videos-kept/`, and its one `dna_decode_cache` (nested at
+`E:/PythonProjects/dna_decode_cache`, NOT the drive root) holds only `amr_portal` + `mpra` with **no
+`refseq`**. The disk carrying `refseq`/embeddings/ProteinGym is a DIFFERENT physical disk, still absent, so
+the "~4.1 TB free" figure above describes neither attached drive. **429 occurrences across 197 files name a
+literal `D:/` path (389 of them `D:/dna_decode_cache`)**, so a letter change silently points all of them at
+nothing and the only symptom is datasets reporting absent. `dna_decode/data/external_root.py` probes every
+drive for the signature dirs and **REFUSES to auto-substitute** (a right NAME is not evidence of the right
+CONTENTS — adopting `E:` would convert a loud missing-ROOT into a quiet missing-DATASET); its report is
+attached to every `data_inventory` run. Locally: `data/` is a REAL C: directory (`dir /AL data` finds no
+reparse point) with ~4.0 GB `refseq_cache` (680 entries, so the GENOMES are here), `raw/`+`processed/`
+**EMPTY**. **The 580-accession cohort labels `data/raw/*/selected.tsv` are gitignored (`/data/*`,
+`.gitignore:4`) — 0 tracked, absent from `E:`, and the committed validation artifacts carry only aggregate
+counts — so they are NOT recoverable from this repo, and rebuilding the cohort would change the accession
+set, which clause 2 of a derived bar compares for EXACT equality.** 52 of 59 files tracked under `data/` are
+missing locally (61 repo-wide), so **`git commit -a` would record deletions** — they are unreachable, not
+deleted. The D: rule STANDS wherever the right disk is attached. **The project is also NOW its own git repo
+(init'd in place 2026-10-19; `origin` = `DNA_SEQUENCE_TO_TRAIT_PREDICTION.git`, HEAD == `origin/main`
+fc8b1f2)** — `git rev-parse --show-toplevel` used to return HOME, remote `Guided-Capstone.git`: the
+anchoring hazard that made ad-hoc `git diff --quiet` frozen-checks vacuous.
 Repo-gated tests now RUN.
 
 **Before declaring a "disk full" or "tool not installed" wall, check D: — when it is attached.** The PEAR G6

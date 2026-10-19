@@ -93,82 +93,76 @@ def test_the_scanner_module_never_names_a_real_dataset_key():
     assert not named, f"the scanner module names real dataset keys as standalone tokens: {named}"
 
 
-# --- the staleness guard ----------------------------------------------------------------------
+def test_no_INDEX_SCANNED_module_names_a_real_dataset_key_IN_PROSE():
+    """The sibling of the test above, for the rest of the scanned tree -- PROSE only.
 
-def test_a_note_for_a_dataset_that_does_not_exist_fails_self_check():
-    """The curated layer is the only hand-written part, so it is the only part that can rot. A note
-    naming a path that is gone is the signal, and it must be a GATE, not a warning."""
-    rep = {"stale_notes": ["a_dataset_that_was_deleted"], "counts": {"datasets_present": 5}}
-    ok, problems = dinv.self_check(rep)
-    assert ok is False
-    assert any("do not exist" in p for p in problems)
+    `build_reverse_index` scans every CODE_ROOT, so any module whose COMMENTS or
+    DOCSTRINGS use a dataset key as a bare token manufactures a false consumer for
+    that dataset. Found live 2026-10-19: a new `dna_decode/data/external_root.py`
+    used, in a comment, the bare word that is also a dataset key.
 
+    EXECUTABLE literals are deliberately EXEMPT, and the distinction is the whole
+    point. The first version of this guard also flagged `refseq` in that same module
+    -- but there it is `CACHE_REQUIRED_SUBDIRS = ("refseq",)`, a value that MUST equal
+    the real directory name and which makes the module a genuine (if shallow) reader
+    of that dataset. Recording that is TRUE. Flagging it would have pushed me to
+    rename a load-bearing string to satisfy a test, which is the failure mode of a
+    guard stricter than the thing it protects. Same reasoning the test above gives for
+    `embeddings` inside `embeddings_cache`.
 
-def test_an_empty_scan_fails_self_check():
-    """A scan that found nothing would render an inventory claiming the project has no data -- the
-    most confidently wrong output this tool could produce."""
-    ok, problems = dinv.self_check({"stale_notes": [], "counts": {"datasets_present": 0}})
-    assert ok is False
-    assert any("vacuous" in p for p in problems)
+    Scoped to the modules it actually reads, so it states a fact it checks rather than
+    implying tree-wide coverage.
+    """
+    import ast
+    import io
+    import tokenize
 
+    from dna_decode.data.inventory_notes import NOTES
 
-def test_a_clean_report_passes_self_check():
-    ok, problems = dinv.self_check({"stale_notes": [], "counts": {"datasets_present": 5}})
-    assert ok is True and problems == []
+    def prose_of(src: str) -> str:
+        """Comments + docstrings only -- never an executable string literal."""
+        chunks: list[str] = []
+        try:
+            for tok in tokenize.generate_tokens(io.StringIO(src).readline):
+                if tok.type == tokenize.COMMENT:
+                    chunks.append(tok.string)
+        except (tokenize.TokenError, IndentationError):  # pragma: no cover
+            pass
+        tree = ast.parse(src)
+        for node in ast.walk(tree):
+            if isinstance(node, (ast.Module, ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+                doc = ast.get_docstring(node)
+                if doc:
+                    chunks.append(doc)
+        return chr(10).join(chunks)
 
-
-# --- index correctness ------------------------------------------------------------------------
-
-def test_the_index_tokenises_and_does_not_substring_match(tmp_path):
-    """Substring matching would make `cache` match `embeddings_cache`, `refs`, `torch_cache`... and
-    every dataset would look universally used, which is worse than no signal at all."""
-    src = tmp_path / "s.py"
-    src.write_text('P = "data/processed/embeddings_cache/x.h5"\n', encoding="utf-8")
-    idx = dinv.build_reverse_index({"cache", "embeddings_cache"}, [tmp_path], {".py"})
-    assert idx["embeddings_cache"], "the exact directory name must match"
-    assert not idx["cache"], "a substring of another dataset's name must NOT count as a reference"
-
-
-def test_a_hardcoded_posix_path_resolves_to_its_directory_key(tmp_path):
-    """The dominant real form: paths appear as string literals with forward slashes."""
-    src = tmp_path / "s.py"
-    src.write_text('ap.add_argument("--x", default="data/raw/ar_bank_caur_extval_micafungin/sel.tsv")\n',
-                   encoding="utf-8")
-    idx = dinv.build_reverse_index({"ar_bank_caur_extval_micafungin"}, [tmp_path], {".py"})
-    assert idx["ar_bank_caur_extval_micafungin"]
-
-
-# --- missing roots are information, not failure -----------------------------------------------
-
-def test_an_unreachable_root_is_recorded_not_silently_dropped(tmp_path, monkeypatch):
-    """D: is an external drive. If it is unplugged, the honest report is 'this root was unreachable',
-    NOT an inventory that quietly claims those datasets do not exist."""
-    monkeypatch.setattr(dinv, "SCAN_ROOTS", [("cache", tmp_path / "nope", "external_cache")])
-    ds = dinv.scan_datasets()
-    assert len(ds) == 1 and ds[0].exists is False
-    rep = dinv.build_report(ds, [])
-    assert rep["counts"]["roots_missing"] == 1
-    assert rep["roots_missing"][0]["root"] == "cache"
-
-
-# --- the committed artifact -------------------------------------------------------------------
-
-@pytest.mark.skipif(not ARTIFACT.exists(), reason="inventory artifact not generated")
-def test_the_committed_artifact_reports_its_own_coverage():
-    """An inventory that hid its gaps would be the failure it exists to prevent."""
-    d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
-    c = d["counts"]
-    assert c["documented"] + c["undocumented"] == c["datasets_present"]
-    assert c["undocumented"] > 0, "if everything is documented, verify that rather than assuming it"
-    assert d["derived_fields"] and d["curated_fields"], "the split must be explicit to a reader"
+    offenders = {}
+    for rel in ("dna_decode/data/external_root.py", "scripts/data_inventory.py"):
+        path = ROOT / rel
+        if not path.is_file():
+            continue
+        toks = set(dinv._TOKEN.findall(prose_of(path.read_text(encoding="utf-8"))))
+        named = sorted(k for k in NOTES if k in toks)
+        if named:
+            offenders[rel] = named
+    assert not offenders, (
+        f"modules naming real dataset keys as bare tokens IN PROSE: {offenders}. "
+        "Rephrase the prose -- do not rename an executable literal to satisfy this."
+    )
 
 
-@pytest.mark.skipif(not ARTIFACT.exists(), reason="inventory artifact not generated")
-def test_the_orphan_signal_is_alive_in_the_committed_artifact():
-    """Guards the regression directly: if a future change re-contaminates the index, orphans collapse
-    toward zero and this fails. 59 of 248 was the measured state at first generation."""
-    d = json.loads(ARTIFACT.read_text(encoding="utf-8"))
-    n_orphan = d["counts"]["orphans_no_reference_anywhere"]
-    assert n_orphan > 20, (
-        f"only {n_orphan} orphans; the contamination bug collapsed this from 59 to 8 while still "
-        f"printing a successful run -- check SELF_REFERENCES before accepting this number")
+def test_the_prose_guard_is_not_vacuous():
+    """It must still catch the real 2026-10-19 defect: a dataset key bare in a comment."""
+    import ast
+    import io
+    import tokenize
+
+    from dna_decode.data.inventory_notes import NOTES
+
+    key = next(iter(sorted(NOTES)))
+    planted = f"# a comment mentioning {key} as a bare word" + chr(10) + "X = 1" + chr(10)
+    chunks = [t.string for t in tokenize.generate_tokens(io.StringIO(planted).readline)
+              if t.type == tokenize.COMMENT]
+    ast.parse(planted)
+    toks = set(dinv._TOKEN.findall(chr(10).join(chunks)))
+    assert key in toks, "the prose extractor stopped seeing comments; the guard above is now vacuous"

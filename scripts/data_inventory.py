@@ -56,6 +56,11 @@ SCAN_ROOTS: list[tuple[str, Path, str]] = [
     ("raw", ROOT / "data" / "raw", "cohort"),
     ("processed", ROOT / "data" / "processed", "processed"),
     ("ref", ROOT / "data", "reference"),
+    # The LETTER here is an accident of which slot the removable disk occupied when this
+    # line was written. It is deliberately NOT auto-resolved -- see
+    # dna_decode/data/external_root.py for why substituting a same-named root with
+    # different CONTENTS is worse than reporting it absent. build_report() attaches a
+    # probe when this root is missing, so the condition is diagnosed rather than silent.
     ("cache", Path("D:/dna_decode_cache"), "external_cache"),
 ]
 
@@ -266,6 +271,51 @@ def size_str(d: Dataset) -> str:
     return "?"
 
 
+def _external_root_probe() -> dict:
+    """What the `external_cache` root actually resolves to, and what the alternatives hold.
+
+    Attached to EVERY report, not only a failing one, so "the drive was fine" is
+    recorded rather than inferred from the absence of a complaint. Fail-soft: a drive
+    scan that raises must not take the whole inventory with it.
+    """
+    configured = Path("D:/dna_decode_cache")
+    try:
+        from dna_decode.data.external_root import (
+            CACHE_REQUIRED_SUBDIRS,
+            describe,
+            probe,
+            resolve_external_root,
+        )
+    except Exception as exc:  # pragma: no cover - import guard
+        return {"status": "probe_unavailable", "detail": repr(exc)}
+    try:
+        _, status = resolve_external_root(configured, required=CACHE_REQUIRED_SUBDIRS)
+        cands = probe()
+        return {
+            "configured": str(configured).replace(chr(92), "/"),
+            "configured_exists": configured.is_dir(),
+            "status": status,
+            "required_subdirs": list(CACHE_REQUIRED_SUBDIRS),
+            "candidates": [
+                {
+                    "path": str(c.path).replace(chr(92), "/"),
+                    "holds": list(c.entries),
+                    "missing_required": list(c.missing(CACHE_REQUIRED_SUBDIRS)),
+                    "fit": c.has(CACHE_REQUIRED_SUBDIRS),
+                }
+                for c in cands
+            ],
+            "human": describe(configured, required=CACHE_REQUIRED_SUBDIRS),
+            "note": (
+                "NOT auto-resolved. A directory of the right NAME is not evidence of the "
+                "right CONTENTS; pointing the project at an unfit root converts a loud "
+                "missing-root into a quiet missing-dataset."
+            ),
+        }
+    except Exception as exc:  # pragma: no cover - defensive
+        return {"status": "probe_failed", "detail": repr(exc)}
+
+
 def build_report(datasets: list[Dataset], stale: list[str]) -> dict:
     present = [d for d in datasets if d.exists]
     documented = [d for d in present if d.documented]
@@ -273,6 +323,7 @@ def build_report(datasets: list[Dataset], stale: list[str]) -> dict:
     missing_roots = [d for d in datasets if not d.exists]
     return {
         "schema": "data-inventory-v1",
+        "external_root_probe": _external_root_probe(),
         "date": str(_date.today()),
         "purpose": "Answer 'do we already have this, and has anything already used it?' without a "
                    "context window that holds the whole tree.",
