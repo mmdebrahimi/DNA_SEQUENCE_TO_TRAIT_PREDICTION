@@ -5,6 +5,105 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Added — a native-Windows genome-distance route, with its thresholds explicitly NOT yet valid (2026-10-19)
+
+`dna_decode/eval/sourmash_distance.py` produces an `eval.phylogeny.DistanceMatrix` from sourmash
+FracMinHash sketches, so it drops straight into
+`clonality.greedy_representative_clusters_from_matrix` wherever `compute_mash_distances` was the only
+producer. Evaluation-layer only — no decoder change, no CLI surface, no new console entry point. Behind
+the optional `lineage` extra (`uv sync --extra lineage`).
+
+**It exists because Mash is unreachable natively on this host, not because it is better.** The Mash v2.3
+release ships only `mash-Linux64` / `mash-OSX64` and bioconda publishes no `win-64`, so Mash has exactly
+two routes here — Docker or WSL2 — and both need the same BIOS-gated virtualization layer. `sourmash`
+ships a `win_amd64` wheel.
+
+**FracMinHash is NOT Mash's bottom-sketch MinHash, so the repo's fixed `(0.001, 0.005)` clonality
+thresholds were calibrated against a DIFFERENT estimator and are ASSUMED, not measured.** Do not read a
+sourmash partition as interchangeable with a Mash partition until
+`scripts/sourmash_vs_mash_crosscheck.py` clears its bar at
+`wiki/sourmash_vs_mash_crosscheck_bar.json` (frozen by `scripts/freeze_crosscheck_bar.py` **before any
+agreement number existed**; three clauses — verdict identity on all 20 (cell, threshold) pairs, exact
+minority-count agreement within ±2 of the bar, and reproduction of every Mash TRIP).
+
+**The crosscheck RAN and returned exit 2 `INSUFFICIENT_DATA`** — all 10 cohorts blocked, 0 of 20 pairs
+observed, because `data/raw/` carries no cohort `selected.tsv` on this host. That is the working-tree data
+gap recorded in `CLAUDE.md`'s D: section, not a property of the method; re-run once `data/raw/` is
+restored. Artifacts: `wiki/sourmash_vs_mash_crosscheck_2026-10-19.{md,json}`.
+
+Measured surface notes that cost a plan assumption (in the module docstring): `MinHash(n, ...)` takes `n`
+positionally and `n=0` + `scaled=N` selects FracMinHash; `add_sequence(..., force=True)` is required for
+real assemblies (N runs / IUPAC codes); and `jaccardANIResult.ani` is **`None`** whenever
+`size_is_inaccurate` — which is why `SketchTooSmall` exists, since a `None`/NaN distance silently clusters
+as "far from everything".
+
+Also added: `scripts/live_vs_sg8_delta.py` (live-tree vs sg8 divergence diagnostic) and
+`scripts/freeze_crosscheck_bar.py`. Tests: `tests/test_sourmash_distance.py`,
+`tests/test_sourmash_vs_mash_crosscheck.py`, `tests/test_live_vs_sg8_delta.py`.
+
+### Added — a phylogeny de-confounding instrument, BUILT and explicitly NOT CALIBRATED (2026-10-09)
+
+F3. `REQUIRES_DECONFOUNDING` has told callers to de-confound since the regime map shipped, without recording
+whether the instrument that would do it has ever been shown to work. This builds that instrument and
+**registers that it is uncalibrated**, rather than letting a tested code path pass for a validated tool.
+Evaluation-layer only — no decoder change, no CLI surface, no new console entry point. Frozen AMR surface
+byte-unchanged and the 2026-08-31 prospective lock re-verifies. Suite 6238 → 6343 passed, 0 failed.
+
+**Verdict `blocked:positive_control_not_fold_compatible`, a pre-registered outcome of the plan rather than a
+partial result. No calibration metrics were emitted and none should be quoted from this run.** What exists is
+a grouped-CV path that is tested; what does **not** exist is evidence that it responds differentially to real
+population structure, so **a grouped number from it is not yet evidence of de-confounding.**
+
+- **`eval/genomic_prediction.py` — a grouped-fold seam.** `cv_ridge_gp` / `cv_model_gp` take keyword-only
+  `groups=`, and `groups=None` is a **bit-for-bit no-op**, proven against the pre-change module extracted
+  from `git HEAD` rather than against hardcoded goldens (ridge over 3 seeds, gbm, and the NaN-filter path all
+  identical; anchor `predictive_r = 0.4723343055050292`). The seam is `folds`, which both entry points
+  already hand to the permutation null, so **a grouped run has a grouped null by construction** — asserted by
+  capturing `id(folds)` across the measured run and every null draw, for both paths, not inferred. Also fixes
+  a latent alpha-selection leak: the inner split was a positional slice and now splits by whole group.
+- **`eval/panel_structure.py` (new)** — IBS distance over a dense genotype matrix (Mash deliberately not
+  used: IBS is the direct measurement where a sketch would be a proxy), a clustering threshold **swept over
+  the panel's own distance percentiles and selected by the guards**, and `pc1_variance_fraction`.
+- **Two plan premises died on measurement.** (1) **There is no cached natural-population Arabidopsis genotype
+  matrix** — `data/arabidopsis/` holds phenotypes only; the sole cached Arabidopsis genotypes are
+  `arabmagic`, a *constructed* multi-parent panel. The premise came from reading a directory listing, which
+  is the failure the plan's own Step 1 exists to prevent. (2) **`pc1` cannot select a structured panel.** The
+  plan pre-registered "highest measured `pc1_variance_fraction`"; measured, that rule is self-contradictory
+  here — under raw pc1 the one natural population ranks third and under excess-over-its-own-null it ranks
+  **last** (2.00) while the top panel is **`bloom` (7.91), the bi-parental cross that must be the NEGATIVE
+  control** — because pc1 = LD **+** structure and a cross maximises LD by construction. Controls are
+  therefore selected **BY CONSTRUCTION** from each panel's `design` field, fixed before any number was read,
+  with a test pinning that the selector never reads `pc1`; cluster shape agrees by a different route.
+- **Why it is blocked, and the blocker is a substrate not a bug.** All four cached panels are intact (bloom
+  1008×11623, arabmagic 703×1260, bxd 198×7320, dgrp 205×12365 — full parse, not a presence check). But a
+  grouping can clear the panel-level 60% dominant-cluster bound and still be unusable for *k*-fold CV, where
+  a group above **n/k** forces one fold over its share: across the whole ladder `dgrp` has **no rung that is
+  both fold-compatible (largest ≤ 1/5) and not mostly singletons** (p1–p30 are 66–84% singletons; p40–p50
+  fail both; p60 is 0.522 > 1/5). The three crosses each have such a rung. **Unblocking means acquiring a
+  natural-population panel whose relatedness is not concentrated in one clump — a USER decision.**
+- **The criterion is a CONTRAST between two controls, which is what makes them a pair.** A natural panel may
+  carry structure *and* real functional signal, and a correct de-confounder removes the former while leaving
+  the latter — so an absolute "the positive control falls to its own null" bar would condemn a working
+  instrument. Both adverse verdicts are genuinely reachable (`INVALID_OVER_AGGRESSIVE`,
+  `INVALID_INSENSITIVE`) and all 8 verdict states have a test that reaches them.
+- **`eval/regime.py::DECONFOUNDER_CALIBRATION` + `deconfounder_calibration_status()`** record the status
+  (`BUILT_NOT_CALIBRATED`), what is and is **not** established, the blocker and the unblock, and surface it
+  as a condition on **every** `REQUIRES_DECONFOUNDING` screen (so it also prints from
+  `scripts/regime_map.py --screen`). **Augment-only, verified by a with/without diff over all 144
+  (population, endpoint, method, target, claim) combinations** — conditions only, nothing else touched.
+- Scripts: `scripts/f3_substrate_census.py` (read-only integrity + structure census, exit 0 always) and
+  `scripts/f3_deconfound_calibration.py` (double-control harness, 8 frozen verdicts). Artifacts:
+  `wiki/f3_deconfound_calibration_2026-10-09.{md,json}`, `wiki/f3_substrate_census_2026-10-09.json`.
+- **Honest limits, from the memo:** a blocked run bounds **nothing** about the instrument's quality — neither
+  validated nor invalidated; `design` is recorded by construction, not measured; `pc1_excess` uses 3
+  permutations at 1200 subsampled markers (an ordering, not an effect size); the two controls would have had
+  different traits, so the between-control comparison is two-sample, not paired; the positive control's
+  structure is measured while the negative control's randomisation is by construction, a deliberate asymmetry
+  in evidence strength; IBS-greedy-representative is **one** grouping, so an `INVALID_INSENSITIVE` verdict
+  could not distinguish the grouping's blindness from the instrument's; and `MIN_TRAITS_FOR_SIGN_TEST`,
+  `MAX_TRAITS`, `IBS_PERCENTILE_LADDER`, `MAX_LARGEST_CLUSTER_FRACTION`, `MAX_SINGLETON_FRACTION` are
+  **asserted, not derived**.
+
 ### Added — a cross-organism essentiality transfer ladder, and its verdict is INDETERMINATE (2026-10-06)
 
 Extends the F1 Phase 0 entry below: that work made "which split produced this number" machine-readable and

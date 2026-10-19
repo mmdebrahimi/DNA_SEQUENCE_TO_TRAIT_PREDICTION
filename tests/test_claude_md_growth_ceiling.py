@@ -42,6 +42,18 @@ CLAUDE_MD = ROOT / "CLAUDE.md"
 # stored elsewhere in wiki/**, so the diet is available and is a USER AUTHORITY call (NEXT.md fork 5),
 # not something to take unilaterally. Prefer compressing a candidate bullet over raising this number
 # again.
+#
+# NOT RAISED 2026-10-12, and the attempt is recorded because the refusal is the useful part. A /documentation
+# pass wanted a ~100-word pointer recording the 2026-10-11 `encoder-pyramid` arm (a THIRD GLM encoder arm
+# that also failed to separate from GC, with the declared 4-decade arm SUBSTRATE-GATED by arithmetic rather
+# than merely unrun). The file had **8 words of headroom**, so the addition needed this number moved. It was
+# moved to 35_553, the file then exceeded THAT too, and the second raise is where the mechanism broke: a
+# ceiling that moves whenever it binds is not a ceiling. Both the raise and the addition were REVERTED.
+# Paying for it by compressing instead is the preferred route above -- but it is explicitly a USER AUTHORITY
+# call (NEXT.md item 6, which escalated this exact situation on 2026-10-08: "compressing other sessions'
+# bullets is a scope decision, which is why it is still here rather than done"), so an executor cannot take
+# it. The pointer's content is NOT lost: it lives in `wiki/glm_pyramid_arm_2026-10-11.md`, in NEXT.md item 8,
+# in `project_state/glm-learned-representation-2026-10-07.md`, and in `tests/test_glm_encoder.py`.
 WORD_CEILING = 35_460
 MEASURED_AT_WRITE = 34_758
 

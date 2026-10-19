@@ -1,0 +1,953 @@
+{
+  "schema": "cabbage-fn-anatomy-v1",
+  "generated": "2026-10-11",
+  "cell": {
+    "species": "Salmonella enterica",
+    "drug": "ceftriaxone",
+    "amrfinder_organism": "Salmonella"
+  },
+  "confusion": {
+    "tp": 895,
+    "fn": 57,
+    "tn": 11709,
+    "fp": 20
+  },
+  "n_unscoreable": 10104,
+  "verdict": "ALL_FN_CARRY_NO_DETERMINANT_DECLARED_BLIND_SPOT",
+  "per_determinant_ppv": {
+    "blaCMY-2": {
+      "n_carriers": 608,
+      "n_truth_R": 600,
+      "n_truth_S": 8,
+      "ppv": 0.9868,
+      "ppv_wilson_ci": [
+        0.974,
+        0.993
+      ]
+    },
+    "blaCTX-M-65": {
+      "n_carriers": 184,
+      "n_truth_R": 181,
+      "n_truth_S": 3,
+      "ppv": 0.9837,
+      "ppv_wilson_ci": [
+        0.953,
+        0.994
+      ]
+    },
+    "blaCMY": {
+      "n_carriers": 62,
+      "n_truth_R": 60,
+      "n_truth_S": 2,
+      "ppv": 0.9677,
+      "ppv_wilson_ci": [
+        0.89,
+        0.991
+      ]
+    },
+    "blaCTX-M-15": {
+      "n_carriers": 37,
+      "n_truth_R": 37,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.906,
+        1.0
+      ]
+    },
+    "blaOXA-1": {
+      "n_carriers": 37,
+      "n_truth_R": 34,
+      "n_truth_S": 3,
+      "ppv": 0.9189,
+      "ppv_wilson_ci": [
+        0.787,
+        0.972
+      ]
+    },
+    "blaCTX-M-55": {
+      "n_carriers": 27,
+      "n_truth_R": 27,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.875,
+        1.0
+      ]
+    },
+    "blaCTX-M-1": {
+      "n_carriers": 15,
+      "n_truth_R": 15,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.796,
+        1.0
+      ]
+    },
+    "blaCTX-M": {
+      "n_carriers": 8,
+      "n_truth_R": 8,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.676,
+        1.0
+      ]
+    },
+    "blaCTX-M-27": {
+      "n_carriers": 6,
+      "n_truth_R": 6,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.61,
+        1.0
+      ]
+    },
+    "blaCTX-M-14": {
+      "n_carriers": 5,
+      "n_truth_R": 5,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.566,
+        1.0
+      ]
+    },
+    "blaOXA-10": {
+      "n_carriers": 5,
+      "n_truth_R": 2,
+      "n_truth_S": 3,
+      "ppv": 0.4,
+      "ppv_wilson_ci": [
+        0.118,
+        0.769
+      ]
+    },
+    "blaSHV-12": {
+      "n_carriers": 4,
+      "n_truth_R": 4,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.51,
+        1.0
+      ]
+    },
+    "blaCTX-M-123": {
+      "n_carriers": 4,
+      "n_truth_R": 4,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.51,
+        1.0
+      ]
+    },
+    "blaDHA-1": {
+      "n_carriers": 2,
+      "n_truth_R": 1,
+      "n_truth_S": 1,
+      "ppv": 0.5,
+      "ppv_wilson_ci": [
+        0.095,
+        0.905
+      ]
+    },
+    "blaCTX-M-115": {
+      "n_carriers": 2,
+      "n_truth_R": 2,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.342,
+        1.0
+      ]
+    },
+    "blaCTX-M-64": {
+      "n_carriers": 2,
+      "n_truth_R": 2,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.342,
+        1.0
+      ]
+    },
+    "blaCTX-M-9": {
+      "n_carriers": 1,
+      "n_truth_R": 1,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.207,
+        1.0
+      ]
+    },
+    "blaCTX-M-3": {
+      "n_carriers": 1,
+      "n_truth_R": 1,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.207,
+        1.0
+      ]
+    },
+    "blaCMY-55": {
+      "n_carriers": 1,
+      "n_truth_R": 1,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.207,
+        1.0
+      ]
+    },
+    "blaCTX-M-24": {
+      "n_carriers": 1,
+      "n_truth_R": 1,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.207,
+        1.0
+      ]
+    },
+    "blaSHV-5": {
+      "n_carriers": 1,
+      "n_truth_R": 1,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.207,
+        1.0
+      ]
+    }
+  },
+  "determinants_with_zero_true_R_carriers": [],
+  "fp_finding": "Every false positive carries a counted determinant, and the determinants with ZERO true-R carriers contribute only false positives in this cohort. That is the MIRROR of the gentamicin `rmt` case: there a determinant the rule could not SEE produced false negatives; here a determinant the rule COUNTS produces false positives. Changing what the rule counts would edit the sha256-pinned frozen surface and retire the active prospective lock, so it is a USER AUTHORITY call and is deliberately NOT made here.",
+  "fp_attribution": "NOT A RULE BUG -- an UPSTREAM catalog assertion the rule faithfully propagates. Verified on GCA_004836905.1: gyrA_P104S is the SOLE counted determinant (n_determinants=1, counter='qrdr_point', threshold=1), and AMRFinderPlus itself files it as Class=QUINOLONE / Subclass=QUINOLONE named 'Campylobacter quinolone resistant GyrA'. The frozen rule counts QUINOLONE-class gyrA point mutations, so it is behaving exactly as specified; the resistance-conferring claim for P104S originates in AMRFinder's catalog. A fix therefore belongs upstream, or in an L2 doubt flag, not in the counting logic.",
+  "false_negatives": [
+    {
+      "accession": "GCA_001243145.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "COMPARE_ML;NCBI_antibiogram;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_006342645.2",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006389015.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2004.0
+    },
+    {
+      "accession": "GCA_006661965.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006754305.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2004.0
+    },
+    {
+      "accession": "GCA_007185575.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2004.0
+    },
+    {
+      "accession": "GCA_007187035.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2007.0
+    },
+    {
+      "accession": "GCA_007190695.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2009.0
+    },
+    {
+      "accession": "GCA_007743895.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2005.0
+    },
+    {
+      "accession": "GCA_007862665.2",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_007926905.2",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008649995.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_008919265.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_009120445.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009332555.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_010370025.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2004.0
+    },
+    {
+      "accession": "GCA_010430205.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2009.0
+    },
+    {
+      "accession": "GCA_010566605.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2012.0
+    },
+    {
+      "accession": "GCA_010688465.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_010824385.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_014966435.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_019586125.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_019586185.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_019586195.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_019586305.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_019586345.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_019586365.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_019586405.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_019586425.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_019586445.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2011.0
+    },
+    {
+      "accession": "GCA_019586505.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_019586525.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_019586545.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_019586565.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_019586585.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_019586595.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_019586655.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2010.0
+    },
+    {
+      "accession": "GCA_019586705.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019586725.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019586745.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019586785.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019586825.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019586865.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019586915.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019587025.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1984.0
+    },
+    {
+      "accession": "GCA_019587045.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1985.0
+    },
+    {
+      "accession": "GCA_019587075.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1984.0
+    },
+    {
+      "accession": "GCA_019587095.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1984.0
+    },
+    {
+      "accession": "GCA_019587145.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1984.0
+    },
+    {
+      "accession": "GCA_019587185.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 1984.0
+    },
+    {
+      "accession": "GCA_020528875.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2008.0
+    },
+    {
+      "accession": "GCA_050847135.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "Turkey",
+      "year": 2024.0
+    },
+    {
+      "accession": "GCA_050847165.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "Turkey",
+      "year": 2024.0
+    },
+    {
+      "accession": "GCA_050847175.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "Turkey",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_050847185.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "Turkey",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_050847195.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "Turkey",
+      "year": 2022.0
+    },
+    {
+      "accession": "GCA_050847215.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "Turkey",
+      "year": 2024.0
+    }
+  ],
+  "false_positives": [
+    {
+      "accession": "GCA_005444055.1",
+      "determinants": [
+        "blaOXA-10"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006555485.1",
+      "determinants": [
+        "blaOXA-1"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_006812945.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2007.0
+    },
+    {
+      "accession": "GCA_007052585.1",
+      "determinants": [
+        "blaOXA-10"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_007177675.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2005.0
+    },
+    {
+      "accession": "GCA_007182335.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2005.0
+    },
+    {
+      "accession": "GCA_007754895.1",
+      "determinants": [
+        "blaCMY"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2008.0
+    },
+    {
+      "accession": "GCA_008617655.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2008.0
+    },
+    {
+      "accession": "GCA_008655055.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2008.0
+    },
+    {
+      "accession": "GCA_009375835.1",
+      "determinants": [
+        "blaCTX-M-65"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010395845.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2009.0
+    },
+    {
+      "accession": "GCA_010669525.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2009.0
+    },
+    {
+      "accession": "GCA_010801305.1",
+      "determinants": [
+        "blaCMY-2"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_014963485.1",
+      "determinants": [
+        "blaOXA-10"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_015536285.1",
+      "determinants": [
+        "blaCTX-M-65"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_017256735.1",
+      "determinants": [
+        "blaCTX-M-65"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_020016455.1",
+      "determinants": [
+        "blaDHA-1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Canada",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_020674215.1",
+      "determinants": [
+        "blaOXA-1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_020674915.1",
+      "determinants": [
+        "blaOXA-1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_029494995.1",
+      "determinants": [
+        "blaCMY"
+      ],
+      "n_determinants": 1,
+      "database": "CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2008.0
+    }
+  ],
+  "n_fn_determinant_free": 57,
+  "n_fp_determinant_free": 0,
+  "determinant_frequency_by_bucket": {
+    "fn": {},
+    "fp": {
+      "blaCMY-2": 8,
+      "blaOXA-10": 3,
+      "blaOXA-1": 3,
+      "blaCTX-M-65": 3,
+      "blaCMY": 2,
+      "blaDHA-1": 1
+    },
+    "tp": {
+      "blaCMY-2": 600,
+      "blaCTX-M-65": 181,
+      "blaCMY": 60,
+      "blaCTX-M-15": 37,
+      "blaOXA-1": 34,
+      "blaCTX-M-55": 27,
+      "blaCTX-M-1": 15,
+      "blaCTX-M": 8,
+      "blaCTX-M-27": 6,
+      "blaCTX-M-14": 5,
+      "blaSHV-12": 4,
+      "blaCTX-M-123": 4,
+      "blaCTX-M-115": 2,
+      "blaCTX-M-64": 2,
+      "blaOXA-10": 2,
+      "blaCTX-M-9": 1,
+      "blaCTX-M-3": 1,
+      "blaDHA-1": 1,
+      "blaCMY-55": 1,
+      "blaCTX-M-24": 1
+    },
+    "tn": {}
+  },
+  "n_determinants_distribution": {
+    "tp": {
+      "1": 800,
+      "2": 92,
+      "3": 3
+    },
+    "tn": {
+      "0": 11709
+    },
+    "fn": {
+      "0": 57
+    },
+    "fp": {
+      "1": 20
+    }
+  },
+  "honest_limits": [
+    "`determinants` are the hits the FROZEN rule COUNTS for this drug, not everything AMRFinder reported. An FN listed as determinant-free may still carry an uncounted element, which is precisely the distinction between a declared blind spot and a catalog gap -- so a determinant-free FN bounds the rule's input, it does not prove the genome is bare.",
+    "Labels are portal MIC run through this repo's STRICT tiers; a mislabelled isolate presents as an FN and nothing here can separate that from a genotype miss.",
+    "Campylobacter cipro R is overwhelmingly gyrA_T86I, so bucket determinant frequencies are dominated by one substitution and are not a broad coverage census.",
+    "The cohort is 96.4% one country (see the cell artifact's source_concentration verdict), so an absent determinant family may be absent from the COHORT rather than rare in the world.",
+    "A zero-true-R determinant is reported with its Wilson CI because the carrier counts are SMALL; 0 of 6 is suggestive and is NOT a demonstration that the substitution is benign.",
+    "PPV here is MARGINAL per determinant, not causal: a carrier may hold several determinants, so credit is not attributable to one symbol from these counts alone.",
+    "Not clonality-corrected, so carriers of one determinant may be a handful of clones."
+  ]
+}

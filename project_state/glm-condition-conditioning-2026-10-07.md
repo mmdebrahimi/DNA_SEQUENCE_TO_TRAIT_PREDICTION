@@ -142,12 +142,35 @@ A committed artifact stating whether one (sequence, medium) model beats two sepa
 - **v0.1 metric:** `unknowns-retired` + `gates-passed`. 4 unknowns, 4 hypotheses at init; 0 retired.
 
 ### Candidate next actions
+
+**REFRESHED 2026-10-18 — family is TERMINAL; all four rows delivered 2026-10-08.**
+(The refresh note lives BELOW the heading on purpose: `advance_ranker._section_slice`
+anchors on `^### Candidate next actions[ 	]*$`, so any suffix on the heading line makes
+the whole family read `degraded-input` and vanish from the gate. Measured here by doing it.)
+
+> **Why terminal:** all 6 MVP criteria were confirmed satisfied on disk in Action Log row 3
+> (2026-10-11), which also journaled the four `[done:…]` markers. The acceptance decision is
+> therefore already recorded — this refresh is bookkeeping, not a new judgement. What was never
+> done is the table below, because `/project-state` v0.4 has **no op for the candidate table**
+> (documented v0.5 API gap; direct-Edit + Action-Log mirror is the sanctioned workaround).
+>
+> Leaving the delivered rows live had a measured cost: `advance_ranker` ranked this family
+> **top-eligible at `bucket=high`** with `NO PENDING CANDIDATE`, so a `--advance` that trusted
+> `table[0]` would have re-run finished work. Same shape as the note in
+> `doubt-layer-2026-08-31.md` — *"leaving completed work here made a finished family rank first
+> on the portfolio frontier."*
+
 | # | Action | Class | Expected progress | Expected info gain | Uncertainty | Cost |
 |---|---|---|---|---|---|---|
-| 1 | Pin LB and M9 ceilings separately | run-tests | low | low | low | 2 hr |
-| 2 | Shared-ridge + medium indicator vs two ridges | edit-local-code | **high** | **high** | low | 1 day |
-| 3 | Medium-shuffled null | edit-local-code | medium | **high** | low | 3 hr |
-| 4 | Run, commit, record verdict | run-tests | high | high | low | 1 day |
+| 1 | ~~Pin LB and M9 ceilings separately~~ **DELIVERED 2026-10-08** — per-medium ceilings in `wiki/glm_condition_conditioning_2026-10-08.json` (`per_medium_ceilings`; LB 2-rep reliability 0.6281, sequence-model ceiling 0.7925). `[done:17580492]` | stop | none — delivered | none | none | none |
+| 2 | ~~Shared-ridge + medium indicator vs two ridges~~ **DELIVERED 2026-10-08** — this was the PRIMARY arm. `partial_pooling` +0.2033 vs `two_model` +0.2032 = **gain +0.0001 against a 0.02 bar**, two orders of magnitude short. `verdict: NO_GAIN`. `[done:59825d35]` | stop | none — delivered | none | none | none |
+| 3 | ~~Medium-shuffled null~~ **DELIVERED 2026-10-08** — `null_clean=true` (shuffled gain −0.0006), stamped into the artifact as a machine-readable field per D1 rather than asserted. `[done:27967dce]` | stop | none — delivered | none | none | none |
+| 4 | ~~Run, commit, record verdict~~ **DELIVERED 2026-10-08** — 10-seed sweep over 297,868 coordinate-keyed LB/M9 fragments, position-blocked; memo `wiki/glm_condition_conditioning_result_2026-10-08.md`. `[done:74238f74]` | stop | none — delivered | none | none | none |
+
+**No follow-on belongs in THIS family.** The live follow-up named in `NEXT.md` — re-run the
+selection measurement with the hybrid as primary scorer — is tile/selection work and needs its
+own pre-registered run; adding it here would smuggle a new question into a bar that is closed.
+Do not re-open G-C to host it.
 <!-- project-state:end:candidate-actions -->
 
 ### Re-evaluation trigger
@@ -162,6 +185,8 @@ A committed artifact stating whether one (sequence, medium) model beats two sepa
 |---|---|---|---|---|
 | 1 | 2026-10-07 | propose | project-init protocol executed by hand for GLM family G-C | ledger created; 3a PASS (all figures verified against the committed artifact), 3b PASS project, 3c PASS |
 | 2 | 2026-10-08 | run-tests | G-C 10-seed sweep executed: partial_pooling (PRIMARY) vs two_model on 297,868 coordinate-keyed LB/M9 fragments, position-blocked splits, pooling strength selected on an inner TRAIN-only split | **VERDICT NO_GAIN** — partial_pooling +0.2033 vs two_model +0.2032, gain **+0.0001 against a bar of 0.02** (two orders of magnitude short, not marginal). `null_clean=true` (shuffled gain −0.0006) and `registered_protocol_used=true`, both stamped by the script into `wiki/glm_condition_conditioning_2026-10-08.json`, so D1's two validity predicates hold on a machine-readable field rather than a human claim. Memo: `wiki/glm_condition_conditioning_result_2026-10-08.md`. THREE defects found en route, two of them mine: (a) the full-interaction arm is DEGENERATE with the comparator by construction (corr 0.9999998 on synthetic truth with medium-specific coefficients; equal to 4dp on real data at the median); (b) the pooling scale was a silent NO-OP — applied BEFORE StandardScaler, which divides out a constant column factor, so all three conditioned arms were secretly ONE model (r=0.9999970, same to 7dp); fixed by moving the penalty AFTER standardisation (block penalised by alpha/c²) and pinned by a test that asserts a pre-scaler scale is inert and a post-scaler one is not; (c) MVP criterion 2 named a test file that could never exist — failed closed (pytest exit 4), the second mis-specified path in this bar. The pooling curve is FLAT (0.0001 spread; argmax wanders 0.03/0.1/1.0 across seeds) so the selected scale is NOISE — pooling strength is not a lever here. Partial mechanistic account: CENTERING the unit-sum 3-mer block makes the design exactly rank 63 of 64 (cond 9.3e14), so ridge alpha is already load-bearing. Also measured: the pooled metric's excess over per-medium-mean IS the medium offset (shuffling collapses pooled 0.3085 → 0.2027 ≈ its own pmm 0.2026), upgrading an asserted caveat to a demonstrated one. Engineering: features were 97% of cost (181s vs 4s ridge); caching one pass per medium cut the sweep ~3.5h → ~35min, bit-faithful (two_model +0.2013/+0.1916 on seeds 0/1, reproduced on 3 separate runs) |
+| 3 | 2026-10-11 | stop | G-C terminal confirmed during --advance: all 6 MVP criteria satisfied on disk | Criteria 1/2/3 (script, tests, artifact) and 4/5/6 (verdict row naming NO_GAIN with null_clean=true + registered_protocol_used=true) all hold; wiki/glm_condition_conditioning_2026-10-08.json carries stage=step5-all-arms, verdict=NO_GAIN, gain +0.0001 against a 0.02 bar. No work re-run. Journaling the four completed candidates so a later --advance cannot redo them: [done:17580492] [done:59825d35] [done:27967dce] [done:74238f74]. NOTE: the ranker's advisory already flagged these as looks-already-done; marking makes it exact. |
+| 4 | 2026-10-18 | edit-local-code | Refreshed the stale `### Candidate next actions` table to reflect the terminal recorded in row 3: all four rows struck through as DELIVERED 2026-10-08 with their `[done:...]` markers inline, plus a note that no follow-on belongs in this family. Direct-Edit + this mirror, per the documented v0.4 API gap (no `/project-state` op owns the candidate table). | **Measured effect on the gate:** before, `advance_ranker` ranked G-C **top-eligible at `bucket=high`** while reporting `NO PENDING CANDIDATE - all 4 row(s) already done`, so a `--advance` trusting `table[0]` would have re-run finished work; after, G-C ranks **last at `bucket=unknown`** and the four already-done warnings are gone. **A defect found by committing it:** writing the refresh note as a heading SUFFIX (`### Candidate next actions - REFRESHED ...`) made the whole family read `degraded-input - no marker-anchored slice`, because `advance_ranker._section_slice` anchors on `^### Candidate next actions[ 	]*$`. Note moved below the heading and the reason recorded inline. The same suffix pattern is present in `dna-decode-2026-05-11.md`, `...-scratch.md` and `ecoli-pathotype-prediction-cli-2026-05-26.md`; blast radius measured as ZERO live ranked families (the first is read as the umbrella, the second is untracked scratch, the third is at a recorded terminal and in no umbrella's family list), so they were REPORTED and deliberately not edited. |
 <!-- project-state:end:action-log -->
 
 ## Open Questions for User

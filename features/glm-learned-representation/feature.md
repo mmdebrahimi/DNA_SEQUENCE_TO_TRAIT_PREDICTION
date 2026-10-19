@@ -40,6 +40,48 @@ made once in this repo:
 
 ## Repo grounding
 
+### Captured by: brainstorm @ 2026-10-12
+
+Files read: soraya_runs/arms-ledger.json; soraya_runs/negative-results.json;
+soraya_runs/precompact-brief.md; dna_decode/glm/encoder.py; dna_decode/glm/genomewide.py;
+scripts/glm_encoder_gate.py; tests/test_glm_encoder.py; tests/test_glm_encoder_gate.py;
+tests/test_glm_tile_headroom.py; features/glm-learned-representation/technical-plan.md;
+features/glm-learned-representation/feature.md; project_state/glm-learned-representation-2026-10-07.md;
+project_state/glm-umbrella-2026-10-07.md; plans/GLM_Portfolio_Decompose_2026-10-07.md;
+wiki/glm_pyramid_arm_2026-10-11.md; wiki/glm_pyramid_arm_2026-10-11.json;
+wiki/glm_learned_representation_2026-10-08.json; wiki/glm_encoder_gate_result_2026-10-08.md;
+wiki/chatgpt_architecture_discussion_lessons_2026-10-09.md; CLAUDE.md
+
+Key claims:
+- [grounded] The ceiling criterion is ALREADY substrate-bound by its own wording. The `0.941` it names
+  is the replicate agreement of GSE144621 150 bp tiles specifically (`noise_ceiling` in
+  wiki/glm_pyramid_arm_2026-10-11.json; substrate string "GEO GSE144621 peak tiles, category=tile,
+  len=150"), and the adopted G-A goal is likewise bound to real E. coli tiles + `leave_peak_out`
+  (project_state/glm-learned-representation-2026-10-07.md, features/.../technical-plan.md). A
+  constructed eukaryotic/human panel would have its OWN different ceiling, so it cannot satisfy this
+  criterion as written -- the arm is MISFILED rather than the criterion being due for redefinition.
+- [grounded] `multiresolution-pyramid-4-decades-UNRUN` cannot execute on this substrate at all, not
+  merely at high cost. `dna_decode/glm/encoder.py:148 validate_widths` raises `EncoderDataError` for
+  any kernel wider than the sequence; executed check: `validate_widths((10,100,1000,10000), 150)` ->
+  "kernel width(s) [1000, 10000] exceed the sequence length 150". Leaving it `planned` therefore holds
+  the criterion in a state the repo already knows is impossible.
+- [grounded] `arms_ledger` has exactly three statuses (`planned`/`measured`/`killed`) and `Arm` carries
+  no revival field (`name`, `cost_tier`, `status`, `metric`, `evidence`, `declared_at`, `resolved_at`).
+  So a non-destructive "deferred/blocked-by-substrate" state does not exist, and a kill's revival
+  trigger has to live in `soraya_runs/negative-results.json` (which exists).
+- [grounded] `kill_arm` refuses only REDUNDANCY reasons (`_REDUNDANCY_REASON` matches bar-met /
+  already-cleared / redundant / sibling / not-needed / goal-is-met), so a substrate-infeasibility kill
+  is mechanically permitted -- the refusal is not a blocker here.
+- [grounded] The 2026-10-11 memo contradicts itself: line 5 says the run "closes one of them with a
+  number" while line 70 says "the arm measured here is not either declared arm" and the criterion stays
+  `blocked:untried-arm`. A new arm was measured; NEITHER declared arm was closed.
+- [grounded] "More scale is not the missing lever" (wiki/glm_pyramid_arm_2026-10-11.md:31) over-reaches
+  the measurement, and contradicts that same artifact's own `honest_limits`. The supported claim is
+  narrower: within 150 bp tiles, widening 1.10 -> 1.70 decades under the registered small CNN protocol
+  did not help.
+- [grounded] Splitting the criterion by substrate scope is an ACCEPTANCE-BAR change requiring user
+  ratification, not a bookkeeping correction -- because the current criterion's terminal condition is
+  defined against the GSE144621-derived 0.941 ceiling.
 Files read while drafting: `dna_decode/glm/expression.py`, `dna_decode/glm/genomewide.py`,
 `dna_decode/glm/selection.py`, `dna_decode/glm/falsifier.py`, `wiki/glm_genomewide_oracle_2026-10-07.json`,
 `wiki/glm_selfdistill_probe_2026-10-07.json`, `wiki/glm_generator_falsifier_REAL_2026-10-07.json`,

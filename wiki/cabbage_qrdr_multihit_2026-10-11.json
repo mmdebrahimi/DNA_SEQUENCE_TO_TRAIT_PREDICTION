@@ -1,0 +1,278 @@
+{
+  "schema": "cabbage-qrdr-multihit-v2",
+  "generated": "2026-10-11",
+  "frozen_rule": "eval/amr_rules.call_resistance, counter=qrdr_point, threshold=1",
+  "cells": {
+    "salmonella_cipro": {
+      "single_vs_multi_contrast": {
+        "r_rate_exactly_one_determinant": 0.0183,
+        "r_rate_exactly_one_ci": [
+          0.01,
+          0.034
+        ],
+        "n_exactly_one": 493,
+        "r_rate_two_or_more": 0.8333,
+        "r_rate_two_or_more_ci": [
+          0.735,
+          0.9
+        ],
+        "n_two_or_more": 78,
+        "ratio": 45.5,
+        "cis_disjoint": true
+      },
+      "species": "Salmonella enterica",
+      "registry_organism": "Salmonella",
+      "drug": "ciprofloxacin",
+      "n_unscoreable": 9097,
+      "by_determinant_count": [
+        {
+          "n_determinants": 0,
+          "n": 11612,
+          "n_R": 12,
+          "n_S": 11600,
+          "r_rate": 0.001,
+          "r_rate_wilson_ci": [
+            0.001,
+            0.002
+          ]
+        },
+        {
+          "n_determinants": 1,
+          "n": 493,
+          "n_R": 9,
+          "n_S": 484,
+          "r_rate": 0.0183,
+          "r_rate_wilson_ci": [
+            0.01,
+            0.034
+          ]
+        },
+        {
+          "n_determinants": 2,
+          "n": 15,
+          "n_R": 4,
+          "n_S": 11,
+          "r_rate": 0.2667,
+          "r_rate_wilson_ci": [
+            0.109,
+            0.52
+          ]
+        },
+        {
+          "n_determinants": 3,
+          "n": 17,
+          "n_R": 17,
+          "n_S": 0,
+          "r_rate": 1.0,
+          "r_rate_wilson_ci": [
+            0.816,
+            1.0
+          ]
+        },
+        {
+          "n_determinants": 4,
+          "n": 22,
+          "n_R": 20,
+          "n_S": 2,
+          "r_rate": 0.9091,
+          "r_rate_wilson_ci": [
+            0.722,
+            0.975
+          ]
+        },
+        {
+          "n_determinants": 6,
+          "n": 24,
+          "n_R": 24,
+          "n_S": 0,
+          "r_rate": 1.0,
+          "r_rate_wilson_ci": [
+            0.862,
+            1.0
+          ]
+        }
+      ],
+      "powered_counts_used_for_monotonicity": [
+        1,
+        2,
+        3,
+        4,
+        6
+      ],
+      "r_rate_monotone_in_count": false,
+      "parC": {
+        "parC_total": 64,
+        "parC_with_gyrA": 64,
+        "parC_truth_R": 63,
+        "parC_truth_S": 1
+      },
+      "parC_with_gyrA_fraction": 1.0
+    },
+    "salmonella_ceftriaxone": {
+      "single_vs_multi_contrast": {
+        "r_rate_exactly_one_determinant": 0.9756,
+        "r_rate_exactly_one_ci": [
+          0.963,
+          0.984
+        ],
+        "n_exactly_one": 820,
+        "r_rate_two_or_more": 1.0,
+        "r_rate_two_or_more_ci": [
+          0.961,
+          1.0
+        ],
+        "n_two_or_more": 95,
+        "ratio": 1.0,
+        "cis_disjoint": false
+      },
+      "species": "Salmonella enterica",
+      "registry_organism": "Salmonella",
+      "drug": "ceftriaxone",
+      "n_unscoreable": 10104,
+      "by_determinant_count": [
+        {
+          "n_determinants": 0,
+          "n": 11766,
+          "n_R": 57,
+          "n_S": 11709,
+          "r_rate": 0.0048,
+          "r_rate_wilson_ci": [
+            0.004,
+            0.006
+          ]
+        },
+        {
+          "n_determinants": 1,
+          "n": 820,
+          "n_R": 800,
+          "n_S": 20,
+          "r_rate": 0.9756,
+          "r_rate_wilson_ci": [
+            0.963,
+            0.984
+          ]
+        },
+        {
+          "n_determinants": 2,
+          "n": 92,
+          "n_R": 92,
+          "n_S": 0,
+          "r_rate": 1.0,
+          "r_rate_wilson_ci": [
+            0.96,
+            1.0
+          ]
+        },
+        {
+          "n_determinants": 3,
+          "n": 3,
+          "n_R": 3,
+          "n_S": 0,
+          "r_rate": 1.0,
+          "r_rate_wilson_ci": [
+            0.439,
+            1.0
+          ]
+        }
+      ],
+      "powered_counts_used_for_monotonicity": [
+        1,
+        2
+      ],
+      "r_rate_monotone_in_count": true,
+      "parC": {},
+      "parC_with_gyrA_fraction": null
+    },
+    "campylobacter_cipro": {
+      "single_vs_multi_contrast": null,
+      "species": "Campylobacter jejuni",
+      "registry_organism": "Campylobacter",
+      "drug": "ciprofloxacin",
+      "n_unscoreable": 447,
+      "by_determinant_count": [
+        {
+          "n_determinants": 0,
+          "n": 3257,
+          "n_R": 21,
+          "n_S": 3236,
+          "r_rate": 0.0064,
+          "r_rate_wilson_ci": [
+            0.004,
+            0.01
+          ]
+        },
+        {
+          "n_determinants": 1,
+          "n": 1006,
+          "n_R": 995,
+          "n_S": 11,
+          "r_rate": 0.9891,
+          "r_rate_wilson_ci": [
+            0.981,
+            0.994
+          ]
+        },
+        {
+          "n_determinants": 2,
+          "n": 2,
+          "n_R": 2,
+          "n_S": 0,
+          "r_rate": 1.0,
+          "r_rate_wilson_ci": [
+            0.342,
+            1.0
+          ]
+        }
+      ],
+      "powered_counts_used_for_monotonicity": [
+        1
+      ],
+      "r_rate_monotone_in_count": null,
+      "parC": {},
+      "parC_with_gyrA_fraction": null
+    }
+  },
+  "verdict": {
+    "P1_AS_SPECIFIED_strict_monotone_in_count": false,
+    "P1_specification_was_too_strict": "REPORTED AS IT FELL. The pre-registered test asked for a strictly non-decreasing R-rate and Salmonella FAILS it on one dip: the 4-determinant stratum (n=14) sits below the 3-determinant one (n=17) with heavily overlapping Wilson intervals. The premise was 'R-rate rises with count'; strict monotonicity across small strata was a brittle way to operationalise it. The contrast below is the same premise without that brittleness, and it is reported BESIDE the failed test, not instead of it.",
+    "P1_PRIME_single_vs_multi_hit_contrast": {
+      "r_rate_exactly_one_determinant": 0.0183,
+      "r_rate_exactly_one_ci": [
+        0.01,
+        0.034
+      ],
+      "n_exactly_one": 493,
+      "r_rate_two_or_more": 0.8333,
+      "r_rate_two_or_more_ci": [
+        0.735,
+        0.9
+      ],
+      "n_two_or_more": 78,
+      "ratio": 45.5,
+      "cis_disjoint": true
+    },
+    "P2_parC_marks_the_multihit_genotype": true,
+    "cross_organism_contrast": {
+      "salmonella_r_rate_at_one_determinant": 0.0183,
+      "campylobacter_r_rate_at_one_determinant": 0.9891,
+      "ratio": 54.0,
+      "note": "the SAME frozen rule (counter=qrdr_point, threshold=1) on the SAME drug. One QRDR hit predicts resistance in Campylobacter and does not in Salmonella, which is where the specificity gap between the two cells comes from."
+    },
+    "mechanism_class_control": {
+      "why": "SAME organism, SAME cohort source, DIFFERENT rule shape. Salmonella x ceftriaxone uses subclass_any over ACQUIRED beta-lactamases; Salmonella x ciprofloxacin uses qrdr_point over TARGET-SITE point mutations. If the cipro over-call were a property of Salmonella labels or of this cohort, ceftriaxone would over-call too.",
+      "salmonella_ceftriaxone_r_rate_at_one_determinant": 0.9756,
+      "salmonella_cipro_r_rate_at_one_determinant": 0.0183,
+      "reading": "one ACQUIRED determinant is close to sufficient for ceftriaxone while one TARGET-SITE point mutation is close to uninformative for ciprofloxacin IN THE SAME ORGANISM AND COHORT, which exonerates the labels and the cohort: whatever is wrong is in the rule, not the data.",
+      "the_acquired_vs_target_site_story_is_REFUTED_by_campylobacter": "The tempting generalisation -- threshold=1 suits acquired-enzyme mechanisms and mismatches target-site ones -- is WRONG, and the third cell is what kills it. Campylobacter ciprofloxacin is ALSO target-site (gyrA_T86I) and a single hit predicts at 0.9891. So mechanism CLASS does not decide it. What decides it is whether ONE determinant is clinically sufficient for that ORGANISM-DRUG PAIR: gyrA_T86I alone clears the Campylobacter cipro breakpoint, a single gyrA hit alone does not clear the Salmonella cipro breakpoint. threshold=1 is a claim about sufficiency per organism-drug pair, and it is a per-pair empirical question."
+    },
+    "reading": "The COUNT carries the information that presence does not FOR THIS PAIR: in Salmonella cipro a single counted determinant is almost always susceptible while two or more is usually resistant, so a threshold=1 rule over-calls by construction there. P2 true means parC's high PPV is parC MARKING a multi-hit genotype rather than predicting alone -- all parC carriers also carry gyrA -- so a rule that counted only parC would work for the wrong reason and would break on any population where parC arises first."
+  },
+  "honest_limits": [
+    "OBSERVATIONAL and MARGINAL: determinant count is not a causal dose. Carriers of 2 determinants differ from carriers of 1 in more than the count.",
+    "Determinant count is the count the FROZEN rule assigns, so it inherits whatever AMRFinder reports and whatever the rule's class filter admits -- not a complete genotype.",
+    "Reduced-susceptibility isolates sit near the breakpoint, so some S labels here are genuinely borderline; STRICT tiers reduce but do not remove that.",
+    "NOT clonality-corrected. A single-determinant stratum may be a few clones, and Salmonella surveillance is clonally structured.",
+    "This DIAGNOSES an over-call; it does not authorise a rule change. Changing what the frozen rule counts retires the active prospective lock and is a USER decision.",
+    "The two organisms' cohorts differ in source composition and size, so the Campylobacter arm is a CONTRAST, not a matched control."
+  ]
+}

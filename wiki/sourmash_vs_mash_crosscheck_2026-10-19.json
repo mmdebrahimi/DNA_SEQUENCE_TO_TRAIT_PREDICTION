@@ -1,0 +1,160 @@
+{
+  "_schema": "sourmash-vs-mash-crosscheck-v1",
+  "generated": "2026-10-19",
+  "status": "INSUFFICIENT_DATA",
+  "exit_code": 2,
+  "bar": "wiki/sourmash_vs_mash_crosscheck_bar.json",
+  "bar_sha256": "8e26d23e536c6d8a954e9ca9af89361f9bd031d32fee970bff8ce56e908f1dfa",
+  "sourmash_params": {
+    "ksize": 21,
+    "scaled": 1000
+  },
+  "refseq_cache": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/refseq_cache",
+  "n_pairs_expected": 20,
+  "n_pairs_observed": 0,
+  "clauses": [
+    {
+      "clause_id": 1,
+      "name": "verdict_identity",
+      "met": null,
+      "detail": "not evaluated -- INSUFFICIENT_DATA",
+      "failures": []
+    },
+    {
+      "clause_id": 2,
+      "name": "exact_minority_count_near_the_bar",
+      "met": null,
+      "detail": "not evaluated -- INSUFFICIENT_DATA",
+      "failures": []
+    },
+    {
+      "clause_id": 3,
+      "name": "the_trip_must_reproduce",
+      "met": null,
+      "detail": "not evaluated -- INSUFFICIENT_DATA",
+      "failures": []
+    }
+  ],
+  "cells": [
+    {
+      "cohort": "campylobacter_provdisjoint_ciprofloxacin",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_tetracycline",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_ceftriaxone",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_ciprofloxacin",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_gentamicin",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_meropenem",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_tetracycline",
+      "status": "INSUFFICIENT_DATA",
+      "reason": "cohort manifest (selected.tsv) not present",
+      "n_genomes_missing": null
+    }
+  ],
+  "blocked": [
+    {
+      "cohort": "campylobacter_provdisjoint_ciprofloxacin",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/campylobacter_provdisjoint_ciprofloxacin/selected.tsv"
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_ceftriaxone",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ceftriaxone/selected.tsv"
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_ciprofloxacin",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_ciprofloxacin/selected.tsv"
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_gentamicin",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_gentamicin/selected.tsv"
+    },
+    {
+      "cohort": "escherichia_coli_shigella_provdisjoint_tetracycline",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/escherichia_coli_shigella_provdisjoint_tetracycline/selected.tsv"
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_ceftriaxone",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ceftriaxone/selected.tsv"
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_ciprofloxacin",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_ciprofloxacin/selected.tsv"
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_gentamicin",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_gentamicin/selected.tsv"
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_meropenem",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_meropenem/selected.tsv"
+    },
+    {
+      "cohort": "klebsiella_provdisjoint_tetracycline",
+      "reason": "no selected.tsv",
+      "path": "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/raw/klebsiella_provdisjoint_tetracycline/selected.tsv"
+    }
+  ],
+  "agreement_number_withheld": true,
+  "why_withheld": "A cohort whose assemblies do not all resolve produces LOWER-BOUND effective-lineage counts. Reporting an agreement rate over a partial cohort would compare a lower bound against an exact-equality clause, so no agreement number is emitted. INSUFFICIENT_DATA is a valid result.",
+  "honest_limits": [
+    "FracMinHash is not Mash's bottom-sketch MinHash, so agreement on these cohorts does not make the two estimators interchangeable in general.",
+    "The thresholds (0.001, 0.005) were calibrated against MASH distances. Passing this bar shows sourmash reproduces Mash's PARTITION VERDICTS at those thresholds on these cohorts; it does not re-derive the thresholds.",
+    "Clause 3 rests on a SINGLE TRIP pair. One negative is enough to make the bar non-vacuous and far too few to characterise sourmash's behaviour near the bar in general.",
+    "These are provenance-disjoint AMR cohorts, not CABBAGE. Accepting the distance source for CABBAGE is an extrapolation across cohorts."
+  ]
+}

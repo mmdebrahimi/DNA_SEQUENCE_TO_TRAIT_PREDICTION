@@ -1,0 +1,826 @@
+{
+  "schema": "f3-deconfound-calibration-1001g-v1",
+  "generated": "2026-10-10",
+  "verdict": "VALID_DIFFERENTIAL_RESPONSE",
+  "verdict_meaning": "the negative control keeps beating its own grouped null AND the positive control's drop exceeds it",
+  "all_possible_verdicts": [
+    "blocked:no_intact_panel",
+    "blocked:no_negative_control",
+    "blocked:no_positive_control",
+    "blocked:positive_control_not_fold_compatible",
+    "INDETERMINATE_UNDERPOWERED",
+    "INVALID_OVER_AGGRESSIVE",
+    "INVALID_INSENSITIVE",
+    "VALID_DIFFERENTIAL_RESPONSE"
+  ],
+  "smoke": false,
+  "genotype_meta": {
+    "n_snps_read": 60000,
+    "n_after_maf": 9442,
+    "n_markers_used": 1500,
+    "maf_floor": 0.05,
+    "n_blocks": 60
+  },
+  "n_perm": 100,
+  "n_splits": 5,
+  "control_selection": {
+    "rule": "BY CONSTRUCTION from each panel's `design` field; NOT by pc1",
+    "negative_control": "bloom",
+    "positive_control": "1001g_arabidopsis",
+    "positive_basis": "by sampling: 1,135 natural Arabidopsis accessions (1001 Genomes)"
+  },
+  "criterion": "DIFFERENTIAL: the negative control keeps beating its own grouped null AND the positive control's paired per-trait drop exceeds the negative control's. Asserts no magnitude.",
+  "negative_control_result": {
+    "panel": "bloom_finest_rung",
+    "design": "constructed_biparental",
+    "n_traits": 8,
+    "per_trait": [
+      {
+        "trait": "Cadmium_Chloride",
+        "n": 799,
+        "r_random": 0.6887,
+        "r_grouped": 0.6743,
+        "drop": 0.0144,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0956,
+        "null_p95_grouped": 0.0853,
+        "n_groups": 161,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Caffeine",
+        "n": 1004,
+        "r_random": 0.4577,
+        "r_grouped": 0.444,
+        "drop": 0.0137,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0611,
+        "null_p95_grouped": 0.0695,
+        "n_groups": 169,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Calcium_Chloride",
+        "n": 949,
+        "r_random": 0.4983,
+        "r_grouped": 0.5134,
+        "drop": -0.0152,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0751,
+        "null_p95_grouped": 0.0821,
+        "n_groups": 168,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Cisplatin",
+        "n": 990,
+        "r_random": 0.5138,
+        "r_grouped": 0.5139,
+        "drop": -0.0001,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0672,
+        "null_p95_grouped": 0.0767,
+        "n_groups": 169,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Cobalt_Chloride",
+        "n": 1007,
+        "r_random": 0.6798,
+        "r_grouped": 0.6663,
+        "drop": 0.0134,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.083,
+        "null_p95_grouped": 0.0901,
+        "n_groups": 169,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Congo_red",
+        "n": 979,
+        "r_random": 0.6967,
+        "r_grouped": 0.6965,
+        "drop": 0.0001,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0666,
+        "null_p95_grouped": 0.059,
+        "n_groups": 168,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Copper",
+        "n": 972,
+        "r_random": 0.5528,
+        "r_grouped": 0.5623,
+        "drop": -0.0095,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0785,
+        "null_p95_grouped": 0.0793,
+        "n_groups": 167,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Cycloheximide",
+        "n": 1004,
+        "r_random": 0.7109,
+        "r_grouped": 0.715,
+        "drop": -0.0041,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0613,
+        "null_p95_grouped": 0.0698,
+        "n_groups": 169,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      }
+    ],
+    "median_drop": 0.0,
+    "n_dropped": 4,
+    "sign_test": {
+      "n_nonzero": 8,
+      "n_positive": 4,
+      "p": 1.0
+    },
+    "grouped_beats_own_null": true,
+    "genotype_meta": {
+      "stride": 7,
+      "n_markers_used": 1661,
+      "n_markers_full": 11623
+    },
+    "grouping": {
+      "n_individuals": 1008,
+      "n_clusters": 170,
+      "largest_cluster_fraction": 0.0288,
+      "singleton_fraction": 0.2529,
+      "threshold": 0.400361,
+      "percentile": 2.0,
+      "ibs_path": "binary_exact",
+      "missing_fraction": 0.0,
+      "sweep": []
+    }
+  },
+  "positive_control_result": {
+    "panel": "1001g_finest_rung",
+    "design": "natural_population",
+    "n_traits": 8,
+    "per_trait": [
+      {
+        "trait": "ap261_FT10",
+        "n": 1003,
+        "r_random": 0.692,
+        "r_grouped": 0.6683,
+        "drop": 0.0237,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0768,
+        "null_p95_grouped": 0.0628,
+        "n_groups": 157,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap703_DTF1",
+        "n": 936,
+        "r_random": 0.7046,
+        "r_grouped": 0.671,
+        "drop": 0.0336,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0811,
+        "null_p95_grouped": 0.0892,
+        "n_groups": 151,
+        "backfilled_from_log": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap528_rSurvival-fruit-mli",
+        "n": 512,
+        "r_random": 0.2412,
+        "r_grouped": 0.2464,
+        "drop": -0.0052,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.083,
+        "null_p95_grouped": 0.0877,
+        "n_groups": 126,
+        "backfilled_from_log": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap390_rosetteDM",
+        "n": 407,
+        "r_random": 0.492,
+        "r_grouped": 0.4506,
+        "drop": 0.0414,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1045,
+        "null_p95_grouped": 0.0993,
+        "n_groups": 109,
+        "backfilled_from_log": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap750_stomatasize",
+        "n": 330,
+        "r_random": 0.2858,
+        "r_grouped": 0.2388,
+        "drop": 0.0469,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1084,
+        "null_p95_grouped": 0.1282,
+        "n_groups": 98,
+        "backfilled_from_log": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap1898_Trichome-stem-length",
+        "n": 305,
+        "r_random": 0.4151,
+        "r_grouped": 0.3604,
+        "drop": 0.0547,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1211,
+        "null_p95_grouped": 0.1384,
+        "n_groups": 77,
+        "backfilled_from_log": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap699_Inter-specific-pollination-o",
+        "n": 283,
+        "r_random": 0.2194,
+        "r_grouped": 0.1179,
+        "drop": 0.1015,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": false,
+        "null_p95_random": 0.1391,
+        "null_p95_grouped": 0.1529,
+        "n_groups": 86,
+        "backfilled_from_log": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap1910_Raffinose-32C",
+        "n": 250,
+        "r_random": 0.1817,
+        "r_grouped": 0.0537,
+        "drop": 0.128,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": false,
+        "null_p95_random": 0.1349,
+        "null_p95_grouped": 0.1028,
+        "n_groups": 74,
+        "backfilled_from_log": true,
+        "from_checkpoint": true
+      }
+    ],
+    "median_drop": 0.044149999999999995,
+    "n_dropped": 7,
+    "sign_test": {
+      "n_nonzero": 8,
+      "n_positive": 7,
+      "p": 0.0703125
+    },
+    "grouped_beats_own_null": true
+  },
+  "positive_control_result_coarsest_rung": {
+    "panel": "1001g_coarsest_rung",
+    "design": "natural_population",
+    "n_traits": 8,
+    "per_trait": [
+      {
+        "trait": "ap261_FT10",
+        "n": 1003,
+        "r_random": 0.692,
+        "r_grouped": 0.6436,
+        "drop": 0.0484,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0768,
+        "null_p95_grouped": 0.0604,
+        "n_groups": 90,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap703_DTF1",
+        "n": 936,
+        "r_random": 0.7046,
+        "r_grouped": 0.6584,
+        "drop": 0.0462,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0811,
+        "null_p95_grouped": 0.0744,
+        "n_groups": 89,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap528_rSurvival-fruit-mli",
+        "n": 512,
+        "r_random": 0.2412,
+        "r_grouped": 0.2405,
+        "drop": 0.0007,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.083,
+        "null_p95_grouped": 0.0742,
+        "n_groups": 82,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap390_rosetteDM",
+        "n": 407,
+        "r_random": 0.492,
+        "r_grouped": 0.4542,
+        "drop": 0.0378,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1045,
+        "null_p95_grouped": 0.0893,
+        "n_groups": 68,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap750_stomatasize",
+        "n": 330,
+        "r_random": 0.2858,
+        "r_grouped": 0.3102,
+        "drop": -0.0244,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1084,
+        "null_p95_grouped": 0.0969,
+        "n_groups": 69,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap1898_Trichome-stem-length",
+        "n": 305,
+        "r_random": 0.4151,
+        "r_grouped": 0.3881,
+        "drop": 0.027,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1211,
+        "null_p95_grouped": 0.1219,
+        "n_groups": 51,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap699_Inter-specific-pollination-o",
+        "n": 283,
+        "r_random": 0.2194,
+        "r_grouped": 0.1766,
+        "drop": 0.0428,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1391,
+        "null_p95_grouped": 0.1592,
+        "n_groups": 58,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "ap1910_Raffinose-32C",
+        "n": 250,
+        "r_random": 0.1817,
+        "r_grouped": 0.1528,
+        "drop": 0.0289,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.1349,
+        "null_p95_grouped": 0.1131,
+        "n_groups": 52,
+        "from_checkpoint": true
+      }
+    ],
+    "median_drop": 0.03335,
+    "n_dropped": 7,
+    "sign_test": {
+      "n_nonzero": 8,
+      "n_positive": 7,
+      "p": 0.0703125
+    },
+    "grouped_beats_own_null": true
+  },
+  "negative_control_result_coarsest_rung": {
+    "panel": "bloom_coarsest_rung",
+    "design": "constructed_biparental",
+    "n_traits": 8,
+    "per_trait": [
+      {
+        "trait": "Cadmium_Chloride",
+        "n": 799,
+        "r_random": 0.6887,
+        "r_grouped": 0.6932,
+        "drop": -0.0045,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0956,
+        "null_p95_grouped": 0.0849,
+        "n_groups": 72,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Caffeine",
+        "n": 1004,
+        "r_random": 0.4577,
+        "r_grouped": 0.4662,
+        "drop": -0.0086,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0611,
+        "null_p95_grouped": 0.0593,
+        "n_groups": 74,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Calcium_Chloride",
+        "n": 949,
+        "r_random": 0.4983,
+        "r_grouped": 0.5219,
+        "drop": -0.0236,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0751,
+        "null_p95_grouped": 0.0893,
+        "n_groups": 74,
+        "random_arm_reused": false,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Cisplatin",
+        "n": 990,
+        "r_random": 0.5138,
+        "r_grouped": 0.5239,
+        "drop": -0.0101,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0672,
+        "null_p95_grouped": 0.0739,
+        "n_groups": 74,
+        "random_arm_reused": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Cobalt_Chloride",
+        "n": 1007,
+        "r_random": 0.6798,
+        "r_grouped": 0.6738,
+        "drop": 0.0059,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.083,
+        "null_p95_grouped": 0.0713,
+        "n_groups": 74,
+        "random_arm_reused": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Congo_red",
+        "n": 979,
+        "r_random": 0.6967,
+        "r_grouped": 0.6999,
+        "drop": -0.0032,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0666,
+        "null_p95_grouped": 0.0805,
+        "n_groups": 74,
+        "random_arm_reused": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Copper",
+        "n": 972,
+        "r_random": 0.5528,
+        "r_grouped": 0.5578,
+        "drop": -0.005,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0785,
+        "null_p95_grouped": 0.0771,
+        "n_groups": 74,
+        "random_arm_reused": true,
+        "from_checkpoint": true
+      },
+      {
+        "trait": "Cycloheximide",
+        "n": 1004,
+        "r_random": 0.7109,
+        "r_grouped": 0.7163,
+        "drop": -0.0054,
+        "random_beats_own_null": true,
+        "grouped_beats_own_null": true,
+        "null_p95_random": 0.0613,
+        "null_p95_grouped": 0.0665,
+        "n_groups": 74,
+        "random_arm_reused": true,
+        "from_checkpoint": true
+      }
+    ],
+    "median_drop": -0.0052,
+    "n_dropped": 1,
+    "sign_test": {
+      "n_nonzero": 8,
+      "n_positive": 1,
+      "p": 0.0703125
+    },
+    "grouped_beats_own_null": true,
+    "grouping": {
+      "n_individuals": 1008,
+      "n_clusters": 74,
+      "largest_cluster_fraction": 0.0506,
+      "singleton_fraction": 0.1081,
+      "threshold": 0.420229,
+      "percentile": 5.0,
+      "ibs_path": "binary_exact",
+      "missing_fraction": 0.0,
+      "sweep": []
+    }
+  },
+  "grouping_bracket": {
+    "why": "select_threshold takes the SMALLEST passing rung on a named bias -- it under-merges, biasing AGAINST detecting a de-confounding response. Running BOTH endpoints of the admissible set separates 'the instrument is insensitive' from 'the grouping was too fine to de-confound anything', which the INVALID_INSENSITIVE verdict text alone cannot.",
+    "finest": {
+      "percentile": 5.0,
+      "n_clusters": 157,
+      "largest": 0.0969,
+      "median_drop": 0.044149999999999995,
+      "n_traits": 8
+    },
+    "coarsest": {
+      "percentile": 10.0,
+      "n_clusters": 90,
+      "largest": 0.0952,
+      "median_drop": 0.03335,
+      "n_traits": 8
+    },
+    "per_trait_admissibility": {
+      "bar": 0.2,
+      "fine": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 157,
+          "largest_share": 0.0947,
+          "admissible": true
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 151,
+          "largest_share": 0.0972,
+          "admissible": true
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 126,
+          "largest_share": 0.0898,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 109,
+          "largest_share": 0.0958,
+          "admissible": true
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 98,
+          "largest_share": 0.0879,
+          "admissible": true
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 77,
+          "largest_share": 0.1213,
+          "admissible": true
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 86,
+          "largest_share": 0.0671,
+          "admissible": true
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 74,
+          "largest_share": 0.08,
+          "admissible": true
+        }
+      },
+      "coarse": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 90,
+          "largest_share": 0.1037,
+          "admissible": true
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 89,
+          "largest_share": 0.1058,
+          "admissible": true
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 82,
+          "largest_share": 0.0879,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 68,
+          "largest_share": 0.1327,
+          "admissible": true
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 69,
+          "largest_share": 0.0909,
+          "admissible": true
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 51,
+          "largest_share": 0.1246,
+          "admissible": true
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 58,
+          "largest_share": 0.1025,
+          "admissible": true
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 52,
+          "largest_share": 0.104,
+          "admissible": true
+        }
+      },
+      "coarse_percentile_overridden_to": 10.0,
+      "why_overridden": "The sweep's `passes` flag is computed on the FULL 1,135-accession panel, but grouped CV folds each trait's NON-MISSING subset. The coarsest rung the sweep passes (p=20, largest 0.1947 on the full panel) is inadmissible for 6 of 8 traits once missingness is accounted for -- FT10 reaches 0.2104 on its 1,003 rows. The coarsest rung admissible for EVERY trait is p=10 (90 clusters); see wiki/f3_rung_census_1001g_*.json. The run now REFUSES an inadmissible endpoint rather than scoring whichever traits happen to clear it."
+    },
+    "paired_fine_vs_coarse": {
+      "positive": {
+        "status": "ok",
+        "n_common_traits": 8,
+        "common_traits": [
+          "ap261_FT10",
+          "ap703_DTF1",
+          "ap528_rSurvival-fruit-mli",
+          "ap390_rosetteDM",
+          "ap750_stomatasize",
+          "ap1898_Trichome-stem-length",
+          "ap699_Inter-specific-pollination-o",
+          "ap1910_Raffinose-32C"
+        ],
+        "median_drop_fine_on_common": 0.0441,
+        "median_drop_coarse_on_common": 0.0333,
+        "median_delta_coarse_minus_fine": -0.0156,
+        "n_coarser_drops_more": 3,
+        "dropped_by_coarse_rung": [],
+        "gained_by_coarse_rung": [],
+        "coarse_rung_refusals": {}
+      },
+      "negative": {
+        "status": "ok",
+        "n_common_traits": 8,
+        "common_traits": [
+          "Cadmium_Chloride",
+          "Caffeine",
+          "Calcium_Chloride",
+          "Cisplatin",
+          "Cobalt_Chloride",
+          "Congo_red",
+          "Copper",
+          "Cycloheximide"
+        ],
+        "median_drop_fine_on_common": 0.0,
+        "median_drop_coarse_on_common": -0.0052,
+        "median_delta_coarse_minus_fine": -0.008,
+        "n_coarser_drops_more": 1,
+        "dropped_by_coarse_rung": [],
+        "gained_by_coarse_rung": [],
+        "coarse_rung_refusals": {}
+      },
+      "why": "A rung's median over the traits IT could score is NOT comparable to the other rung's median over a DIFFERENT trait set. The coarse rung refuses a trait whose NON-MISSING subset pushes a cluster over the one-fold share, and the traits it refuses are the HIGHEST-n ones -- which on this panel are also the strongest-signal, smallest-drop ones. Dropping them inflates the coarse median through ATTRITION alone, so the fine-vs-coarse reading is restricted to the traits scoreable at BOTH rungs."
+    },
+    "granularity_matching": {
+      "rule": "the negative arm's rungs are chosen to match the positive arm's CLUSTERS PER INDIVIDUAL, not its ladder percentile; the rule was fixed before any bloom drop was read",
+      "negative_fine": {
+        "target_clusters_per_individual": 0.138326,
+        "chosen_percentile": 2.0,
+        "n_clusters": 170,
+        "clusters_per_individual": 0.168651,
+        "mean_cluster_size": 5.93,
+        "candidates": [
+          {
+            "percentile": 1.0,
+            "n_clusters": 260,
+            "clusters_per_individual": 0.257937
+          },
+          {
+            "percentile": 2.0,
+            "n_clusters": 170,
+            "clusters_per_individual": 0.168651
+          },
+          {
+            "percentile": 5.0,
+            "n_clusters": 74,
+            "clusters_per_individual": 0.073413
+          },
+          {
+            "percentile": 10.0,
+            "n_clusters": 37,
+            "clusters_per_individual": 0.036706
+          },
+          {
+            "percentile": 15.0,
+            "n_clusters": 29,
+            "clusters_per_individual": 0.02877
+          },
+          {
+            "percentile": 20.0,
+            "n_clusters": 22,
+            "clusters_per_individual": 0.021825
+          }
+        ]
+      },
+      "negative_coarse": {
+        "target_clusters_per_individual": 0.079295,
+        "chosen_percentile": 5.0,
+        "n_clusters": 74,
+        "clusters_per_individual": 0.073413,
+        "mean_cluster_size": 13.62,
+        "candidates": [
+          {
+            "percentile": 1.0,
+            "n_clusters": 260,
+            "clusters_per_individual": 0.257937
+          },
+          {
+            "percentile": 2.0,
+            "n_clusters": 170,
+            "clusters_per_individual": 0.168651
+          },
+          {
+            "percentile": 5.0,
+            "n_clusters": 74,
+            "clusters_per_individual": 0.073413
+          },
+          {
+            "percentile": 10.0,
+            "n_clusters": 37,
+            "clusters_per_individual": 0.036706
+          },
+          {
+            "percentile": 15.0,
+            "n_clusters": 29,
+            "clusters_per_individual": 0.02877
+          },
+          {
+            "percentile": 20.0,
+            "n_clusters": 22,
+            "clusters_per_individual": 0.021825
+          }
+        ]
+      },
+      "positive_fine_clusters_per_individual": 0.138326,
+      "positive_coarse_clusters_per_individual": 0.079295,
+      "why_not_percentile": "on 1001G p=10 gives 90 clusters over 1,135 accessions while on the bloom cross p=20 gives 22 over 1,008 -- a 12.6-member cluster against a 46-member one. Percentile matching would compare different operations and call it the same end of the bracket.",
+      "note_on_range_width": "the negative control's admissible range is WIDE (p=1..20, 260..22 clusters) and the positive's is NARROW (p=5..10, 157..90): a bi-parental cross forms no dominant cluster, so few rungs are excluded. The WIDTH of the admissible range is itself a structure signal, observed here and not used as a test."
+    },
+    "symmetric_comparison": {
+      "finest_positive_minus_negative": 0.0441,
+      "coarsest_positive_minus_negative": 0.0386,
+      "note": "both arms are compared AT THE SAME END of their own admissible ranges; a positive-coarsest vs negative-finest comparison would be apples to oranges and is deliberately not reported as the differential."
+    },
+    "reading": "if BOTH endpoints show a drop no larger than the negative control's, the insensitivity is the INSTRUMENT's; if the coarsest shows a clear drop and the finest does not, the fineness was the cause and select_threshold's bias is the binding constraint."
+  },
+  "crosscheck_artifact": "f3_ibs_crosscheck_1001g_2026-10-10.json",
+  "honest_limits": [
+    "The two controls have DIFFERENT traits, so the between-control comparison is two-sample, not paired; only the within-control sign tests are paired.",
+    "The positive control's genotypes are IMPUTED, which can flatten or sharpen the very relatedness structure a de-confounding calibration measures.",
+    "Markers are a MAF>=0.05 subsample read from chunk-aligned blocks, not an LD-pruned genome-wide set.",
+    "n_perm=100 bounds the resolution of every beats_null decision.",
+    "MIN_TRAITS_FOR_SIGN_TEST is asserted, not derived.",
+    "The positive control's traits are ONE PER STUDY (163 usable AraPheno traits span only 8 studies, 121 of them one rainfall factorial), which is the best independence this substrate allows -- but FT10 and DTF1 are both flowering time, so they remain BIOLOGICALLY correlated across studies.",
+    "Both arms run at a comparable marker budget by construction (bloom is strided to match), so the differential is not confounded by marker count.",
+    "A PASS bounds the INSTRUMENT's differential response. It does not validate any downstream organism-level prediction.",
+    "The VERDICT is computed from the FINEST admissible rung (what select_threshold would actually deploy). The coarsest-rung arm is a DIAGNOSTIC that brackets the admissible range; it does not feed the verdict, so the bar is not being chosen after the fact."
+  ]
+}

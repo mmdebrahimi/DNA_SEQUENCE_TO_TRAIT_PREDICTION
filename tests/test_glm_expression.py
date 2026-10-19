@@ -18,6 +18,7 @@ from dna_decode.glm.expression import (
     Pair,
     _norm_key,
     gc_feature,
+    irrelevant_feature_control,
     kmer_feature,
     leave_element_out,
     load_pairs,
@@ -216,3 +217,84 @@ def test_the_learned_features_genuinely_BEAT_the_crude_baseline_on_the_real_data
     oh = fit_predict_ridge(tr, te, feature="onehot")["spearman"]
     assert gc < 0.35, f"GC-only should be weak, got {gc}"
     assert oh > gc + 0.2, f"positional one-hot ({oh}) must clearly beat GC ({gc})"
+
+
+# ---------------------------------------------------------------------------------------------------
+# the leakage control (moved here 2026-10-13 from a duplicate loader built on the naive join)
+# ---------------------------------------------------------------------------------------------------
+def _synth_crossed(n=600, seed=1):
+    """Like `_synth` but with a VARYING Background, so a held-out-Background fold has a train set.
+    `_synth` pins Background to one value and is deliberately left alone — other tests rely on it."""
+    import random
+    r = random.Random(seed)
+    out = []
+    for i in range(n):
+        m10 = r.choice(["a", "b", "c", "d"])
+        m35 = r.choice(["p", "q", "r", "s"])
+        bg = r.choice(["bg1", "bg2", "bg3", "bg4"])
+        val = {"a": 1.0, "b": 2.0, "c": 4.0, "d": 8.0}[m10] + r.random()
+        out.append(Pair(name=f"v{i}", seq="".join(r.choice("ACGT") for _ in range(SEQ_LENGTH)),
+                        expression=val,
+                        elements={"UP_element": "u", "Minus35": m35, "Spacer": "s1",
+                                  "Minus10": m10, "Background": bg}))
+    return out
+
+
+def test_an_irrelevant_feature_lands_at_chance_on_synthetic_folds():
+    c = irrelevant_feature_control(_synth_crossed(), "Background", seed=0)
+    assert c["n_folds"] >= 3, c
+    assert c["irrelevant_median_abs_spearman"] < 0.35, c
+
+
+def test_the_leakage_control_is_NON_VACUOUS():
+    """THE load-bearing test. A planted leak must score HIGH, or a clean irrelevant-feature reading
+    proves nothing — it would only mean the control is blind. This is what separates a control from a
+    formality, and it is the one piece of the deleted `constructed.py` that was worth keeping."""
+    c = irrelevant_feature_control(_synth_crossed(), "Background", seed=0)
+    assert c["planted_leak_median_abs_spearman"] > 0.5, (
+        "the planted leak did NOT score high, so this control cannot detect leakage and a clean "
+        f"reading from it must not be trusted: {c}")
+    assert c["planted_leak_median_abs_spearman"] > c["irrelevant_median_abs_spearman"]
+
+
+def test_the_control_runs_on_every_element_column_not_just_background():
+    """The deleted duplicate could only hold out Background. The canonical split axis set is all five,
+    so a control that covers only one of them under-tests the splits actually in use."""
+    pairs = _synth_crossed()
+    for col in ("Minus10", "Minus35", "Background"):
+        c = irrelevant_feature_control(pairs, col, seed=0)
+        assert c["column"] == col
+        assert c["n_folds"] >= 2, (col, c)
+
+
+def test_a_single_level_column_yields_NO_folds_rather_than_a_degenerate_one():
+    """`_synth` pins Background to one value. Holding it out leaves an empty train set, so the honest
+    result is zero folds — not one fold scored against nothing."""
+    c = irrelevant_feature_control(_synth(n=200, seed=0), "Background", seed=0)
+    assert c["n_folds"] == 0, c
+
+
+@pytest.mark.skipif(not HAVE_DATA, reason="GSE108535 not cached on this host")
+def test_the_real_substrate_control_is_clean_AND_can_still_see_a_leak():
+    pairs, _ = load_pairs(CACHE, allow_download=False)
+    c = irrelevant_feature_control(pairs, "Background", seed=0)
+    assert c["irrelevant_median_abs_spearman"] < 0.15, c
+    assert c["planted_leak_median_abs_spearman"] > 0.5, c
+
+
+@pytest.mark.skipif(not HAVE_DATA, reason="GSE108535 not cached on this host")
+def test_the_design_is_FIVE_way_crossed_and_UP_element_is_NOT_constant():
+    """Pins the shape a duplicate loader got wrong on 2026-10-13. Built on the NAIVE join it reported
+    8x8x8x8 with `UP_element` collapsed to a single level; through the canonical loader the grid is
+    3 x 8 x 8 x 8 x 8 = 12,288 cells with 10,898 filled. The naive join kept only the `noUP` arm, which
+    is exactly why the axis looked constant."""
+    pairs, rep = load_pairs(CACHE, allow_download=False)
+    levels = {c: len({p.elements[c] for p in pairs}) for c in ELEMENT_COLUMNS}
+    assert levels["UP_element"] == 3, levels
+    assert levels["Minus35"] == levels["Spacer"] == levels["Minus10"] == levels["Background"] == 8, levels
+    cells = 1
+    for v in levels.values():
+        cells *= v
+    assert cells == 12288, levels
+    assert rep.n_joined == 10898
+    assert rep.n_joined < cells, "the grid is near-complete, not complete"

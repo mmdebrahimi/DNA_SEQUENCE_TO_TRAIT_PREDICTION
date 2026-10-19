@@ -6,15 +6,16 @@
       "claim": "The GLM (a learned, generative model) is the product; the deterministic catalog was a bridge built only so there was a number to compare against",
       "raised_by": "user",
       "first_raised": "2026-10-09T14:43:08Z",
-      "times_raised": 2,
+      "times_raised": 3,
       "quotes": [
         "just build it... I don't care if it is not getting good results",
-        "I don't want you to compare it with the lookup table, that was just built as a bridge"
+        "I don't want you to compare it with the lookup table, that was just built as a bridge",
+        "I had qwen do some research on the topic, and a talk on genomics by a professor that seems very related. please analyze and tell me what you think"
       ],
-      "status": "open",
-      "resolved_by": "",
-      "tested_exactly": "",
-      "resolved_at": "",
+      "status": "adopted-user-was-right",
+      "resolved_by": "project_state/trait-to-edit/big-idea.md",
+      "tested_exactly": "NO experiment tested this claim. This is an ADOPTION on the user's authority, not a resolution by evidence: the user holds the position, restated it three times, and the mission document now encodes it as its opening premise -- 'The product is the generative engine; the deterministic catalog was a BRIDGE'. ADOPTION IS NOT EVIDENCE and nothing here is a measurement. The discriminative result that looks like it settles this does not, and is kept out of this field on purpose; see wiki/standing_position_adoption_2026-10-19.md.",
+      "resolved_at": "2026-10-19T00:00:00Z",
       "count_corrections": [
         {
           "from": 2,
@@ -22,6 +23,9 @@
           "reason": "replayed registration script double-counted on first deploy (2026-10-09); true evidence is 2 known restatements each",
           "at": "2026-10-09T14:51:15Z"
         }
+      ],
+      "seen_occurrences": [
+        "kellis-multimodal-doc-2026-10-18"
       ]
     },
     "substrate-is-not-the-subject": {

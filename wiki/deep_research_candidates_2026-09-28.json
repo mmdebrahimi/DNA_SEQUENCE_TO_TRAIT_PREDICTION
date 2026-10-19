@@ -5,10 +5,11 @@
   "window": "2024-09..2026-09 (stated window; two candidates below predate it and are labelled)",
   "status": "F2 + F3 + F4 SEARCHED; F1 one shallow search only. Resumed sequentially after the 12-agent fan-out died on a rate limit. 14 candidates recorded.",
   "coverage": {
-    "F1_label_substrates": "ONE shallow search only (DMS/MaveDB axis, a clean negative). AMR measured-AST collections, AllTheBacteria, EBI AMR Portal, Zenodo/Figshare thesis deposits and ETD aggregators remain UNSEARCHED -- blocked in this session by the exhausted web-search budget, NOT by a finding.",
+    "F1_label_substrates": "RE-SEARCHED 2026-10-09 in TWO passes (first-party, sequential, no fan-out). PASS 1 (AllTheBacteria) -> CABBAGE / EMBL-EBI AMR Portal: 9 of 10 gates pass and it clears the STRICT bar on four cells (wiki/f1_cabbage_label_substrate_2026-10-09.md). PASS 2 (Zenodo / Dryad / ETD) -> five further candidates, ALL DOMINATED OR REJECTED, and the rejections are STRUCTURAL rather than incidental: DRIAMS (750k phenotypes) and ARMD (283k patients) carry NO GENOMES, so a genotype rule cannot be scored against them at all; the Align Foundation benchmark is a PROPOSAL whose only file is a 404 kB PDF; Arcadia's 6,983 strains are BV-BRC-derived, categorical-only (no MIC) and ship no assemblies; the nanopore/VITEK cohort is genuinely paired but n=79. One TOOL finding: AMRgen proves mic.eucast.org IS programmatically fetchable but has NO ECOFF function. STILL UNSEARCHED: figshare specifically; ATLAS (Vivli request-gated); the named institutional repositories.",
     "F2_condition_coverage": "two searches + one direct verification. The strongest lead is recorded.",
     "F3_deconfounded_designs": "SEARCHED by a single agent (~13 queries + 8 verification fetches, 33 tool uses). 7 of its 15 candidates recorded here -- the decision-relevant ones. Most carry VERIFIED DOIs; UNVERIFIED flags preserved. META-FINDING: NO candidate re-proposed the closed zero-shot class -- the 2025-26 bacterial-AMR literature has moved to DIAGNOSING the confound rather than scaling sequence models against it.",
-    "F4_dosage_transfer": "4 candidates from 2 first-party searches + 1 direct verification. The headline is a THEORETICAL one: if Barber et al. 2021 holds, our measured vacuous-interval result is the price of distribution-free conditional coverage, not an implementation gap -- so the path is a weaker target or added assumptions, not a better conformal method."
+    "F4_dosage_transfer": "4 candidates from 2 first-party searches + 1 direct verification. The headline is a THEORETICAL one: if Barber et al. 2021 holds, our measured vacuous-interval result is the price of distribution-free conditional coverage, not an implementation gap -- so the path is a weaker target or added assumptions, not a better conformal method.  RE-SEARCHED 2026-10-09: the field has NO method for absolute cross-assay magnitude, and that is now a MEASURED bound rather than an absence of searching. VEFill (2025) quantifies it -- within a uniform stability assay R2=0.64 generalising to unseen proteins, WEAKER on activity-based assays -- so scale transfer is tractable WITHIN a modality and degrades ACROSS. State of the art remains synonymous/nonsense two-point rescaling (recipe now recorded) or rank normalisation. The search explicitly found NO dedicated 2025-2026 work on spiking designated anchor variants for cross-experiment calibration, and none on formal calibration-transfer statistics for absolute effect sizes. CONSEQUENCE: the inverse cell's RANK-ONLY deployability MATCHES the field's state of the art rather than falling short of it, so F4 CONFIRMS a shipped decision instead of opening a path.",
+    "F5_thesis_harvest_infra": "RETIRED ON EVIDENCE 2026-10-09, not deferred. The ETD route is structurally hard for reasons independent of this project: EThOS has been OFFLINE since the 2023 British Library cyber-attack, and general web search does not index thesis full text (a targeted ETD query returned journal articles and dataset resources and ZERO theses). The plan gated F5 on 'only if F1-F4 show the manual search is the bottleneck' -- and the manual search found CABBAGE in ONE query, so search volume is demonstrably not the bottleneck. Unexhausted remainder, named rather than implied: DART-Europe and ProQuest queried directly, plus institutional repositories (Cambridge Apollo, Oxford ORA, Edinburgh ERA, Wageningen, DTU Orbit), which commonly host AMR-genomics theses with linked Zenodo/figshare MIC datasets."
   },
   "candidates": [
     {
@@ -164,12 +165,13 @@
       "name": "Null/WT-anchored normalisation plus overlapping-variant bridging ('test-equating') as the field's practical cross-assay scale",
       "locator": "UNVERIFIED \u2014 synthesised from search summaries of the 2025 Mol Syst Biol DMS variant-scoring review (https://doi.org/10.1038/s44320-025-00137-x) and MaveDB/AVE harmonisation discussion; no primary source fetched",
       "date": "2025 review",
-      "verification": "SEARCH-REPORTED, NOT FETCHED, and partly a SYNTHESIS rather than a single source's stated method. Verify before relying on it.",
-      "claim": "Independent corroboration that the scale problem is real and unsolved: 'their scale is highly dependent on experimental methods and selection assays, requiring rescaling and normalisation'. The practical approach is to anchor each assay on shared controls (synonymous/WT and nonsense/null) to a 0-1 range, then rescale across assays via overlapping variants as a bridging set.",
+      "verification": "CORROBORATED 2026-10-09 by an independent first-party search: several sources describe synonymous/nonsense two-point rescaling as the field's working practice. The UNVERIFIED flag is lifted on the PRACTICE; no single primary source was fetched, so the flag stands on the citation.",
+      "claim": "Independent corroboration that the scale problem is real and unsolved: 'their scale is highly dependent on experimental methods and selection assays, requiring rescaling and normalisation'. The practical approach is to anchor each assay on shared controls (synonymous/WT and nonsense/null) to a 0-1 range, then rescale across assays via overlapping variants as a bridging set.  CONCRETE RECIPE recovered 2026-10-09: the WT anchor is the paper's own value or the MEDIAN of synonymous variants; where nonsense variants are absent (common), a 'nonsense-like' anchor is the MEDIAN of the worst-1% loss-of-function missense in that dataset. Admission requires >=1 synonymous, >=1 nonsense and >50 missense variants -- which yielded only 103 datasets over 30 proteins from MaveDB, so the anchor requirement is itself a hard filter.",
       "why_it_could_matter": "A null-to-WT-anchored scale would NOT be a physical unit but WOULD be a defensible shared axis ('fraction of the null-to-WT range'), which is more than the inverse cell has now. And it independently confirms our own recorded conclusion that raw calibrators cannot transfer.",
       "blocking_unknowns": [
         "ITS FAILURE MODE IN OUR DATA IS ALREADY MEASURED: null-anchoring needs an unsaturated dynamic range, and CcdB is 79.3% tied at its assay ceiling with 8 distinct levels -- the exact degeneracy our own G6 screen excludes it for. So the bridging idea is most likely to fail on the very assay that motivated the problem.",
-        "Requires overlapping variants BETWEEN assays; whether TEM-1 and CTX-M-14 share enough is unmeasured."
+        "Requires overlapping variants BETWEEN assays; whether TEM-1 and CTX-M-14 share enough is unmeasured.",
+        "DYNAMIC-RANGE CLIPPING is the companion caveat, and it is this repo's own assay_degeneracy finding arriving from outside: joint-modelling work truncates scores at a common lower bound because ASSAYS SATURATE AT DIFFERENT POINTS. Any anchoring scheme inherits that."
       ],
       "regime_screen": {
         "population": "constructed",
@@ -332,6 +334,178 @@
       "blocking_unknowns": [
         "A POSITION PAPER. Deliberately given NO regime triple so the screen refuses to promote it: it cannot be a finding."
       ]
+    },
+    {
+      "id": "cabbage_ebi_amr_portal",
+      "family": "F1",
+      "kind": "dataset",
+      "name": "CABBAGE / EMBL-EBI Antimicrobial Resistance Portal (release 2026-07)",
+      "locator": "https://doi.org/10.1093/nar/gkag780  (Nucleic Acids Research 54(16):gkag780, published 2026-08-24; preprint bioRxiv 10.1101/2025.11.12.688105; portal https://www.ebi.ac.uk/amr ; bulk FTP https://ftp.ebi.ac.uk/pub/databases/amr_portal/releases/2026-07/ ; code https://github.com/Leonardini/CABBAGE)",
+      "date": "2026-08-24",
+      "verification": "VERIFIED ON THE REAL SURFACE, not from the paper: FTP listing fetched, phenotype.parquet (8.3 MB) + phenotype_genotype_merged.parquet downloaded to D:/dna_decode_cache/amr_portal/, MD5 matched the published md5sums EXACTLY for both, and every number below was computed from the downloaded table.",
+      "claim": "1,714,486 genome-phenotype pairs over 170,750 isolates, WHO priority pathogens, CC-BY 4.0, parquet+DuckDB bulk download. Phenotypes are LABORATORY-MEASURED (per-row laboratory_typing_method; broth dilution dominant); AMRFinderPlus is used for GENOTYPE annotation only, never to infer phenotype. assembly_ID populated on 66.8% of rows (ENA GCA preferred, ERZ fallback, keyed on BioSample). MIC carried as measurement + measurement_sign + units, so operator-aware censoring is possible.",
+      "why_it_could_matter": "IT CONTRADICTS THE OPERATIVE PREMISE OF THE AMR TRACK'S CLOSURE. The repo's own strict-MIC 4-drug census (2026-05-18) concluded 'NO drug clears N=150 per-class at either bar', with assembly_accession the structural bottleneck (96% drop on cipro). Run through the repo's OWN tier_for_isolate, CABBAGE clears N=150 per-class at the STRICT bar on four cells: E. coli x ceftriaxone 2,802R/4,212S, Campylobacter x cipro 1,180R/3,532S, E. coli x cipro 509R/5,218S, Salmonella x cipro 196R/21,084S. Salmonella cipro is UNDERPOWERED in the repo at 4-5 R against a bar of 20. It is also not a speculative new source: the EBI AMR Portal already produced this project's first genuinely-INDEPENDENT TB number (39,193-isolate provenance-disjoint cohort), so it has cleared these gates in production once.",
+      "blocking_unknowns": [
+        "G8 IS THE ONE OPEN GATE and it is the expensive one: min_effective_lineages needs genome clustering over the actual assemblies, which must be fetched. 9 of 10 gates pass; this is NOT a pass.",
+        "LEAKAGE IS REAL AND MEASURED: 1,011 of the repo's 1,509 manifest accessions (67.0%) appear in CABBAGE -- PATRIC is BV-BRC and NCBI_antibiogram/NDARO are the NCBI-PD family the 10 SCORED cells came from. Manageable rather than fatal: 102,699 CABBAGE assemblies (99.0%) are in NO repo cohort, so the fail-closed cohort_manifest gate costs almost nothing.",
+        "G2 IS THE COHORT-WIDE FALLBACK, AND THE SCREEN SAYS SO ITSELF ('weak'). The `database` column is an AGGREGATOR label (semicolon-joined, overlapping: 'NCBI_antibiogram;NDARO'), NOT a BioProject. The repo's source-diversity bar is per-BioProject, so 7 labels at 47% top share is NOT that measurement. BioProject-level diversity is UNMEASURED and needs BioSample->BioProject resolution via ENA.",
+        "USELESS FOR THE PROSPECTIVE LOCK: collection_year maxes at 2024 with ZERO rows >=2026, so nothing here is eligible against the active 2026-08-31 cutoff. A clean negative on that forward path.",
+        "CENSORING BITES UNEVENLY and the four clearing cells are the good ones: E. coli cipro excludes 51% (CENSORED_EXCLUDED 5,199 -- a <= bound above the S breakpoint), Klebsiella cipro excludes 87% and is S-starved at 32. Campylobacter cipro is the clean one (CENSORED_EXCLUDED exactly 0).",
+        "E. coli x gentamicin yields only 67 strict R, so it does NOT serve the open rmt/aac(3) question.",
+        "assembly_ID is an IDENTIFIER; fetchability is inferred from the portal's own genomes/ tree (indexed by GCA/ERZ with pre-computed GFF) but was NOT spot-fetched."
+      ],
+      "label_screen": {
+        "intended_layer": "L1_AMR_RS",
+        "evidence": {
+          "label_provenance_evidence": "laboratory_typing_method is populated per row with wet-lab methods (broth dilution dominant); AMRFinderPlus is used in CABBAGE for GENOTYPE annotation only, never to infer phenotype (NAR gkag780). Phenotypes come from 89 publications + 9 phenotype databases.",
+          "label_is_measured": true,
+          "label_semantics_evidence": "an MIC dilution reading with an explicit measurement_sign operator, not a description of where or why the isolate was collected.",
+          "label_is_assay_reading": true,
+          "non_ecosystem_min_class_n": 519.0,
+          "n_fetchable_assemblies": 5058.0,
+          "censored_fraction": 0.0,
+          "largest_source_share": 0.4747,
+          "n_sources": 7.0,
+          "loci_without_recorded_variant_fraction": 0.0,
+          "off_panel_variant_fraction": 0.0,
+          "provenance_field_populated_fraction": 0.9968
+        },
+        "scope": "screened on Campylobacter jejuni x ciprofloxacin, the cleanest cell (CENSORED_EXCLUDED=0) and the one whose repo counterpart worst fails source diversity (single BioProject, share 1.000)"
+      }
+    },
+    {
+      "id": "align_mic_benchmark_proposal",
+      "family": "F1",
+      "kind": "dataset",
+      "name": "The Align Foundation 'Predicting Quantitative MIC from WGS' benchmark -- A PROPOSAL, NOT A DATASET",
+      "locator": "https://zenodo.org/records/21456142  (Zenodo, published 2026-07-20, v1, CC-BY-4.0)",
+      "date": "2026-07-20",
+      "verification": "VERIFIED BY FETCH -- and the verification IS the finding: the record contains ONE file, 'Predicting Quantitative MIC.pdf' (404.3 kB, md5 93db327e112103a909d256e6c03746ce). No sequences, no MIC measurements.",
+      "claim": "PLANS ~5,000 E. coli + ~5,000 K. pneumoniae from ten countries spanning six inhabited continents, phenotyped on a standardised broth-microdilution panel. 16 creators (Align Foundation, Oxford, Bristol, Monash, LSHTM, Uppsala, ATCC, CARB-X, Oklahoma).",
+      "why_it_could_matter": "If deposited it would be the first PURPOSE-BUILT globally-representative paired WGS+quantitative-MIC benchmark -- the shape that clears G2 by construction rather than by luck.",
+      "blocking_unknowns": [
+        "IT IS A PROPOSAL. The counts are TARGETS. A search summary described it as 'proposes a globally representative benchmark', and a naive harvest would have recorded 10,000 paired WGS+MIC isolates under CC-BY that DO NOT EXIST. This is precisely what the campaign's verify-before-promising rail exists to catch.",
+        "REVIVAL CONDITION: re-check the Zenodo record for a later version carrying actual sequence/MIC files."
+      ]
+    },
+    {
+      "id": "arcadia_ecoli_7000_amr",
+      "family": "F1",
+      "kind": "dataset",
+      "name": "Arcadia Science 7,000-strain E. coli AMR genotype-phenotype dataset",
+      "locator": "https://doi.org/10.5281/zenodo.12692732  (publication https://thestacks.org/publications/dataset-ecoli-amr-genotype-phenotype/v3 , 2024-08-21, v3, CC-BY-4.0)",
+      "date": "2024-08-21",
+      "verification": "VERIFIED BY FETCH of the publication page (301 redirect from the retired research.arcadiascience.com host followed).",
+      "claim": "6,983 strains with documented resistance/susceptibility to 50 antibiotics or two-antibiotic combinations (7,057 in the variant-calling set incl. 72 ECOR pangenome strains). Deposits: pangenome FASTA, presence/absence matrix, phenotype matrix, VCFs, SRA accessions, GFF.",
+      "why_it_could_matter": "A second independent E. coli genotype-phenotype corpus at ~7k scale with variant calls already computed.",
+      "blocking_unknowns": [
+        "DOMINATED BY CABBAGE ON EVERY AXIS THAT MATTERS HERE, and the domination is the finding: (a) NO MIC VALUES -- phenotypes are categorical S/I/R only, so this repo's strict-MIC tiering CANNOT run; (b) NO ASSEMBLIES -- only SRA accessions, so G5 attrition applies and reads must be assembled (~45 min/isolate by this repo's own measurement); (c) phenotype labels come from BV-BRC -- the source this project already measured as infeasible AND which supplies ~45% of CABBAGE, so it is largely REDUNDANT; (d) 14 countries but 'the majority originating from the United Kingdom and Norway', a G2 concern; (e) whether the phenotypes are LABORATORY-MEASURED is NOT STATED on the page, so G1 cannot be asserted."
+      ]
+    },
+    {
+      "id": "driams_maldi_amr",
+      "family": "F1",
+      "kind": "dataset",
+      "name": "DRIAMS -- MALDI-TOF mass spectra with linked AMR phenotypes (Dryad)",
+      "locator": "https://doi.org/10.5061/dryad.bzkh1899q  (Dryad, version 2025-08-19, 144.84 GB)",
+      "date": "2025-08-19",
+      "verification": "Dryad DOI resolves; scale figures are search-reported and were NOT independently re-counted.",
+      "claim": "More than 300,000 mass spectra and more than 750,000 AMR phenotypes from four medical institutions.",
+      "why_it_could_matter": "By phenotype VOLUME it is the largest single resource this search surfaced.",
+      "blocking_unknowns": [
+        "STRUCTURALLY REJECTED, and the reason generalises to a reusable screen: THERE ARE NO GENOMES. It is MALDI-TOF spectra. This repo's decoder scores a GENOTYPE against a rule, so a phenotype-only corpus -- however large -- cannot test it. G5 is 0 fetchable assemblies BY CONSTRUCTION, not by attrition.",
+        "It is a substrate for a DIFFERENT instrument (spectra->phenotype), which is not this project."
+      ],
+      "label_screen": {
+        "intended_layer": "L1_AMR_RS",
+        "evidence": {
+          "label_provenance_evidence": "MALDI-TOF spectra with linked susceptibility phenotypes from four medical institutions; the phenotype is measured, but the GENOTYPE side is absent entirely.",
+          "label_is_measured": true,
+          "label_semantics_evidence": "an AST reading, not a description of collection context",
+          "label_is_assay_reading": true,
+          "n_fetchable_assemblies": 0.0,
+          "censored_fraction": 0.0,
+          "non_ecosystem_min_class_n": 100.0,
+          "largest_source_share": 0.4,
+          "n_sources": 4.0,
+          "provenance_field_populated_fraction": 0.9,
+          "min_effective_lineages": 0.0,
+          "loci_without_recorded_variant_fraction": 0.0,
+          "off_panel_variant_fraction": 0.0
+        }
+      }
+    },
+    {
+      "id": "armd_stanford_ehr",
+      "family": "F1",
+      "kind": "dataset",
+      "name": "ARMD -- Antibiotic Resistance Microbiology Dataset (Stanford Healthcare EHR, Dryad)",
+      "locator": "https://datasetcatalog.nlm.nih.gov/dataset?q=0000041640  (Dryad; published 2025-01-23, updated 2025-10-22)",
+      "date": "2025-01-23",
+      "verification": "NLM dataset-catalog entry resolves; counts are search-reported and were NOT re-derived.",
+      "claim": "De-identified EHR resource covering urine, respiratory and blood cultures for 283,715 unique adult patients, with organism identification, antibiotic susceptibility and clinical/demographic data.",
+      "why_it_could_matter": "A very large measured-susceptibility corpus with unusually rich clinical context.",
+      "blocking_unknowns": [
+        "SAME STRUCTURAL REJECT AS DRIAMS: NO GENOMES. Clinical susceptibility without sequence cannot score a genotype rule.",
+        "Single institution (Stanford Healthcare), so a G2 source-concentration concern would apply even if genomes existed."
+      ]
+    },
+    {
+      "id": "nanopore_vitek_amr_79",
+      "family": "F1",
+      "kind": "dataset",
+      "name": "Nanopore raw-signal bacterial WGS with VITEK 2 XL MIC phenotypes (Scientific Data)",
+      "locator": "https://doi.org/10.5281/zenodo.17542640  (article https://www.nature.com/articles/s41597-025-06319-4 )",
+      "date": "2025-01-01",
+      "verification": "DOI and article resolve; the per-species phenotype tables were NOT fetched.",
+      "claim": "79 isolates across six species with newly derived AMR phenotype metadata; VITEK 2 XL interpretation AND MIC values for 21-26 antibiotics per species for E. faecium, S. aureus and K. pneumoniae.",
+      "why_it_could_matter": "Genuinely paired sequence + laboratory-measured MIC, with raw long-read signal -- a clean small cohort of exactly the shape this project wants.",
+      "blocking_unknowns": [
+        "TOO SMALL: 79 isolates over six species is ~13 per species, far below this repo's 20-per-class bar and two orders below 150.",
+        "Usable as a SPOT-CHECK cohort, never as a substrate."
+      ]
+    },
+    {
+      "id": "amrgen_eucast_fetch",
+      "family": "F1",
+      "kind": "method",
+      "name": "AMRgen (AMRverse / ESGEM-AMR) -- get_eucast_mic_distribution(), a WORKING programmatic EUCAST fetch",
+      "locator": "https://github.com/AMRverse/AMRgen  (GPL-3.0; remotes::install_github('AMRverse/AMRgen'); preprint Holt et al. 2026, bioRxiv 10.64898/2026.05.01.722195)",
+      "date": "2026-05-01",
+      "verification": "VERIFIED BY FETCH of the package repo page. The preprint PDF is a FlateDecode byte dump and was NOT readable, so function names come from the repo page, not the paper.",
+      "claim": "Exposes get_eucast_mic_distribution(drug, species) -- 'Fetch MIC and disk zone reference distribution data directly from EUCAST' -- plus compare_mic_with_eucast(), import_amrfp() (AMRFinderPlus), import_ncbi_pheno(), export_ebi_pheno(), export_ncbi_pheno(), solo_ppv(), amr_upset(), concordance().",
+      "why_it_could_matter": "It INDEPENDENTLY CORROBORATES this repo's own 2026-09-11/12 correction that mic.eucast.org IS programmatically reachable, and that the earlier 'human-render-only' conclusion was a wrong-query-parameter artifact rather than a property of the source. It is also from the AMRrules group and ships solo_ppv(), the SOLO grading this project already adopted.",
+      "blocking_unknowns": [
+        "IT DOES NOT CLOSE THE ECOFF LINE, and this is the honest bound: there is NO ECOFF FUNCTION. Only MIC and disk-zone reference DISTRIBUTIONS, plus clinical breakpoints inherited from the AMR R package. ECOFFs are not mentioned on the repo page at all.",
+        "So what is confirmed is the FETCH ROUTE, not the values. dna_decode/data/ecoff_catalog.py still requires each value to carry a source_url AND a verbatim quote, and this supplies neither.",
+        "R, not Python -- a cross-language dependency this project does not currently carry."
+      ],
+      "regime_screen": {
+        "population": "natural",
+        "endpoint": "organism",
+        "method": "deterministic_catalog"
+      }
+    },
+    {
+      "id": "vefill_within_modality_transfer",
+      "family": "F4",
+      "kind": "method",
+      "name": "VEFill -- DMS score imputation across protein domains, and the MEASURED within-vs-across-modality limit",
+      "locator": "https://doi.org/10.1101/2025.05.14.653991  (bioRxiv 2025-05-14; also PMC12132439)",
+      "date": "2025-05-14",
+      "verification": "DOI and PMC entry resolve. The performance figures are search-reported and were NOT re-derived from the paper.",
+      "claim": "Gradient-boosting imputation of missing DMS scores trained on Human Domainome 1 -- a large STANDARDISED corpus using a UNIFORM stability-based assay -- integrating ESM-1v embeddings, EVE scores, substitution matrices and physicochemical descriptors. R2=0.64 (Pearson r=0.80); generalises reliably to unseen proteins in OTHER STABILITY-BASED datasets but WEAKER on ACTIVITY-BASED assays.",
+      "why_it_could_matter": "THIS IS THE DIRECT ANSWER TO F4, and it is a BOUND rather than a lever: cross-assay scale transfer is tractable WITHIN an assay modality and degrades ACROSS modalities. That independently corroborates this project's measured finding that a calibrator could not transfer between TEM-1 and CcdB, and it means the inverse cell's RANK-ONLY deployability MATCHES the field's state of the art rather than falling short of it.",
+      "blocking_unknowns": [
+        "IT IS AN IMPUTATION MODEL, NOT A CALIBRATION-TRANSFER METHOD. It fills missing scores WITHIN a standardised corpus; it does not give an absolute magnitude on a new assay.",
+        "CORROBORATION, NOT A PATH: adopting it would not give the inverse cell a dose. The actionable output is the SCOPE RULE (same-modality anchoring only), not the model.",
+        "Human Domainome is a human-domain STABILITY corpus; transfer to a bacterial ACTIVITY assay like TEM-1 ampicillin is exactly the across-modality case it measures as weaker."
+      ],
+      "regime_screen": {
+        "population": "constructed",
+        "endpoint": "molecular",
+        "method": "supervised"
+      }
     }
   ],
   "process_findings": [

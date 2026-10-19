@@ -13,9 +13,9 @@
     {
       "organism": "Homo sapiens",
       "cell": "cross-organism transfer (E4)",
-      "tier": "TRANSFER_SCORED",
-      "metric": "AUROC 0.5805 vs null 0.50 (BAGEL CEG2 n=681 / NEG n=899); sens 0.1571 spec 0.9978",
-      "validation": "universal core (ribosome/tRNA-synth/translation/polymerase) transfers cross-kingdom at high precision; human-specific core (proteasome 0/53, spliceosome 0/49) MISSED -> per-organism catalogue extension is the follow-on"
+      "tier": "NOT_EVALUATED",
+      "metric": "D: data absent",
+      "validation": "-"
     },
     {
       "organism": "Escherichia coli",

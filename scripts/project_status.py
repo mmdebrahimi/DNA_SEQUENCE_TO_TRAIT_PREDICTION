@@ -139,10 +139,76 @@ def main() -> int:
         print(f"    UNAVAILABLE - could not read dna_decode.eval.regime ({exc}).")
         print(f"    Read wiki/organism_gp_regime_correction_2026-08-29.md; do NOT quote from memory.")
     print(f"    The discriminating variable is POPULATION DESIGN, not organism complexity.")
+
+    _print_substrate_block()
+
     print(f"\n  BEFORE CLAIMING ANYTHING ABOUT SCOPE: re-derive it. Prose in CLAUDE.md and wiki/ was")
     print(f"  true when written; this script is true now.")
     print()
     return 0
+
+
+#: The census this block reads. A per-rung utilization table carried by the ONE script every session is
+#: told to run before a scope claim -- because a mechanism fires when a surface someone already reads
+#: carries it, not when it sits in a standalone CLI nobody invokes.
+_CENSUS = Path(__file__).resolve().parent.parent / "wiki" / "mpra_substrate_census_2026-10-12.json"
+
+
+def _print_substrate_block() -> None:
+    """Per-rung rows / largest-N-used / utilization / that rung's OWN ceiling.
+
+    **Why this exists (measured 2026-10-13).** `size_lever` was present on exactly one of the census's
+    four rungs -- the one that said EXHAUSTED -- and absent from the three with headroom. An absent
+    field is not a neutral absence: it reads as "nothing to say here". So a rung-scoped fact was quoted
+    as a project-level wall and 321,123 unused fragments in the same cache directory were reported as
+    "no rows available". Printing EVERY rung side by side is what stops that: a reader now sees
+    `under-used:9.3%` next to `exhausted` and cannot generalise either one.
+
+    Fails soft and LOUD -- a missing or unparseable census prints its reason and never a clean silence.
+    """
+    print()
+    print("  SUBSTRATE RUNGS (rows, how much has been USED, and each rung's OWN ceiling):")
+    try:
+        import json
+
+        from dna_decode.eval.substrate_symmetry import audit
+
+        if not _CENSUS.exists():
+            print(f"    UNAVAILABLE - {_CENSUS.name} absent. Do NOT infer that a rung is exhausted")
+            print(f"    from this silence; the file is the only record of per-rung row counts.")
+            return
+        rep = audit(json.loads(_CENSUS.read_text(encoding="utf-8")))
+        rungs = {r["rung"]: r for r in rep["utilization"]}
+        census = json.loads(_CENSUS.read_text(encoding="utf-8"))["rungs"]
+        for name in sorted(rungs):
+            u = rungs[name]
+            ceil = census.get(name, {}).get("ceiling_for_a_sequence_model")
+            ceil_s = f"ceiling {ceil}" if isinstance(ceil, (int, float)) else "ceiling n/a"
+            avail = f"{u['rows_available']:,}" if u["rows_available"] else "?"
+            used = f"{u['largest_n_measured']:,}" if u["largest_n_measured"] else "?"
+            print(f"    {name:20} {u['verdict']:24} {used:>9} of {avail:>9} rows   {ceil_s}")
+
+        # WRAPPED, never truncated -- the same rule the regime block above states, and this block
+        # broke it. MEASURED 2026-10-13: `[:150]` on the real 4-rung asymmetric census dropped
+        # `size_lever` from the warning ENTIRELY (the one field whose asymmetry caused the incident)
+        # and cut a rung name mid-token at "'sigma|70_designed'"; `[:160]` cut all three live ceiling
+        # warnings mid-word at "square-ro|oted)", losing the derivation. These strings grow with the
+        # rung and field count, so any fixed cut eventually amputates the actionable half.
+        import textwrap
+
+        sym = rep["symmetry"]
+        if sym["verdict"] != "ok":
+            head = f"WARNING - census symmetry {sym['verdict']}: {sym['detail']}"
+            for i, line in enumerate(textwrap.wrap(head, 104)):
+                print(f"    {line}" if i == 0 else f"      {line}")
+            print(f"    A field on SOME rungs reads as a statement about ALL of them.")
+        for w in rep["ceiling_warnings"]:
+            for i, line in enumerate(textwrap.wrap(f"WARNING - {w}", 104)):
+                print(f"    {line}" if i == 0 else f"      {line}")
+        print(f"    A rung's score is only meaningful against ITS OWN ceiling. Never inherit one.")
+    except Exception as exc:  # noqa: BLE001 - orientation must not die on an import
+        print(f"    UNAVAILABLE - could not read the substrate census ({type(exc).__name__}: {exc}).")
+        print(f"    This is NOT evidence that a rung is exhausted.")
 
 
 if __name__ == "__main__":

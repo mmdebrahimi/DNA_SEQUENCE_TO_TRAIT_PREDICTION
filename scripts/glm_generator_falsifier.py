@@ -81,6 +81,15 @@ def main(argv=None) -> int:
                         "for a meaningful comparison against the ALIGNED promoter set")
     p.add_argument("--context", type=int, default=300, help="prompt length (bp) for --conditional")
     p.add_argument("--cache-dir", default="D:/hf_cache", help="weights cache (keep off C:)")
+    # The sampling seam. `dna_decode.glm.generate.HFGenerator` has accepted `temperature` and
+    # `top_k` since it was written, but this CLI never passed them, so every recorded run is "at
+    # default sampling" BY OMISSION, not by choice. G-D's unblock trigger is a sampling sweep
+    # reporting first (so sampling and weights stay separable levers), and that sweep was
+    # unrunnable from here without these two flags.
+    p.add_argument("--temperature", type=float, default=1.0,
+                   help="sampling temperature passed to HFGenerator (1.0 = the recorded default)")
+    p.add_argument("--top-k", type=int, default=0,
+                   help="top-k truncation passed to HFGenerator (0 = disabled, the recorded default)")
     p.add_argument("--out", default=None)
     a = p.parse_args(argv)
 
@@ -118,7 +127,7 @@ def main(argv=None) -> int:
         model_id = None if a.model == "auto" else a.model
         from dna_decode.glm.generate import DEFAULT_MODEL, HFGenerator
         gen = HFGenerator(model_id or DEFAULT_MODEL, cache_dir=a.cache_dir, seed=a.seed,
-                          device=a.device)
+                          device=a.device, temperature=a.temperature, top_k=a.top_k)
         try:
             print(f"loading {gen.model_id} (dtype {gen.dtype}) ...")
             if a.conditional:
@@ -195,6 +204,10 @@ def main(argv=None) -> int:
                            "note": "Markov null fitted on FIT only; all discrimination on EVAL only, so "
                                    "no generator is scored against sequences it was trained on"},
         "device": dev,
+        "sampling": {"temperature": a.temperature, "top_k": a.top_k,
+                     "is_recorded_default": (a.temperature == 1.0 and a.top_k == 0),
+                     "note": "stamped so a sweep row is attributable; an unstamped artifact cannot "
+                             "be distinguished from the default-sampling run already on record"},
         "conditional": bool(a.conditional),
         "context_bp": a.context if a.conditional else None,
         "results": results,

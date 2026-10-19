@@ -1,0 +1,126 @@
+{
+  "schema_version": 1,
+  "constraints": {
+    "north-star-step4-animals-deferred": {
+      "cid": "north-star-step4-animals-deferred",
+      "blocked": "STEP 4 OF THE NORTH STAR: 'climb to animals' -- eukaryotic ORGANISM-LEVEL trait decoding. Deliberately OMITTED as a gap from project_state/trait-to-edit/big-idea.md on 2026-10-09, so a reader of that mission definition will not see it at all. The user explicitly asked that this omission not become an assumed closure.",
+      "rationale": "Premature, NOT refuted. Two grounds: (1) the eukaryotic Path-B arm is a closed negative for ZERO-SHOT EMBEDDINGS on a natural population (Arabidopsis FT10, within-group r2 -0.13) -- which says nothing about a GENERATIVE approach; (2) the corrected regime map says the discriminating variable is POPULATION DESIGN, not organism complexity, so 'animals are too complex' is the wrong reading. The real reason to wait is sequencing: the measured bottleneck is the GENERATOR, and an animal gap would consume budget before there is a generator to climb with.",
+      "expiry_kind": "file-exists",
+      "expiry_arg": "wiki/glm_generator_baseline_panel.json",
+      "registered_at": "2026-10-10T12:52:49Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "ecoff-values-still-unsourced": {
+      "cid": "ecoff-values-still-unsourced",
+      "blocked": "ECOFF-ANCHORED WT/NWT TIERING (prior-art borrowable #3). The seam is BUILT and fully tested (dna_decode/data/ecoff_catalog.py + eval/wildtype_tiering.py); only 4 values are sourced, so everything downstream sits idle.",
+      "rationale": "Originally halted because six fetch routes failed and EUCAST looked human-render-only; then partly corrected 2026-09-11/12 when stable per-result URLs were found and 4 values landed. NEW EVIDENCE 2026-10-09 that further weakens the halt: AMRgen (github.com/AMRverse/AMRgen, GPL-3.0) ships get_eucast_mic_distribution() which fetches MIC and disk-zone reference distributions DIRECTLY from mic.eucast.org -- so a working programmatic route demonstrably exists in someone else's code. It has NO ECOFF function, so it does not hand over the values; what it hands over is proof the route is real.",
+      "expiry_kind": "manual",
+      "expiry_arg": "READ AMRgen's get_eucast_mic_distribution() implementation and port its URL/query construction, then populate ecoff_catalog with source_url + verbatim_quote per value. DO NOT fill the catalog from memory or from a search paraphrase -- a wrong cut-off yields a fully self-consistent evaluation that is entirely wrong and that nothing downstream can catch.",
+      "registered_at": "2026-10-10T12:52:49Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "f5-etd-route-retired-with-remainder": {
+      "cid": "f5-etd-route-retired-with-remainder",
+      "blocked": "THESIS/ETD HARVESTING as a label-substrate route (campaign family F5). Marked RETIRED ON EVIDENCE 2026-10-09 -- and 'retired' is exactly the word a future session will read as closed, which is why the UNEXHAUSTED remainder is named here.",
+      "rationale": "Structurally hard for reasons independent of this project: EThOS offline since the 2023 British Library cyber-attack, and general web search does not index thesis full text (a targeted ETD query returned journal articles and ZERO theses). The plan gated F5 on 'only if F1-F4 show the manual search is the bottleneck', and the manual search found CABBAGE in ONE query -- so search VOLUME was never the bottleneck. None of that says the DEPOSITS are absent; it says this ROUTE to them is poor.",
+      "expiry_kind": "manual",
+      "expiry_arg": "Query DART-Europe and ProQuest Dissertations & Theses DIRECTLY (not via web search), plus the institutional repositories that host AMR-genomics theses with linked Zenodo/figshare MIC datasets: Cambridge Apollo, Oxford ORA, Edinburgh ERA, Wageningen, DTU Orbit. Also still unsearched: figshare specifically.",
+      "registered_at": "2026-10-10T12:52:49Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "atlas-pfizer-vivli-request-gated": {
+      "cid": "atlas-pfizer-vivli-request-gated",
+      "blocked": "ATLAS -- a global AMR dataset of OVER 900,000 isolates with susceptibility data, the largest phenotype corpus identified anywhere in this campaign. Not screened at all.",
+      "rationale": "Access is by request through Vivli, not download. It is therefore not an executor task: it needs a named requester and an accepted data-use agreement, which is a USER authority call. Its genotype coverage is also weak (the CABBAGE paper notes ATLAS has no genotypic data beyond presence/absence of a few beta-lactamase genes), so it may fail the same no-genome structural reject as DRIAMS -- unknown until screened.",
+      "expiry_kind": "manual",
+      "expiry_arg": "A user decision to submit a Vivli data request. On receipt, screen it through scripts/screen_candidate_gates.py at L1_AMR_RS -- expect the genotype side to be the binding question, not the phenotype side.",
+      "registered_at": "2026-10-10T12:52:49Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "align-foundation-benchmark-is-a-proposal": {
+      "cid": "align-foundation-benchmark-is-a-proposal",
+      "blocked": "A PURPOSE-BUILT globally-representative paired WGS + quantitative-MIC benchmark -- the one candidate shape that would clear G2 (source diversity) BY CONSTRUCTION rather than by luck. ~5,000 E. coli + ~5,000 K. pneumoniae from ten countries across six continents, standardised broth microdilution.",
+      "rationale": "As of 2026-10-09 the Zenodo record (zenodo.org/records/21456142, published 2026-07-20) contains exactly ONE file: a 404 kB PDF. The counts are TARGETS, not data. Recorded so the numbers are never cited as existing -- a search summary described it as 'proposes a globally representative benchmark' and a careless harvest would have logged 10,000 paired isolates under CC-BY that do not exist.",
+      "expiry_kind": "manual",
+      "expiry_arg": "Re-check zenodo.org/records/21456142 for a NEW VERSION carrying actual sequence and MIC files (the record is CC-BY and versioned, so a data release would appear there). Backers include CARB-X, Oxford, Bristol, Monash, LSHTM and ATCC, so a release is plausible rather than speculative. Suggested cadence: every ~6 months.",
+      "registered_at": "2026-10-10T12:52:49Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "cabbage-genomes-tree-coverage-uncensused": {
+      "cid": "cabbage-genomes-tree-coverage-uncensused",
+      "blocked": "Knowing whether the EMBL-EBI AMR Portal's pre-computed AMRFinderPlus tree covers ALL CABBAGE assemblies. This matters because that tree is what removes ~95 s/strain of Docker compute -- the 5,058-genome Campylobacter cell alone is ~133 hours.",
+      "rationale": "Sampled 4 Campylobacter accessions on 2026-10-09; ONE (GCA_900039955.1) was ABSENT from the genomes/ tree. So coverage is partial and the partiality is measured, not assumed -- but its MAGNITUDE is unmeasured. A naive pipeline that assumes full coverage will silently score a biased subset.",
+      "expiry_kind": "manual",
+      "expiry_arg": "HEAD-request the genomes/ tree for a random sample of >=200 assembly_IDs drawn from phenotype.parquet and record the hit rate per organism. Use dna_decode.data.amr_portal.genome_url to build the URLs -- it already encodes the three-three accession split.",
+      "registered_at": "2026-10-10T12:52:49Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "cabbage-clonality-g8-blocked-no-mash": {
+      "cid": "cabbage-clonality-g8-blocked-no-mash",
+      "blocked": "CLONALITY CORRECTION (gate G8) for every cell scored from the EMBL-EBI AMR Portal's pre-computed AMRFinderPlus. The Campylobacter jejuni x ciprofloxacin cell (N=4,265, acc 0.9925, sens 0.9794, spec 0.9966) is reported ISOLATE-LEVEL only. Campylobacter surveillance collections are clonally structured, so the lineage-collapsed figure could be materially lower -- the TB arm's raw 0.920 fell to 0.444 once collapsed.",
+      "rationale": "Docker daemon down on this host (npipe dockerDesktopLinuxEngine absent) and no native mash binary on PATH, so the repo's canonical Mash route (eval/phylogeny.compute_mash_distances use_docker=True -> eval/clonality greedy_representative_clusters_from_matrix) is unavailable. The portal phenotype.parquet carries NO MLST/ST column (checked: 34 columns, none typing), so the Mash-free lineage unit used for TB (pinned Napier barcode on VCF) and E. coli (7-locus Achtman ST) does not exist here. Computing MLST locally would mean fetching ~4,652 assemblies (~9 GB) plus per-isolate BLAST. Recorded as blocked rather than approximated with an unsound proxy.",
+      "expiry_kind": "manual",
+      "expiry_arg": "Either (a) start Docker Desktop and run the Mash route, or (b) install a native mash binary, or (c) check whether a later AMR Portal release adds an MLST/ST column to phenotype.parquet -- any one unblocks it. Re-check when Docker is next up on this host.",
+      "registered_at": "2026-10-10T22:47:53Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "local-gpu-vram-blocks-dna-lm-finetune": {
+      "cid": "local-gpu-vram-blocks-dna-lm-finetune",
+      "blocked": "GIVEN UP 2026-05-12: a LOCALLY-trained/fine-tuned transformer DNA model. The superseded refined goal was a tissue-specific gene-regulatory-element activity predictor using a transformer-based DNA model trained on ENCODE / Roadmap Epigenomics multi-tissue data (Enformer-shaped); H1/H2/H3 were retired \"never tested\". What survived was NT v2 100M FROZEN embeddings + XGBoost, chosen because it fit the card, not on merit -- and those frozen embeddings then went 0-for-4. LIVE CONSEQUENCE TODAY: project_state/glm-umbrella-2026-10-07.md line 18 has G-D glm-generator-finetune-2026-10-07 ACCEPTED but blocked_by \"sampling sweep + 8 GB GPU\", scope \"the un-pulled lever on a measured ZERO-SHOT failure\". RE-OPEN G-D when this expires.",
+      "rationale": "As written 2026-05-12 (Evidence row 11): GTX 860M, 4 GiB Maxwell, CC 5.0 -- DNABERT-2 and 4-bit Evo unavailable; bitsandbytes needs CC>=7.0. The cut was on COMPUTE grounds. It was later re-narrated as a LABEL problem (\"do NOT reopen the embedding tracks\"), which contradicted the actual pivot rationale and is why this is being registered late rather than never. Threshold 8 GB is taken from the umbrella's own \"8 GB GPU\" wording, not picked.",
+      "expiry_kind": "gpu-vram-gte",
+      "expiry_arg": "8",
+      "registered_at": "2026-10-18T01:07:15Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": true
+    },
+    "gd-finetune-gated-on-sampling-sweep-not-compute": {
+      "cid": "gd-finetune-gated-on-sampling-sweep-not-compute",
+      "blocked": "G-D glm-generator-finetune (LoRA fine-tune of GENERator-v2-prokaryote-1.2b on real E. coli promoter windows) is NOT running. Its own technical-plan names TWO blockers and the UNBLOCK TRIGGER is the conjunction: \"the sampling sweep artifact exists AND the 8 GB host is reachable\". THE COMPUTE HALF IS ALREADY SATISFIED -- free Kaggle T4s are 16 GB and this repo runs 12 kernels in scripts/kaggle/ with 19 scripts referencing Kaggle, so an 8 GB-class GPU has been reachable since 2026-07-09 regardless of where the local 1070 physically sits. What REMAINS binding is the EPISTEMIC half: the sampling sweep must report FIRST, because sampling and weights are two generator levers and running them together means neither can be attributed. RE-OPEN G-D when the sweep artifact lands.",
+      "rationale": "Superseding my own mis-specified constraint local-gpu-vram-blocks-dna-lm-finetune (registered and resolved 2026-10-17 the same hour). That one used a gpu-vram-gte test on the LOCAL card. R9 states the limit explicitly -- the compute that arrived was CLOUD, so a local-VRAM test would not have fired -- and I registered a local-VRAM test anyway, which would have read UNKNOWN forever on a laptop with no NVIDIA card while the compute was already in hand. The operator caught it. Corrected test: file-exists on the sweep artifact, which is self-checking and keyed to the blocker that is actually load-bearing.",
+      "expiry_kind": "file-exists",
+      "expiry_arg": "wiki/glm_generator_sampling_sweep.json",
+      "registered_at": "2026-10-18T01:11:19Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "env-python-pinned-313-no-315-wheels": {
+      "cid": "env-python-pinned-313-no-315-wheels",
+      "blocked": "dna_decode conda env pinned to Python 3.13, NOT the installed 3.15.0: pytorch-cpu has no 3.15 build and conda-forge carries only python-3.15.0rc1. Giving up: running the project stack on the latest Python.",
+      "rationale": "Measured 2026-10-18 by conda dry-run solve, not assumed: 'pytorch-cpu is not installable because there are no viable options' plus 'nothing provides _python_rc needed by python-3.15.0rc1-h53f6dd8_102_cp315'. Python 3.15.0 IS installed standalone and usable for non-torch work.",
+      "expiry_kind": "test-exit-0",
+      "expiry_arg": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe create -n _probe315 --dry-run -c conda-forge --override-channels python=3.15 pytorch-cpu",
+      "registered_at": "2026-10-18T15:49:28Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "glm-fragment-rung-kmer6-full-size-ram-bound": {
+      "cid": "glm-fragment-rung-kmer6-full-size-ram-bound",
+      "blocked": "The fragment-rung size-lever arm cannot be run at FULL 321,123 rows with the kmer6 feature set on this host. Giving up: the top rung of the size ladder, i.e. whether rho keeps climbing from 150k to the full 321k at 4096 features. The ladder is run at 20k/50k/150k instead, which measures the TREND but not the asymptote.",
+      "rationale": "Measured 2026-10-18, not assumed: host has 15.9 GB total / 10.5 GB free RAM; the kmer6 design matrix alone is 321123 x 4096 float64 = 9.8 GB before any ridge copy, so the full rung would thrash or OOM. kmer4 at full size is only 0.61 GB and IS runnable, so this constraint is specific to the 4096-feature rung, not to full-size fragment work in general.",
+      "expiry_kind": "test-exit-0",
+      "expiry_arg": "python -c \"import psutil,sys; sys.exit(0 if psutil.virtual_memory().available > 24*1024**3 else 1)\"",
+      "registered_at": "2026-10-18T21:50:06Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    }
+  }
+}

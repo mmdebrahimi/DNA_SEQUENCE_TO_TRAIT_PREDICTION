@@ -41,12 +41,14 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import statistics
 from datetime import date
 from pathlib import Path
 
 from dna_decode.glm.encoder import (
     DEFAULT_WIDTHS,
+    PYRAMID_WIDTHS,
     REGISTERED_PROTOCOL,
     fit_encoder,
 )
@@ -275,6 +277,18 @@ def main() -> int:
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--device", default="cpu", choices=["cpu", "cuda", "auto"],
                     help="cpu is the DETERMINISM REFERENCE; cuda convolutions may be nondeterministic")
+    ap.add_argument("--pyramid", action="store_true",
+                    help="also run the R5/R6 CEILING arm: a 4-scale pyramid (3/12/48/150 = 1.70 "
+                         "decades), plus its own shuffled null. Additive -- without this flag the "
+                         "three published arms and the reconcile gate are byte-identical.")
+    ap.add_argument("--extra-widths", action="append", default=None, metavar="W,W,W",
+                    help="also run an ADDITIONAL arm at these comma-separated kernel widths, plus its "
+                         "own shuffled null. Repeatable. Additive, exactly like --pyramid: without it "
+                         "the three published arms and the reconcile gate are byte-identical. The arm "
+                         "is NAMED BY ITS MEASURED SPAN so two width sets cannot collide in the "
+                         "artifact. NOTE a width-1 branch is ORDER-BLIND -- pooled over a tile it is a "
+                         "linear function of base composition and its max-pool half is constant -- so "
+                         "it buys decades without buying information (measured 2026-10-12).")
     ap.add_argument("--with-grid", action="store_true",
                     help="also run the designed-grid POSITIVE CONTROL (not evidence of grammar)")
     ap.add_argument("--no-download", action="store_true")
@@ -301,9 +315,24 @@ def main() -> int:
         print(f"  seed {s}: gc {g:+.4f} auroc {auroc(g_pred, lab):.4f} "
               f"(held {held} peaks, {len(te)} test)")
 
-        for name, kw in (("encoder-w20", {"widths": (20,)}),
-                         ("encoder-multi", {"widths": DEFAULT_WIDTHS}),
-                         ("encoder-shuffled", {"widths": DEFAULT_WIDTHS, "shuffle_labels": True})):
+        # The pyramid arm is ADDITIVE and runs only under --pyramid, so the three published arms and
+        # the reconcile gate are byte-identical without the flag. It is the R5/R6 ceiling arm: widths
+        # (3,12,48,150) = 4 scales / 1.70 decades, the widest span where every branch is still a real
+        # scale on a 150 bp substrate.
+        arm_specs = [("encoder-w20", {"widths": (20,)}),
+                     ("encoder-multi", {"widths": DEFAULT_WIDTHS}),
+                     ("encoder-shuffled", {"widths": DEFAULT_WIDTHS, "shuffle_labels": True})]
+        if args.pyramid:
+            arm_specs.append(("encoder-pyramid", {"widths": PYRAMID_WIDTHS}))
+            arm_specs.append(("encoder-pyramid-shuffled",
+                              {"widths": PYRAMID_WIDTHS, "shuffle_labels": True}))
+        for spec in (args.extra_widths or []):
+            w = tuple(int(x) for x in spec.split(","))
+            # name by MEASURED span, not by the raw tuple -- the span is the quantity the arm tests
+            nm = f"encoder-span{math.log10(max(w) / min(w)):.2f}dec".replace(".", "p")
+            arm_specs.append((nm, {"widths": w}))
+            arm_specs.append((nm + "-shuffled", {"widths": w, "shuffle_labels": True}))
+        for name, kw in arm_specs:
             r = fit_encoder(tr, te, seed=s, device=args.device, **kw)
             # compute the second framing from the SAME fit, then DROP the raw predictions -- one float
             # per test row x 30 fits has no business in a committed artifact

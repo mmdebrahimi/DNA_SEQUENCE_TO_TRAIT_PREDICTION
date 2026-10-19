@@ -1,0 +1,695 @@
+{
+  "schema": "f3-substrate-census-v1",
+  "generated": "2026-10-09",
+  "read_only": true,
+  "n_panels": 4,
+  "n_intact": 4,
+  "intact_panels": [
+    "bloom",
+    "arabmagic",
+    "bxd",
+    "dgrp"
+  ],
+  "panels": [
+    {
+      "panel": "bloom",
+      "arm_module": "scripts.yeast_bloom_gp_arm",
+      "kind": "arm_loader",
+      "design": "constructed_biparental",
+      "design_basis": "by construction: a single BY x RM cross, recombination randomizes ancestry; this is the F3 NEGATIVE control",
+      "notes": [
+        "markers x individuals in the file; the arm's loader transposes"
+      ],
+      "path_provenance": "module constant _GENO/_PHENO",
+      "genotype_path": "D:\\dna_decode_cache\\bloom\\geno_v2.txt",
+      "phenotype_path": "D:\\dna_decode_cache\\bloom\\BYxRM_PhenoData.txt",
+      "raw": {
+        "path": "D:\\dna_decode_cache\\bloom\\geno_v2.txt",
+        "exists": true,
+        "size_bytes": 23729508,
+        "n_lines_total": 11624,
+        "n_comment_lines": 0,
+        "n_data_lines": 11624,
+        "delimiter": "tab",
+        "field_width_histogram": {
+          "1009": 11624
+        },
+        "field_widths_agree": true,
+        "value_alphabet_sample": [
+          "B",
+          "R"
+        ],
+        "n_distinct_values_sampled": 2,
+        "verdict": "intact"
+      },
+      "phenotype_present": true,
+      "loader": "scripts.yeast_bloom_gp_arm.load_genotype",
+      "matrix": {
+        "n_individuals": 1008,
+        "n_markers": 11623,
+        "missing_fraction": 0.0,
+        "n_markers_entirely_missing": 0,
+        "n_individuals_entirely_missing": 0,
+        "verdict": "intact"
+      },
+      "integrity": "intact",
+      "structure": {
+        "pc1_variance_fraction": 0.026051123900830524,
+        "pc1_error": null,
+        "groups": {
+          "n_individuals": 1008,
+          "n_clusters": 261,
+          "largest_cluster_fraction": 0.0188,
+          "singleton_fraction": 0.2759,
+          "threshold": 0.38768,
+          "percentile": 1.0,
+          "ibs_path": "binary_exact",
+          "missing_fraction": 0.0,
+          "sweep": [
+            {
+              "percentile": 1.0,
+              "threshold": 0.3877,
+              "n_clusters": 261,
+              "largest_cluster_fraction": 0.0188,
+              "singleton_fraction": 0.2759,
+              "passes": true
+            },
+            {
+              "percentile": 2.0,
+              "threshold": 0.4006,
+              "n_clusters": 170,
+              "largest_cluster_fraction": 0.0298,
+              "singleton_fraction": 0.2353,
+              "passes": true
+            },
+            {
+              "percentile": 5.0,
+              "threshold": 0.4205,
+              "n_clusters": 76,
+              "largest_cluster_fraction": 0.0546,
+              "singleton_fraction": 0.1447,
+              "passes": true
+            },
+            {
+              "percentile": 10.0,
+              "threshold": 0.438,
+              "n_clusters": 37,
+              "largest_cluster_fraction": 0.1042,
+              "singleton_fraction": 0.0541,
+              "passes": true
+            },
+            {
+              "percentile": 15.0,
+              "threshold": 0.4498,
+              "n_clusters": 30,
+              "largest_cluster_fraction": 0.1488,
+              "singleton_fraction": 0.1333,
+              "passes": true
+            },
+            {
+              "percentile": 20.0,
+              "threshold": 0.4592,
+              "n_clusters": 20,
+              "largest_cluster_fraction": 0.1845,
+              "singleton_fraction": 0.15,
+              "passes": true
+            },
+            {
+              "percentile": 25.0,
+              "threshold": 0.4673,
+              "n_clusters": 18,
+              "largest_cluster_fraction": 0.2242,
+              "singleton_fraction": 0.0556,
+              "passes": true
+            },
+            {
+              "percentile": 30.0,
+              "threshold": 0.4746,
+              "n_clusters": 14,
+              "largest_cluster_fraction": 0.2619,
+              "singleton_fraction": 0.2143,
+              "passes": true
+            },
+            {
+              "percentile": 40.0,
+              "threshold": 0.4877,
+              "n_clusters": 9,
+              "largest_cluster_fraction": 0.372,
+              "singleton_fraction": 0.0,
+              "passes": true
+            },
+            {
+              "percentile": 50.0,
+              "threshold": 0.5,
+              "n_clusters": 8,
+              "largest_cluster_fraction": 0.4792,
+              "singleton_fraction": 0.125,
+              "passes": true
+            },
+            {
+              "percentile": 60.0,
+              "threshold": 0.5122,
+              "n_clusters": 7,
+              "largest_cluster_fraction": 0.6022,
+              "singleton_fraction": 0.2857,
+              "passes": false
+            },
+            {
+              "percentile": 70.0,
+              "threshold": 0.5254,
+              "n_clusters": 5,
+              "largest_cluster_fraction": 0.7004,
+              "singleton_fraction": 0.0,
+              "passes": false
+            }
+          ]
+        },
+        "groups_refused": null,
+        "pc1_null_comparison": {
+          "pc1_observed": 0.028439627515674592,
+          "pc1_null_mean": 0.0035953276196387476,
+          "pc1_excess": 7.91016300164939,
+          "n_markers_used": 1200,
+          "n_perm": 3
+        }
+      },
+      "fold_compatible_k5": {
+        "k": 5,
+        "compatible": true,
+        "percentile": 1.0,
+        "n_clusters": 261,
+        "largest_cluster_fraction": 0.0188,
+        "singleton_fraction": 0.2759
+      }
+    },
+    {
+      "panel": "arabmagic",
+      "arm_module": "scripts.arabmagic_gp_arm",
+      "kind": "arm_loader",
+      "design": "constructed_multiparent",
+      "design_basis": "by construction: a MAGIC multi-parent intercross. Residual FAMILY structure, NOT natural population structure -- any positive-control role must be scoped accordingly",
+      "notes": [],
+      "path_provenance": "module constant _GENO/_PHENO",
+      "genotype_path": "D:\\dna_decode_cache\\arabmagic\\arabmagic_geno.csv",
+      "phenotype_path": "D:\\dna_decode_cache\\arabmagic\\arabmagic_pheno.csv",
+      "raw": {
+        "path": "D:\\dna_decode_cache\\arabmagic\\arabmagic_geno.csv",
+        "exists": true,
+        "size_bytes": 1793195,
+        "n_lines_total": 1264,
+        "n_comment_lines": 3,
+        "n_data_lines": 1261,
+        "delimiter": "comma",
+        "field_width_histogram": {
+          "704": 1261
+        },
+        "field_widths_agree": true,
+        "value_alphabet_sample": [
+          "-",
+          "A",
+          "B",
+          "H"
+        ],
+        "n_distinct_values_sampled": 4,
+        "verdict": "intact"
+      },
+      "phenotype_present": true,
+      "loader": "scripts.arabmagic_gp_arm.load_genotype",
+      "matrix": {
+        "n_individuals": 703,
+        "n_markers": 1260,
+        "missing_fraction": 0.0,
+        "n_markers_entirely_missing": 0,
+        "n_individuals_entirely_missing": 0,
+        "verdict": "intact"
+      },
+      "integrity": "intact",
+      "structure": {
+        "pc1_variance_fraction": 0.01726157950850245,
+        "pc1_error": null,
+        "groups": {
+          "n_individuals": 703,
+          "n_clusters": 280,
+          "largest_cluster_fraction": 0.0242,
+          "singleton_fraction": 0.4464,
+          "threshold": 0.242426,
+          "percentile": 1.0,
+          "ibs_path": "general_loop",
+          "missing_fraction": 0.0,
+          "sweep": [
+            {
+              "percentile": 1.0,
+              "threshold": 0.2424,
+              "n_clusters": 280,
+              "largest_cluster_fraction": 0.0242,
+              "singleton_fraction": 0.4464,
+              "passes": true
+            },
+            {
+              "percentile": 2.0,
+              "threshold": 0.2517,
+              "n_clusters": 205,
+              "largest_cluster_fraction": 0.0398,
+              "singleton_fraction": 0.4,
+              "passes": true
+            },
+            {
+              "percentile": 5.0,
+              "threshold": 0.2644,
+              "n_clusters": 123,
+              "largest_cluster_fraction": 0.0768,
+              "singleton_fraction": 0.3008,
+              "passes": true
+            },
+            {
+              "percentile": 10.0,
+              "threshold": 0.2748,
+              "n_clusters": 86,
+              "largest_cluster_fraction": 0.128,
+              "singleton_fraction": 0.2558,
+              "passes": true
+            },
+            {
+              "percentile": 15.0,
+              "threshold": 0.2814,
+              "n_clusters": 59,
+              "largest_cluster_fraction": 0.1323,
+              "singleton_fraction": 0.2712,
+              "passes": true
+            },
+            {
+              "percentile": 20.0,
+              "threshold": 0.2866,
+              "n_clusters": 53,
+              "largest_cluster_fraction": 0.1735,
+              "singleton_fraction": 0.3019,
+              "passes": true
+            },
+            {
+              "percentile": 25.0,
+              "threshold": 0.2911,
+              "n_clusters": 41,
+              "largest_cluster_fraction": 0.2105,
+              "singleton_fraction": 0.2439,
+              "passes": true
+            },
+            {
+              "percentile": 30.0,
+              "threshold": 0.2949,
+              "n_clusters": 32,
+              "largest_cluster_fraction": 0.2674,
+              "singleton_fraction": 0.1562,
+              "passes": true
+            },
+            {
+              "percentile": 40.0,
+              "threshold": 0.3017,
+              "n_clusters": 25,
+              "largest_cluster_fraction": 0.3471,
+              "singleton_fraction": 0.16,
+              "passes": true
+            },
+            {
+              "percentile": 50.0,
+              "threshold": 0.308,
+              "n_clusters": 20,
+              "largest_cluster_fraction": 0.4794,
+              "singleton_fraction": 0.3,
+              "passes": true
+            },
+            {
+              "percentile": 60.0,
+              "threshold": 0.3141,
+              "n_clusters": 12,
+              "largest_cluster_fraction": 0.6102,
+              "singleton_fraction": 0.1667,
+              "passes": false
+            },
+            {
+              "percentile": 70.0,
+              "threshold": 0.3205,
+              "n_clusters": 12,
+              "largest_cluster_fraction": 0.7084,
+              "singleton_fraction": 0.0833,
+              "passes": false
+            }
+          ]
+        },
+        "groups_refused": null,
+        "pc1_null_comparison": {
+          "pc1_observed": 0.01734023784374027,
+          "pc1_null_mean": 0.00492763973138377,
+          "pc1_excess": 3.5189743546594103,
+          "n_markers_used": 1200,
+          "n_perm": 3
+        }
+      },
+      "fold_compatible_k5": {
+        "k": 5,
+        "compatible": true,
+        "percentile": 1.0,
+        "n_clusters": 280,
+        "largest_cluster_fraction": 0.0242,
+        "singleton_fraction": 0.4464
+      }
+    },
+    {
+      "panel": "bxd",
+      "arm_module": "scripts.bxd_gp_arm",
+      "kind": "arm_loader",
+      "design": "constructed_multiparent",
+      "design_basis": "by construction: BXD recombinant inbred lines from two founders, with known family structure",
+      "notes": [],
+      "path_provenance": "module constant _GENO/_PHENO",
+      "genotype_path": "D:\\dna_decode_cache\\bxd\\bxd_geno.csv",
+      "phenotype_path": "D:\\dna_decode_cache\\bxd\\bxd_pheno.csv",
+      "raw": {
+        "path": "D:\\dna_decode_cache\\bxd\\bxd_geno.csv",
+        "exists": true,
+        "size_bytes": 2980296,
+        "n_lines_total": 7324,
+        "n_comment_lines": 3,
+        "n_data_lines": 7321,
+        "delimiter": "comma",
+        "field_width_histogram": {
+          "199": 7321
+        },
+        "field_widths_agree": true,
+        "value_alphabet_sample": [
+          "B",
+          "D",
+          "H"
+        ],
+        "n_distinct_values_sampled": 3,
+        "verdict": "intact"
+      },
+      "phenotype_present": true,
+      "loader": "scripts.bxd_gp_arm.load_genotype",
+      "matrix": {
+        "n_individuals": 198,
+        "n_markers": 7320,
+        "missing_fraction": 0.0,
+        "n_markers_entirely_missing": 0,
+        "n_individuals_entirely_missing": 0,
+        "verdict": "intact"
+      },
+      "integrity": "intact",
+      "structure": {
+        "pc1_variance_fraction": 0.035448622141404755,
+        "pc1_error": null,
+        "groups": {
+          "n_individuals": 198,
+          "n_clusters": 83,
+          "largest_cluster_fraction": 0.0354,
+          "singleton_fraction": 0.3976,
+          "threshold": 0.395492,
+          "percentile": 2.0,
+          "ibs_path": "general_loop",
+          "missing_fraction": 0.0,
+          "sweep": [
+            {
+              "percentile": 1.0,
+              "threshold": 0.3799,
+              "n_clusters": 114,
+              "largest_cluster_fraction": 0.0253,
+              "singleton_fraction": 0.5526,
+              "passes": false
+            },
+            {
+              "percentile": 2.0,
+              "threshold": 0.3955,
+              "n_clusters": 83,
+              "largest_cluster_fraction": 0.0354,
+              "singleton_fraction": 0.3976,
+              "passes": true
+            },
+            {
+              "percentile": 5.0,
+              "threshold": 0.4152,
+              "n_clusters": 45,
+              "largest_cluster_fraction": 0.0808,
+              "singleton_fraction": 0.2667,
+              "passes": true
+            },
+            {
+              "percentile": 10.0,
+              "threshold": 0.4328,
+              "n_clusters": 27,
+              "largest_cluster_fraction": 0.1414,
+              "singleton_fraction": 0.1111,
+              "passes": true
+            },
+            {
+              "percentile": 15.0,
+              "threshold": 0.4447,
+              "n_clusters": 22,
+              "largest_cluster_fraction": 0.1667,
+              "singleton_fraction": 0.1818,
+              "passes": true
+            },
+            {
+              "percentile": 20.0,
+              "threshold": 0.4538,
+              "n_clusters": 17,
+              "largest_cluster_fraction": 0.2222,
+              "singleton_fraction": 0.2353,
+              "passes": true
+            },
+            {
+              "percentile": 25.0,
+              "threshold": 0.4618,
+              "n_clusters": 14,
+              "largest_cluster_fraction": 0.2778,
+              "singleton_fraction": 0.1429,
+              "passes": true
+            },
+            {
+              "percentile": 30.0,
+              "threshold": 0.4687,
+              "n_clusters": 10,
+              "largest_cluster_fraction": 0.3182,
+              "singleton_fraction": 0.0,
+              "passes": true
+            },
+            {
+              "percentile": 40.0,
+              "threshold": 0.4814,
+              "n_clusters": 8,
+              "largest_cluster_fraction": 0.399,
+              "singleton_fraction": 0.125,
+              "passes": true
+            },
+            {
+              "percentile": 50.0,
+              "threshold": 0.4928,
+              "n_clusters": 6,
+              "largest_cluster_fraction": 0.5051,
+              "singleton_fraction": 0.1667,
+              "passes": true
+            },
+            {
+              "percentile": 60.0,
+              "threshold": 0.504,
+              "n_clusters": 4,
+              "largest_cluster_fraction": 0.6061,
+              "singleton_fraction": 0.0,
+              "passes": false
+            },
+            {
+              "percentile": 70.0,
+              "threshold": 0.5161,
+              "n_clusters": 4,
+              "largest_cluster_fraction": 0.7172,
+              "singleton_fraction": 0.0,
+              "passes": false
+            }
+          ]
+        },
+        "groups_refused": null,
+        "pc1_null_comparison": {
+          "pc1_observed": 0.038071760947250774,
+          "pc1_null_mean": 0.009915266931749095,
+          "pc1_excess": 3.8397111453795985,
+          "n_markers_used": 1200,
+          "n_perm": 3
+        }
+      },
+      "fold_compatible_k5": {
+        "k": 5,
+        "compatible": true,
+        "percentile": 2.0,
+        "n_clusters": 83,
+        "largest_cluster_fraction": 0.0354,
+        "singleton_fraction": 0.3976
+      }
+    },
+    {
+      "panel": "dgrp",
+      "arm_module": "scripts.dgrp_learned_decoder",
+      "kind": "npz",
+      "design": "natural_population",
+      "design_basis": "by sampling: inbred lines drawn from ONE natural Drosophila population (Raleigh), with documented cryptic relatedness",
+      "notes": [
+        "paths are argparse defaults in the arm, not module constants; pinned by test"
+      ],
+      "path_provenance": "argparse default in the arm (pinned by test)",
+      "genotype_path": "D:\\dna_decode_cache\\dgrp\\dgrp_snp_matrix.npz",
+      "phenotype_path": "D:\\dna_decode_cache\\dgrp\\pheno_2798.json",
+      "raw": {
+        "path": "D:\\dna_decode_cache\\dgrp\\dgrp_snp_matrix.npz",
+        "exists": true,
+        "verdict": "intact",
+        "size_bytes": 709336
+      },
+      "phenotype_present": true,
+      "loader": "np.load(npz)['X']",
+      "matrix": {
+        "n_individuals": 205,
+        "n_markers": 12365,
+        "missing_fraction": 0.05577386999102502,
+        "n_markers_entirely_missing": 0,
+        "n_individuals_entirely_missing": 0,
+        "verdict": "intact"
+      },
+      "integrity": "intact",
+      "structure": {
+        "pc1_variance_fraction": 0.019685246678313516,
+        "pc1_error": null,
+        "groups": {
+          "n_individuals": 205,
+          "n_clusters": 27,
+          "largest_cluster_fraction": 0.522,
+          "singleton_fraction": 0.4815,
+          "threshold": 0.310166,
+          "percentile": 60.0,
+          "ibs_path": "binary_exact",
+          "missing_fraction": 0.0558,
+          "sweep": [
+            {
+              "percentile": 1.0,
+              "threshold": 0.2546,
+              "n_clusters": 165,
+              "largest_cluster_fraction": 0.0244,
+              "singleton_fraction": 0.8364,
+              "passes": false
+            },
+            {
+              "percentile": 2.0,
+              "threshold": 0.2627,
+              "n_clusters": 154,
+              "largest_cluster_fraction": 0.0293,
+              "singleton_fraction": 0.8312,
+              "passes": false
+            },
+            {
+              "percentile": 5.0,
+              "threshold": 0.2752,
+              "n_clusters": 138,
+              "largest_cluster_fraction": 0.0488,
+              "singleton_fraction": 0.7899,
+              "passes": false
+            },
+            {
+              "percentile": 10.0,
+              "threshold": 0.2837,
+              "n_clusters": 110,
+              "largest_cluster_fraction": 0.1024,
+              "singleton_fraction": 0.7364,
+              "passes": false
+            },
+            {
+              "percentile": 15.0,
+              "threshold": 0.2888,
+              "n_clusters": 100,
+              "largest_cluster_fraction": 0.1024,
+              "singleton_fraction": 0.69,
+              "passes": false
+            },
+            {
+              "percentile": 20.0,
+              "threshold": 0.2925,
+              "n_clusters": 89,
+              "largest_cluster_fraction": 0.1268,
+              "singleton_fraction": 0.6966,
+              "passes": false
+            },
+            {
+              "percentile": 25.0,
+              "threshold": 0.2956,
+              "n_clusters": 79,
+              "largest_cluster_fraction": 0.1902,
+              "singleton_fraction": 0.6582,
+              "passes": false
+            },
+            {
+              "percentile": 30.0,
+              "threshold": 0.2982,
+              "n_clusters": 69,
+              "largest_cluster_fraction": 0.1951,
+              "singleton_fraction": 0.6667,
+              "passes": false
+            },
+            {
+              "percentile": 40.0,
+              "threshold": 0.3029,
+              "n_clusters": 44,
+              "largest_cluster_fraction": 0.3024,
+              "singleton_fraction": 0.5682,
+              "passes": false
+            },
+            {
+              "percentile": 50.0,
+              "threshold": 0.3067,
+              "n_clusters": 35,
+              "largest_cluster_fraction": 0.3415,
+              "singleton_fraction": 0.6,
+              "passes": false
+            },
+            {
+              "percentile": 60.0,
+              "threshold": 0.3102,
+              "n_clusters": 27,
+              "largest_cluster_fraction": 0.522,
+              "singleton_fraction": 0.4815,
+              "passes": true
+            },
+            {
+              "percentile": 70.0,
+              "threshold": 0.3138,
+              "n_clusters": 21,
+              "largest_cluster_fraction": 0.6488,
+              "singleton_fraction": 0.4286,
+              "passes": false
+            }
+          ]
+        },
+        "groups_refused": null,
+        "pc1_null_comparison": {
+          "pc1_observed": 0.020429148166111275,
+          "pc1_null_mean": 0.010229935050202213,
+          "pc1_excess": 1.9969968593014142,
+          "n_markers_used": 1200,
+          "n_perm": 3
+        }
+      },
+      "fold_compatible_k5": {
+        "k": 5,
+        "compatible": false,
+        "reason": "no percentile on the ladder yields a usable grouping -- p1: 165cl largest=0.02 single=0.84; p2: 154cl largest=0.03 single=0.83; p5: 138cl largest=0.05 single=0.79; p10: 110cl largest=0.10 single=0.74; p15: 100cl largest=0.10 single=0.69; p20: 89cl largest=0.13 single=0.70; p25: 79cl largest=0.19 single=0.66; p30: 69cl largest=0.20 single=0.67; p40: 44cl largest=0.30 single=0.57; p50: 35cl largest=0.34 single=0.60; p60: 27cl largest=0.52 single=0.48; p70: 21cl largest=0.65 single=0.43. The panel has no scale at which clusters are neither dominant nor mostly singletons."
+      }
+    }
+  ],
+  "pc1_selection_verdict": "PC1_UNFIT_FOR_SELECTING_A_STRUCTURED_PANEL. The plan pre-registered 'the intact panel with the highest measured pc1_variance_fraction' as the positive control. Measured, that rule is self-contradictory on this panel set: by raw pc1 the ordering is bxd > bloom > dgrp > arabmagic, and by excess-over-its-own-null it is bloom > bxd > arabmagic > dgrp -- so under BOTH normalisations the one NATURAL population (dgrp) ranks last or third, and under excess the top panel is BLOOM, the bi-parental cross that must be the NEGATIVE control. Mechanism, which is structural rather than statistical: pc1 measures total genotypic correlation = LD + structure, and a bi-parental cross maximises LD by construction while carrying no population structure. The control pair is therefore selected BY CONSTRUCTION from each panel's `design` field (declared before any number was read), with cluster SHAPE as independent corroboration -- not by pc1.",
+  "fold_compatible_panels": [
+    "bloom",
+    "arabmagic",
+    "bxd"
+  ],
+  "honest_limits": [
+    "A census bounds INTEGRITY and STRUCTURE only. It says nothing about whether a panel's phenotypes are usable, nor whether its grouping is the right one.",
+    "`design` is recorded by CONSTRUCTION (how the panel was built), not measured. pc1_variance_fraction is the measured statistic.",
+    "A clean cluster shape is NOT evidence of structure: a percentile threshold manufactures well-shaped clusters on an unstructured panel (measured in eval/panel_structure.py). Read pc1_variance_fraction for existence.",
+    "pc1 cannot SELECT a structured panel -- see pc1_selection_verdict. It conflates linkage disequilibrium with population structure, and a bi-parental cross maximises the former while having none of the latter.",
+    "pc1_excess uses 3 permutations at 1200 subsampled markers: enough to establish an ordering, not a precise effect size."
+  ]
+}

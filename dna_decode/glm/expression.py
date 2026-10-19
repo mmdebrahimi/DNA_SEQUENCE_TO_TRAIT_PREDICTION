@@ -233,6 +233,58 @@ def leave_element_out(pairs: list[Pair], column: str, *, held: set[str] | None =
     return train, test, sorted(held)
 
 
+def irrelevant_feature_control(pairs: list[Pair], column: str = "Background", *,
+                               seed: int = 0) -> dict:
+    """Score a DELIBERATELY irrelevant feature on the real folds. Run this BEFORE trusting any fit.
+
+    A feature with no causal relation to the readout must land at chance. If it does not, the split leaks
+    and every number from this substrate is suspect — which is exactly what happened on a published
+    saturation-mutagenesis benchmark, where a model on irrelevant features reached 0.75 AUC and
+    "reproduc[ed] the prediction quality of the best CAGI challenge submissions", purely via leakage from
+    adjacent-segment splits within one element.
+
+    Returns the irrelevant feature's median |Spearman| AND the same statistic for a PLANTED leak. **The
+    planted leak is what makes this non-vacuous:** if a feature that trivially encodes the label does NOT
+    score high, the scoring is blind and a clean irrelevant-feature reading certifies nothing.
+
+    The planted leak is deliberately UNAMBIGUOUS — the held-out row's own label plus a little noise. An
+    earlier version used a subtler proxy (a row's expression rank among same-element training rows); it
+    scored 0.92 on real rows and 0.19 on clean synthetic ones, because it only leaks when within-group
+    variance happens to be shared across the split. A positive control that lights up only sometimes
+    cannot certify anything, so it was replaced with the narrower answerable question.
+    """
+    import random as _r
+
+    rng = _r.Random(seed)
+    noise = {id(p): rng.random() for p in pairs}
+
+    values = sorted({p.elements.get(column, "") for p in pairs})
+    irrelevant, planted = [], []
+    for held in values:
+        test = [p for p in pairs if p.elements.get(column, "") == held]
+        train = [p for p in pairs if p.elements.get(column, "") != held]
+        if not test or not train:
+            continue
+        y = [p.expression for p in test]
+        if len(set(y)) < 3:
+            continue
+        irrelevant.append(abs(spearman([noise[id(p)] for p in test], y)))
+        spread = (max(y) - min(y)) or 1.0
+        planted.append(abs(spearman([v + 0.01 * spread * rng.random() for v in y], y)))
+
+    def _med(v):
+        return sorted(v)[len(v) // 2] if v else float("nan")
+
+    return {
+        "column": column,
+        "n_folds": len(irrelevant),
+        "irrelevant_per_fold": [round(v, 4) for v in irrelevant],
+        "irrelevant_median_abs_spearman": round(_med(irrelevant), 4) if irrelevant else float("nan"),
+        "planted_leak_per_fold": [round(v, 4) for v in planted],
+        "planted_leak_median_abs_spearman": round(_med(planted), 4) if planted else float("nan"),
+    }
+
+
 # ---------------------------------------------------------------------------------------------------
 # features
 # ---------------------------------------------------------------------------------------------------

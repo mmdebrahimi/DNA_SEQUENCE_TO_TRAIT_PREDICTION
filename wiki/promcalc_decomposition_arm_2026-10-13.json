@@ -1,0 +1,210 @@
+{
+ "schema": "promcalc-decomposition-arm-v1",
+ "measured_on": "2026-10-13",
+ "substrate": {
+  "name": "GSE144621 peak tiles",
+  "n": 44106,
+  "length_bp": 150,
+  "replicate_ceiling": 0.941,
+  "protocol": "leave_peak_out, registered seeds, ~11,000 test tiles/seed"
+ },
+ "n_features": 55,
+ "feature_names": [
+  "best_dG_total",
+  "best_dG_10",
+  "best_dG_35",
+  "best_dG_ext10",
+  "best_dG_spacer",
+  "best_dG_disc",
+  "best_dG_ITR",
+  "best_dG_UP",
+  "best_dG_bind",
+  "best_log1p_tx",
+  "best_spacer_len",
+  "best_hex35_start",
+  "best_hex10_start",
+  "dG_total_min",
+  "dG_total_max",
+  "dG_total_mean",
+  "dG_total_std",
+  "dG_10_min",
+  "dG_10_max",
+  "dG_10_mean",
+  "dG_10_std",
+  "dG_35_min",
+  "dG_35_max",
+  "dG_35_mean",
+  "dG_35_std",
+  "dG_ext10_min",
+  "dG_ext10_max",
+  "dG_ext10_mean",
+  "dG_ext10_std",
+  "dG_spacer_min",
+  "dG_spacer_max",
+  "dG_spacer_mean",
+  "dG_spacer_std",
+  "dG_disc_min",
+  "dG_disc_max",
+  "dG_disc_mean",
+  "dG_disc_std",
+  "dG_ITR_min",
+  "dG_ITR_max",
+  "dG_ITR_mean",
+  "dG_ITR_std",
+  "dG_UP_min",
+  "dG_UP_max",
+  "dG_UP_mean",
+  "dG_UP_std",
+  "dG_bind_min",
+  "dG_bind_max",
+  "dG_bind_mean",
+  "dG_bind_std",
+  "log1p_sum_tx",
+  "log1p_tx1",
+  "log1p_tx2",
+  "log1p_tx3",
+  "n_sites",
+  "no_sites_flag"
+ ],
+ "arms": {
+  "gc": {
+   "median": 0.3112,
+   "min": 0.2747,
+   "max": 0.3347,
+   "per_seed": [
+    0.3,
+    0.3151,
+    0.3073,
+    0.2917,
+    0.3191,
+    0.3347,
+    0.3091,
+    0.3191,
+    0.3133,
+    0.2747
+   ]
+  },
+  "max_tx": {
+   "median": 0.3968,
+   "min": 0.3759,
+   "max": 0.4107,
+   "per_seed": [
+    0.3973,
+    0.3997,
+    0.3916,
+    0.379,
+    0.4047,
+    0.3963,
+    0.3989,
+    0.3897,
+    0.4107,
+    0.3759
+   ]
+  },
+  "decomposition": {
+   "median": 0.3925,
+   "min": 0.3681,
+   "max": 0.4024,
+   "per_seed": [
+    0.4024,
+    0.3953,
+    0.3916,
+    0.3724,
+    0.4011,
+    0.3946,
+    0.3881,
+    0.3681,
+    0.3934,
+    0.3892
+   ]
+  },
+  "control_feature_permuted": {
+   "median": 0.0342,
+   "min": -0.113,
+   "max": 0.085,
+   "per_seed": [
+    0.027,
+    0.0471,
+    0.0062,
+    0.0165,
+    0.0819,
+    -0.113,
+    -0.0272,
+    0.085,
+    0.0413,
+    0.057
+   ]
+  },
+  "_paired_vs_max_tx": {
+   "mean": -0.0048,
+   "median": -0.004,
+   "ci95": [
+    -0.0111,
+    0.0016
+   ],
+   "includes_zero": true,
+   "wins": 2,
+   "n": 10
+  },
+  "_paired_vs_gc": {
+   "mean": 0.0812,
+   "median": 0.0804,
+   "ci95": [
+    0.0698,
+    0.0926
+   ],
+   "includes_zero": false,
+   "wins": 10,
+   "n": 10
+  },
+  "_paired_max_tx_vs_gc": {
+   "mean": 0.086,
+   "median": 0.0865,
+   "ci95": [
+    0.0784,
+    0.0935
+   ],
+   "includes_zero": false,
+   "wins": 10,
+   "n": 10
+  }
+ },
+ "verdict": "NO_GAIN",
+ "verdict_detail": "decomposition -0.0040 vs the max_tx scalar at the median (2/10 seeds) -- the ~730 discarded numbers add nothing the strongest-promoter rate does not already carry",
+ "preregistered": {
+  "question": "does the full per-site mechanistic decomposition beat the single max_tx scalar reduced from it, on the same tiles under the same registered protocol?",
+  "primary_metric": "spearman",
+  "comparator": "max_tx",
+  "secondary_comparator": "gc",
+  "margin": 0.02,
+  "min_seeds_winning": 8,
+  "registered_seeds": [
+   0,
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9
+  ],
+  "control": "feature_permutation",
+  "control_max_abs": 0.05,
+  "reconcile": {
+   "gc_seed0": {
+    "expected": 0.3,
+    "tolerance": 0.01,
+    "source": "glm_encoder_gate.PREREGISTERED.reconcile_anchor"
+   },
+   "max_tx_median": {
+    "expected": 0.3968,
+    "tolerance": 0.02,
+    "source": "wiki/promcalc_vs_learned_2026-10-12.json"
+   }
+  },
+  "margin_is": "DERIVED from this substrate's measured effect sizes: above the +0.0069/+0.0125 CI-including-zero band of the learned arms, below the +0.0686 of the one real gain"
+ },
+ "smoke": false
+}

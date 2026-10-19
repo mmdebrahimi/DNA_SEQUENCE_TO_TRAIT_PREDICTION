@@ -1,0 +1,173 @@
+{
+ "schema": "sigma70-loader-reconciliation-v1",
+ "date": "2026-10-13",
+ "markdown_twin": "wiki/sigma70_loader_reconciliation_2026-10-13.md",
+ "canonical_loader": "dna_decode.glm.expression.load_pairs",
+ "deleted": {
+  "dna_decode/glm/constructed.py": "duplicate sigma70 loader built on the naive join; never committed",
+  "tests/test_glm_constructed.py": "its 12 tests, incl. USABLE_N = 3821; never committed"
+ },
+ "kept_from_the_duplicate": {
+  "irrelevant_feature_control": {
+   "moved_to": "dna_decode/glm/expression.py",
+   "generalised": "Background-only -> any of the 5 element columns",
+   "why_kept": "non-vacuity by design: reports a planted leak's score beside the irrelevant feature's, so a clean reading cannot come from a blind control"
+  }
+ },
+ "corrections": [
+  {
+   "claim": "sigma70 usable rows",
+   "shipped": 3821,
+   "true": 10898,
+   "cause": "hyphen-vs-underscore in the UP-element name; 3821 is exactly the naive join",
+   "consequence": "the rung looked like a third of its real size"
+  },
+  {
+   "claim": "cause of the 65% gap",
+   "shipped": "absent sequence data",
+   "true": "separator mismatch, fixed by expression.py::_norm_key",
+   "consequence": "an open question was filed to hunt for data that was never missing; now CLOSED"
+  },
+  {
+   "claim": "sigma70 factorial",
+   "shipped": "8x8x8x8, UP_element collapses to 1 level",
+   "true": "3x8x8x8x8 = 12288 cells, 10898 filled, UP_element has 3 levels",
+   "consequence": "one design axis declared constant; contradicted a live green assertion"
+  },
+  {
+   "claim": "fragment-rung ceiling",
+   "shipped": [
+    0.4583,
+    0.4731
+   ],
+   "true": [
+    0.7928,
+    0.8014
+   ],
+   "cause": "noise_ceiling() returns single_replicate_agreement AND ceiling_for_a_sequence_model; the wrong field was read",
+   "consequence": "REVERSED a recommendation: 7.3x the data for ~85% of headroom, not ~49%"
+  }
+ ],
+ "measured_ceilings": {
+  "peak_tiles_44106": {
+   "single_replicate_agreement": 0.7945,
+   "ceiling_for_a_sequence_model": 0.941
+  },
+  "fragments_LB_321123": {
+   "single_replicate_agreement": 0.4583,
+   "ceiling_for_a_sequence_model": 0.7928
+  },
+  "fragments_M9_318457": {
+   "single_replicate_agreement": 0.4731,
+   "ceiling_for_a_sequence_model": 0.8014
+  },
+  "sigma70_10898": {
+   "ceiling_for_a_sequence_model": null,
+   "reason": "the two published GSE108535 tables correlate at exactly 1.0 -- one monotone transform of the other, not replicates. No denominator exists for a number on this rung."
+  }
+ },
+ "schema_fix": {
+  "removed_key": "replicate_ceiling",
+  "replaced_by": [
+   "single_replicate_agreement",
+   "ceiling_for_a_sequence_model"
+  ],
+  "rationale": "one key stood for two quantities, which is what made the conflation possible; re-valuing it would have left the trap armed"
+ },
+ "arms_ledger": {
+  "registered_measured": {
+   "name": "promoter-calculator-biophysical-346params-fwd_max_tx",
+   "metric": 0.3968,
+   "was_best_before": {
+    "name": "conv-3width-13k-params-150bp",
+    "metric": 0.3234
+   }
+  },
+  "declared_planned": "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
+  "verdict_after": "blocked:untried-arm",
+  "verdict_note": "correct -- three declared arms remain unrun; a criterion with unrun declared arms must not read as plateaued",
+  "gotcha": "measure_arm mutates memory only; save() is separate. A first attempt registered both arms, exited without saving, and the verdict read unchanged -- a silent no-op."
+ },
+ "why_not_an_arm": "measure_arm(criterion, name, metric: float, evidence) requires a number. A loader fix produces no metric and has no competitor, so filing it as an arm would put a bug-fix into the ledger that ranks predictors and leave the criterion blocked on a maintenance ticket.",
+ "tests": {
+  "added": 6,
+  "file": "tests/test_glm_expression.py",
+  "collected_total": 6421,
+  "committed_baseline": 6415,
+  "arithmetic": "6415 committed + 6 new = 6421; the 12 deleted were never committed",
+  "key_test": "test_the_design_is_FIVE_way_crossed_and_UP_element_is_NOT_constant"
+ },
+ "honest_limits": [
+  "the added tests are NOT blinded -- written after the failure was known, so they pin the current state rather than prove the guard catches an unanticipated variant",
+  "the sigma70 measured_headline (one-hot ~0.59 vs GC ~0.14) has NO denominator -- no ceiling is computable on that rung",
+  "circularity UNRESOLVED: the Promoter Calculator's 346 params and PromoterAtlas's urtecho2018 head may both have been fit on GSE108535; neither was checked",
+  "AUDITED AND CLOSED same day: every loader-shaped fn in dna_decode/glm/ was enumerated -- exactly ONE loader per GEO series (expression.py owns GSE108535, genomewide.py owns GSE144621, each with its own GEO_BASE). No other duplication. Cosmetic residue: DEFAULT_CACHE is defined identically in both modules -- same value, different series, no correctness consequence; recorded not fixed, since consolidating would couple two independent substrate loaders."
+ ],
+ "duplicate_loader_audit": {
+  "date": "2026-10-13",
+  "scope": "dna_decode/glm/*.py",
+  "method": "enumerate load_*/ensure_cached/_rows/_read_*",
+  "result": "one loader per GEO series; no duplication",
+  "loaders": {
+   "GSE108535_sigma70": "expression.py::load_pairs",
+   "GSE144621_fragments": "genomewide.py::load_fragments",
+   "GSE144621_peak_tiles": "genomewide.py::load_peak_tiles"
+  }
+ },
+ "why_an_already_fixed_trap_recurred": {
+  "mechanism": "the protection was INSIDE the function that got bypassed -- MIN_JOIN_RATE guards callers of load_pairs, and writing a second reader is the one action that defeats every guard attached to the first. The knowledge was perfect and sat on a path not taken.",
+  "findability_measured": {
+   "terms_tried": 10,
+   "terms_that_find_the_owner": 9,
+   "hits": [
+    "sigma70",
+    "GSE108535",
+    "hyphen",
+    "underscore",
+    "norm_key",
+    "barcode_mapping",
+    "join_rate",
+    "naive_join",
+    "loader"
+   ],
+   "only_miss": "constructed",
+   "reading": "the search ran in the vocabulary of the CONCEPT being built (constructed variation) rather than of the DATA being loaded (the accession)"
+  },
+  "structural_fix": {
+   "file": "tests/test_substrate_loader_ownership.py",
+   "tests": 8,
+   "rule": "a GEO accession may be named in exactly ONE module; the owner is declared with the trap it encodes",
+   "why_it_works": "a second reader must name the files to open them, so it trips a test instead of silently re-deriving a solved trap",
+   "failure_message_contains": [
+    "owner module",
+    "entry point to call",
+    "the trap encoded"
+   ],
+   "non_vacuity": "recreating the real duplicate two filename constants in the package FAILS the guard and names the owner; removing them returns it to green",
+   "exemptions": {
+    "GSE108535": [
+     "glm/genomewide.py (6 docstring cross-references)"
+    ],
+    "GSE144621": [
+     "glm/encoder.py (1 comment recording the <=150bp bound)"
+    ],
+    "why_a_list_not_a_narrower_regex": "a guard that fired on those would be the documented trap where guards fire on the comment explaining what they ban; a visible one-line exemption beats a silent hole"
+   }
+  },
+  "defects_in_the_guard_itself": [
+   {
+    "draft": 1,
+    "defect": "ASSERTED that a bare \"GSE108535\" string was caught; it was not",
+    "cause": "regex required GSE\\d+_<filename>, so naming the accession once and building filenames from it evaded it",
+    "note": "a claim about the guard own coverage written without running it -- the same error being fixed"
+   },
+   {
+    "draft": 2,
+    "defect": "anchored as \bGSE\\d+\b, which cannot match GSE108535_sigma70 at all",
+    "cause": "_ is a WORD character so there is no boundary after the digits",
+    "effect": "caught the bare accession and missed every real filename -- exactly backwards"
+   }
+  ],
+  "remaining_hole": "a module that never writes the accession digits (imports the owner filename constant, or composes f\"GSE{series}_...\" from a number held elsewhere) still evades. Closing it needs import-graph/AST analysis of what reaches gzip.open. Recorded, not closed."
+ }
+}

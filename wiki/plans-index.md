@@ -653,3 +653,89 @@
 - The grid arm is demoted to a consistency check only: the designed grid separates from genomic sequence at AUROC 1.0000 via element-vocabulary recombination (median 13bp shared block, no constant scaffold), so grid performance is not evidence of transferable grammar.
 
 ---
+
+## [plan_file: F3_Phylogeny_Deconfounding_Calibrated_Instrument_Plan/] 2026-10-09
+**Status:** as-built
+**Executed:** 2026-10-09 | **Verdict:** `blocked:positive_control_not_fold_compatible` (pre-registered) | **Archived:** `executed_plans/F3_Phylogeny_Deconfounding_Calibrated_Instrument_Plan/`
+**Deviations:** control selection moved from pc1 to BY-CONSTRUCTION (pc1 measured unfit); fixed percentile replaced by a guard-selected sweep; one verdict state added
+**Summary:** Build a phylogeny de-confounding instrument — a grouped-CV seam threaded through `eval/genomic_prediction.py`, a genotype-derived grouping module, and a double control that can fail in both directions — rather than another panel result; the deliverable does not ship until it is calibrated.
+**Key decisions:**
+- The reuse seam is `folds`: the permutation null already consumes the same `folds` object as the measured run, so passing grouped folds makes the null grouped BY CONSTRUCTION, and no null can silently bound a different quantity than the metric it is compared against.
+- The verdict criterion is DIFFERENTIAL, not "the positive control falls to its own null" — a natural panel may carry structure AND real functional signal, and a correct de-confounder removes the former while leaving the latter, so an absolute bar would condemn a working instrument.
+- The control pair is SELECTED by Step 1's measurement, not named in advance: there is no cached natural-population Arabidopsis genotype matrix (phenotypes only; the only cached Arabidopsis genotypes are the CONSTRUCTED `arabmagic` multi-parent panel), which falsified the premise this plan was proposed on.
+- Step 1 is an integrity gate, not a presence check — a genotype matrix is parsed in full and any gzip fully decompressed, because `file exists` is not `file intact` and a head-only read passes exactly the truncated files that later fail.
+- `blocked:no-structured-panel` is a legitimate pre-registered terminal (the essentiality-ladder `INDETERMINATE_INSUFFICIENT_RUNGS` shape); fetching the 1001G genotype matrix is scoped OUT and is a user authority call.
+- The grouping module refuses on BOTH a dominant cluster (>0.60) and over-splitting (>0.50 singletons) — the Mash threshold work guarded only against the former, and its minimize-variance-ratio rule was monotonically biased toward singletons.
+
+---
+
+## [plan_file: GLM_Ceiling_Arm_Accounting_Correction_Plan/] 2026-10-12
+**Status:** as-built (partial) — Steps 1, 2, 4 executed 2026-10-12; Step 3 SKIPPED as already-satisfied (negative `neg-5ad65fa5`, recorded 2026-10-09, already carries the unrunnable scope AND the revival condition, so a second record would duplicate it); Step 5 NOT RUN — authority-gated, awaiting a user decision.
+**Summary:** Correct two self-contradictions in the pyramid-arm memo, close the test gap the new constant opened, record the substrate-infeasibility as a revivable scoped negative, and stage the one arms-ledger move that needs user authority.
+**Key decisions:**
+- Step 3 (record the scoped negative with its revival condition) is ordered BEFORE the authority-gated arms-ledger step, so the expensive 4-decade arm survives with a dated revival trigger under EVERY option -- the reversible safety work precedes the irreversible-in-spirit act.
+- Step 5 is AUTHORITY-GATED with three named branches (A kill-within-criterion / B split-criterion / C hold) and must not auto-execute; `/execute-plan` reaching Wave 2 without a recorded user decision must stop, not pick a default.
+- The commit (Step 4) runs BEFORE the gated step rather than after, resolving an intra-wave file overlap the wave checker found -- making the commit depend on the gate would have blocked three reversible corrections behind an authority decision.
+- Step 1 research found a fourth, unreported defect: `PYRAMID_WIDTHS` has ZERO test references, so the `validate_widths` refusal that makes the 4-decade arm infeasible is unpinned by any test.
+
+---
+
+## [plan_file: Promoter_Activity_Substrate_Ladder_And_The_Mechanistic_Baseline_Plan/] 2026-10-12
+**Status:** candidate — 6 steps / 3 waves; Steps 1-2 finalize measurements that were still RUNNING when the plan was written, Step 4 is authority-gated.
+**Summary:** Finish and verify two in-flight measurements, settle whether a 346-parameter biophysical model genuinely beats the learned encoder or merely re-encodes GC, split the ceiling criterion onto the substrate it was computed from, and register the two substrates found on disk with their leakage controls fixed in advance.
+**Key decisions:**
+- Span is treated as a CLOSED direction on this substrate, twice-disconfirmed: four spans from 1.10 to 2.18 decades sit within noise, and LegNet (DREAM-2022 winner, 0.979 on 150 bp) deliberately CAPS its receptive field at 79 bp with no dilated convolutions. A width-1 branch is additionally proven order-blind (3e-8 under a composition-preserving shuffle).
+- The criterion is scoped by SUBSTRATE + CEILING, not by sequence length — the frag library is also bacterial promoter data but carries its own measured 0.4583 ceiling, so "150 letters" would quietly stand in for "the 0.941-ceiling library".
+- The biophysical-baseline headline (provisional median 0.3856 vs encoder 0.3234) is held UNPUBLISHED pending a full-set recompute: it rests on a non-random file-order subset, and the plan pre-commits to RETRACTING rather than footnoting any move over 0.02.
+- Step 3 isolates the question that actually matters — does the mechanistic feature ADD to GC, or re-encode it — as a 2-feature paired test, because a null there is itself a real result.
+- Both substrates the user proposed were already cached (321,123 fragments at 48-499 bp; a designed sigma70 library) after I had told them the longer-sequence work needed data we did not have; Step 6 records the census so the frag library cannot be lost again.
+
+---
+
+## [plan_file: Claim_Guardrails_Plan/] 2026-10-13
+**Summary:** Stop rung-scoped and door-closing claims from escaping as global facts, by making the absent field impossible, the judge's payload factual, and the trigger harness-bound.
+**Key decisions:**
+- Per-file orphan detection was KILLED by evidence during research — the fragment files are referenced at `dna_decode/glm/genomewide.py:48-49`, so they are not orphans; the real defect is `size_lever` present on 1 of 4 census rungs, which makes an absent field read as a global statement.
+- The symmetry/utilization verdict is surfaced in `scripts/project_status.py` — the surface `CLAUDE.md` already instructs running before ANY scope claim — rather than in a new standalone CLI.
+- The external review payload gains a numbered `## Load-Bearing Claims` block so the reviewer can challenge the FRAMING, not only the proposal (measured: it caught the claims surfaced as uncertain, and could not catch the ones stated as settled background).
+- Stop-hook feasibility is unverified on this build, so it is a probe step (Step 1) and the closing-claim check ships INERT with `--print-settings`; arming the live `settings.json` stays a user decision.
+
+---
+## [plan_file: Tile_Substrate_Selection_Value_And_The_Untried_Hybrid_Arm_Plan/] 2026-10-14
+**Summary:** The live `ceiling:` criterion asks for the best PREDICTION of promoter activity while the project's own 2026-10-07 measurement concluded the scoring half is adequate and the generator is the bottleneck — so measure what the tile rung's best scorer (0.3968 against a 0.941 ceiling) is actually worth to a CHOICE, and run the one untried combination of the learned conv encoder with the biophysical scalar.
+**Key decisions:**
+- The selection-value run is deliberately NOT declared as a ceiling arm — an arm is a candidate approach to raising the metric, whereas this is a decision instrument about whether that metric matters; filing it as an arm would make the ledger claim an improvement attempt that was never attempted.
+- Generator work is explicitly out of scope: `features/glm-generator-finetune/` already carries a technical plan that is DEFERRED BY DESIGN with a named unblock trigger, so proposing it here would be the repo's recorded orientation error #3.
+- Neither existing arm persists per-tile predictions (`scripts/glm_encoder_gate.py` deliberately does `r.pop("predictions")` — "one float"), so a single shared Step-2 prediction table feeds both measurements instead of each re-fitting independently, with the published reconcile anchors (gc seed 0 = 0.3000, max_tx = 0.3968) recomputed FROM the persisted vectors as the proof it reads the same substrate.
+- A prior recorded decision conflicts and is left unresolved rather than overridden: `wiki/decisions-log.md` 2026-10-13 found the fragment rung attractive once its ceiling was corrected to 0.79, while this session measured only 3.30% of its 321,123 rows above 2x the median — different quantities, both able to hold, and no step here touches that arm.
+
+---
+## [plan_file: CABBAGE_G8_Closure_Lineage_Corrected_Effective_N_For_The_Four_Scored_Cells_Plan/] 2026-10-17
+**Summary:** Close the one open label gate (G8) on the project's strongest label substrate by computing minority-class effective lineage counts for the four scored CABBAGE cells and feeding them into the existing code-owned `rejection_gates.g8_dedup_collapses_balance`, which returns INSUFFICIENT_DATA today because nothing supplies `min_effective_lineages` -- written into a namespace-separate sidecar because two of the four cells collide exactly with keys already in `wiki/provdisjoint_lineage_metrics.json`.
+**Key decisions:**
+- The sidecar is namespace-separate (`wiki/cabbage_lineage_metrics.json`, schema `cabbage-lineage-metrics-v1`) because the collision is MEASURED, not hypothetical: the CABBAGE cells key on `amrfinder_organism` and the provdisjoint lineage file already holds `Campylobacter x ciprofloxacin` and `Escherichia_coli_Shigella x gentamicin`, so a shared-key write would silently overwrite two provdisjoint cells.
+- Clustering by determinant profile is explicitly forbidden as circular -- the portal's pre-computed AMRFinderPlus tree is the cheap-looking lineage proxy, but the decoder's prediction is a function of those same determinants, so lineages must come from genome distance (Mash) at the fixed (0.001, 0.005) thresholds with NO threshold search.
+- `min_effective_lineages` is defined as the MINORITY class's effective lineage count, on G8's own "smallest class" wording; the majority class is ~100x larger and is not separately clustered, and because lineage count is not monotone in isolate count this is recorded as a scoped reading rather than a proof.
+- Merge-or-refuse semantics are defined BEFORE the first increment (per the 2026-10-14 lesson that staged writes over a shared artifact are silently lossy), and a G8 TRIP is pre-committed as a valid finding about the substrate rather than a failure to tune away.
+
+---
+## [plan_file: Mission_Reconciliation_A_Native_Clonality_Route_Plan/] 2026-10-18
+**Status:** as-built
+**Executed:** 2026-10-19 — 8 of 9 steps built (sequential; parallel mode refused because the git
+toplevel was the HOME repo, whose origin is an unrelated project). **Step 6 NOT RUN by the plan's own
+pre-commitment**: it fires only on Step 5 exit 0, and Step 5 returned exit 2 `INSUFFICIENT_DATA`
+(`data/raw/` is empty with D: offline), so the G8 bar is deliberately unamended. **D2 is still
+outstanding.** Three plan-level errors were corrected during execution and are recorded in
+`.claude/execute-plan-state/Mission_Reconciliation_A_Native_Clonality_Route_Plan.json`: Step 1's
+producer check was unsatisfiable for 4 predicates, Step 2's "all four cells are 96-98% USA" is false
+for the chosen cell (58.4%), and Step 4's clause 3 is logically implied by clause 1 so the plan's
+clause-3 test was unconstructible. Plan folder left in place, not archived.
+**Summary:** v1 with D1-D7 answered: the crosscheck bar is now DERIVED from the committed lineage table rather than asserted, the arm-kill option is withdrawn because code refuses it, and the versioning recommendation is reversed to `git init` in place on measured evidence. Saved IN PLACE over v1 per the save-once rule (v1 preserved as `technical-plan.md.v1bak`); nine steps, three waves, max parallelism 5.
+**Key decisions:**
+- The crosscheck bar is DERIVED from the gate's own arithmetic, not asserted. All 20 cell-threshold pairs in `wiki/provdisjoint_lineage_metrics.json` give minority effective-lineage counts `2,4,5,6,7,9,11,13,14,14,14,15,16,16,17,19,21,23,23,24` against a bar of 3 -- **19 PASS, exactly 1 TRIP, median 14** -- so v1's "identical verdict per cell" clause is nearly VACUOUS on its own and all discriminating power sits in one pair (`Klebsiella x ciprofloxacin @ 0.005`, minority 2). v1's `ARI >= 0.80` is unanchored (nothing in `g8_dedup_collapses_balance` consumes partition similarity) and `cluster count within 25%` binds only where verdict-identity already binds harder; both are DEMOTED to reported diagnostics. The three gate clauses are now: verdict identity (necessary, labelled nearly-vacuous, with the 19/20 base rate stamped in a `non_vacuity` block) + exact equality of the minority count on the three pairs within +/-2 of the bar + **the TRIP must reproduce**, because a method that turns the project's only real negative into a PASS manufactures lineage diversity and a bar that cannot fail on its one real negative is theatre.
+- The arm-kill option v1 offered does not exist. `arms_ledger.kill_arm` requires the arm's OWN executed evidence and refuses redundancy reasons, routing a no-evidence kill to explicit user authority -- R6 working as designed. Withdrawn from the plan and from this entry; the ceiling stays `blocked:untried-arm`, which is the honest state, and reaching `plateau` by declining to declare would buy a verdict through scope reduction.
+- D6 is reversed on a measured fact: the live `.gitignore` carries 4 `!soraya_runs/` negations and the sg8 clone carries 3, missing `!soraya_runs/constraint-expiry.json`. Committing the live copy into sg8 under sg8's rules would silently drop the R9 constraint registry (10 registered scope cuts), reproducing the exact defect the live `.gitignore` comment says was fixed on 2026-10-10. `git init` in place also fixes the anchoring bug hit live this session -- `git rev-parse --show-toplevel` resolves to the home directory, where a different project's `wiki/plans-index.md` sits. `git reset --hard` / `clean -fd` / `checkout .` are FORBIDDEN in that step and grep-guarded; only a mixed `git reset origin/main` is permitted.
+- v1's single Step 4 is SPLIT into freeze-the-bar (offline: no drive, no sourmash, no network -- runnable today) and run-the-measurement (drive-gated), so the bar lands even though D: and E: are offline and Step 5's expected outcome today is exit 2 `INSUFFICIENT_DATA`. The `.gitignore` negations have meanwhile **never been verified by git** -- asserted by comment only, because there is no repository to run `check-ignore` against, which Step 9 makes testable for the first time.
+- One decision remains genuinely outstanding: **D2**, accepting `sourmash` as an admissible G8 distance source conditional on Step 5 clearing the frozen bar. It is the only item `ask_gate` classified affirmatively (`user:acceptance-bar`). D1/D3/D4/D5/D7 are answered and encoded in the steps.
+
+---

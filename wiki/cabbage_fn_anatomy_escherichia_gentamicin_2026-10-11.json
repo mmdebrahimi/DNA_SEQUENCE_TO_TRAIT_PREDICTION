@@ -1,0 +1,617 @@
+{
+  "schema": "cabbage-fn-anatomy-v1",
+  "generated": "2026-10-11",
+  "cell": {
+    "species": "Escherichia coli",
+    "drug": "gentamicin",
+    "amrfinder_organism": "Escherichia_coli_Shigella"
+  },
+  "confusion": {
+    "tp": 55,
+    "fn": 6,
+    "tn": 7848,
+    "fp": 39
+  },
+  "n_unscoreable": 311,
+  "verdict": "ALL_FN_CARRY_NO_DETERMINANT_DECLARED_BLIND_SPOT",
+  "per_determinant_ppv": {
+    "aac(3)-IId": {
+      "n_carriers": 40,
+      "n_truth_R": 20,
+      "n_truth_S": 20,
+      "ppv": 0.5,
+      "ppv_wilson_ci": [
+        0.352,
+        0.648
+      ]
+    },
+    "rmtB1": {
+      "n_carriers": 22,
+      "n_truth_R": 20,
+      "n_truth_S": 2,
+      "ppv": 0.9091,
+      "ppv_wilson_ci": [
+        0.722,
+        0.975
+      ]
+    },
+    "aac(3)-IVa": {
+      "n_carriers": 18,
+      "n_truth_R": 15,
+      "n_truth_S": 3,
+      "ppv": 0.8333,
+      "ppv_wilson_ci": [
+        0.608,
+        0.942
+      ]
+    },
+    "aac(3)-IIe": {
+      "n_carriers": 9,
+      "n_truth_R": 6,
+      "n_truth_S": 3,
+      "ppv": 0.6667,
+      "ppv_wilson_ci": [
+        0.354,
+        0.879
+      ]
+    },
+    "armA": {
+      "n_carriers": 8,
+      "n_truth_R": 8,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.676,
+        1.0
+      ]
+    },
+    "aac(3)-VIa": {
+      "n_carriers": 8,
+      "n_truth_R": 0,
+      "n_truth_S": 8,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.324
+      ]
+    },
+    "aac(6')-Ib": {
+      "n_carriers": 2,
+      "n_truth_R": 0,
+      "n_truth_S": 2,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.658
+      ]
+    },
+    "aac(3)-IV": {
+      "n_carriers": 1,
+      "n_truth_R": 1,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.207,
+        1.0
+      ]
+    },
+    "ant(2'')-Ia": {
+      "n_carriers": 1,
+      "n_truth_R": 1,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.207,
+        1.0
+      ]
+    },
+    "aac(6')-Ib4": {
+      "n_carriers": 1,
+      "n_truth_R": 0,
+      "n_truth_S": 1,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.793
+      ]
+    }
+  },
+  "determinants_with_zero_true_R_carriers": [
+    "aac(3)-VIa",
+    "aac(6')-Ib",
+    "aac(6')-Ib4"
+  ],
+  "fp_finding": "Every false positive carries a counted determinant, and the determinants with ZERO true-R carriers contribute only false positives in this cohort. That is the MIRROR of the gentamicin `rmt` case: there a determinant the rule could not SEE produced false negatives; here a determinant the rule COUNTS produces false positives. Changing what the rule counts would edit the sha256-pinned frozen surface and retire the active prospective lock, so it is a USER AUTHORITY call and is deliberately NOT made here.",
+  "fp_attribution": "NOT A RULE BUG -- an UPSTREAM catalog assertion the rule faithfully propagates. Verified on GCA_004836905.1: gyrA_P104S is the SOLE counted determinant (n_determinants=1, counter='qrdr_point', threshold=1), and AMRFinderPlus itself files it as Class=QUINOLONE / Subclass=QUINOLONE named 'Campylobacter quinolone resistant GyrA'. The frozen rule counts QUINOLONE-class gyrA point mutations, so it is behaving exactly as specified; the resistance-conferring claim for P104S originates in AMRFinder's catalog. A fix therefore belongs upstream, or in an L2 doubt flag, not in the counting logic.",
+  "false_negatives": [
+    {
+      "accession": "GCA_009392935.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009393125.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009393145.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009393365.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009393475.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009394445.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    }
+  ],
+  "false_positives": [
+    {
+      "accession": "GCA_000692595.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_003794515.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_009393635.1",
+      "determinants": [
+        "rmtB1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009393855.1",
+      "determinants": [
+        "rmtB1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009393945.1",
+      "determinants": [
+        "aac(3)-IVa"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_012688485.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_012701365.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_012991425.1",
+      "determinants": [
+        "aac(3)-IVa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_014097975.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_017835145.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_020284255.1",
+      "determinants": [
+        "aac(3)-IVa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_024304945.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_025829015.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "None",
+      "year": NaN
+    },
+    {
+      "accession": "GCA_029878525.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_029888985.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_030784565.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_030800705.1",
+      "determinants": [
+        "aac(3)-IIe"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_030805605.1",
+      "determinants": [
+        "aac(6')-Ib"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_030877645.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_030878165.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_030883345.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_031510785.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_031517485.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_031577135.1",
+      "determinants": [
+        "aac(3)-IIe"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_031776005.2",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2023.0
+    },
+    {
+      "accession": "GCA_031815355.1",
+      "determinants": [
+        "aac(6')-Ib"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_031818015.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_032328635.2",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2022.0
+    },
+    {
+      "accession": "GCA_032334895.2",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2022.0
+    },
+    {
+      "accession": "GCA_032338275.2",
+      "determinants": [
+        "aac(3)-IIe"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2022.0
+    },
+    {
+      "accession": "GCA_034685665.1",
+      "determinants": [
+        "aac(3)-IId"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Japan",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_044091815.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "Canada",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_044103175.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "Canada",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_044146565.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "Canada",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_044686145.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "Canada",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_044692305.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "Canada",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_044692385.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "Canada",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_044692425.1",
+      "determinants": [
+        "aac(3)-VIa"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "Canada",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_048599745.1",
+      "determinants": [
+        "aac(6')-Ib4"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Italy",
+      "year": 2014.0
+    }
+  ],
+  "n_fn_determinant_free": 6,
+  "n_fp_determinant_free": 0,
+  "determinant_frequency_by_bucket": {
+    "fn": {},
+    "fp": {
+      "aac(3)-IId": 20,
+      "aac(3)-VIa": 8,
+      "aac(3)-IVa": 3,
+      "aac(3)-IIe": 3,
+      "rmtB1": 2,
+      "aac(6')-Ib": 2,
+      "aac(6')-Ib4": 1
+    },
+    "tp": {
+      "aac(3)-IId": 20,
+      "rmtB1": 20,
+      "aac(3)-IVa": 15,
+      "armA": 8,
+      "aac(3)-IIe": 6,
+      "aac(3)-IV": 1,
+      "ant(2'')-Ia": 1
+    },
+    "tn": {}
+  },
+  "n_determinants_distribution": {
+    "tn": {
+      "0": 7848
+    },
+    "fp": {
+      "1": 39
+    },
+    "fn": {
+      "0": 6
+    },
+    "tp": {
+      "1": 41,
+      "2": 12,
+      "3": 2
+    }
+  },
+  "honest_limits": [
+    "`determinants` are the hits the FROZEN rule COUNTS for this drug, not everything AMRFinder reported. An FN listed as determinant-free may still carry an uncounted element, which is precisely the distinction between a declared blind spot and a catalog gap -- so a determinant-free FN bounds the rule's input, it does not prove the genome is bare.",
+    "Labels are portal MIC run through this repo's STRICT tiers; a mislabelled isolate presents as an FN and nothing here can separate that from a genotype miss.",
+    "Campylobacter cipro R is overwhelmingly gyrA_T86I, so bucket determinant frequencies are dominated by one substitution and are not a broad coverage census.",
+    "The cohort is 96.4% one country (see the cell artifact's source_concentration verdict), so an absent determinant family may be absent from the COHORT rather than rare in the world.",
+    "A zero-true-R determinant is reported with its Wilson CI because the carrier counts are SMALL; 0 of 6 is suggestive and is NOT a demonstration that the substitution is benign.",
+    "PPV here is MARGINAL per determinant, not causal: a carrier may hold several determinants, so credit is not attributable to one symbol from these counts alone.",
+    "Not clonality-corrected, so carriers of one determinant may be a handful of clones."
+  ]
+}

@@ -1,0 +1,2002 @@
+{
+  "schema": "arapheno-trait-overlap-v1",
+  "generated": "2026-10-10",
+  "n_genotyped_accessions": 1135,
+  "n_phenotypes_listed": 536,
+  "n_fetched": 536,
+  "n_failed": 0,
+  "failed_ids": [],
+  "min_overlap": 250,
+  "n_usable": 163,
+  "usable": [
+    {
+      "phenotype_id": 261,
+      "name": "FT10",
+      "study": "1001genomes flowering time phenotypes",
+      "n_overlap_genotyped": 1003,
+      "n_values": 1163
+    },
+    {
+      "phenotype_id": 262,
+      "name": "FT16",
+      "study": "1001genomes flowering time phenotypes",
+      "n_overlap_genotyped": 970,
+      "n_values": 1123
+    },
+    {
+      "phenotype_id": 703,
+      "name": "DTF1",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 936,
+      "n_values": 936
+    },
+    {
+      "phenotype_id": 701,
+      "name": "DTF2",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 931,
+      "n_values": 931
+    },
+    {
+      "phenotype_id": 702,
+      "name": "DTF3",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 923,
+      "n_values": 923
+    },
+    {
+      "phenotype_id": 705,
+      "name": "CL",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 904,
+      "n_values": 904
+    },
+    {
+      "phenotype_id": 704,
+      "name": "RL",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 850,
+      "n_values": 850
+    },
+    {
+      "phenotype_id": 700,
+      "name": "Length",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 680,
+      "n_values": 680
+    },
+    {
+      "phenotype_id": 706,
+      "name": "RBN",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 674,
+      "n_values": 674
+    },
+    {
+      "phenotype_id": 707,
+      "name": "Diameter",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 656,
+      "n_values": 656
+    },
+    {
+      "phenotype_id": 529,
+      "name": "rSurvival fruit mlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 528,
+      "name": "rSurvival fruit mli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 532,
+      "name": "rSurvival fruit tli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 519,
+      "name": "rFitness mhp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 521,
+      "name": "rFitness mlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 526,
+      "name": "rSurvival fruit mhi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 524,
+      "name": "rFitness tli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 525,
+      "name": "rFitness tlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 531,
+      "name": "rSurvival fruit thp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 518,
+      "name": "rFitness mhi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 527,
+      "name": "rSurvival fruit mhp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 535,
+      "name": "rSeeds mhp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 533,
+      "name": "rSurvival fruit tlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 523,
+      "name": "rFitness thp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 538,
+      "name": "rSeeds thi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 522,
+      "name": "rFitness thi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 530,
+      "name": "rSurvival fruit thi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 520,
+      "name": "rFitness mli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 539,
+      "name": "rSeeds thp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 511,
+      "n_values": 511
+    },
+    {
+      "phenotype_id": 534,
+      "name": "rSeeds mhi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 511,
+      "n_values": 511
+    },
+    {
+      "phenotype_id": 576,
+      "name": "clim-gs1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 638,
+      "name": "clim-tmin8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 578,
+      "name": "clim-gs11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 596,
+      "name": "clim-pet2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 637,
+      "name": "clim-tmin7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 545,
+      "name": "clim-aet12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 563,
+      "name": "clim-bio18",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 607,
+      "name": "clim-prec12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 589,
+      "name": "clim-gs sum",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 555,
+      "name": "clim-bio10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 567,
+      "name": "clim-bio4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 551,
+      "name": "clim-aet7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 639,
+      "name": "clim-tmin9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 608,
+      "name": "clim-prec2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 593,
+      "name": "clim-pet10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 626,
+      "name": "clim-tmax8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 577,
+      "name": "clim-gs10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 634,
+      "name": "clim-tmin4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 624,
+      "name": "clim-tmax6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 546,
+      "name": "clim-aet2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 609,
+      "name": "clim-prec3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 573,
+      "name": "clim-cyclelength",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 611,
+      "name": "clim-prec5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 585,
+      "name": "clim-gs7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 583,
+      "name": "clim-gs5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 627,
+      "name": "clim-tmax9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 564,
+      "name": "clim-bio19",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 584,
+      "name": "clim-gs6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 574,
+      "name": "clim-cyclevar",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 544,
+      "name": "clim-aet11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 606,
+      "name": "clim-prec11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 618,
+      "name": "clim-tmax11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 614,
+      "name": "clim-prec8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 580,
+      "name": "clim-gs2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 550,
+      "name": "clim-aet6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 587,
+      "name": "clim-gs9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 599,
+      "name": "clim-pet5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 595,
+      "name": "clim-pet12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 597,
+      "name": "clim-pet3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 548,
+      "name": "clim-aet4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 557,
+      "name": "clim-bio12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 623,
+      "name": "clim-tmax5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 559,
+      "name": "clim-bio14",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 630,
+      "name": "clim-tmin11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 575,
+      "name": "clim-cyclevsgs",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 543,
+      "name": "clim-aet10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 565,
+      "name": "clim-bio2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 566,
+      "name": "clim-bio3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 592,
+      "name": "clim-pet1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 553,
+      "name": "clim-aet9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 622,
+      "name": "clim-tmax4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 635,
+      "name": "clim-tmin5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 620,
+      "name": "clim-tmax2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 558,
+      "name": "clim-bio13",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 598,
+      "name": "clim-pet4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 588,
+      "name": "clim-gs prec",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 586,
+      "name": "clim-gs8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 549,
+      "name": "clim-aet5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 612,
+      "name": "clim-prec6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 625,
+      "name": "clim-tmax7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 617,
+      "name": "clim-tmax10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 552,
+      "name": "clim-aet8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 605,
+      "name": "clim-prec10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 561,
+      "name": "clim-bio16",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 602,
+      "name": "clim-pet8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 604,
+      "name": "clim-prec1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 562,
+      "name": "clim-bio17",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 636,
+      "name": "clim-tmin6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 581,
+      "name": "clim-gs3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 600,
+      "name": "clim-pet6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 603,
+      "name": "clim-pet9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 591,
+      "name": "clim-gs tmin",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 619,
+      "name": "clim-tmax12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 582,
+      "name": "clim-gs4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 560,
+      "name": "clim-bio15",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 547,
+      "name": "clim-aet3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 613,
+      "name": "clim-prec7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 615,
+      "name": "clim-prec9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 601,
+      "name": "clim-pet7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 590,
+      "name": "clim-gs tmax",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 610,
+      "name": "clim-prec4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 579,
+      "name": "clim-gs12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 616,
+      "name": "clim-tmax1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 571,
+      "name": "clim-bio8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 542,
+      "name": "clim-aet1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 594,
+      "name": "clim-pet11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 568,
+      "name": "clim-bio5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 570,
+      "name": "clim-bio7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 621,
+      "name": "clim-tmax3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 500,
+      "n_values": 500
+    },
+    {
+      "phenotype_id": 554,
+      "name": "clim-bio1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 500,
+      "n_values": 500
+    },
+    {
+      "phenotype_id": 572,
+      "name": "clim-bio9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 500,
+      "n_values": 500
+    },
+    {
+      "phenotype_id": 556,
+      "name": "clim-bio11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 499,
+      "n_values": 499
+    },
+    {
+      "phenotype_id": 540,
+      "name": "rSeeds tli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 499,
+      "n_values": 499
+    },
+    {
+      "phenotype_id": 628,
+      "name": "clim-tmin1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 499,
+      "n_values": 499
+    },
+    {
+      "phenotype_id": 629,
+      "name": "clim-tmin10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 498,
+      "n_values": 498
+    },
+    {
+      "phenotype_id": 632,
+      "name": "clim-tmin2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 497,
+      "n_values": 497
+    },
+    {
+      "phenotype_id": 569,
+      "name": "clim-bio6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 497,
+      "n_values": 497
+    },
+    {
+      "phenotype_id": 633,
+      "name": "clim-tmin3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 482,
+      "n_values": 482
+    },
+    {
+      "phenotype_id": 631,
+      "name": "clim-tmin12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 479,
+      "n_values": 479
+    },
+    {
+      "phenotype_id": 536,
+      "name": "rSeeds mli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 423,
+      "n_values": 423
+    },
+    {
+      "phenotype_id": 541,
+      "name": "rSeeds tlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 421,
+      "n_values": 421
+    },
+    {
+      "phenotype_id": 390,
+      "name": "rosetteDM",
+      "study": "Adaptive diversification of growth allometry in the plant Arabidopsis thaliana",
+      "n_overlap_genotyped": 407,
+      "n_values": 451
+    },
+    {
+      "phenotype_id": 391,
+      "name": "GrowthRate",
+      "study": "Adaptive diversification of growth allometry in the plant Arabidopsis thaliana",
+      "n_overlap_genotyped": 407,
+      "n_values": 451
+    },
+    {
+      "phenotype_id": 392,
+      "name": "ScalingExponent",
+      "study": "Adaptive diversification of growth allometry in the plant Arabidopsis thaliana",
+      "n_overlap_genotyped": 407,
+      "n_values": 451
+    },
+    {
+      "phenotype_id": 389,
+      "name": "RGR",
+      "study": "Adaptive diversification of growth allometry in the plant Arabidopsis thaliana",
+      "n_overlap_genotyped": 402,
+      "n_values": 445
+    },
+    {
+      "phenotype_id": 388,
+      "name": "FruitNumber",
+      "study": "Adaptive diversification of growth allometry in the plant Arabidopsis thaliana",
+      "n_overlap_genotyped": 396,
+      "n_values": 440
+    },
+    {
+      "phenotype_id": 750,
+      "name": "stomatasize",
+      "study": "Natural variation in stomata size (Dittberner et al. 2018)",
+      "n_overlap_genotyped": 330,
+      "n_values": 330
+    },
+    {
+      "phenotype_id": 748,
+      "name": "stomata density",
+      "study": "Natural variation in stomata size (Dittberner et al. 2018)",
+      "n_overlap_genotyped": 330,
+      "n_values": 330
+    },
+    {
+      "phenotype_id": 752,
+      "name": "delta 13C",
+      "study": "Natural variation in stomata size (Dittberner et al. 2018)",
+      "n_overlap_genotyped": 310,
+      "n_values": 310
+    },
+    {
+      "phenotype_id": 1899,
+      "name": "Trichome autofluorescence",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 309,
+      "n_values": 309
+    },
+    {
+      "phenotype_id": 1900,
+      "name": "Leaf epidermis autofluorescence",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 309,
+      "n_values": 309
+    },
+    {
+      "phenotype_id": 1909,
+      "name": "Shaveproof trichomes",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 309,
+      "n_values": 309
+    },
+    {
+      "phenotype_id": 1902,
+      "name": "Trichome density",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 309,
+      "n_values": 309
+    },
+    {
+      "phenotype_id": 1907,
+      "name": "Metal surrounding trichomes",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 307,
+      "n_values": 307
+    },
+    {
+      "phenotype_id": 1905,
+      "name": "Metal gradient in trichomes",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 307,
+      "n_values": 307
+    },
+    {
+      "phenotype_id": 1908,
+      "name": "Metals in stomata",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 307,
+      "n_values": 307
+    },
+    {
+      "phenotype_id": 1903,
+      "name": "Number of trichome branches",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 307,
+      "n_values": 307
+    },
+    {
+      "phenotype_id": 1906,
+      "name": "Metal in trichome base",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 307,
+      "n_values": 307
+    },
+    {
+      "phenotype_id": 1904,
+      "name": "Metal ring in trichomes",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 307,
+      "n_values": 307
+    },
+    {
+      "phenotype_id": 1901,
+      "name": "Autofluorescence color",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 306,
+      "n_values": 306
+    },
+    {
+      "phenotype_id": 1898,
+      "name": "Trichome stem length",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 305,
+      "n_values": 305
+    },
+    {
+      "phenotype_id": 1896,
+      "name": "Trichome perimeter",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 302,
+      "n_values": 302
+    },
+    {
+      "phenotype_id": 1893,
+      "name": "Trichome circularity",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 302,
+      "n_values": 302
+    },
+    {
+      "phenotype_id": 1894,
+      "name": "Trichome solidity",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 302,
+      "n_values": 302
+    },
+    {
+      "phenotype_id": 1897,
+      "name": "Callose content in trichomes",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 302,
+      "n_values": 302
+    },
+    {
+      "phenotype_id": 1892,
+      "name": "Trichome area",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 302,
+      "n_values": 302
+    },
+    {
+      "phenotype_id": 1895,
+      "name": "Trichome length",
+      "study": "trichome_development_epidermis_metal_traits",
+      "n_overlap_genotyped": 302,
+      "n_values": 302
+    },
+    {
+      "phenotype_id": 699,
+      "name": "Inter-specific pollination of Arabidopsis thaliana and Malcolmia littorea",
+      "study": "Inter-specific pollination of Arabidopsis thaliana and Malcolmia littorea",
+      "n_overlap_genotyped": 283,
+      "n_values": 339
+    },
+    {
+      "phenotype_id": 753,
+      "name": "delta 13C 261",
+      "study": "Natural variation in stomata size (Dittberner et al. 2018)",
+      "n_overlap_genotyped": 261,
+      "n_values": 261
+    },
+    {
+      "phenotype_id": 749,
+      "name": "stomata density 261",
+      "study": "Natural variation in stomata size (Dittberner et al. 2018)",
+      "n_overlap_genotyped": 261,
+      "n_values": 261
+    },
+    {
+      "phenotype_id": 751,
+      "name": "Stomatasize 261",
+      "study": "Natural variation in stomata size (Dittberner et al. 2018)",
+      "n_overlap_genotyped": 261,
+      "n_values": 261
+    },
+    {
+      "phenotype_id": 1910,
+      "name": "Raffinose 32C",
+      "study": "Raffinose (22\u00b0C and 32\u00b0C)",
+      "n_overlap_genotyped": 250,
+      "n_values": 250
+    },
+    {
+      "phenotype_id": 1911,
+      "name": "Raffinose 22C",
+      "study": "Raffinose (22\u00b0C and 32\u00b0C)",
+      "n_overlap_genotyped": 250,
+      "n_values": 250
+    }
+  ],
+  "all_ranked": [
+    {
+      "phenotype_id": 261,
+      "name": "FT10",
+      "study": "1001genomes flowering time phenotypes",
+      "n_overlap_genotyped": 1003,
+      "n_values": 1163
+    },
+    {
+      "phenotype_id": 262,
+      "name": "FT16",
+      "study": "1001genomes flowering time phenotypes",
+      "n_overlap_genotyped": 970,
+      "n_values": 1123
+    },
+    {
+      "phenotype_id": 703,
+      "name": "DTF1",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 936,
+      "n_values": 936
+    },
+    {
+      "phenotype_id": 701,
+      "name": "DTF2",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 931,
+      "n_values": 931
+    },
+    {
+      "phenotype_id": 702,
+      "name": "DTF3",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 923,
+      "n_values": 923
+    },
+    {
+      "phenotype_id": 705,
+      "name": "CL",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 904,
+      "n_values": 904
+    },
+    {
+      "phenotype_id": 704,
+      "name": "RL",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 850,
+      "n_values": 850
+    },
+    {
+      "phenotype_id": 700,
+      "name": "Length",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 680,
+      "n_values": 680
+    },
+    {
+      "phenotype_id": 706,
+      "name": "RBN",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 674,
+      "n_values": 674
+    },
+    {
+      "phenotype_id": 707,
+      "name": "Diameter",
+      "study": "1001 Genomes & easyGWAS",
+      "n_overlap_genotyped": 656,
+      "n_values": 656
+    },
+    {
+      "phenotype_id": 529,
+      "name": "rSurvival fruit mlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 528,
+      "name": "rSurvival fruit mli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 532,
+      "name": "rSurvival fruit tli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 519,
+      "name": "rFitness mhp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 521,
+      "name": "rFitness mlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 526,
+      "name": "rSurvival fruit mhi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 524,
+      "name": "rFitness tli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 525,
+      "name": "rFitness tlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 531,
+      "name": "rSurvival fruit thp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 518,
+      "name": "rFitness mhi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 527,
+      "name": "rSurvival fruit mhp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 535,
+      "name": "rSeeds mhp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 533,
+      "name": "rSurvival fruit tlp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 523,
+      "name": "rFitness thp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 538,
+      "name": "rSeeds thi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 522,
+      "name": "rFitness thi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 530,
+      "name": "rSurvival fruit thi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 520,
+      "name": "rFitness mli",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 512,
+      "n_values": 512
+    },
+    {
+      "phenotype_id": 539,
+      "name": "rSeeds thp",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 511,
+      "n_values": 511
+    },
+    {
+      "phenotype_id": 534,
+      "name": "rSeeds mhi",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 511,
+      "n_values": 511
+    },
+    {
+      "phenotype_id": 576,
+      "name": "clim-gs1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 638,
+      "name": "clim-tmin8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 578,
+      "name": "clim-gs11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 596,
+      "name": "clim-pet2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 637,
+      "name": "clim-tmin7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 545,
+      "name": "clim-aet12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 563,
+      "name": "clim-bio18",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 607,
+      "name": "clim-prec12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 589,
+      "name": "clim-gs sum",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 555,
+      "name": "clim-bio10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 567,
+      "name": "clim-bio4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 551,
+      "name": "clim-aet7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 639,
+      "name": "clim-tmin9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 608,
+      "name": "clim-prec2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 593,
+      "name": "clim-pet10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 626,
+      "name": "clim-tmax8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 577,
+      "name": "clim-gs10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 634,
+      "name": "clim-tmin4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 624,
+      "name": "clim-tmax6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 546,
+      "name": "clim-aet2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 609,
+      "name": "clim-prec3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 573,
+      "name": "clim-cyclelength",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 611,
+      "name": "clim-prec5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 585,
+      "name": "clim-gs7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 583,
+      "name": "clim-gs5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 627,
+      "name": "clim-tmax9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 564,
+      "name": "clim-bio19",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 584,
+      "name": "clim-gs6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 574,
+      "name": "clim-cyclevar",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 544,
+      "name": "clim-aet11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 606,
+      "name": "clim-prec11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 618,
+      "name": "clim-tmax11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 614,
+      "name": "clim-prec8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 580,
+      "name": "clim-gs2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 550,
+      "name": "clim-aet6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 587,
+      "name": "clim-gs9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 599,
+      "name": "clim-pet5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 595,
+      "name": "clim-pet12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 597,
+      "name": "clim-pet3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 548,
+      "name": "clim-aet4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 557,
+      "name": "clim-bio12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 623,
+      "name": "clim-tmax5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 559,
+      "name": "clim-bio14",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 630,
+      "name": "clim-tmin11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 575,
+      "name": "clim-cyclevsgs",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 543,
+      "name": "clim-aet10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 565,
+      "name": "clim-bio2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 566,
+      "name": "clim-bio3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 592,
+      "name": "clim-pet1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 553,
+      "name": "clim-aet9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 622,
+      "name": "clim-tmax4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 635,
+      "name": "clim-tmin5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 620,
+      "name": "clim-tmax2",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 558,
+      "name": "clim-bio13",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 598,
+      "name": "clim-pet4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 588,
+      "name": "clim-gs prec",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 586,
+      "name": "clim-gs8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 549,
+      "name": "clim-aet5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 612,
+      "name": "clim-prec6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 625,
+      "name": "clim-tmax7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 617,
+      "name": "clim-tmax10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 552,
+      "name": "clim-aet8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 605,
+      "name": "clim-prec10",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 561,
+      "name": "clim-bio16",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 602,
+      "name": "clim-pet8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 604,
+      "name": "clim-prec1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 562,
+      "name": "clim-bio17",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 636,
+      "name": "clim-tmin6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 581,
+      "name": "clim-gs3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 600,
+      "name": "clim-pet6",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 603,
+      "name": "clim-pet9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 591,
+      "name": "clim-gs tmin",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 619,
+      "name": "clim-tmax12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 582,
+      "name": "clim-gs4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 560,
+      "name": "clim-bio15",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 547,
+      "name": "clim-aet3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 613,
+      "name": "clim-prec7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 615,
+      "name": "clim-prec9",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 601,
+      "name": "clim-pet7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 590,
+      "name": "clim-gs tmax",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 610,
+      "name": "clim-prec4",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 579,
+      "name": "clim-gs12",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 616,
+      "name": "clim-tmax1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 571,
+      "name": "clim-bio8",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 542,
+      "name": "clim-aet1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 594,
+      "name": "clim-pet11",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 568,
+      "name": "clim-bio5",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 570,
+      "name": "clim-bio7",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 501,
+      "n_values": 501
+    },
+    {
+      "phenotype_id": 621,
+      "name": "clim-tmax3",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 500,
+      "n_values": 500
+    },
+    {
+      "phenotype_id": 554,
+      "name": "clim-bio1",
+      "study": "Lifetime fitness in Germany and Spain under rainfall manipulation",
+      "n_overlap_genotyped": 500,
+      "n_values": 500
+    }
+  ],
+  "honest_limits": [
+    "Overlap counts accessions with a FINITE value that appear in the genotype matrix; it does NOT check the phenotype is quantitative-continuous, nor that it is independent of the others (many AraPheno traits come from one study and are correlated).",
+    "A high overlap does not make a trait a good calibration target. Several of these are binary/ordinal scores, which a ridge will handle poorly.",
+    "min_overlap is ASSERTED, not derived.",
+    "Failures are RECORDED, never counted as zero-overlap -- a fetch failure and an empty phenotype must not look alike."
+  ]
+}

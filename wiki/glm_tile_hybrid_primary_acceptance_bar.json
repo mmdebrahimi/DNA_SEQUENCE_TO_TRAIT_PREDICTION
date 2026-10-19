@@ -1,0 +1,114 @@
+{
+  "schema": "glm-tile-hybrid-primary-bar-v1",
+  "frozen": "2026-10-17",
+  "frozen_before_any_number_was_seen": true,
+  "authored_on": "the SHNEITZER laptop, which has no tile data, no uv and no GPU -- so no arm of this run COULD have been executed before the bar was written",
+
+  "question": "The tile-rung selection run scored `max_tx` as primary and returned SELECTION_IS_THE_BOTTLENECK (bar A 2/10). The hybrid arm then measured `hybrid_conv_maxtx` as the best scorer on this rung by correlation. Does the hybrid, substituted as primary scorer into the SAME unchanged bar, clear bar A at k=10?",
+
+  "the_only_thing_that_changes": {
+    "primary_scorer": "max_tx -> hybrid_conv_maxtx",
+    "everything_else": "UNCHANGED from scripts/glm_tile_selection.py::PREREGISTERED -- at_k, baseline_scorer, both thresholds, min_seeds_passing, the verdict rule and the substrate",
+    "why_this_matters": "the bar was frozen with primary_scorer max_tx before any tile number was read. Asking whether a DIFFERENT scorer clears the SAME bar is legitimate. Re-sizing the bar to fit the new scorer would not be, and is forbidden here."
+  },
+
+  "inherited_bar_restated_verbatim": {
+    "at_k": 10,
+    "baseline_scorer": "gc",
+    "bar_a_headroom_captured": 0.50,
+    "bar_a_meaning": "the primary scorer realises at least half the AVAILABLE selection value",
+    "bar_b_margin_over_baseline": 0.10,
+    "bar_b_effective_margin": "max(0.10, 2 * permutation-null stdev at that seed and k)",
+    "min_seeds_passing": 6,
+    "n_seeds_expected": 10,
+    "seeds": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+    "thresholds_are": "ASSERTED, not derived; the per-trial ceiling arm that normalises them IS derived",
+    "source": "scripts/glm_tile_selection.py::PREREGISTERED, read 2026-10-17; bar B's max(0.10, 2*sd) was verified in the verdict() source, not inferred from the rendered memo"
+  },
+
+  "family_size_declared_up_front": {
+    "why": "this is the SECOND scorer put to this bar. A bar tested against scorer after scorer until one passes is a garden of forking paths, and the honest defence is to state the family before running, not after.",
+    "already_tested": [
+      {"scorer": "max_tx", "at_k10_cross_seed_mean": 0.4847, "bar_a": "FAILED 2/10", "artifact": "wiki/glm_tile_selection_2026-10-14.json"}
+    ],
+    "tested_by_this_run": ["hybrid_conv_maxtx"],
+    "untested_and_deliberately_NOT_in_this_run": [
+      {"scorer": "decomposition", "at_k10_cross_seed_mean": 0.4693, "why_excluded": "it is closer to the bar than conv and a plausible future candidate, but it was not the hybrid arm's winner. Naming it here means a later run cannot present it as a first look."},
+      {"scorer": "hybrid_conv_maxtx_gc", "at_k10_cross_seed_mean": null, "why_excluded": "measured WORSE than hybrid_conv_maxtx on correlation (+0.4217 vs +0.4254); adding it would widen the family for no expected gain."}
+    ],
+    "rule": "if hybrid_conv_maxtx fails bar A, do NOT substitute a third scorer into this bar without a fresh pre-registration that carries this family count forward."
+  },
+
+  "selection_basis_is_independent_of_this_bar": {
+    "claim": "hybrid_conv_maxtx was NOT chosen because it passed anything. It was chosen because it was the best MEASURED scorer on this rung by Spearman (+0.4254 median vs max_tx +0.3968), in a separate run with its own pre-registered protocol and its own clean control.",
+    "control_that_run_already_passed": "max_tx rank-averaged with a SHUFFLED conv scores -0.1232, 0/10 seeds, CI95 [-0.1275, -0.1187] -- a content-free vector HURTS, so the hybrid's gain is the conv's content.",
+    "artifact": "wiki/glm_tile_hybrid_arm_2026-10-14.json"
+  },
+
+  "anchor_run_refuses_without_it": {
+    "rule": "the re-run's `max_tx` arm must reproduce the committed per-seed headroom_captured at k=10 within 0.01 on at least 9 of 10 seeds, against [0.498, 0.480, 0.471, 0.457, 0.513, 0.496, 0.482, 0.457, 0.517, 0.476] for seeds 0-9, and its cross-seed mean within 0.005 of 0.4847.",
+    "on_miss": "REFUSE the whole comparison (exit 3) and report the mismatch. A hybrid-vs-bar verdict computed off a pipeline that no longer reproduces the number the bar was frozen against is not a measurement of the hybrid.",
+    "why": "this mirrors the project's own M4 raw-reconciliation gate and the FBA reconcile gate, both of which caught real divergences -- the FBA one surfaced a duplicate-gene-symbol bug via a 0.0003 discrepancy."
+  },
+
+  "fairness_constraints": [
+    "hybrid and max_tx must be scored on the SAME seeds, the SAME leave_peak_out splits and the SAME candidate pools -- only the scorer differs.",
+    "the conv component must be fitted on each seed's own training split, never on held-out peaks, so the rank-average introduces no second-level leakage.",
+    "the permutation null must be recomputed for the hybrid rather than reusing max_tx's, because bar B's effective margin depends on the null stdev at that seed and k.",
+    "a `control_shuffled_conv_maxtx` arm must be scored through the IDENTICAL selection path. If a shuffled-conv hybrid also clears bar A, the run is REFUSED as uninformative -- that would mean the bar is passable by a content-free vector and the metric, not the scorer, is what moved."
+  ],
+
+  "k_is_frozen_at_10_and_this_is_the_load_bearing_guard": {
+    "rule": "k=10 is the ONLY bar-bearing k.",
+    "why": "the k-trend on this rung is monotone (max_tx 0.3880 -> 0.4468 -> 0.4847 -> 0.5366 at k=2/5/10/20), so max_tx ALREADY clears 0.50 at k=20. Letting k float would let the run choose the k that passes, which measures the analyst and not the scorer.",
+    "k20_is_reported_as_pre_declared_secondary": "yes -- descriptive only, explicitly NOT bar-bearing, and it may not be quoted as clearing the bar."
+  },
+
+  "third_quantity_reported_but_NOT_bar_bearing": {
+    "what": "paired per-seed headroom delta, hybrid minus max_tx at k=10, with a bootstrap CI95 on the median",
+    "why_reported": "bar A is absolute and bar B is against gc, so neither asks whether the hybrid actually moved the SELECTION metric relative to the incumbent. The hybrid's correlation gain is CI-positive; whether that converts into selection value is a separate question and is the one a reader will want.",
+    "why_not_bar_bearing": "adding a third bar after seeing the first run's result would be re-sizing. It is declared here so it can be neither inflated into a pass nor buried on a miss."
+  },
+
+  "expectation_stated_honestly": {
+    "direction": "a pass is PLAUSIBLE but not assured, and this is written down so a near-miss cannot be spun as a win.",
+    "naive_extrapolation_and_why_it_is_NOT_a_prediction": "the hybrid's correlation is 7.2% above max_tx's; applied naively to max_tx's 0.4847 headroom that lands near 0.520, just over the bar. This is NOT a prediction -- headroom_captured is a normalised selection outcome, not a monotone function of Spearman, and the project has a recorded instance of exactly this kind of cross-metric extrapolation failing (the designed grid's 0.7937 did not transfer to this rung).",
+    "do_not_conflate": "NEXT.md's '42.2% -> 45.2% of the 0.941 ceiling' figures are SPEARMAN normalised by the ceiling. They are not headroom_captured and must not be compared to the 0.50 bar."
+  },
+
+  "verdict_rule": {
+    "ORACLE_READY_AS_SCORING_HEAD": "bar A and bar B both pass on >= 6 of 10 seeds -- the hybrid converts its correlation into a choice, and further prediction work on this rung has measured diminishing returns FOR THE GENERATIVE GOAL",
+    "CRUDE_BASELINE_SUFFICES": "bar A passes, bar B fails -- gc does the work",
+    "SELECTION_IS_THE_BOTTLENECK": "bar A fails -- even the best measured scorer on this rung cannot convert correlation into a choice at k=10, so prediction work IS justified",
+    "INDETERMINATE_INSUFFICIENT_SEEDS": "fewer than 6 seeds produced a scoreable pool; the bar is unreachable by construction and no substantive verdict may be printed",
+    "REFUSED_ANCHOR_MISMATCH": "the max_tx arm did not reproduce the committed numbers",
+    "REFUSED_CONTROL_ALSO_PASSED": "the shuffled-conv hybrid also cleared bar A"
+  },
+
+  "what_a_PASS_would_license": [
+    "describing hybrid_conv_maxtx as an adequate RANKING head for the tile rung at k=10.",
+    "de-prioritising further scoring-head work on THIS rung relative to generator work."
+  ],
+
+  "what_a_PASS_would_NOT_license": [
+    "A DOSING claim. The combine is a label-free, parameter-free rank-average: it ranks and does not dose, the same deployability class as the inverse cell. 'Ready as a scoring head' means ready to ORDER candidates.",
+    "Settling the self-distillation precondition. Whether a learned component that contributes only in combination satisfies the ban's 'forbidden until a learned representation lands' precondition is an OPEN USER AUTHORITY CALL recorded in NEXT.md. A bar cannot pre-empt it, and this run is not evidence for either side of it.",
+    "Overturning the G-A encoder gate. That gate asked whether the conv beats one GC number and its CI includes zero. This asks something different and both results stand together.",
+    "Any claim about a generator. The candidate pool is MEASURED peak tiles; a generator's candidates sit off this distribution where no label exists."
+  ],
+
+  "honest_scope": [
+    "UPPER BOUND on the loop's selection value -- measured peak tiles, not generator output.",
+    "Peak tiles are selected from ChIP peaks, so the pool is enriched for real promoters relative to the genome; selection is EASIER here than on random sequence.",
+    "ONE rung, ONE experiment (GEO GSE144621, 44106 tiles, leave_peak_out frac=0.25, ceiling 0.941), ONE combine rule.",
+    "conv and max_tx are both ridge-fitted on the same split, so their errors may be correlated through the SPLIT rather than through the biology -- carried over from the hybrid arm's own limits.",
+    "Cross-seed means pool over leave-peak-out splits of one experiment. The designed-grid anchor (0.7937) pooled over element axes. Different pooling units; not a stricter bound, a different one.",
+    "A negative does not show that no learned representation can add here -- only that THIS hybrid, at THIS k, on THIS rung, does not clear an ASSERTED 0.50."
+  ],
+
+  "execution_notes": {
+    "runs_on": "server2 / DESKTOP-SJG795O only -- needs the tile data (data -> D:/dna_decode_data), uv, and roughly 75 s per seed for the conv arm",
+    "not_runnable_on": "the SHNEITZER laptop: no D: data tree, no uv, no Docker",
+    "status": "PRE-REGISTRATION ONLY. No arm has been run. No number in this file was produced by this run; every figure quoted is from the two committed 2026-10-14 artifacts or from the frozen PREREGISTERED block."
+  }
+}

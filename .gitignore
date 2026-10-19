@@ -149,6 +149,11 @@ soraya_runs/*
 #   standing-positions.json -- counts of the user's repeatedly-raised positions (the COUNT is the signal)
 #   negative-results.json   -- killed candidates with scope + revival_condition (what RE-OPENS each)
 #   arms-ledger.json        -- declared-but-unrun arms that must BLOCK a ceiling criterion
+#   constraint-expiry.json  -- scope cuts + the observation that RE-OPENS each (R9). Added 2026-10-10
+#     after registering six omissions into it and finding it ignored -- the same "built, proven, not
+#     persisted" failure this block already existed to prevent, one file further along. It is the most
+#     durability-critical of the four: its whole purpose is to outlive the session that wrote it.
 !soraya_runs/standing-positions.json
 !soraya_runs/negative-results.json
 !soraya_runs/arms-ledger.json
+!soraya_runs/constraint-expiry.json

@@ -1,4 +1,94 @@
+## D2 AUTHORISED 2026-10-19 — sourmash is an admissible G8 distance source (user)
+
+The AUTHORITY gate is cleared; the EVIDENCE gate is not, and Step 6 must not fire on the
+first alone. `plans/.../Mission_Reconciliation_A_Native_Clonality_Route_Plan` pre-committed
+Step 6 (amend the CABBAGE G8 bar's distance source) to **Step 5 exit 0**. Step 5 returned
+**exit 2 `INSUFFICIENT_DATA`** — all 10 cohorts blocked, `data/raw/` empty, D: offline — so
+**zero agreement numbers exist**. Amending the bar now would record sourmash as validated
+against a bar it has never been measured against: bar-shopping in the honest direction,
+which this plan already declined once (see the `clause_logic` annotation).
+
+**To fire it:** reattach D: -> `uv run python -m scripts.sourmash_vs_mash_crosscheck`
+(needs `uv sync --extra lineage`). Exit 0 = all three clauses met -> Step 6 is unblocked
+and pre-authorised, no further decision needed. Exit 1 = sourmash does NOT substitute for
+Mash, and that is a real finding, not a failure to retry. Exit 2 = still drive-blocked.
+
+The scorer is now EOL-safe (`verify_derived_from`), so the frozen bar no longer refuses to
+load on an LF checkout — previously it would have exited 4 claiming the derived-from table
+had changed. Nothing about the bar's three requirements moved.
+
+---
+
 # Open threads — what a fresh session should pick up
+## TILE-RUNG SELECTION VALUE + THE HYBRID ARM — both ran 2026-10-14
+
+Two measurements, and the first one **refutes the recommendation I had just given**.
+
+**1. `SELECTION_IS_THE_BOTTLENECK`** (`wiki/glm_tile_selection_2026-10-14.md`). I argued the scoring
+half was probably adequate and the prediction criterion should likely be retired for generator work,
+citing the designed grid's 0.7937 of achievable selection value at k=10. On the tile rung the best
+scorer realises **0.4807 median (2 of 10 seeds clear the frozen 0.50 bar)** — so the 0.7937 does not
+transfer and prediction work on this rung IS justified. **It is a near-miss, not a collapse:** the k=10
+null band is stdev 0.0485, so 0.48 sits ~10 stdevs above chance, and bar B passes 10/10 (0.485 vs gc
+0.295). **The k-trend is the actionable part and it is monotone — 0.388 (k=2) → 0.485 (k=10) → 0.537
+(k=20) — so the current oracle DOES clear the bar at k=20.** The answer is conditional on how many
+candidates the loop can afford to assay, not a flat verdict on the scorer.
+
+**2. `HYBRID_ADDS`** (`wiki/glm_tile_hybrid_arm_2026-10-14.md`) — **the first learned component to
+measurably contribute on this substrate.** conv ⊕ max_tx rank-average: paired **+0.0339 over the
+scalar, 10/10 seeds, CI95 [0.0238, 0.0409]** excluding zero; 0.4254 vs 0.3968, moving the rung from
+42.2% to 45.2% of its 0.941 ceiling. The published GEMME pattern reproduced on DNA: **conv alone LOSES
+to max_tx (−0.0767, 0/10) and still lifts it.** Control clean and decisive — max_tx with a *shuffled*
+conv scores −0.1232, 0/10, so a content-free vector hurts and the gain is the conv's content.
+
+**This does NOT overturn the G-A encoder-gate negative.** That gate asked "does the conv beat one GC
+number?" — still no, CI includes zero. This asked whether the conv carries anything the *biophysical
+scalar* lacks — yes. Both hold.
+
+### The authority fork these two create
+
+**Does a learned component contributing only IN COMBINATION satisfy the self-distillation ban's
+precondition** (*"forbidden until a learned representation lands"*)? Not mine to declare. Note the two
+results pull in opposite directions on the criterion question: #1 says keep improving prediction, #2
+says a learned component now helps. Both support continued work on the *prediction* side, which is the
+opposite of the pivot I proposed.
+
+### Named follow-up, deliberately NOT run
+
+**Re-run the selection measurement with the HYBRID as primary scorer.** It is now the best measured arm
+(0.4254) and Step 3's bar was frozen with `primary_scorer: max_tx` before any number was read. Asking
+whether the new best scorer clears the *same unchanged* bar is legitimate and cheap — but it needs its
+own pre-registered run, not a retrofit into a committed artifact, and adding it mid-execution is the
+scope drift the plan's non-goals exist to prevent.
+
+Ledger: 10 arms, 6 measured / 4 planned; `ceiling_verdict` still **`blocked:untried-arm`** — a cheap arm
+winning does not settle the ceiling question (R5 holding as designed).
+
+## THE MISSION IS NOW DEFINED — `project_state/trait-to-edit/big-idea.md` (authored 2026-10-09)
+
+A validated mission definition for the north star, authored at the user's request from everything
+established to date. **It parses and validates against the real `big_idea.py`**, and
+`run_minister.preflight(...)` returns `(True, [], [])` — so the `minister` lane is genuinely available
+for it, which it was not before (there was no mission big-idea.md; only two stale EP4 ones).
+
+`mission-shape: greenfield` · 4 gaps · 10 checkable endpoint predicates · **Φ = 12** (finite by
+construction, so the mission cannot generate unboundedly).
+
+| gap | budget | what closes it |
+|---|---|---|
+| `amr-label-substrate-validated` | 3 | CABBAGE's G8 + BioProject-level diversity + one leakage-gated scored cell |
+| `deconfounder-calibrated` | 2 | the F3 calibration actually run on 1001G + the IBS cross-check |
+| `generator-beats-its-baseline-panel` | 4 | a generator beating the mandatory baseline panel on biologically-motivated splits |
+| `trait-to-edit-end-to-end` | 3 | one bacterial trait → a ranked edit set, oracle-scored, rails audited |
+
+It also names what must **not** be re-proposed (zero-shot embeddings on natural populations; ESM2 scale;
+absolute cross-assay magnitude; the ETD route) so a generative lane cannot re-raise a closed negative.
+**Step 4 (climb to animals) is deliberately absent** — premature until the generator gap has a result.
+
+**Launching a minister mission on it is a separate decision and was NOT taken.** Authoring the definition
+is not the same act as running it.
+
+
 
 Short by design. **Transient** state only: what is in flight, what is waiting on the user, what was just
 learned that isn't durable yet. Durable findings belong in `CLAUDE.md` / `wiki/`; scope facts belong in
@@ -6,7 +96,7 @@ learned that isn't durable yet. Durable findings belong in `CLAUDE.md` / `wiki/`
 
 Prune aggressively. A stale entry here is worse than an empty file.
 
-_Last updated: 2026-10-08._
+_Last updated: 2026-10-09._
 
 > **Pruned 2026-10-05.** This file had sat at 2026-09-28 / 428 lines, and its own "known-stale" section
 > had itself gone stale in the opposite direction (it warned that 46 traits was really 44; the live count
@@ -27,8 +117,8 @@ have run).
 | family | state |
 |---|---|
 | **F2** condition coverage | **ANSWERED NEGATIVELY.** "Public K-12" adds samples, not condition breadth — glucose share 60% → **82.7%** of annotated rows, **42%** carry no carbon annotation, only **3** carbon sources reach 10 samples. Computed from the repo's own metadata; the "contact us" wall covers only `log_tpm`. |
-| **F1** label substrates | one shallow search. DMS axis is a clean negative. **Not searched:** measured-AST collections, AllTheBacteria, EBI AMR Portal, Zenodo/Figshare thesis deposits. |
-| **F3** de-confounded population designs | **NEVER SEARCHED. On the critical path** — population DESIGN, not organism complexity, is the measured barrier to the north star's step 4. |
+| **F1** label substrates | **SEARCHED 2026-10-09 and it produced the campaign's strongest candidate.** `CABBAGE` / EMBL-EBI AMR Portal (release 2026-07) — 1.7M genome-phenotype pairs, lab-measured, CC-BY 4.0, **8.3 MB parquet, MD5-verified on the real FTP surface**. **9 of 10 gates pass**; only **G8 (`min_effective_lineages`)** is open. Through the repo's OWN `tier_for_isolate` it clears N=150 per-class at the STRICT bar on **four cells** — against the 2026-05-18 census verdict that **no** drug clears it. `wiki/f1_cabbage_label_substrate_2026-10-09.md`. Still unsearched: Zenodo/Figshare/Dryad + ETD aggregators; ATLAS is Vivli-request-gated. |
+| **F3** de-confounded population designs | **The INSTRUMENT is CALIBRATED ON ONE PANEL PAIR — `VALID_DIFFERENTIAL_RESPONSE`** (2026-10-10, `wiki/f3_deconfound_calibration_1001g_2026-10-10.md`), superseding the 10-09 `blocked:positive_control_not_fold_compatible` whose substrate blocker was RESOLVED by using 1001 Genomes (1,135 natural Arabidopsis accessions + AraPheno phenotypes). It responds differentially to real population structure (**+0.0441** natural vs **0.0000** bi-parental cross). **What is NOT established is TRANSFER** — one positive and one negative panel only; it bounds the INSTRUMENT and validates no downstream organism-level prediction. `eval/regime.py::DECONFOUNDER_CALIBRATION` is the live status — read it rather than this row, which was stale for two days and contradicted this file's own `deconfounder-calibrated` row above. **The literature SEARCH half is still unrun.** Population DESIGN, not organism complexity, remains the measured barrier to the north star's step 4. |
 | **F4** cross-assay dosage transfer | **NEVER SEARCHED.** |
 
 **Relaunch SEQUENTIALLY (or 2 at a time) and forbid sub-agent spawning.** The first attempt spawned 12
@@ -158,7 +248,23 @@ scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
    encoder is a different experiment and the result says nothing about G-B. Closing either is a scope
    decision; the executor default is to leave both as recorded negatives and start nothing new.
 
-5. **Whether to compress the other long CLAUDE.md bullets — NOW BINDING, not optional (escalated
+5. **~~Acquire a natural-population genotype panel so the de-confounder's positive control can run?~~
+   ANSWERED BY MEASUREMENT 2026-10-09 — the substrate is resolved and it cost 330 MB.**
+   `wiki/f3_substrate_resolved_2026-10-09.md`. The 1001-Genomes imputed SNP matrix is **0.33 GB**
+   (HEAD-measured; a literature estimate said "a few GB"), HTTP 200, no auth, and **both MD5s match the
+   publisher's own `md5sum.txt`**. It ships a **pre-computed IBS kinship matrix (10.3 MB)**, so the
+   decisive question was answerable without touching the 919 MB genotypes. Through the SAME pipeline and
+   guards the census ran on `dgrp`: **a fold-compatible grouping EXISTS at p5 — 108 clusters, largest
+   9.5%, singletons 30.6%** — where `dgrp` passed at no rung. Phenotypes were **already on disk**: FT10
+   overlaps **1,003 accessions (86.3%)**. And FT10 is the right control, not merely an available one —
+   it is exactly the trait/panel of the closed Arabidopsis negative, where structure is MEASURED to
+   dominate. **What remains is executor work, not an authority call:** run the calibration (needs the
+   919 MB matrix for the ridge), and cross-check the grouping against this repo's own
+   `ibs_distance_matrix` rather than the project's converted kinship — a disagreement there is a finding
+   to diagnose, not a number to choose between. Caveats: genotypes are IMPUTED; p5 is a narrow window
+   (p2 and p10 fail in opposite directions); 159 phenotyped accessions have no genotype.
+
+6. **Whether to compress the other long CLAUDE.md bullets — NOW BINDING, not optional (escalated
    2026-10-08).** The growth-ceiling guard fired on an ordinary 60-word finding, because the file had
    arrived at **12 words of headroom**. The ceiling was raised 35,400 → 35,460 on the record (which is
    what the guard's docstring prescribes), but it is now constraining real findings rather than drift, and
@@ -169,6 +275,35 @@ scored 0 survivors). Measured shape: **CALL / DOUBT / EVIDENCE**.
    bullets cite a resolvable memo, so their derivations could become pointers. Measure first:
    `uv run python scripts/claude_md_weight.py`. Two long bullets have no external store and must stay
    whole — the tool already protects them.
+
+7. **~~Does the CABBAGE label substrate reopen the AMR track?~~ RESOLVED BY THE USER 2026-10-09 — YES,
+   it reopens.** *"CABBAGE should reopen the banked AMR track --> i think it should. use your best
+   judgement."* The scope of that decision is narrow and was stated when it was made: what CABBAGE
+   contradicts is the premise that **no usable label substrate exists** — it does **NOT** reopen the
+   embedding negatives (closed on de-confounded signal-vs-structure grounds, which more labels cannot
+   address, and independently corroborated at 24k-genome scale by Yu/Barquist 2025) and it does **NOT**
+   change the generative north star, whose measured bottleneck is the generator.
+   **Now executor work, no further authority needed:** close G8 (`min_effective_lineages`, needs the
+   assemblies clustered) and measure BioProject-level source diversity (the `database` column is an
+   overlapping aggregator label, and the screen flags its own G2 as "weak").
+   `wiki/f1_cabbage_label_substrate_2026-10-09.md`.
+
+8. **How should the GLM umbrella's `ceiling:` criterion be resolved?** (new 2026-10-12)
+   Two arms were declared 2026-10-09. The 2026-10-11 run measured a **THIRD** (`encoder-pyramid`, 1.70
+   decades) and closed **NEITHER** declared arm, so the criterion is still `blocked:untried-arm`. The
+   accounting is now correct and the remaining question is an authority call, not a measurement: one
+   declared arm is **SUBSTRATE-GATED** -- >=4 decades of span needs a >=10,000 bp coarsest branch against a
+   150 bp tile, so **no budget reaches it** (pinned by arithmetic in `tests/test_glm_encoder.py`) -- which
+   means resolving the criterion requires either changing the substrate or retiring the arm, and the
+   arms-ledger resolution step was deliberately NOT run. `wiki/glm_pyramid_arm_2026-10-11.md`;
+   negative already filed as `neg-5ad65fa5` with its revival condition.
+   **Substrate fact for this fork, measured 2026-10-13 and now printed by `scripts/project_status.py`:**
+   the "changing the substrate" branch has **cached** candidates — two fragment rungs sit at ~9% used
+   (30,000 of 321,123 LB / 318,457 M9 rows, 48–499 bp), while `peak_tiles` and `sigma70_designed` are
+   genuinely spent. **This does NOT un-gate the span arm:** 499 bp still cannot host a 10,000 bp coarsest
+   branch, so that arm stays substrate-gated and the fork remains an authority call. What changed is only
+   that "no data for longer sequences" was false — it came from `size_lever` being absent on three of the
+   four rungs. `wiki/substrate_symmetry_2026-10-13.json`; `## The GLM` in `CLAUDE.md`.
 
 ## Cheap untried levers (executor work, no authority needed)
 

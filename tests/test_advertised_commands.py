@@ -258,12 +258,54 @@ def test_every_shipped_help_text_survives_a_legacy_console_encoding():
     )
 
 
-def test_hla_help_does_not_advertise_the_demoted_tags():
+_DEMOTION_NEGATORS = r"not |never|fail|unvalidated|unsafe|demoted|excluded|does not|cannot|only b\*?57"
+
+
+def _unnegated_mentions(text: str, term: str, *, window: int = 200) -> list[str]:
+    """Occurrences of `term` with NO demotion marker nearby.
+
+    POLARITY PER OCCURRENCE, not occurrence count. A forbidden-wording check keyed on mere presence
+    forbids the honest disclosure as well as the over-claim: "B*58:01 is NOT screened -- its tag proxy
+    misses 39% of carriers" is exactly the sentence a user needs, and a `term not in text` assertion
+    rejects it. Counting is also wrong in the other direction -- one negated mention plus one bare
+    advertisement passes a whole-document negation check.
+    """
+    out = []
+    for hit in re.finditer(re.escape(term), text, re.I):
+        ctx = text[max(0, hit.start() - window): hit.end() + window]
+        if not re.search(_DEMOTION_NEGATORS, ctx, re.I):
+            out.append(ctx.strip()[:120])
+    return out
+
+
+def test_hla_help_mentions_the_demoted_tags_ONLY_while_demoting_them():
     """The demotion must reach the user-facing surface, not only the catalog's internal comment.
 
     `catalog._UNVALIDATED_TAGS` records that rs9263726 misses 39% of B*58:01 carriers ("unsafe for an
     SJS/TEN screen") and rs1061235 cannot call A*31:01 at all -- while `dna-hla --help` claimed
     "abacavir/allopurinol/carbamazepine". Only the abacavir screen ships.
+
+    RENAMED from `..._does_not_advertise_the_demoted_tags` (2026-10-11). The old form asserted
+    `demoted not in helptext`, a bare containment check -- which forbade the CLEAREST form of the very
+    disclosure this test exists to enforce. It was also inconsistent with its own second half, which
+    already allowed the drug names to appear "only while saying they are NOT shipped". Both halves now
+    use per-occurrence polarity, and the drug half no longer accepts a negation found ANYWHERE in the
+    help text regardless of which sentence it sits in.
+
+    THE COST OF POLARITY, NAMED (it was glossed in the commit that introduced it). Polarity is strictly
+    LOOSER than absence: a demoted tag reintroduced near an unrelated negator inside the 200-char window
+    now passes where `not in` would have caught it.
+
+    HERE THAT COST IS BOUNDED TO PROSE, and the bound is checked rather than assumed. The real
+    regression is not a help-string -- it is SHIPPING a demoted screen, and `set(HLA_ALLELES) ==
+    {"b5701"}` two lines below fails on exactly that (verified: adding `b5801` to the shipped tuple
+    breaks it regardless of any help text). So the structural assertion carries the regression and
+    polarity only governs how the demotion is WORDED. That is what makes this conversion free; where no
+    such structural assertion exists, the loosening is real and must be weighed rather than waved past.
+
+    RE-TIGHTENING BAR: add an explicit absence assertion beside the polarity one once a phrase is known
+    PERMANENTLY gone rather than merely retracted. These two tags are not that -- the catalog records
+    them as demoted-pending-better-proxies, so they may legitimately be discussed in help text again.
     """
     from dna_decode.hla import HLA_ALLELES
     from dna_decode.hla import cli as hla_cli
@@ -273,13 +315,26 @@ def test_hla_help_does_not_advertise_the_demoted_tags():
     with contextlib.redirect_stdout(err), pytest.raises(SystemExit):
         hla_cli.main(["--help"])
     helptext = err.getvalue().lower()
-    for demoted in ("b5801", "a3101"):
-        assert demoted not in helptext, f"--help advertises the DEMOTED tag {demoted}"
-    # the drug names may appear only while saying they are NOT shipped
-    for drug in ("allopurinol", "carbamazepine"):
-        if drug in helptext:
-            assert "failed" in helptext or "not shipped" in helptext, (
-                f"--help mentions {drug} without saying its tag failed validation")
+    for term in ("b5801", "a3101", "allopurinol", "carbamazepine"):
+        bare = _unnegated_mentions(helptext, term)
+        assert not bare, (
+            f"--help mentions the DEMOTED {term} with no demotion marker in context: {bare}")
+
+
+def test_the_polarity_helper_separates_an_over_claim_from_an_honest_disclosure():
+    """Non-vacuity in BOTH directions, which a containment check cannot have: it rejects the honest
+    sentence too, so 'the guard fires' proves nothing about whether it fires for the right reason."""
+    over = "screens b5801 for allopurinol hypersensitivity and a3101 for carbamazepine"
+    honest = ("b5801 is NOT screened: its tag proxy misses 39% of carriers and is unsafe for an "
+              "SJS/TEN screen. a3101 cannot be called from this panel at all.")
+    mixed = honest + " also screens b5801 for allopurinol."
+
+    assert _unnegated_mentions(over, "b5801"), "an over-claim must be flagged"
+    assert not _unnegated_mentions(honest, "b5801"), "an honest demotion must be permitted"
+    assert not _unnegated_mentions(honest, "a3101")
+    # the count-based failure mode: one negated mention does not license a bare one elsewhere
+    assert _unnegated_mentions(mixed, "b5801", window=40), (
+        "a bare advertisement alongside an honest demotion must still be flagged")
 
 
 if __name__ == "__main__":

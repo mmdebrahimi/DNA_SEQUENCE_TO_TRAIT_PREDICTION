@@ -1,0 +1,110 @@
+{
+  "schema": "promcalc-vs-learned-v1",
+  "measured_on": "2026-10-12",
+  "substrate": {
+    "name": "GSE144621 peak tiles",
+    "n": 44106,
+    "length_bp": 150,
+    "replicate_ceiling": 0.941,
+    "protocol": "leave_peak_out, 10 seeds, ~11,000 test tiles/seed"
+  },
+  "model": {
+    "name": "Salis-lab Promoter Calculator",
+    "parameters": 346,
+    "trained_on_this_substrate": false,
+    "env": "D:/tools/promcalc_env (ISOLATED: pulls sklearn 1.9.1 vs project 1.8.0)"
+  },
+  "sweep": {
+    "attempted": 44046,
+    "ok": 44046,
+    "err": 0,
+    "minutes": 74.0,
+    "coverage": 1.0
+  },
+  "results_median_spearman": {
+    "gc_ridge": 0.3112,
+    "encoder_w20": 0.3163,
+    "encoder_multi": 0.3234,
+    "encoder_pyramid": 0.3167,
+    "promcalc_fwd_max_tx": 0.3968,
+    "promcalc_fwd_sum_tx": 0.3953,
+    "promcalc_best_strand": 0.38,
+    "gc_plus_mech": 0.395
+  },
+  "paired": {
+    "vs_gc": {
+      "mean_delta": 0.0686,
+      "wins": "5/5 logged seeds"
+    },
+    "vs_encoder_multi": {
+      "mean_delta": 0.0401,
+      "wins": "4/4 logged seeds"
+    }
+  },
+  "retraction_check": {
+    "rule": "retract if full-set median moves >0.02 from provisional",
+    "fwd_max_tx": {
+      "provisional": 0.3804,
+      "full": 0.3968,
+      "move": 0.0164,
+      "breached": false
+    },
+    "fwd_sum_tx": {
+      "provisional": 0.3856,
+      "full": 0.3953,
+      "move": 0.0097,
+      "breached": false
+    },
+    "provisional_subset": "14,885 tiles in FILE ORDER (non-random)",
+    "verdict": "KEPT"
+  },
+  "additivity": {
+    "question": "does mechanism add to composition?",
+    "gc_plus_mech_minus_gc": {
+      "mean": 0.0856,
+      "wins": "10/10"
+    },
+    "feature_permutation_control": {
+      "mean": -0.0002,
+      "wins": "2/10",
+      "collapsed": true
+    },
+    "spearman_gc_vs_mech": -0.5563,
+    "verdict": "SUBSUMPTION, not orthogonality",
+    "why": "GC+mech (0.3950) is NOT better than mech alone (0.3968) -- containment is one-way"
+  },
+  "internal_consistency": {
+    "min_dG_is_exact_negation_of_max_tx": "all 10 seeds -> ONE feature, not two",
+    "forward_beats_both_strands": {
+      "forward": 0.3968,
+      "both": 0.38,
+      "why": "assay is orientation-defined; reverse-strand promoters add noise"
+    },
+    "baseline_faithfulness": "ridge_gc IMPORTED not reimplemented; 1-feature replication matches to <1e-9"
+  },
+  "methodological_errors_found_by_running": [
+    {
+      "error": "compared a 2-feature fit against RAW GC, which is the sign-flip of the gate's ridge_gc (-0.2994 vs +0.3000)",
+      "wrong_answer_it_produced": "+0.5681 gain, 10/10 seeds",
+      "fix": "import ridge_gc and mirror its pipeline"
+    },
+    {
+      "error": "the PLAN specified a shuffled-LABEL control, which cannot collapse for a rank metric here",
+      "why": "shuffling labels randomises the coefficient SIGN but not its ranking power; prediction stays monotone in GC, which correlates with the test target at ~0.30, so the control returns +-0.41 BY CONSTRUCTION",
+      "fix": "permute the FEATURE instead -- collapses to -0.0002"
+    }
+  ],
+  "primary_source_correction": {
+    "research_claim": "Promoter Calculator R2=0.60 on the Urtecho data, beating the CNNs (flagged unverified)",
+    "what_the_paper_says": "346 parameters verbatim; R2 0.45-0.65 on external in-vivo sets; NO Urtecho comparison and NO CNN baseline",
+    "consequence": "scoring it on endogenous genome-wide tiles is a NEW measurement"
+  },
+  "honest_limits": [
+    "one substrate: endogenous 150bp E. coli peak tiles only",
+    "0.3968 is still only 42% of the 0.941 ceiling -- the gap remains the dominant fact",
+    "no claim that learning cannot win here; only that it beats the learned arms this project built at 44k rows",
+    "the size lever is unavailable on this rung: 46,713 rows is the entire file",
+    "not a deployed-decoder change; that is a surface question and out of scope",
+    "single condition; the two fragment growth conditions are untouched"
+  ]
+}

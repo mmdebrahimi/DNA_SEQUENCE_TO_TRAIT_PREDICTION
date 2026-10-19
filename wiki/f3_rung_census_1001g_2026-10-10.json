@@ -1,0 +1,772 @@
+{
+  "schema": "f3-rung-census-v1",
+  "generated": "2026-10-10",
+  "genotype_meta": {
+    "n_snps_read": 60000,
+    "n_after_maf": 9442,
+    "n_markers_used": 1500,
+    "maf_floor": 0.05,
+    "n_blocks": 60
+  },
+  "fold_share_bar": 0.2,
+  "n_splits": 5,
+  "ladder": [
+    1.0,
+    2.0,
+    5.0,
+    10.0,
+    15.0,
+    20.0,
+    25.0,
+    30.0,
+    40.0,
+    50.0,
+    60.0,
+    70.0
+  ],
+  "rungs": [
+    {
+      "percentile": 1.0,
+      "threshold": 0.158,
+      "n_clusters_full_panel": 674,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 654,
+          "largest_share": 0.0199,
+          "admissible": true
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 623,
+          "largest_share": 0.0182,
+          "admissible": true
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 415,
+          "largest_share": 0.0156,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 315,
+          "largest_share": 0.0295,
+          "admissible": true
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 254,
+          "largest_share": 0.0273,
+          "admissible": true
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 216,
+          "largest_share": 0.0525,
+          "admissible": true
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 213,
+          "largest_share": 0.0424,
+          "admissible": true
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 185,
+          "largest_share": 0.056,
+          "admissible": true
+        }
+      },
+      "n_traits_admissible": 8
+    },
+    {
+      "percentile": 2.0,
+      "threshold": 0.195333,
+      "n_clusters_full_panel": 338,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 338,
+          "largest_share": 0.0409,
+          "admissible": true
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 325,
+          "largest_share": 0.0417,
+          "admissible": true
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 242,
+          "largest_share": 0.0469,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 198,
+          "largest_share": 0.0639,
+          "admissible": true
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 155,
+          "largest_share": 0.0545,
+          "admissible": true
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 133,
+          "largest_share": 0.0721,
+          "admissible": true
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 138,
+          "largest_share": 0.0601,
+          "admissible": true
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 127,
+          "largest_share": 0.064,
+          "admissible": true
+        }
+      },
+      "n_traits_admissible": 8
+    },
+    {
+      "percentile": 5.0,
+      "threshold": 0.218667,
+      "n_clusters_full_panel": 157,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 157,
+          "largest_share": 0.0947,
+          "admissible": true
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 151,
+          "largest_share": 0.0972,
+          "admissible": true
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 126,
+          "largest_share": 0.0898,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 109,
+          "largest_share": 0.0958,
+          "admissible": true
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 98,
+          "largest_share": 0.0879,
+          "admissible": true
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 77,
+          "largest_share": 0.1213,
+          "admissible": true
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 86,
+          "largest_share": 0.0671,
+          "admissible": true
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 74,
+          "largest_share": 0.08,
+          "admissible": true
+        }
+      },
+      "n_traits_admissible": 8
+    },
+    {
+      "percentile": 10.0,
+      "threshold": 0.234,
+      "n_clusters_full_panel": 90,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 90,
+          "largest_share": 0.1037,
+          "admissible": true
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 89,
+          "largest_share": 0.1058,
+          "admissible": true
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 82,
+          "largest_share": 0.0879,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 68,
+          "largest_share": 0.1327,
+          "admissible": true
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 69,
+          "largest_share": 0.0909,
+          "admissible": true
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 51,
+          "largest_share": 0.1246,
+          "admissible": true
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 58,
+          "largest_share": 0.1025,
+          "admissible": true
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 52,
+          "largest_share": 0.104,
+          "admissible": true
+        }
+      },
+      "n_traits_admissible": 8
+    },
+    {
+      "percentile": 15.0,
+      "threshold": 0.243333,
+      "n_clusters_full_panel": 60,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 60,
+          "largest_share": 0.1565,
+          "admissible": true
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 57,
+          "largest_share": 0.1571,
+          "admissible": true
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 56,
+          "largest_share": 0.1309,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 48,
+          "largest_share": 0.1769,
+          "admissible": true
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 48,
+          "largest_share": 0.1576,
+          "admissible": true
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 39,
+          "largest_share": 0.2098,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 40,
+          "largest_share": 0.2014,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 37,
+          "largest_share": 0.16,
+          "admissible": true
+        }
+      },
+      "n_traits_admissible": 6
+    },
+    {
+      "percentile": 20.0,
+      "threshold": 0.25,
+      "n_clusters_full_panel": 46,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 46,
+          "largest_share": 0.2104,
+          "admissible": false
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 44,
+          "largest_share": 0.2115,
+          "admissible": false
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 42,
+          "largest_share": 0.1992,
+          "admissible": true
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 36,
+          "largest_share": 0.2088,
+          "admissible": false
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 36,
+          "largest_share": 0.2182,
+          "admissible": false
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 27,
+          "largest_share": 0.2197,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 32,
+          "largest_share": 0.2367,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 31,
+          "largest_share": 0.196,
+          "admissible": true
+        }
+      },
+      "n_traits_admissible": 2
+    },
+    {
+      "percentile": 25.0,
+      "threshold": 0.256,
+      "n_clusters_full_panel": 33,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 33,
+          "largest_share": 0.343,
+          "admissible": false
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 32,
+          "largest_share": 0.3472,
+          "admissible": false
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 27,
+          "largest_share": 0.3262,
+          "admissible": false
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 26,
+          "largest_share": 0.3489,
+          "admissible": false
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 26,
+          "largest_share": 0.3727,
+          "admissible": false
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 20,
+          "largest_share": 0.3475,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 23,
+          "largest_share": 0.371,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 23,
+          "largest_share": 0.34,
+          "admissible": false
+        }
+      },
+      "n_traits_admissible": 0
+    },
+    {
+      "percentile": 30.0,
+      "threshold": 0.261333,
+      "n_clusters_full_panel": 26,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 26,
+          "largest_share": 0.4058,
+          "admissible": false
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 25,
+          "largest_share": 0.4124,
+          "admissible": false
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 23,
+          "largest_share": 0.3965,
+          "admissible": false
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 23,
+          "largest_share": 0.4103,
+          "admissible": false
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 20,
+          "largest_share": 0.4333,
+          "admissible": false
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 19,
+          "largest_share": 0.3902,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 20,
+          "largest_share": 0.417,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 19,
+          "largest_share": 0.432,
+          "admissible": false
+        }
+      },
+      "n_traits_admissible": 0
+    },
+    {
+      "percentile": 40.0,
+      "threshold": 0.270667,
+      "n_clusters_full_panel": 23,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 23,
+          "largest_share": 0.4865,
+          "admissible": false
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 23,
+          "largest_share": 0.4925,
+          "admissible": false
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 21,
+          "largest_share": 0.498,
+          "admissible": false
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 21,
+          "largest_share": 0.5037,
+          "admissible": false
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 16,
+          "largest_share": 0.5091,
+          "admissible": false
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 16,
+          "largest_share": 0.4852,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 17,
+          "largest_share": 0.4912,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 15,
+          "largest_share": 0.524,
+          "admissible": false
+        }
+      },
+      "n_traits_admissible": 0
+    },
+    {
+      "percentile": 50.0,
+      "threshold": 0.279333,
+      "n_clusters_full_panel": 17,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 17,
+          "largest_share": 0.4845,
+          "admissible": false
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 16,
+          "largest_share": 0.4915,
+          "admissible": false
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 17,
+          "largest_share": 0.4824,
+          "admissible": false
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 14,
+          "largest_share": 0.4865,
+          "admissible": false
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 13,
+          "largest_share": 0.4758,
+          "admissible": false
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 14,
+          "largest_share": 0.4689,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 13,
+          "largest_share": 0.4735,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 12,
+          "largest_share": 0.516,
+          "admissible": false
+        }
+      },
+      "n_traits_admissible": 0
+    },
+    {
+      "percentile": 60.0,
+      "threshold": 0.288,
+      "n_clusters_full_panel": 11,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 11,
+          "largest_share": 0.4417,
+          "admissible": false
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 11,
+          "largest_share": 0.4444,
+          "admissible": false
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 11,
+          "largest_share": 0.4375,
+          "admissible": false
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 10,
+          "largest_share": 0.4644,
+          "admissible": false
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 7,
+          "largest_share": 0.4242,
+          "admissible": false
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 8,
+          "largest_share": 0.4623,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 8,
+          "largest_share": 0.4664,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 8,
+          "largest_share": 0.464,
+          "admissible": false
+        }
+      },
+      "n_traits_admissible": 0
+    },
+    {
+      "percentile": 70.0,
+      "threshold": 0.297333,
+      "n_clusters_full_panel": 8,
+      "per_trait": {
+        "ap261_FT10": {
+          "n": 1003,
+          "n_clusters": 8,
+          "largest_share": 0.5763,
+          "admissible": false
+        },
+        "ap703_DTF1": {
+          "n": 936,
+          "n_clusters": 8,
+          "largest_share": 0.5823,
+          "admissible": false
+        },
+        "ap528_rSurvival-fruit-mli": {
+          "n": 512,
+          "n_clusters": 8,
+          "largest_share": 0.5762,
+          "admissible": false
+        },
+        "ap390_rosetteDM": {
+          "n": 407,
+          "n_clusters": 6,
+          "largest_share": 0.5405,
+          "admissible": false
+        },
+        "ap750_stomatasize": {
+          "n": 330,
+          "n_clusters": 6,
+          "largest_share": 0.5848,
+          "admissible": false
+        },
+        "ap1898_Trichome-stem-length": {
+          "n": 305,
+          "n_clusters": 5,
+          "largest_share": 0.4787,
+          "admissible": false
+        },
+        "ap699_Inter-specific-pollination-o": {
+          "n": 283,
+          "n_clusters": 3,
+          "largest_share": 0.4876,
+          "admissible": false
+        },
+        "ap1910_Raffinose-32C": {
+          "n": 250,
+          "n_clusters": 4,
+          "largest_share": 0.524,
+          "admissible": false
+        }
+      },
+      "n_traits_admissible": 0
+    }
+  ],
+  "admissible_rungs_per_trait": {
+    "ap261_FT10": [
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+      15.0
+    ],
+    "ap703_DTF1": [
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+      15.0
+    ],
+    "ap528_rSurvival-fruit-mli": [
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+      15.0,
+      20.0
+    ],
+    "ap390_rosetteDM": [
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+      15.0
+    ],
+    "ap750_stomatasize": [
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+      15.0
+    ],
+    "ap1898_Trichome-stem-length": [
+      1.0,
+      2.0,
+      5.0,
+      10.0
+    ],
+    "ap699_Inter-specific-pollination-o": [
+      1.0,
+      2.0,
+      5.0,
+      10.0
+    ],
+    "ap1910_Raffinose-32C": [
+      1.0,
+      2.0,
+      5.0,
+      10.0,
+      15.0,
+      20.0
+    ]
+  },
+  "rungs_admissible_for_every_trait": [
+    1.0,
+    2.0,
+    5.0,
+    10.0
+  ],
+  "finding": "4 of 12 ladder rungs are admissible for ALL 8 traits simultaneously: [1.0, 2.0, 5.0, 10.0]. A rung admissible on the full 1,135-accession panel can be INADMISSIBLE for a trait whose missingness concentrates one cluster above the one-fold share, so rung admissibility is a per-trait property and selecting it on the genotype set alone over-states the usable range.",
+  "honest_limits": [
+    "This is a STRUCTURAL census: no model is fitted, so it says which rungs COULD be used, never which would show a de-confounding response.",
+    "Clustering is greedy-representative (chaining-resistant) on this repo's IBS over a MAF->=0.05 marker subsample -- not an LD-pruned genome-wide distance.",
+    "The bar is 1/n_splits, so it moves with n_splits; it is a validity constraint on grouped CV, not a tunable threshold.",
+    "Admissibility is evaluated on each trait's non-missing subset, which is the set grouped CV actually folds."
+  ]
+}

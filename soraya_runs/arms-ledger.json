@@ -37,6 +37,72 @@
         "evidence": "",
         "declared_at": "2026-10-09T14:42:29Z",
         "resolved_at": ""
+      },
+      "pyramid-4scale-1.70decades-150bp": {
+        "name": "pyramid-4scale-1.70decades-150bp",
+        "cost_tier": "expensive",
+        "status": "measured",
+        "metric": 0.3167,
+        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json \u2014 median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
+        "declared_at": "2026-10-12T00:48:51Z",
+        "resolved_at": "2026-10-12T00:48:51Z"
+      },
+      "promoter-calculator-biophysical-346params-fwd_max_tx": {
+        "name": "promoter-calculator-biophysical-346params-fwd_max_tx",
+        "cost_tier": "unknown",
+        "status": "measured",
+        "metric": 0.3968,
+        "evidence": "wiki/promcalc_vs_learned_2026-10-12.md -- median Spearman over 10 leave-peak-out seeds, 44,106/44,106 tiles, err=0. Paired +0.0686 over GC (5/5 seeds) and +0.0401 over the conv encoder (4/4); the learned arms paired CIs vs GC all include zero, this one does not. 346 params, NEVER trained on this substrate. Pre-committed retraction check PASSED (full-set move +0.0164 < 0.02 bar). Feature-permutation control collapses to -0.0002 (2/10), so the gain is the sequence-to-mechanism pairing, not an added column.",
+        "declared_at": "2026-10-13T14:02:47Z",
+        "resolved_at": "2026-10-13T14:02:47Z"
+      },
+      "promoteratlas-base-embeddings-frozen-150bp-padded-to-200": {
+        "name": "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
+        "cost_tier": "medium",
+        "status": "planned",
+        "metric": null,
+        "evidence": "",
+        "declared_at": "2026-10-13T14:02:47Z",
+        "resolved_at": ""
+      },
+      "promcalc-full-decomposition-ridge-150bp": {
+        "name": "promcalc-full-decomposition-ridge-150bp",
+        "cost_tier": "unknown",
+        "status": "measured",
+        "metric": 0.3925,
+        "evidence": "wiki/promcalc_decomposition_arm_2026-10-13.json -- median 0.3925 over 10 REGISTERED seeds, coverage 1.0 of 44,106 tiles / 3,219,801 site rows / 55 features. NO_GAIN: paired vs the max_tx scalar -0.004, CI95 [-0.0111, 0.0016] INCLUDES ZERO, 2/10 wins -- the ~730 per-tile numbers the scalar discards add nothing. DOES beat GC (+0.0804, 10/10). Both reconcile gates passed in-pipeline: gc seed0 0.3000, max_tx 0.3968, exact vs published.",
+        "declared_at": "2026-10-14T13:03:04Z",
+        "resolved_at": "2026-10-14T13:03:04Z"
+      },
+      "fragment-rung-321k-rows-size-lever-LB-M9": {
+        "name": "fragment-rung-321k-rows-size-lever-LB-M9",
+        "cost_tier": "large",
+        "status": "measured",
+        "metric": 0.185,
+        "evidence": "0.185 = fraction of the FRAGMENT ceiling (0.7928) reached by the best learned set, best seed (kmer4 rho +0.1466 at N=20k). SCOPE NOTE: this criterion quotes the 0.941 TILE ceiling; this arm measures the FRAGMENT rung, whose derived ceiling is 0.7928 - do not compare the two fractions without saying which ceiling. VERDICT: the size lever does NOT move the question. Margin over GC: 20k n=2 mean +0.0288 (range +0.0168..+0.0407); 150k n=2 mean +0.0191 (range +0.0179..+0.0203); pre-registered bar 0.05 -> DOES_NOT_GENERALISE at both sizes, never approached. REAL SUB-FINDING pointing the other way: kmer6 alone DOES gain from size (mean +0.0749 at 20k -> +0.1172 at 150k), so 4096 features were data-starved; but it never reaches kmer4's 20k value and GC rises too, so the margin shrinks anyway. Runner scripts/glm_genomewide_oracle.py on restored GSE144621 (LB 321,123 / M9 318,457, full-decompress verified); reconcile PASSED, load_shared returned 297,868/297,868 == the committed n_shared. HONEST LIMITS: 2 seeds per endpoint, not this project's 10; 2 of 4 planned replication runs LOST when the external drive disconnected mid-run; kmer6 at FULL 321k is RAM-blocked (see constraint glm-fragment-rung-kmer6-full-size-ram-bound) so the asymptote is UNMEASURED; the Q1b peak-tile half is INVARIANT to --limit (verified in code: the single consuming site at :126 touches only the LB fragment list), so its identical rows across rungs are ONE measurement, not three.",
+        "declared_at": "2026-10-14T13:03:04Z",
+        "resolved_at": "2026-10-18T22:15:08Z"
+      },
+      "promcalc-plus-conv-rank-average-hybrid-150bp": {
+        "name": "promcalc-plus-conv-rank-average-hybrid-150bp",
+        "cost_tier": "cheap",
+        "status": "measured",
+        "metric": 0.4254,
+        "evidence": "wiki/glm_tile_hybrid_arm_2026-10-14.md -- median Spearman 0.4254 over 10 REGISTERED leave-peak-out seeds, 44,106 tiles. HYBRID_ADDS: paired +0.0339 over the max_tx scalar, 10/10 seeds, CI95 [0.0238, 0.0409] EXCLUDES zero. Reproduces the published GEMME pattern -- conv ALONE loses to max_tx (-0.0767, 0/10) and still lifts it. Control (max_tx + SHUFFLED conv) -0.1232, 0/10 -- a content-free vector HURTS, so the gain is the conv's content not the rank-average. Orthogonality measured first: conv-vs-max_tx prediction Spearman median 0.3862. 0.452 of the 0.941 ceiling vs max_tx's 0.422. Does NOT overturn the G-A encoder-gate negative (conv vs one GC number is still CI-includes-zero); a different question. No fitting, no calibrator.",
+        "declared_at": "2026-10-14T16:06:31Z",
+        "resolved_at": "2026-10-14T16:43:31Z"
+      },
+      "orthogonal-modality-stack-promcalc-plus-N-channels": {
+        "name": "orthogonal-modality-stack-promcalc-plus-N-channels",
+        "cost_tier": "cheap",
+        "status": "planned",
+        "metric": null,
+        "evidence": "",
+        "declared_at": "2026-10-19T12:32:35Z",
+        "resolved_at": "",
+        "rationale": "The incumbent best is a 2-channel rank-average (promcalc-plus-conv-rank-average-hybrid-150bp, rho 0.4254) that wins 10/10 seeds with a paired CI excluding zero, and whose SHUFFLED-CONV control HURTS (-0.1232, 0/10) -- so the gain is channel CONTENT, not the averaging. Whether that STACKS to 3+ orthogonal channels is untested here, and it is the exact shape of the published ESM2+GEMME+ProSST result (+0.056, 90.5% of proteins) that the 2-channel version already echoed once.",
+        "kill_option_withdrawn": "An earlier draft of this plan offered killing one of the unrun arms to reach a verdict. WITHDRAWN as something I can do: kill_arm requires the arm's OWN executed evidence and refuses redundancy reasons, routing a no-evidence kill to explicit user authority. Recorded so the option is not silently re-offered.",
+        "verdict_consequence": "The ceiling stays blocked:untried-arm while ANY arm is 'planned'. Reaching 'plateau' by declining to DECLARE a known-promising arm would buy a verdict through scope reduction -- the 2026-07-09 defect in new clothes."
       }
     }
   }

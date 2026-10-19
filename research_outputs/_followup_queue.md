@@ -1,21 +1,24 @@
 # Research Follow-up Queue (V1.5 invocation)
 <!-- queue-schema: 0.1 -->
 
-> Last updated 2026-07-14 (marine acquisition-path epoch: 3 verified/named Vibrio genome+measured-AST accessions added for the Hamid data-request email; appended to the 2026-06-22 label-acquisition epoch). Stale-days threshold: 30.
+> Last updated 2026-10-13 (short-sequence promoter/MPRA epoch: 5 rows added on what the field does when a sequence-only model plateaus near a composition baseline, and whether multi-scale span helps on short sequences). Stale-days threshold: 30.
 > This queue surfaces "Decisions for Human Confirmation" rows from supported memos —
 > NOT a promotion list. Human review + per-memo Promotion Gates remain required before
 > any number lifts into rules / wiki / code.
 > NOTE (2026-07-14): this update APPENDED 3 marine-vibrio + 2 immunogenicity + 4 immunogenicity-rescope (vaccine seroprotection + AAV NAb) rows to the top of Active + bumped counts; the prior rows are preserved verbatim (no full re-aggregation was run — that is deferred).
+> **NOTE (2026-10-13) — STALENESS CROSSOVER.** 91 days elapsed since the previous update. Under the 30-day threshold **every row from the 2026-05-13 → 2026-07-14 epochs is now STALE**; only the 5 new 2026-10-13 rows are Active. Those 32 prior rows were **flagged at section level rather than physically moved**, because moving them would mean rewriting 40 KB of verbatim claim cells and this skill's load-bearing rule is that rows are never mutated. The Stale Candidates section below carries the per-memo age table. Read the "Previously-active rows" subsection as stale.
+> **DEVIATION RECORDED (2026-10-13):** this update used Edit rather than a whole-file Write, for the reason above. Both load-bearing constraints hold — the only file written is `_followup_queue.md`, and no existing row was altered.
 
 ## Summary
 
-- Source memos scanned (this + prior epoch): 10
-- Schema-drift memos (skipped): 0
-- Total raw candidate rows extracted: 34
-- Unique candidates after dedup: 34
-- Active candidates (≤ 30 days old): 34
-- Stale candidates (> 30 days old): 0
+- Source memos scanned (this + prior epochs): 11
+- Schema-drift memos (skipped): 0 parsed this run; 2 memos in the directory carry a truncated/unreadable marker and were NOT parsed (see Schema-drift section)
+- Total raw candidate rows extracted: 39
+- Unique candidates after dedup: 39 (0 duplicates — the new rows share no claim/value/units triple with any prior row)
+- **Active candidates (≤ 30 days old): 5** (all from `short-dna-promoter-mpra-activity-prediction-2026-10-13`)
+- **Stale candidates (> 30 days old): 34** (every row from the prior epochs; ages 91–153 days)
 - Cross-flavor candidates (public + internal): 0
+- Full re-aggregation across all 21 schema-0.4 memos in the directory: **still deferred** (the prior epochs' note carries forward). This run parsed only the new memo and re-bucketed by date.
 
 ## Acquisition decisions — label-acquisition epoch (2026-06-22, from noncircular-label-sources)
 
@@ -31,6 +34,22 @@ These are AUTHORITY/MONEY decisions surfaced by the label-source survey — the 
 Full shortlist + gate-screening: `research_outputs/noncircular-label-sources-2026-06-22.md`.
 
 ## Active Candidates
+
+**Only the rows in this first subsection are Active as of 2026-10-13.** Everything under "Previously-active rows" further down is STALE (see the staleness-crossover note in the header and the age table in Stale Candidates).
+
+### short-dna-promoter-mpra-activity-prediction (2026-10-13) — short-sequence promoter/MPRA plateau
+
+| Claim | Numeric value | Units | Locator(s) | Candidate use / Verification needed | Confidence | Sources | Problem-anchor(s) | Notes |
+|---|---:|---|---|---|---|---|---|---|
+| The best-in-class short-sequence promoter model caps its receptive field at roughly the element length (79 bp on a 150 bp input) and reports that architectural changes did not significantly affect performance, while training mode did | 79 | bp receptive field on 150 bp input | https://doi.org/10.1093/bioinformatics/btad457 | **Candidate use:** supports treating a measured no-gain-from-wider-span result as EXPECTED rather than anomalous on a 150 bp substrate, and redirecting effort from architecture span to training regime. **Verification needed:** a human must confirm that §3.3's "architectural changes" ablation actually varied receptive field / kernel width (rather than only block counts and channel widths), since the quoted sentence does not itself enumerate which changes were tested. Until that is read, this supports "span is not where the field found gains" but not "span was explicitly swept and found null." | high | short-dna-promoter-mpra-activity-prediction-2026-10-13 | Predicting promoter/regulatory activity from short DNA (100-300 bp), esp. bacterial promoter MPRA: model families beating composition baselines, whether multi-scale/dilated conv helps on SHORT sequences, bacterial SOTA vs replicate ceiling, plateau-escape techniques, fixed-background vs diverse-panel predictability | LegNet is the DREAM-2022 winner; no dilated convolutions anywhere in the paper (skeptical fetch returned VALUE NOT PRESENT) |
+| A 200 bp MPRA sequence model that had already reached the assay's technical-noise ceiling was still improving log-linearly with training-set size | qualitative (log-linear) | — | https://doi.org/10.1038/s41586-024-08430-9 | **Candidate use:** identifies training-set size as the one lever in this literature with a measured functional form, and implies a predictable (not asymptotic) return from more tiles. **Verification needed:** a human must read Extended Data Fig 5c to extract the actual slope and the data range it was fitted over, and confirm whether "performance" there is Pearson r or a transformed metric. A log-linear law measured from ~10^5 human cCREs may not have the same slope on ~4×10^4 bacterial tiles. | high | short-dna-promoter-mpra-activity-prediction-2026-10-13 | (as above) | ENCODE lentiMPRA; MPRALegNet Pearson r = 0.83 ≈ technical noise, and STILL data-limited |
+| An under-parameterised model stops benefiting from additional training data while a larger sibling keeps improving — the published diagnostic for a capacity-limited plateau | Mini r2 = 0.898 ± 0.004 vs full 0.914 ± 0.003 | dimensionless | https://doi.org/10.1093/bioinformaticsadvances/vbaf130 | **Candidate use:** supplies a concrete, cheap DIAGNOSTIC — train the same architecture at two very different capacities and compare their data-scaling curves — that distinguishes "the substrate has no learnable signal" from "the model is too small to use it." Directly relevant to any sub-20k-parameter model. **Verification needed:** a human must confirm from Fig S8A-B how large the capacity gap was between Camformer and Camformer-Mini, and note that this diagnostic was established at 10^6–10^7 training sequences; its behaviour at 10^4–10^5 is untested. | high | short-dna-promoter-mpra-activity-prediction-2026-10-13 | (as above) | Camformer; 110 nt yeast promoters |
+| On 300 bp quantitative regulatory-activity regression, gkm-SVM (0.29) and a CNN (0.30) were indistinguishable and barely above a reference of 0.28, and the CNN needed 6–7x more data merely to match the kernel method | 0.29 / 0.30 / 0.28; 6-7x | Spearman ρ; fold data | https://doi.org/10.1371/journal.pone.0237412 | **Candidate use:** establishes that ~0.3 Spearman with deep and shallow models within 0.01 of each other is a KNOWN, published operating point for quantitative short-element regulatory prediction, not a sign of a broken pipeline; and nominates gapped-k-mer SVM as the specific shallow comparator to run at ~10^4–10^5 scale. **Verification needed:** a human must confirm what the 0.28 "reference" value actually is (the source gives 0.28 in text and 0.276 in captions) and whether the task is close enough — it is human DNase-derived enhancer activity, not bacterial promoter activity, and the authors' 50k–600k range is above a ~44k substrate. | high | short-dna-promoter-mpra-activity-prediction-2026-10-13 | (as above) | Authors' own conclusion: "keep models simple, especially if training data is limited" |
+| In the standard within-element saturation-mutagenesis split, a random forest on IRRELEVANT features scored 0.75 AUCROC, a simple method reproduced the best CAGI submissions, and held-out-element performance "drastically degraded" | 0.75 AUCROC / 0.47 AUPRC on irrelevant features | dimensionless | https://doi.org/10.3389/fgene.2019.01078 | **Candidate use:** a direct warning against adopting a fixed-background mutational-series design on the expectation that it is "easier" — the published easiness is substantially a local-context leakage artefact, so the design must come with a leakage-proof split (and an irrelevant-feature control) specified BEFORE data collection, not after. **Verification needed:** a human must read Table 1 and Fig 3 to get the actual held-out-element numbers, and confirm whether the leakage mechanism (adjacent-segment splits within one element) would apply to a bacterial design that splits by background rather than by segment — the two are not obviously the same failure. | high | short-dna-promoter-mpra-activity-prediction-2026-10-13 | (as above) | Decision-relevant if a fixed-background mutational series is being considered as a substrate |
+
+### Previously-active rows — ALL STALE as of 2026-10-13 (91–153 days old)
+
+These rows are preserved verbatim from the 2026-05-13 → 2026-07-14 epochs and are **not** Active. See Stale Candidates for the per-memo age table.
 
 | Claim | Numeric value | Units | Locator(s) | Candidate use / Verification needed | Confidence | Sources | Problem-anchor(s) | Notes |
 |---|---:|---|---|---|---|---|---|---|
@@ -78,11 +97,40 @@ Full shortlist + gate-screening: `research_outputs/noncircular-label-sources-202
 
 ## Stale Candidates
 
-(None — all 4 source memos captured within the 30-day window.)
+**Superseded 2026-10-13.** The previous line here read "(None — all 4 source memos captured within the 30-day window.)" — true on 2026-07-14, false now. 91 days elapsed; under the 30-day threshold **all 34 rows from the prior epochs are stale**. They remain physically located under "Previously-active rows" in the Active Candidates section rather than being moved here, to avoid rewriting verbatim claim cells (see the header's deviation note). This table is the authoritative age index.
+
+| Source memo | Captured | Age at 2026-10-13 | Rows | Status |
+|---|---|---:|---:|---|
+| sota-bacterial-amr-prediction-small-cohorts-2026-05-13 | 2026-05-13 | 153 d | 5 | STALE |
+| all-of-us-prs-ancestry-stratified-accuracy-2025-2026-05-23 | 2026-05-23 | 143 d | 5 | STALE |
+| ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27 | 2026-05-27 | 139 d | 5 | STALE |
+| ecoli-bacterial-phenotype-decoder-substrate-feasibility-2026-06-05 | 2026-06-05 | 130 d | 5 | STALE |
+| eukaryotic-multimodal-substrate-feasibility-2026-06-07 | 2026-06-07 | 128 d | (in later section) | STALE |
+| acquirable-ecoli-phenotype-label-sources-2026-06-14 | 2026-06-14 | 121 d | (in later section) | STALE |
+| ecoli-amr-revalidation-source-portfolio-2026-06-14 | 2026-06-14 | 121 d | (in later section) | STALE |
+| viral-antiviral-resistance-gp-datasets-2026-06-21 | 2026-06-21 | 114 d | (in later section) | STALE |
+| noncircular-label-sources-2026-06-22 | 2026-06-22 | 113 d | 4 (acquisition decisions LA-1..LA-4) | STALE |
+| cyp2d6-cyp2d7-psv-hybrid-identity-2026-07-07 | 2026-07-07 | 98 d | (in later section) | STALE |
+| ddg-to-fold-change-calibration-drug-resistance-2026-07-09 | 2026-07-09 | 96 d | 4 | STALE |
+| free-genotype-paired-phenotype-substrates-2026-07-16 | 2026-07-16 | 89 d | (in later section) | STALE |
+| in-vivo-immunogenicity-clinical-threshold-2026-07-14 | 2026-07-14 | 91 d | 2 | STALE |
+| vaccine-seroprotection-titer-thresholds-2026-07-14 | 2026-07-14 | 91 d | 1 | STALE |
+| aav-gene-therapy-preexisting-nab-eligibility-2026-07-14 | 2026-07-14 | 91 d | 1 | STALE |
+| marine-vibrio-genome-mic-accessions-2026-07-14 | 2026-07-14 | 91 d | 3 | STALE |
+| **short-dna-promoter-mpra-activity-prediction-2026-10-13** | **2026-10-13** | **0 d** | **5** | **ACTIVE** |
+
+Staleness here means "not re-checked in 30+ days," NOT "wrong." Several of these rows are structural findings (e.g. the EnteroBase label-circularity result) that do not decay. The flag is a prompt to re-verify before acting, not a retraction.
 
 ## Schema-drift Memos
 
-(None — all source memos carry a recognized schema marker.)
+Updated 2026-10-13. The previous line read "(None — all source memos carry a recognized schema marker.)". Two memos in `research_outputs/` return a marker that does not resolve to a recognized version string on scan and were therefore NOT parsed — listed explicitly rather than silently skipped, per the skill's discipline:
+
+| Memo slug | Reason | Suggested follow-up |
+|---|---|---|
+| horesh-2021-file-f1-audit-2026-05-27 | marker present but version string did not resolve on scan (`memo-schema: ...`) | Open the file and read the marker directly. If it is a v0.2/0.3/0.4 memo, its Decisions rows are currently missing from this queue. Related rows from `ecoli-pathotype-labeled-genome-substrate-survey-2026-05-27` reference the same Horesh File F1 audit, so the finding may already be represented. |
+| ncbi-pathogen-detection-host-disease-facet-2026-05-27 | marker present but version string did not resolve on scan (`memo-schema: ...`) | Same — read the marker directly and confirm whether a Decisions table exists that this queue is missing. |
+
+Also note: this run parsed only the new 2026-10-13 memo. **21 schema-0.4 memos exist in the directory and a full re-aggregation has never been run** (the deferral dates to 2026-07-14). The row counts in Summary therefore describe what this queue has accumulated across appends, not an exhaustive sweep of the corpus.
 
 ## Footer notes
 

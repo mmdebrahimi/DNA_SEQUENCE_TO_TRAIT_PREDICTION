@@ -1,0 +1,119 @@
+{
+  "schema": "cabbage-scored-cell-v1",
+  "generated": "2026-10-11",
+  "cell": {
+    "species": "Salmonella enterica",
+    "drug": "ceftriaxone",
+    "amrfinder_organism": "Salmonella"
+  },
+  "smoke": false,
+  "label_source": "CABBAGE / EMBL-EBI AMR Portal release 2026-07, scored through this repo's external_mic_labels.tier_for_isolate on operator-aware MIC (STRICT tiers only)",
+  "genotype_source": "portal PRE-COMPUTED AMRFinderPlus, header-normalized via dna_decode.data.amr_portal.prepare",
+  "rule": "FROZEN eval/amr_rules.call_resistance (byte-unchanged)",
+  "label_census": {
+    "tier_census": {
+      "CENSORED_HIGH_S": 20803,
+      "HIGH_R": 1424,
+      "BORDERLINE": 415,
+      "CENSORED_HIGH_R": 441,
+      "AMBIGUOUS": 12,
+      "CENSORED_EXCLUDED": 186,
+      "CONFLICT": 1,
+      "HIGH_S": 117
+    },
+    "n_with_asm_and_mic": 23399,
+    "n_strict_labelled": 22785,
+    "n_excluded_tiers": 614
+  },
+  "leakage": {
+    "n_prior_accessions": 1509,
+    "n_excluded_for_leakage": 60,
+    "manifest_incomplete": false
+  },
+  "attempted": 8000,
+  "subset": {
+    "n_scoreable": 22725,
+    "max_isolates": 8000,
+    "selection": "seeded_random_sample",
+    "sample_seed": 20261010,
+    "why_not_prefix": "an accession-ordered prefix is EASIER -- measured on Campylobacter x ciprofloxacin, first 1,444 sens 0.9971 vs full 4,265 sens 0.9794 -- because accession order tracks deposition batch and therefore study"
+  },
+  "confusion": {
+    "tp": 591,
+    "fn": 36,
+    "tn": 7190,
+    "fp": 15,
+    "n_scored": 7832
+  },
+  "metrics": {
+    "accuracy": 0.9935,
+    "sensitivity": 0.9426,
+    "specificity": 0.9979,
+    "sens_wilson_ci": [
+      0.922,
+      0.958
+    ],
+    "spec_wilson_ci": [
+      0.997,
+      0.999
+    ]
+  },
+  "failures": {
+    "n_fetch_failed": 168,
+    "n_dialect_refused": 0,
+    "n_call_failed": 0,
+    "fetch_failed_sample": [
+      "GCA_010175075.1",
+      "GCA_010387315.3",
+      "GCA_010804765.1",
+      "GCA_010999375.1",
+      "GCA_011235355.1",
+      "GCA_011307875.1",
+      "GCA_011341505.1",
+      "GCA_011381745.1",
+      "GCA_011486205.1",
+      "GCA_011507365.1"
+    ],
+    "call_failed_sample": []
+  },
+  "source_concentration_of_scored_set": {
+    "bar": {
+      "max_largest_share": 0.6,
+      "min_distinct_sources": 5,
+      "provenance": "scripts/source_diverse_validate.py (this repo's own bar)"
+    },
+    "n_distinct_database_labels": 17,
+    "largest_database_share": 0.5198,
+    "largest_database_label": "NARMS",
+    "n_distinct_countries": 9,
+    "largest_country_share": 0.9775,
+    "largest_country": "United States of America",
+    "collection_year_range": [
+      1984,
+      2024
+    ],
+    "n_distinct_collection_years": 24,
+    "axes": {
+      "database_label": {
+        "n_distinct": 17,
+        "largest_share": 0.5198,
+        "passes": true
+      },
+      "country": {
+        "n_distinct": 9,
+        "largest_share": 0.9775,
+        "passes": false
+      }
+    },
+    "verdict": "source_concentrated",
+    "reading": "A cohort that fails this bar cannot reveal a determinant-family blind spot it does not contain -- the mechanism that made the gentamicin rmt gap structurally invisible. It does NOT make the metrics wrong; it bounds what they could ever have detected."
+  },
+  "honest_limits": [
+    "NOT CLONALITY-CORRECTED. These are isolate-level counts; Campylobacter surveillance collections are clonally structured, so read the metrics as isolate-level. The lineage layer (G8) is the open gate on this substrate and is NOT closed by this run.",
+    "The `database` column is an overlapping AGGREGATOR label, not a BioProject, so the source-concentration figures here are NOT this repo's per-BioProject diversity bar.",
+    "Campylobacter cipro resistance is overwhelmingly one well-catalogued determinant (gyrA_T86I), so a high score is MECHANISTICALLY EXPECTED and is not evidence of broad catalog coverage.",
+    "A fetch failure means the portal's genomes/ tree lacks that assembly; those isolates are EXCLUDED and counted, never scored as wrong. Tree coverage is uncensused (see constraint `cabbage-genomes-tree-coverage-uncensused`).",
+    "Leakage exclusion is accession-string based (version-insensitive). It does not resolve BioSample identity, so an isolate deposited under two different assemblies could survive.",
+    "GEOGRAPHICALLY CONCENTRATED: see source_concentration_of_scored_set.verdict. Do NOT quote this cell as source-diverse. What it DOES add is INDEPENDENCE: the provenance-disjoint Campylobacter cipro cell is PRJNA560409 (Univ. Melbourne, N=40) and the prospective cell is PRJNA563067 (PulseNet Canada, N=426, 100% one BioProject). Each fails the diversity bar alone; that they are three MUTUALLY INDEPENDENT national collections is the part worth keeping."
+  ]
+}

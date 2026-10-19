@@ -45,6 +45,22 @@ BASES = "ACGT"
 #: The three branch widths, with their rationale in the module docstring.
 DEFAULT_WIDTHS = (6, 20, 75)
 
+#: The MAXIMAL-SPAN pyramid the 150 bp substrate permits, for the R5/R6 ceiling arm.
+#:
+#: Four scales, each one a real biological scale: 3 bp sub-motif, 12 bp motif, 48 bp element,
+#: 150 bp whole tile. Span = log10(150/3) = **1.70 decades** against DEFAULT_WIDTHS' 1.10.
+#:
+#: WHY NOT (1, 10, 100, 150), which would score 2.18 decades: a width-1 kernel cannot see a motif at
+#: all, so buying span by shrinking the finest branch to 1 bp inflates the decade metric without
+#: testing the hypothesis the metric stands for. The honest span is the one where every branch is a
+#: scale someone would choose on its own.
+#:
+#: SUBSTRATE BOUND (measured, not estimated): every category in GSE144621 is <= 150 bp (tile max 150,
+#: neg_control/random exactly 150, pos_control 48-75), so the absolute ceiling is log10(150/1) = 2.18
+#: decades even with a degenerate 1 bp branch. A FOUR-decade pyramid needs 10,000 bp of context and is
+#: therefore not reachable on this substrate at any cost -- it is substrate-gated, not expensive.
+PYRAMID_WIDTHS = (3, 12, 48, 150)
+
 
 class EncoderDataError(ValueError):
     """Raised on an input shape that could only be handled by silently inventing data."""

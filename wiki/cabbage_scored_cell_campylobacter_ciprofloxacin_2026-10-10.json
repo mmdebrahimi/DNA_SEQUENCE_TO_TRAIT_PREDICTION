@@ -1,0 +1,110 @@
+{
+  "schema": "cabbage-scored-cell-v1",
+  "generated": "2026-10-10",
+  "cell": {
+    "species": "Campylobacter jejuni",
+    "drug": "ciprofloxacin",
+    "amrfinder_organism": "Campylobacter"
+  },
+  "smoke": false,
+  "label_source": "CABBAGE / EMBL-EBI AMR Portal release 2026-07, scored through this repo's external_mic_labels.tier_for_isolate on operator-aware MIC (STRICT tiers only)",
+  "genotype_source": "portal PRE-COMPUTED AMRFinderPlus, header-normalized via dna_decode.data.amr_portal.prepare",
+  "rule": "FROZEN eval/amr_rules.call_resistance (byte-unchanged)",
+  "label_census": {
+    "tier_census": {
+      "HIGH_S": 3525,
+      "HIGH_R": 1148,
+      "BORDERLINE": 316,
+      "AMBIGUOUS": 30,
+      "CENSORED_HIGH_R": 32,
+      "CENSORED_HIGH_S": 7
+    },
+    "n_with_asm_and_mic": 5058,
+    "n_strict_labelled": 4712,
+    "n_excluded_tiers": 346
+  },
+  "leakage": {
+    "n_prior_accessions": 1509,
+    "n_excluded_for_leakage": 60,
+    "manifest_incomplete": false
+  },
+  "attempted": 4652,
+  "confusion": {
+    "tp": 997,
+    "fn": 21,
+    "tn": 3236,
+    "fp": 11,
+    "n_scored": 4265
+  },
+  "metrics": {
+    "accuracy": 0.9925,
+    "sensitivity": 0.9794,
+    "specificity": 0.9966,
+    "sens_wilson_ci": [
+      0.969,
+      0.986
+    ],
+    "spec_wilson_ci": [
+      0.994,
+      0.998
+    ]
+  },
+  "failures": {
+    "n_fetch_failed": 387,
+    "n_dialect_refused": 0,
+    "n_call_failed": 0,
+    "fetch_failed_sample": [
+      "GCA_003777945.1",
+      "GCA_003902535.1",
+      "GCA_004805515.1",
+      "GCA_004846785.1",
+      "GCA_004914315.1",
+      "GCA_004924055.1",
+      "GCA_004926175.1",
+      "GCA_004926715.1",
+      "GCA_004931155.1",
+      "GCA_004934855.1"
+    ],
+    "call_failed_sample": []
+  },
+  "source_concentration_of_scored_set": {
+    "bar": {
+      "max_largest_share": 0.6,
+      "min_distinct_sources": 5,
+      "provenance": "scripts/source_diverse_validate.py (this repo's own bar)"
+    },
+    "n_distinct_database_labels": 7,
+    "largest_database_share": 0.4521,
+    "largest_database_label": "NARMS",
+    "n_distinct_countries": 5,
+    "largest_country_share": 0.9637,
+    "largest_country": "United States of America",
+    "collection_year_range": [
+      2007,
+      2021
+    ],
+    "n_distinct_collection_years": 15,
+    "axes": {
+      "database_label": {
+        "n_distinct": 7,
+        "largest_share": 0.4521,
+        "passes": true
+      },
+      "country": {
+        "n_distinct": 5,
+        "largest_share": 0.9637,
+        "passes": false
+      }
+    },
+    "verdict": "source_concentrated",
+    "reading": "A cohort that fails this bar cannot reveal a determinant-family blind spot it does not contain -- the mechanism that made the gentamicin rmt gap structurally invisible. It does NOT make the metrics wrong; it bounds what they could ever have detected."
+  },
+  "honest_limits": [
+    "NOT CLONALITY-CORRECTED. These are isolate-level counts; Campylobacter surveillance collections are clonally structured, so read the metrics as isolate-level. The lineage layer (G8) is the open gate on this substrate and is NOT closed by this run.",
+    "The `database` column is an overlapping AGGREGATOR label, not a BioProject, so the source-concentration figures here are NOT this repo's per-BioProject diversity bar.",
+    "Campylobacter cipro resistance is overwhelmingly one well-catalogued determinant (gyrA_T86I), so a high score is MECHANISTICALLY EXPECTED and is not evidence of broad catalog coverage.",
+    "A fetch failure means the portal's genomes/ tree lacks that assembly; those isolates are EXCLUDED and counted, never scored as wrong. Tree coverage is uncensused (see constraint `cabbage-genomes-tree-coverage-uncensused`).",
+    "Leakage exclusion is accession-string based (version-insensitive). It does not resolve BioSample identity, so an isolate deposited under two different assemblies could survive.",
+    "GEOGRAPHICALLY CONCENTRATED: see source_concentration_of_scored_set.verdict. Do NOT quote this cell as source-diverse. What it DOES add is INDEPENDENCE: the provenance-disjoint Campylobacter cipro cell is PRJNA560409 (Univ. Melbourne, N=40) and the prospective cell is PRJNA563067 (PulseNet Canada, N=426, 100% one BioProject). Each fails the diversity bar alone; that they are three MUTUALLY INDEPENDENT national collections is the part worth keeping."
+  ]
+}

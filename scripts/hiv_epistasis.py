@@ -40,6 +40,8 @@ import numpy as np
 from sklearn.linear_model import ElasticNetCV
 from sklearn.model_selection import KFold, cross_val_predict
 from sklearn.pipeline import make_pipeline
+
+from dna_decode.sklearn_compat import alpha_count_kwargs
 from sklearn.preprocessing import StandardScaler
 
 REPO = Path(__file__).resolve().parent.parent
@@ -168,7 +170,14 @@ def augment(X, pairs):
 def _model():
     return make_pipeline(
         StandardScaler(),
-        ElasticNetCV(l1_ratio=_L1_GRID, n_alphas=20, cv=3, max_iter=5000, tol=1e-3, random_state=SEED),
+        ElasticNetCV(
+            l1_ratio=_L1_GRID,
+            cv=3,
+            max_iter=5000,
+            tol=1e-3,
+            random_state=SEED,
+            **alpha_count_kwargs(20),
+        ),
     )
 
 

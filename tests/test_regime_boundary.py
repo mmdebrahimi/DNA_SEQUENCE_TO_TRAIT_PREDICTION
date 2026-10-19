@@ -510,3 +510,154 @@ def test_the_cited_artifact_exists_so_regime_map_can_certify_it():
     root = Path(__file__).resolve().parents[1]
     r = next(x for x in REGIMES if x.key == "curated_catalog_cross_organism")
     assert (root / r.artifact).exists(), r.artifact
+
+
+# ----------------------------------------------------------- F3: the de-confounder's own status
+
+def test_the_deconfounder_calibration_record_is_scoped_to_one_panel_pair():
+    """RENAMED 2026-10-10, not renumbered. This test was
+    `test_the_deconfounder_calibration_record_says_built_not_calibrated` and pinned
+    status == "BUILT_NOT_CALIBRATED" with a `blocked:` verdict -- the right guard while no positive
+    control could run, and a GREEN test asserting a retracted claim once one did
+    (wiki/f3_deconfound_calibration_1001g_2026-10-10.md: VALID_DIFFERENTIAL_RESPONSE).
+
+    The guard's PURPOSE is unchanged and is what this still enforces: a caller must not read the
+    record as a blanket licence. Calibration on one positive and one negative panel is not
+    calibration on an arbitrary substrate, and the record must keep saying so."""
+    from dna_decode.eval.regime import deconfounder_calibration_status
+
+    c = deconfounder_calibration_status()
+    assert c["status"] == "CALIBRATED_ON_ONE_PANEL_PAIR"
+    assert c["verdict"] == "VALID_DIFFERENTIAL_RESPONSE"
+    # the scope limit is the load-bearing half -- it must never be dropped from the record
+    assert "does not clear 0.05" in c["what_is_NOT_established"].lower()
+    assert "ONE positive and ONE negative panel" in c["what_is_NOT_established"]
+    assert "do not" in c["caveat_for_callers"].lower()
+    # and the superseded blocker stays on the record rather than vanishing
+    assert "positive_control_not_fold_compatible" in c["superseded_blocker"]
+
+
+def test_the_calibration_differential_is_a_real_separation_not_a_restated_zero():
+    """A differential criterion is only meaningful if the two arms actually differ: a record could
+    satisfy every string assertion above while reporting the same number for both panels."""
+    from dna_decode.eval.regime import deconfounder_calibration_status
+
+    d = deconfounder_calibration_status()["differential"]
+    for rung in ("fine", "coarse"):
+        pos = d[f"median_drop_positive_{rung}"]
+        neg = d[f"median_drop_negative_{rung}"]
+        assert pos > neg, (rung, pos, neg)
+        # the negative control must be near zero; a large negative-arm drop would mean the
+        # instrument reacts to the ACT of grouping rather than to structure
+        assert abs(neg) < 0.02, (rung, neg)
+        assert d[f"symmetric_differential_{rung}"] > 0.02, rung
+
+
+def test_the_calibration_record_cites_an_artifact_that_exists():
+    from pathlib import Path
+
+    from dna_decode.eval.regime import deconfounder_calibration_status
+
+    repo = Path(__file__).resolve().parent.parent
+    assert (repo / deconfounder_calibration_status()["artifact"]).exists()
+
+
+def test_the_calibration_status_is_a_copy_so_a_caller_cannot_mutate_the_record():
+    from dna_decode.eval.regime import DECONFOUNDER_CALIBRATION, deconfounder_calibration_status
+
+    got = deconfounder_calibration_status()
+    got["status"] = "CALIBRATED_EVERYWHERE"
+    assert DECONFOUNDER_CALIBRATION["status"] == "CALIBRATED_ON_ONE_PANEL_PAIR"
+
+
+def test_a_requires_deconfounding_screen_surfaces_the_instrument_status():
+    from dna_decode.eval.regime import REQUIRES_DECONFOUNDING, screen_proposal
+
+    r = screen_proposal("natural", "organism", "supervised")
+    assert r.verdict == REQUIRES_DECONFOUNDING
+    joined = " ".join(r.conditions)
+    assert "CALIBRATED_ON_ONE_PANEL_PAIR" in joined
+    assert "f3_deconfound_calibration" in joined
+
+
+def test_the_instrument_status_is_AUGMENT_ONLY_and_never_changes_the_verdict():
+    """Proved by a with/without comparison, not promised: the layer may only append."""
+    from dna_decode.eval import regime as R
+
+    r_with = R.screen_proposal("natural", "organism", "supervised")
+    orig = R._deconfounder_conditions
+    try:
+        R._deconfounder_conditions = lambda verdict: []       # disable the layer
+        r_without = R.screen_proposal("natural", "organism", "supervised")
+    finally:
+        R._deconfounder_conditions = orig
+
+    for f in ("regime", "verdict", "reason", "evidence", "artifact"):
+        assert getattr(r_with, f) == getattr(r_without, f), f"layer changed {f}"
+    assert r_with.conditions[: len(r_without.conditions)] == r_without.conditions
+    assert len(r_with.conditions) == len(r_without.conditions) + 1
+
+
+def test_the_instrument_status_is_AUGMENT_ONLY_over_EVERY_combination():
+    """`_deconfounder_conditions`' docstring claims a with/without diff over every
+    (population, endpoint, method, target, claim) combination; the test above proves ONE. This
+    runs the whole grid, which is what the claim says.
+
+    It also pins the layer's SCOPE: exactly the REQUIRES_DECONFOUNDING rows may gain the
+    condition, and it must land INSIDE the unclaimed baseline -- i.e. before any transfer
+    condition -- which is the ordering the docstring calls deliberate."""
+    from dna_decode.eval import regime as R
+
+    gained = 0
+    orig = R._deconfounder_conditions
+    try:
+        for r in REGIMES:
+            for target in ("replace", "blind_spot_complement"):
+                for cat in (False, True):
+                    for claim in (None, R.ORGANISM_TRANSFER_UNMEASURED, "held_out_clade"):
+                        kw = dict(curated_catalog_exists=cat, target=target)
+                        if claim is not None:
+                            kw["claims_organism_transfer"] = claim
+                        with_layer = R.screen_proposal(r.population, r.endpoint,
+                                                       r.method, **kw).as_dict()
+                        R._deconfounder_conditions = lambda verdict: []
+                        without = R.screen_proposal(r.population, r.endpoint,
+                                                    r.method, **kw).as_dict()
+                        R._deconfounder_conditions = orig
+
+                        for k in with_layer:
+                            if k == "conditions":
+                                continue
+                            assert with_layer[k] == without[k], \
+                                f"layer changed {k} for {r.key} ({target}, cat={cat}, {claim})"
+
+                        extra = with_layer["conditions"]
+                        base = without["conditions"]
+                        fires = with_layer["verdict"] == R.REQUIRES_DECONFOUNDING
+                        if not fires:
+                            assert extra == base, f"layer fired on {r.key} ({with_layer['verdict']})"
+                            continue
+                        gained += 1
+                        assert len(extra) == len(base) + 1
+                        inserted = [c for c in extra if c not in base]
+                        assert len(inserted) == 1 and "CALIBRATED_ON_ONE_PANEL_PAIR" in inserted[0]
+                        # appended to the UNCLAIMED baseline, so it precedes any transfer line
+                        unclaimed = R.screen_proposal(r.population, r.endpoint, r.method,
+                                                      curated_catalog_exists=cat,
+                                                      target=target).conditions
+                        assert extra[: len(unclaimed)] == list(unclaimed)
+                        assert extra.index(inserted[0]) == len(unclaimed) - 1
+    finally:
+        R._deconfounder_conditions = orig
+
+    assert gained > 0, "no combination gained the condition; the sweep would pass vacuously"
+
+
+def test_the_instrument_status_does_NOT_fire_on_other_verdicts():
+    """A closed negative or a working regime must not carry a de-confounder caveat."""
+    from dna_decode.eval.regime import screen_proposal
+
+    for args in (("natural", "organism", "zero_shot"),
+                 ("constructed", "molecular", "supervised")):
+        r = screen_proposal(*args)
+        assert "BUILT_NOT_CALIBRATED" not in " ".join(r.conditions), args

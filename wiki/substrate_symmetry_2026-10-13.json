@@ -1,0 +1,85 @@
+{
+ "schema": "substrate-symmetry-v1",
+ "measured_on": "2026-10-13",
+ "target": "wiki/mpra_substrate_census_2026-10-12.json",
+ "state": "BEFORE the 2026-10-13 amendment (Step 4) -- this is the baseline refusal",
+ "why_this_artifact_exists": "a validator that PASSES the file already known to be asymmetric has not been shown to detect anything; this records the refusal on the unmodified file so the before/after is auditable rather than asserted",
+ "result": {
+  "symmetry": {
+   "verdict": "asymmetric:best_measured_arm",
+   "detail": "a field on SOME rungs reads as a statement about ALL of them -- best_measured_arm present on 1/4, missing from ['fragments_LB', 'fragments_M9', 'sigma70_designed']; size_lever present on 1/4, missing from ['fragments_LB', 'fragments_M9', 'sigma70_designed']",
+   "asymmetric_fields": {
+    "size_lever": [
+     "fragments_LB",
+     "fragments_M9",
+     "sigma70_designed"
+    ],
+    "best_measured_arm": [
+     "fragments_LB",
+     "fragments_M9",
+     "sigma70_designed"
+    ]
+   },
+   "n_rungs": 4
+  },
+  "utilization": [
+   {
+    "rung": "fragments_LB",
+    "verdict": "unknown:no largest_n_measured",
+    "rows_available": 321123,
+    "largest_n_measured": null,
+    "fraction": null
+   },
+   {
+    "rung": "fragments_M9",
+    "verdict": "unknown:no largest_n_measured",
+    "rows_available": 318457,
+    "largest_n_measured": null,
+    "fraction": null
+   },
+   {
+    "rung": "peak_tiles",
+    "verdict": "unknown:no largest_n_measured",
+    "rows_available": 44106,
+    "largest_n_measured": null,
+    "fraction": null
+   },
+   {
+    "rung": "sigma70_designed",
+    "verdict": "unknown:no row count",
+    "rows_available": null,
+    "largest_n_measured": null,
+    "fraction": null
+   }
+  ],
+  "ceiling_warnings": [
+   "fragments_LB: do NOT quote single_replicate_agreement 0.4583 as a ceiling; this rung's ceiling_for_a_sequence_model is 0.7928 (Spearman-Brown step-up, square-rooted)",
+   "fragments_M9: do NOT quote single_replicate_agreement 0.4731 as a ceiling; this rung's ceiling_for_a_sequence_model is 0.8014 (Spearman-Brown step-up, square-rooted)",
+   "peak_tiles: do NOT quote single_replicate_agreement 0.7945 as a ceiling; this rung's ceiling_for_a_sequence_model is 0.941 (Spearman-Brown step-up, square-rooted)"
+  ],
+  "required_fields": [
+   "size_lever",
+   "best_measured_arm",
+   "ceiling_for_a_sequence_model"
+  ],
+  "thresholds": {
+   "exhausted_at": 0.95,
+   "under_used_below": 0.5,
+   "are": "ASSERTED, not derived -- the only measured anchors are 9.3% (fragments, clearly under-used) and ~94% (tiles, clearly spent); any cut between those separates them equally well"
+  }
+ },
+ "measured_baseline": {
+  "size_lever_present_on": "1 of 4 rungs (peak_tiles only)",
+  "best_measured_arm_present_on": "1 of 4 rungs (peak_tiles only)",
+  "ceiling_for_a_sequence_model_present_on": "4 of 4",
+  "single_replicate_agreement_present_on": "4 of 4",
+  "largest_n_measured_present_on": "0 of 4 -- the field did not exist",
+  "utilization_knowable_for": "0 of 4 rungs"
+ },
+ "killed_design": "per-file orphan detection in scripts/data_inventory.py would NOT have caught this: the fragment files are referenced at dna_decode/glm/genomewide.py:48-49, so they are not orphans under any definition. The signal is under-use relative to size, not absence of references.",
+ "honest_limits": [
+  "SYMMETRY_REQUIRED is hand-declared, so a NEW field added to one rung without being listed is invisible (declared, not detected).",
+  "The exhausted/under-used thresholds are ASSERTED, not derived.",
+  "This is a report, not enforcement -- nothing blocks a census write."
+ ]
+}

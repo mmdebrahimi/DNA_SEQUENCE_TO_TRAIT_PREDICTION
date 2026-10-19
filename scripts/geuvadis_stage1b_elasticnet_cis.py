@@ -15,6 +15,8 @@ import argparse, gzip, json
 from pathlib import Path
 import numpy as np
 from sklearn.linear_model import ElasticNetCV
+
+from dna_decode.sklearn_compat import alpha_count_kwargs
 from sklearn.model_selection import KFold
 
 from dna_decode.organism_multimodal.geuvadis_data import load_expr, parse_sample_population, canon_pop
@@ -109,7 +111,7 @@ def main():
         try:
             for tr, te in kf.split(X):
                 if np.std(y[tr]) == 0: continue
-                m = ElasticNetCV(l1_ratio=0.5, n_alphas=8, cv=3, max_iter=1500, n_jobs=1)
+                m = ElasticNetCV(l1_ratio=0.5, cv=3, max_iter=1500, n_jobs=1, **alpha_count_kwargs(8))
                 m.fit(X[tr], y[tr]); pred[te] = m.predict(X[te])
         except Exception:
             continue

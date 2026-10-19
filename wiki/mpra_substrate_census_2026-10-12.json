@@ -1,0 +1,181 @@
+{
+  "schema": "mpra-substrate-census-v1",
+  "measured_on": "2026-10-12",
+  "cache_dir": "D:/dna_decode_cache/mpra",
+  "delimiter": "whitespace (NOT tab -- a tab-split parse returns zero rows and reads as empty)",
+  "loader_gotcha": "dna_decode.glm.genomewide.load_peak_tiles requires the 'mpra' subdir, not its parent",
+  "ceiling_rule": "ceilings are PER-RUNG and must not be inherited (0.9410 belongs to the peak tiles alone); and within a rung, never quote single_replicate_agreement as the ceiling",
+  "rungs": {
+    "peak_tiles": {
+      "file": "GSE144621_peak_tile_expression_formatted_std.txt.gz",
+      "rows_in_file": 46713,
+      "rows_after_published_filters": 44106,
+      "length_bp": {
+        "all": 150
+      },
+      "best_measured_arm": {
+        "name": "promoter-calculator-biophysical-fwd_max_tx",
+        "spearman": 0.3968,
+        "fraction_of_ceiling": 0.4217,
+        "params": 346,
+        "trained_on_this_substrate": false,
+        "evidence": "wiki/promcalc_vs_learned_2026-10-12.md",
+        "superseded": {
+          "name": "conv-3width-13k-params-150bp",
+          "spearman": 0.3234
+        }
+      },
+      "gc_baseline_spearman": 0.3112,
+      "size_lever": "EXHAUSTED ON THE PEAK-TILE RUNG ONLY -- 46,713 rows is the whole file and 44,106 are in use. This statement is SCOPED to peak_tiles and says nothing about any sibling rung.",
+      "single_replicate_agreement": 0.7945,
+      "ceiling_for_a_sequence_model": 0.941,
+      "ceiling_field_note": "ceiling_for_a_sequence_model is the Spearman-Brown step-up of single_replicate_agreement, square-rooted: the published readout is the MEAN of two replicates and is more reliable than either alone. The first version of this census reported single_replicate_agreement AS the ceiling for the fragment rungs and so understated their headroom by ~0.33.",
+      "largest_n_measured": 44106
+    },
+    "fragments_LB": {
+      "n": 321123,
+      "min": 48,
+      "median": 244,
+      "max": 499,
+      "p90": 290,
+      "frac_gt_150": 0.9884,
+      "distinct_lengths": 359,
+      "n_with_both_reps": 321123,
+      "file": "GSE144621_U00096.2_frag-rLP5_LB_expression.txt.gz",
+      "max_span_decades_at_3bp_floor": 2.22,
+      "single_replicate_agreement": 0.4583,
+      "ceiling_for_a_sequence_model": 0.7928,
+      "ceiling_field_note": "ceiling_for_a_sequence_model is the Spearman-Brown step-up of single_replicate_agreement, square-rooted: the published readout is the MEAN of two replicates and is more reliable than either alone. The first version of this census reported single_replicate_agreement AS the ceiling for the fragment rungs and so understated their headroom by ~0.33.",
+      "largest_n_measured": 30000,
+      "size_lever": "UNDER-USED on this rung -- 30,000 of 321,123 rows (9.3%) is the largest N any measurement has used. The size lever here has never been pulled.",
+      "best_measured_arm": {
+        "name": "kmer4",
+        "spearman": 0.1313,
+        "fraction_of_ceiling": 0.1656,
+        "n_features": 256,
+        "trained_on_this_substrate": true,
+        "evidence": "wiki/glm_genomewide_oracle_2026-10-07.json -- position-blocked split, verdict DOES_NOT_GENERALISE against a pre-registered beat-GC-by-0.05 bar",
+        "caveat": "measured on a 30,000-row SUBSAMPLE, not the full rung"
+      }
+    },
+    "fragments_M9": {
+      "n": 318457,
+      "min": 48,
+      "median": 244,
+      "max": 499,
+      "p90": 290,
+      "frac_gt_150": 0.9883,
+      "distinct_lengths": 361,
+      "n_with_both_reps": 318457,
+      "file": "GSE144621_U00096.2_frag-rLP5_M9_expression.txt.gz",
+      "single_replicate_agreement": 0.4731,
+      "ceiling_for_a_sequence_model": 0.8014,
+      "ceiling_field_note": "ceiling_for_a_sequence_model is the Spearman-Brown step-up of single_replicate_agreement, square-rooted: the published readout is the MEAN of two replicates and is more reliable than either alone. The first version of this census reported single_replicate_agreement AS the ceiling for the fragment rungs and so understated their headroom by ~0.33.",
+      "largest_n_measured": 30000,
+      "size_lever": "UNDER-USED on this rung -- 30,000 of 318,457 rows (9.4%) is the largest N any measurement has used. The size lever here has never been pulled.",
+      "best_measured_arm": {
+        "name": "kmer4",
+        "spearman": 0.1313,
+        "fraction_of_ceiling": 0.1656,
+        "n_features": 256,
+        "trained_on_this_substrate": true,
+        "evidence": "wiki/glm_genomewide_oracle_2026-10-07.json -- position-blocked split, verdict DOES_NOT_GENERALISE against a pre-registered beat-GC-by-0.05 bar",
+        "caveat": "measured on a 30,000-row SUBSAMPLE, not the full rung"
+      }
+    },
+    "sigma70_designed": {
+      "files": [
+        "GSE108535_sigma70_variant_data.txt.gz",
+        "GSE108535_barcode_mapping.txt.gz"
+      ],
+      "canonical_loader": "dna_decode.glm.expression.load_pairs",
+      "designed_rows": 10898,
+      "usable_joined": 10898,
+      "join_rate": 1.0,
+      "naive_join_would_have_given": 3821,
+      "join_gap_cause": "hyphen-vs-underscore in the UP-element name (gourse-326fold-up vs gourse_136fold_up); _norm_key fixes it and load_pairs enforces MIN_JOIN_RATE=0.95. NOT absent data.",
+      "usable_length_bp": {
+        "all": 150
+      },
+      "n_distinct_sequences": 10898,
+      "factorial": {
+        "UP_element": 3,
+        "Minus35": 8,
+        "Spacer": 8,
+        "Minus10": 8,
+        "Background": 8
+      },
+      "factorial_cells": 12288,
+      "factorial_filled": 10898,
+      "factorial_note": "5-way crossed, 88.7% filled. UP_element has THREE levels, not one.",
+      "leakage_proof_split": "dna_decode.glm.expression.leave_element_out (any of the 5 element columns)",
+      "expression_range_fold": 615,
+      "label_degeneracy": {
+        "distinct_values": 10898,
+        "mode_share": 0.0001,
+        "clears_project_bar": true
+      },
+      "single_replicate_agreement": null,
+      "ceiling_for_a_sequence_model": null,
+      "ceiling_reason": "GSE108535's two published tables correlate at EXACTLY 1.0 -- one is a monotone transform of the other, not a replicate pair. No ceiling is computable, so a number on this rung has no denominator.",
+      "measured_headline": {
+        "positional_onehot_ridge_spearman": 0.59,
+        "gc_only_spearman": 0.14,
+        "split": "leave_element_out(Minus10)",
+        "note": "unlike the peak-tile rung, the crude baseline does NOT win here",
+        "evidence": "tests/test_glm_expression.py (pinned)"
+      },
+      "largest_n_measured": 10898,
+      "size_lever": "EXHAUSTED ON THE SIGMA70 RUNG ONLY -- 10,898 of 10,898 joined rows are in use under leave_element_out. Scoped to this rung. NOTE: the non-computable thing here is the CEILING (no replicate pair), which is a different limitation from the row count and must not be conflated.",
+      "best_measured_arm": {
+        "name": "positional_onehot_ridge",
+        "spearman": 0.59,
+        "fraction_of_ceiling": null,
+        "fraction_of_ceiling_reason": "no ceiling is derivable on this rung, so a number here has no denominator",
+        "split": "leave_element_out(Minus10)",
+        "evidence": "tests/test_glm_expression.py (pinned)",
+        "trained_on_this_substrate": true
+      }
+    }
+  },
+  "the_forgotten_substrate": {
+    "claim_that_was_wrong": "no substrate with longer context; unblock = acquiring a substrate, a USER call",
+    "what_was_actually_cached": "321,123 fragments at 48-499 bp, same directory as the tiles",
+    "what_remains_true": "the LITERAL 4-decade arm needs ~10,000 bp; fragments top out at 499 bp",
+    "generalisation": "a substrate blocker is a claim about what you looked for"
+  },
+  "not_established": [
+    "no sigma70 ceiling is computable -- the two shipped tables are one monotone transform apart, so a number on that rung has no denominator",
+    "whether training on the fragment rung transfers to the tile rung",
+    "whether the Promoter Calculator's 346 parameters or PromoterAtlas's urtecho2018 head were fit on GSE108535, which would make either a circular comparator on the sigma70 rung"
+  ],
+  "corrections_2026_10_13": [
+    {
+      "field": "rungs.sigma70_designed.*",
+      "was": "3,821 usable (35.1%); 8x8x8x8; UP_element collapses to one level; gap is absent data",
+      "now": "10,898 usable (join rate 1.00); 3x8x8x8x8 = 12,288 cells, 10,898 filled; UP_element has 3",
+      "cause": "a second loader was written beside dna_decode/glm/expression.py and reproduced the exact naive join that file documents, fixes, enforces a floor against, and test-pins as rep.naive_join == 3821. The duplicate has been deleted; its one original contribution (the leakage control) moved into expression.py."
+    },
+    {
+      "field": "rungs.fragments_{LB,M9}.replicate_ceiling",
+      "was": "0.4583 / 0.4731 labelled as the ceiling",
+      "now": "those are single_replicate_agreement; the sequence-model ceilings are 0.7928 / 0.8014",
+      "cause": "noise_ceiling() returns both quantities and the wrong one was read. The consequence is strategic: the fragment trade is ~15% of headroom for 7.3x the data, not ~50%."
+    },
+    {
+      "field": "rungs.peak_tiles.best_measured_arm",
+      "was": "conv-3width-13k-params-150bp at 0.3234",
+      "now": "promoter-calculator-biophysical-fwd_max_tx at 0.3968 (346 params, never saw this data)",
+      "cause": "measured 2026-10-12 and never written back into the census"
+    },
+    {
+      "field": "rungs.*.size_lever, rungs.*.best_measured_arm, rungs.*.largest_n_measured",
+      "was": "size_lever and best_measured_arm present on peak_tiles ONLY (1 of 4 rungs); largest_n_measured absent from all 4",
+      "now": "all three present on all 4 rungs; peak_tiles size_lever re-worded to name its own rung",
+      "cause": "a field present on SOME rungs and absent on others reads as a statement about ALL of them. The only size statement available said EXHAUSTED, so it was quoted as a project-level wall and 321,123 unused fragments in the same cache directory were reported as \"no rows available\".",
+      "enforced_by": "dna_decode/eval/substrate_symmetry.py (check_symmetry) + tests/test_substrate_symmetry.py",
+      "baseline_refusal": "wiki/substrate_symmetry_2026-10-13.json",
+      "self_correction": "the first pass of THIS amendment wrote sigma70_designed largest_n_measured=None and size_lever=NOT_COMPUTABLE claiming \"no usable denominator is recorded here\". That was FALSE: the rung records 10,898 rows under designed_rows, usable_joined AND n_distinct_sequences. The validator also under-reported it, because ROW_COUNT_KEYS omitted those keys -- so a missing key read as \"no data\" rather than \"the list is incomplete\". Both fixed; the error class this module targets was reproduced inside the fix for it, and is recorded rather than quietly repaired."
+    }
+  ]
+}

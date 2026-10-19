@@ -12,6 +12,7 @@ Pure helpers must pass with torch ABSENT (the lazy-import convention); only the 
 """
 from __future__ import annotations
 
+import math
 import random
 
 import pytest
@@ -19,6 +20,7 @@ import pytest
 from dna_decode.glm.encoder import (
     BASES,
     DEFAULT_WIDTHS,
+    PYRAMID_WIDTHS,
     REGISTERED_PROTOCOL,
     EncoderDataError,
     TrainingProtocol,
@@ -152,6 +154,92 @@ def test_the_three_registered_widths_cover_three_DIFFERENT_scales():
     multi-branch arm would be a single-resolution arm wearing three hats."""
     assert DEFAULT_WIDTHS == (6, 20, 75)
     assert len(set(DEFAULT_WIDTHS)) == 3
+
+
+def test_the_pyramid_widths_are_pinned_and_EVERY_branch_fits_the_substrate():
+    """`PYRAMID_WIDTHS` is the maximal-span pyramid the 150 bp substrate permits, and the 2026-10-11
+    ceiling arm's reported span (1.70 decades) is computed FROM it. Widening any branch past 150 would
+    make the published arm unrunnable while the number in the memo stayed put, so the tuple is pinned
+    and its span is asserted rather than trusted.
+    """
+    assert PYRAMID_WIDTHS == (3, 12, 48, 150)
+    assert len(set(PYRAMID_WIDTHS)) == 4, "four DISTINCT scales, or it is not a 4-scale pyramid"
+    assert max(PYRAMID_WIDTHS) <= 150, "a branch wider than the tile has no valid output position"
+    span = math.log10(max(PYRAMID_WIDTHS) / min(PYRAMID_WIDTHS))
+    assert round(span, 2) == 1.70, f"published span is 1.70 decades, computed {span:.4f}"
+    validate_widths(PYRAMID_WIDTHS, 150)  # the deployed arm must pass its own gate
+
+
+def test_a_FOUR_decade_pyramid_is_SUBSTRATE_GATED_not_merely_expensive():
+    """The declared `multiresolution-pyramid-4-decades-UNRUN` arm cannot run here at ANY price, and this
+    is the arithmetic that gates it: four decades of span is a coarsest/finest ratio of 1e4, so even with
+    the finest branch at the 1 bp floor the coarsest must be >= 10,000 bp -- 66x the 150 bp tile. This is
+    the test behind the memo's "substrate-gated, not expensive" claim; without it the claim rests on
+    prose. A budget increase cannot move it, so the arm is unrunnable rather than unrun.
+    """
+    substrate = 150
+    four_decades = (1, 100, 1000, 10000)
+    assert math.log10(max(four_decades) / min(four_decades)) >= 4.0
+
+    with pytest.raises(EncoderDataError) as e:
+        validate_widths(four_decades, substrate)
+    msg = str(e.value)
+    assert "1000" in msg and "10000" in msg, f"the error must name the offending widths, got: {msg}"
+
+    # Not a quirk of that one tuple: ANY >=4-decade set needs a coarsest branch wider than the tile,
+    # because the finest branch cannot go below 1 bp.
+    for finest in (1, 2, 3):
+        assert finest * 10**4 > substrate
+
+
+def test_the_pyramid_contributes_FOUR_branches_to_the_feature_vector():
+    """Two pools (max, mean) per channel per branch. If a branch were silently dropped from the tuple the
+    model would still train and still report a number, with one stated resolution simply absent."""
+    assert encoder_feature_width(PYRAMID_WIDTHS) == 2 * 32 * 4 == 256
+    assert encoder_feature_width(PYRAMID_WIDTHS) > encoder_feature_width(DEFAULT_WIDTHS)
+
+
+def test_the_pyramid_PARAMETER_count_is_pinned_and_it_BREAKS_the_small_by_design_bar():
+    """The 2026-10-11 memo publishes `params 27,649` for this arm and concludes that **2.1x the
+    parameters did not help**. Both figures are `count_parameters` outputs, and neither was pinned -- so a
+    change to the tuple or to the parameter arithmetic would move a published number with nothing failing.
+
+    The second assert is the part worth keeping: `test_parameter_count_is_small_by_design` asserts
+    `< 15_000`, and that bar is checked for DEFAULT_WIDTHS ONLY. The pyramid is 27,649 -- 1.8x over it --
+    so the arm deliberately spends the capacity the encoder's design commitment refuses. That is recorded
+    here rather than left looking like the small-by-design guard covers it, because the memo's whole
+    reading ("more capacity, no gain") depends on the capacity actually being larger.
+    """
+    n = count_parameters(PYRAMID_WIDTHS, channels=32)
+    # 32*4*(3+12+48+150) + 4*32 biases + 257 head
+    assert n == 32 * 4 * (3 + 12 + 48 + 150) + 4 * 32 + 257
+    assert n == 27_649, f"published params for the pyramid arm is 27,649, computed {n}"
+
+    small = count_parameters(DEFAULT_WIDTHS, channels=32)
+    assert small == 13_217, f"published params for encoder-multi is 13,217, computed {small}"
+    assert n > 15_000, "the pyramid is the arm that SPENDS capacity; if it fits the small bar it is not it"
+    assert round(n / small, 1) == 2.1, f"published ratio is 2.1x, computed {n / small:.4f}"
+
+
+def test_the_span_LADDER_is_pinned_and_2_point_18_is_a_JUDGMENT_call_not_a_refusal():
+    """The memo's central sentence is "widening the receptive field from 1.10 to 1.70 decades". 1.70 is
+    pinned above; **1.10 -- the baseline it is compared against -- was not**, so half of a published
+    comparison was asserted and half was trusted.
+
+    The second half guards a distinction the memo makes explicitly and a later reader could easily
+    collapse: the 4-decade arm is SUBSTRATE-GATED (the code refuses it), whereas `(1, 10, 100, 150)` at
+    2.18 decades is substrate-LEGAL and was rejected on biological grounds -- a width-1 kernel cannot see
+    a motif. Those are different kinds of "no". If someone ever reports 2.18 as also substrate-gated, the
+    refusal they cite does not exist, and this test says so.
+    """
+    assert round(math.log10(max(DEFAULT_WIDTHS) / min(DEFAULT_WIDTHS)), 2) == 1.10
+    assert round(math.log10(max(PYRAMID_WIDTHS) / min(PYRAMID_WIDTHS)), 2) == 1.70
+
+    degenerate = (1, 10, 100, 150)
+    assert round(math.log10(max(degenerate) / min(degenerate)), 2) == 2.18, "the stated 2.18 ceiling"
+    # It PASSES the gate -- the rejection was judgment, not arithmetic. Contrast the 4-decade case above.
+    assert validate_widths(degenerate, 150) == degenerate
+    assert min(degenerate) == 1, "the span is bought by a 1 bp branch, which is exactly the objection"
 
 
 # ---------------------------------------------------------------------------------------------------

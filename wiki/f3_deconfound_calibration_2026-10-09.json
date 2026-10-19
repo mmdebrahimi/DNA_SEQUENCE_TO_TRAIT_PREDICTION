@@ -1,0 +1,35 @@
+{
+  "schema": "f3-deconfound-calibration-v1",
+  "generated": "2026-10-09",
+  "census": "f3_substrate_census_2026-10-09.json",
+  "verdict": "blocked:positive_control_not_fold_compatible",
+  "verdict_meaning": "the natural-population panel has no grouping that is BOTH fold-compatible (largest cluster <= 1/k) and not mostly singletons, so grouped CV cannot be run on it at all. The instrument is built and NOT calibrated. Unblock = a natural-population panel whose relatedness is not concentrated in one clump (a USER decision: it means acquiring a substrate, e.g. the 1001-Genomes genotype matrix).",
+  "all_possible_verdicts": [
+    "blocked:no_intact_panel",
+    "blocked:no_negative_control",
+    "blocked:no_positive_control",
+    "blocked:positive_control_not_fold_compatible",
+    "INDETERMINATE_UNDERPOWERED",
+    "INVALID_OVER_AGGRESSIVE",
+    "INVALID_INSENSITIVE",
+    "VALID_DIFFERENTIAL_RESPONSE"
+  ],
+  "control_selection": {
+    "rule": "BY CONSTRUCTION from each panel's `design` field, declared before any number was read; NOT by pc1 (see the census pc1_selection_verdict)",
+    "negative_control": "bloom",
+    "negative_basis": "by construction: a single BY x RM cross, recombination randomizes ancestry; this is the F3 NEGATIVE control",
+    "positive_control": "dgrp",
+    "positive_basis": "by sampling: inbred lines drawn from ONE natural Drosophila population (Raleigh), with documented cryptic relatedness",
+    "positive_fold_compatible_k5": false,
+    "positive_fold_incompatibility_reason": "no percentile on the ladder yields a usable grouping -- p1: 165cl largest=0.02 single=0.84; p2: 154cl largest=0.03 single=0.83; p5: 138cl largest=0.05 single=0.79; p10: 110cl largest=0.10 single=0.74; p15: 100cl largest=0.10 single=0.69; p20: 89cl largest=0.13 single=0.70; p25: 79cl largest=0.19 single=0.66; p30: 69cl largest=0.20 single=0.67; p40: 44cl largest=0.30 single=0.57; p50: 35cl largest=0.34 single=0.60; p60: 27cl largest=0.52 single=0.48; p70: 21cl largest=0.65 single=0.43. The panel has no scale at which clusters are neither dominant nor mostly singletons."
+  },
+  "criterion": "DIFFERENTIAL: negative control keeps beating its own grouped null AND the positive control's paired per-trait drop exceeds the negative control's. Asserts no magnitude.",
+  "honest_limits": [
+    "The two controls have DIFFERENT traits, so the between-control comparison is two-sample, not paired; the within-control sign tests are paired.",
+    "The positive control's structure is MEASURED while the negative control's randomization is BY CONSTRUCTION -- a deliberate asymmetry in evidence strength.",
+    "IBS-greedy-representative is ONE grouping. An INVALID_INSENSITIVE verdict could be the grouping's blindness rather than the instrument's insensitivity.",
+    "n_perm=100 bounds the resolution of every beats_null decision.",
+    "MIN_TRAITS_FOR_SIGN_TEST and MAX_TRAITS are ASSERTED, not derived."
+  ],
+  "metrics_withheld": "This run is blocked, so NO calibration metrics are emitted. A blocked verdict is a pre-registered outcome of this plan, not a partial result to be read as one."
+}

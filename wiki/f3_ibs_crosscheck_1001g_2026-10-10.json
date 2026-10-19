@@ -1,0 +1,143 @@
+{
+  "schema": "f3-ibs-crosscheck-v1",
+  "generated": "2026-10-10",
+  "n_common_accessions": 1135,
+  "repo_ibs_grouping_finest": {
+    "n_individuals": 1135,
+    "n_clusters": 157,
+    "largest_cluster_fraction": 0.0969,
+    "singleton_fraction": 0.3376,
+    "threshold": 0.218667,
+    "percentile": 5.0,
+    "ibs_path": "binary_exact",
+    "missing_fraction": 0.0,
+    "sweep": []
+  },
+  "repo_ibs_grouping_coarsest": {
+    "n_individuals": 1135,
+    "n_clusters": 90,
+    "largest_cluster_fraction": 0.0952,
+    "singleton_fraction": 0.1778,
+    "threshold": 0.234,
+    "percentile": 10.0,
+    "ibs_path": "binary_exact",
+    "missing_fraction": 0.0,
+    "sweep": []
+  },
+  "admissible_rung_sweep": [
+    {
+      "percentile": 1.0,
+      "threshold": 0.158,
+      "n_clusters": 674,
+      "largest_cluster_fraction": 0.0863,
+      "singleton_fraction": 0.7878,
+      "passes": false
+    },
+    {
+      "percentile": 2.0,
+      "threshold": 0.1953,
+      "n_clusters": 338,
+      "largest_cluster_fraction": 0.0934,
+      "singleton_fraction": 0.503,
+      "passes": false
+    },
+    {
+      "percentile": 5.0,
+      "threshold": 0.2187,
+      "n_clusters": 157,
+      "largest_cluster_fraction": 0.0969,
+      "singleton_fraction": 0.3376,
+      "passes": true
+    },
+    {
+      "percentile": 10.0,
+      "threshold": 0.234,
+      "n_clusters": 90,
+      "largest_cluster_fraction": 0.0952,
+      "singleton_fraction": 0.1778,
+      "passes": true
+    },
+    {
+      "percentile": 15.0,
+      "threshold": 0.2433,
+      "n_clusters": 60,
+      "largest_cluster_fraction": 0.1436,
+      "singleton_fraction": 0.2,
+      "passes": true
+    },
+    {
+      "percentile": 20.0,
+      "threshold": 0.25,
+      "n_clusters": 46,
+      "largest_cluster_fraction": 0.1947,
+      "singleton_fraction": 0.1522,
+      "passes": true
+    },
+    {
+      "percentile": 25.0,
+      "threshold": 0.256,
+      "n_clusters": 33,
+      "largest_cluster_fraction": 0.3163,
+      "singleton_fraction": 0.1818,
+      "passes": false
+    },
+    {
+      "percentile": 30.0,
+      "threshold": 0.2613,
+      "n_clusters": 26,
+      "largest_cluster_fraction": 0.4326,
+      "singleton_fraction": 0.1923,
+      "passes": false
+    },
+    {
+      "percentile": 40.0,
+      "threshold": 0.2707,
+      "n_clusters": 23,
+      "largest_cluster_fraction": 0.5189,
+      "singleton_fraction": 0.2174,
+      "passes": false
+    },
+    {
+      "percentile": 50.0,
+      "threshold": 0.2793,
+      "n_clusters": 17,
+      "largest_cluster_fraction": 0.5181,
+      "singleton_fraction": 0.1176,
+      "passes": false
+    },
+    {
+      "percentile": 60.0,
+      "threshold": 0.288,
+      "n_clusters": 11,
+      "largest_cluster_fraction": 0.4811,
+      "singleton_fraction": 0.0,
+      "passes": false
+    },
+    {
+      "percentile": 70.0,
+      "threshold": 0.2973,
+      "n_clusters": 8,
+      "largest_cluster_fraction": 0.5295,
+      "singleton_fraction": 0.5,
+      "passes": false
+    }
+  ],
+  "project_kinship_grouping": {
+    "source": "1001G project kinship (IBS MAC>=5), converted",
+    "percentile": 5.0,
+    "threshold": 0.6765643890593759,
+    "n_clusters": 108
+  },
+  "pair_agreement": {
+    "same_in_both": 8438,
+    "same_only_repo_ibs": 11472,
+    "same_only_project_kinship": 13410,
+    "different_in_both": 610225,
+    "jaccard_of_same_cluster_pairs": 0.2532
+  },
+  "honest_limits": [
+    "The two groupings derive from DIFFERENT distances: this repo's IBS over a MAF-filtered marker SUBSAMPLE vs the 1001G project's own IBS kinship at MAC>=5 over all markers. They are closely related, not the same quantity.",
+    "Pair-counting agreement is reported instead of adjusted Rand to avoid adding a sklearn metrics dependency; it is exactly interpretable but NOT chance-corrected.",
+    "The calibration uses the REPO IBS grouping, so the verdict does not depend on the project's converted kinship."
+  ]
+}

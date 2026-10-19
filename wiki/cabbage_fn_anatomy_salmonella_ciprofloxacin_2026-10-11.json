@@ -1,0 +1,3909 @@
+{
+  "schema": "cabbage-fn-anatomy-v1",
+  "generated": "2026-10-11",
+  "cell": {
+    "species": "Salmonella enterica",
+    "drug": "ciprofloxacin",
+    "amrfinder_organism": "Salmonella"
+  },
+  "confusion": {
+    "tp": 55,
+    "fn": 12,
+    "tn": 7421,
+    "fp": 346
+  },
+  "n_unscoreable": 13446,
+  "verdict": "ALL_FN_CARRY_NO_DETERMINANT_DECLARED_BLIND_SPOT",
+  "per_determinant_ppv": {
+    "gyrA_D87Y": {
+      "n_carriers": 169,
+      "n_truth_R": 2,
+      "n_truth_S": 167,
+      "ppv": 0.0118,
+      "ppv_wilson_ci": [
+        0.003,
+        0.042
+      ]
+    },
+    "gyrA_D87N": {
+      "n_carriers": 93,
+      "n_truth_R": 36,
+      "n_truth_S": 57,
+      "ppv": 0.3871,
+      "ppv_wilson_ci": [
+        0.294,
+        0.489
+      ]
+    },
+    "gyrA_S83F": {
+      "n_carriers": 86,
+      "n_truth_R": 46,
+      "n_truth_S": 40,
+      "ppv": 0.5349,
+      "ppv_wilson_ci": [
+        0.43,
+        0.637
+      ]
+    },
+    "gyrA_D87G": {
+      "n_carriers": 29,
+      "n_truth_R": 10,
+      "n_truth_S": 19,
+      "ppv": 0.3448,
+      "ppv_wilson_ci": [
+        0.199,
+        0.527
+      ]
+    },
+    "parC_S80R": {
+      "n_carriers": 28,
+      "n_truth_R": 27,
+      "n_truth_S": 1,
+      "ppv": 0.9643,
+      "ppv_wilson_ci": [
+        0.823,
+        0.994
+      ]
+    },
+    "aac(6')-Ib-cr5": {
+      "n_carriers": 24,
+      "n_truth_R": 21,
+      "n_truth_S": 3,
+      "ppv": 0.875,
+      "ppv_wilson_ci": [
+        0.69,
+        0.957
+      ]
+    },
+    "gyrA_S83Y": {
+      "n_carriers": 23,
+      "n_truth_R": 4,
+      "n_truth_S": 19,
+      "ppv": 0.1739,
+      "ppv_wilson_ci": [
+        0.07,
+        0.371
+      ]
+    },
+    "oqxA": {
+      "n_carriers": 20,
+      "n_truth_R": 14,
+      "n_truth_S": 6,
+      "ppv": 0.7,
+      "ppv_wilson_ci": [
+        0.481,
+        0.855
+      ]
+    },
+    "oqxB": {
+      "n_carriers": 20,
+      "n_truth_R": 14,
+      "n_truth_S": 6,
+      "ppv": 0.7,
+      "ppv_wilson_ci": [
+        0.481,
+        0.855
+      ]
+    },
+    "parC_S80I": {
+      "n_carriers": 18,
+      "n_truth_R": 18,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.824,
+        1.0
+      ]
+    },
+    "gyrB_S464F": {
+      "n_carriers": 14,
+      "n_truth_R": 0,
+      "n_truth_S": 14,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.215
+      ]
+    },
+    "qnrS1": {
+      "n_carriers": 8,
+      "n_truth_R": 4,
+      "n_truth_S": 4,
+      "ppv": 0.5,
+      "ppv_wilson_ci": [
+        0.215,
+        0.785
+      ]
+    },
+    "qnrB19": {
+      "n_carriers": 7,
+      "n_truth_R": 0,
+      "n_truth_S": 7,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.354
+      ]
+    },
+    "ramR_T18P": {
+      "n_carriers": 6,
+      "n_truth_R": 0,
+      "n_truth_S": 6,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.39
+      ]
+    },
+    "qepA1": {
+      "n_carriers": 3,
+      "n_truth_R": 3,
+      "n_truth_S": 0,
+      "ppv": 1.0,
+      "ppv_wilson_ci": [
+        0.439,
+        1.0
+      ]
+    },
+    "qnrA1": {
+      "n_carriers": 3,
+      "n_truth_R": 0,
+      "n_truth_S": 3,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.561
+      ]
+    },
+    "gyrB_S464Y": {
+      "n_carriers": 2,
+      "n_truth_R": 0,
+      "n_truth_S": 2,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.658
+      ]
+    },
+    "qnrA": {
+      "n_carriers": 1,
+      "n_truth_R": 0,
+      "n_truth_S": 1,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.793
+      ]
+    },
+    "gyrA_D82N": {
+      "n_carriers": 1,
+      "n_truth_R": 0,
+      "n_truth_S": 1,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.793
+      ]
+    },
+    "gyrB_E466D": {
+      "n_carriers": 1,
+      "n_truth_R": 0,
+      "n_truth_S": 1,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.793
+      ]
+    },
+    "ramR_T50P": {
+      "n_carriers": 1,
+      "n_truth_R": 0,
+      "n_truth_S": 1,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.793
+      ]
+    },
+    "qnrS2": {
+      "n_carriers": 1,
+      "n_truth_R": 0,
+      "n_truth_S": 1,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.793
+      ]
+    },
+    "qnrB6": {
+      "n_carriers": 1,
+      "n_truth_R": 0,
+      "n_truth_S": 1,
+      "ppv": 0.0,
+      "ppv_wilson_ci": [
+        0.0,
+        0.793
+      ]
+    }
+  },
+  "determinants_with_zero_true_R_carriers": [
+    "gyrB_S464F",
+    "qnrB19",
+    "ramR_T18P",
+    "qnrA1",
+    "gyrB_S464Y",
+    "qnrA",
+    "gyrA_D82N",
+    "gyrB_E466D",
+    "ramR_T50P",
+    "qnrS2",
+    "qnrB6"
+  ],
+  "fp_finding": "Every false positive carries a counted determinant, and the determinants with ZERO true-R carriers contribute only false positives in this cohort. That is the MIRROR of the gentamicin `rmt` case: there a determinant the rule could not SEE produced false negatives; here a determinant the rule COUNTS produces false positives. Changing what the rule counts would edit the sha256-pinned frozen surface and retire the active prospective lock, so it is a USER AUTHORITY call and is deliberately NOT made here.",
+  "fp_attribution": "NOT A RULE BUG -- an UPSTREAM catalog assertion the rule faithfully propagates. Verified on GCA_004836905.1: gyrA_P104S is the SOLE counted determinant (n_determinants=1, counter='qrdr_point', threshold=1), and AMRFinderPlus itself files it as Class=QUINOLONE / Subclass=QUINOLONE named 'Campylobacter quinolone resistant GyrA'. The frozen rule counts QUINOLONE-class gyrA point mutations, so it is behaving exactly as specified; the resistance-conferring claim for P104S originates in AMRFinder's catalog. A fix therefore belongs upstream, or in an L2 doubt flag, not in the counting logic.",
+  "false_negatives": [
+    {
+      "accession": "GCA_023840185.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_023843155.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_032737985.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_032738355.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": NaN
+    },
+    {
+      "accession": "GCA_032738405.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_032738575.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_032741565.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_032741715.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": NaN
+    },
+    {
+      "accession": "GCA_032743495.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_032743535.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_032743595.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "PATRIC",
+      "country": "India",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_050847175.1",
+      "determinants": [],
+      "n_determinants": 0,
+      "database": "NCBI_antibiogram",
+      "country": "Turkey",
+      "year": 2021.0
+    }
+  ],
+  "false_positives": [
+    {
+      "accession": "GCA_001272035.1",
+      "determinants": [
+        "ramR_T18P"
+      ],
+      "n_determinants": 1,
+      "database": "COMPARE_ML;NCBI_antibiogram;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_001367355.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "Nepal",
+      "year": 2011.0
+    },
+    {
+      "accession": "GCA_001474205.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United States of America",
+      "year": 2012.0
+    },
+    {
+      "accession": "GCA_001474385.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United States of America",
+      "year": 2012.0
+    },
+    {
+      "accession": "GCA_001474965.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United States of America",
+      "year": 2012.0
+    },
+    {
+      "accession": "GCA_001931555.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_001931595.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "COMPARE_ML",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_003717935.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Bangladesh",
+      "year": 2007.0
+    },
+    {
+      "accession": "GCA_003717955.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Bangladesh",
+      "year": 2009.0
+    },
+    {
+      "accession": "GCA_003718155.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Bangladesh",
+      "year": 2007.0
+    },
+    {
+      "accession": "GCA_003718235.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Bangladesh",
+      "year": 2000.0
+    },
+    {
+      "accession": "GCA_003718575.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Bangladesh",
+      "year": 2008.0
+    },
+    {
+      "accession": "GCA_003776705.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005417395.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005420355.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005428245.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005454745.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005488555.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005514475.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005517975.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005542155.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005543435.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_005544715.1",
+      "determinants": [
+        "qnrA1"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005584675.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005644635.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005653295.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005662715.1",
+      "determinants": [
+        "qnrA",
+        "qnrA1"
+      ],
+      "n_determinants": 2,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005664875.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005675815.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005700095.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005705395.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005782385.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005814965.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_005837445.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005838185.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005858485.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_005919985.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006071215.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_006115725.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_006157905.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006172825.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_006190245.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_006192285.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_006220645.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006221145.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006249635.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_006342905.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006420715.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006453215.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006468085.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006474765.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006497055.1",
+      "determinants": [
+        "ramR_T18P"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_006497095.1",
+      "determinants": [
+        "qnrB19"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_006497275.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_006497335.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_006499905.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_006508565.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_006531635.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_006561505.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006570085.1",
+      "determinants": [
+        "qnrB19"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_006586625.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006630495.1",
+      "determinants": [
+        "ramR_T18P"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2002.0
+    },
+    {
+      "accession": "GCA_006631665.1",
+      "determinants": [
+        "ramR_T18P"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2002.0
+    },
+    {
+      "accession": "GCA_006658305.1",
+      "determinants": [
+        "oqxA",
+        "oqxB"
+      ],
+      "n_determinants": 2,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006691265.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2002.0
+    },
+    {
+      "accession": "GCA_006705245.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006722665.1",
+      "determinants": [
+        "oqxA",
+        "oqxB"
+      ],
+      "n_determinants": 2,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_006725605.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_006903745.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_006963305.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_007026025.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_007052665.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_007057065.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2005.0
+    },
+    {
+      "accession": "GCA_007074185.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_007093685.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_007272175.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_007494805.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_007496045.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_007552795.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_007555055.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_007630545.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_007715145.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_007740775.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_007797035.2",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_007824965.1",
+      "determinants": [
+        "gyrA_D82N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_007872545.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008160745.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008174265.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008206025.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008386215.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_008396355.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008414245.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_008427105.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_008438585.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_008447885.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_008469025.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS;NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_008480065.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_008480085.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_008482425.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_008482665.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_008516285.1",
+      "determinants": [
+        "ramR_T18P"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS;NCBI_antibiogram;NDARO;PATRIC",
+      "country": "United States of America",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_008522745.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_008529775.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_008621475.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008727535.1",
+      "determinants": [
+        "qnrA1"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "None",
+      "year": NaN
+    },
+    {
+      "accession": "GCA_008760535.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008770075.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_008782495.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008866525.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_008878005.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_008944285.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_008944345.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_008958965.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_008966935.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_009068665.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009185405.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_009188385.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_009214025.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009214985.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215125.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215185.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215245.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215285.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215545.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215645.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215805.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215825.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009215925.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009216355.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009216425.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009216725.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009216745.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009216805.1",
+      "determinants": [
+        "gyrA_S83F",
+        "qnrB19"
+      ],
+      "n_determinants": 2,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009327815.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009331375.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009370195.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009371495.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_009396895.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_009398345.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009478385.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009499635.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009500215.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009500435.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009500635.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009518035.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_009518935.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_009523575.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009529115.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009529135.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009529155.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009529575.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "None",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009583725.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_009591505.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_010000025.1",
+      "determinants": [
+        "gyrB_E466D"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC;CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2009.0
+    },
+    {
+      "accession": "GCA_010004265.2",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_010012205.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010014265.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010126895.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_010131295.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_010155595.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_010164655.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_010175675.1",
+      "determinants": [
+        "oqxA",
+        "oqxB"
+      ],
+      "n_determinants": 2,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_010387185.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010387765.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010395725.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2008.0
+    },
+    {
+      "accession": "GCA_010436355.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010480095.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010485035.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010489015.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010489435.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010513855.1",
+      "determinants": [
+        "qnrB19"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010525195.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010555965.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_010593345.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_010622085.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_010705725.2",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010729185.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_010743415.1",
+      "determinants": [
+        "qnrB19"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010783155.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_010790055.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010791375.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010815525.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010829105.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010842565.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010855405.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010859505.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010859605.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010865545.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010894995.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_010913015.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_010950915.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011008035.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011109735.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_011158035.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Ghana",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_011169585.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_011202615.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_011204615.1",
+      "determinants": [
+        "qnrB19"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_011213825.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011227535.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011235295.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011245735.1",
+      "determinants": [
+        "ramR_T18P"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011246415.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011262175.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011267825.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011286845.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011311575.1",
+      "determinants": [
+        "gyrB_S464Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_011329825.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_011337325.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011359725.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011395515.1",
+      "determinants": [
+        "gyrB_S464Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_011440015.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_011441195.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_011468795.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011470255.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011511945.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011513905.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011549875.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011569185.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_011592565.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011613525.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_011613565.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_011616545.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_011747925.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_011770525.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_012043775.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_012654995.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_013117485.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_013130195.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_013570515.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_013691475.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_013723015.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_013733865.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_013876215.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_014062725.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_014561185.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_014568755.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_014574215.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_014574535.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_014574555.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_014574815.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_014574835.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_014742615.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_014813405.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_015155455.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_015919205.1",
+      "determinants": [
+        "ramR_T50P"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016142855.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016143575.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016159815.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016167505.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016174745.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016211685.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016233385.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_016254545.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_016264225.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_016267545.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_016314705.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_016327945.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_016350645.1",
+      "determinants": [
+        "gyrB_S464F"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2020.0
+    },
+    {
+      "accession": "GCA_016357285.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_016976175.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_017176215.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_017220415.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_017292005.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_017721365.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_017927135.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_017966685.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_018255175.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_018728805.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_018839435.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "United Kingdom of Great Britain and Northern Ireland",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_018936575.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_018990895.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_019382535.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_019576435.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_019586405.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2013.0
+    },
+    {
+      "accession": "GCA_019586445.1",
+      "determinants": [
+        "gyrA_S83Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Rwanda",
+      "year": 2011.0
+    },
+    {
+      "accession": "GCA_019743515.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_019900045.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_019955315.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_020013855.1",
+      "determinants": [
+        "oqxA",
+        "oqxB"
+      ],
+      "n_determinants": 2,
+      "database": "PATRIC",
+      "country": "Canada",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_020015855.1",
+      "determinants": [
+        "oqxA",
+        "oqxB"
+      ],
+      "n_determinants": 2,
+      "database": "PATRIC",
+      "country": "Canada",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_020228315.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_020234855.1",
+      "determinants": [
+        "qnrB19"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_020475925.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_020495915.1",
+      "determinants": [
+        "gyrA_S83F"
+      ],
+      "n_determinants": 1,
+      "database": "CABBAGE_PubMed_data",
+      "country": "United States of America",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_020525405.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_020621065.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NARMS",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_020674255.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_020674575.1",
+      "determinants": [
+        "aac(6')-Ib-cr5",
+        "gyrA_D87N",
+        "gyrA_S83F",
+        "parC_S80R"
+      ],
+      "n_determinants": 4,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_021349025.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_022381655.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_022481185.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_022907515.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_022907585.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_023840085.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_023840385.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_023840445.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_023840465.1",
+      "determinants": [
+        "qnrS1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_023840545.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023840765.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023840825.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023840995.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023841045.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023841165.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023841205.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023841385.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2016.0
+    },
+    {
+      "accession": "GCA_023842775.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_023842855.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_023843055.1",
+      "determinants": [
+        "qnrS1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023843075.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023843235.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023843375.1",
+      "determinants": [
+        "aac(6')-Ib-cr5",
+        "oqxA",
+        "oqxB",
+        "qnrS2"
+      ],
+      "n_determinants": 4,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023843395.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023843595.1",
+      "determinants": [
+        "gyrA_D87N"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023843725.1",
+      "determinants": [
+        "qnrS1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023843895.1",
+      "determinants": [
+        "gyrA_D87G"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_023844475.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023844705.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_023844775.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_023844885.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_023844975.1",
+      "determinants": [
+        "qnrS1"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2017.0
+    },
+    {
+      "accession": "GCA_023845265.1",
+      "determinants": [
+        "aac(6')-Ib-cr5",
+        "qnrB6"
+      ],
+      "n_determinants": 2,
+      "database": "PATRIC",
+      "country": "China",
+      "year": 2018.0
+    },
+    {
+      "accession": "GCA_024984155.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Canada",
+      "year": 2015.0
+    },
+    {
+      "accession": "GCA_024984195.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "PATRIC",
+      "country": "Canada",
+      "year": 2014.0
+    },
+    {
+      "accession": "GCA_026945425.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046001405.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_046009975.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046010135.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046010315.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046011735.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046011975.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046012375.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046012435.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046013835.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046013955.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046014015.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046014925.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046015165.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046016195.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046017215.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046018555.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046019615.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046019755.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046026945.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_046031555.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram",
+      "country": "United States of America",
+      "year": 2021.0
+    },
+    {
+      "accession": "GCA_046040095.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    },
+    {
+      "accession": "GCA_046041815.1",
+      "determinants": [
+        "gyrA_D87Y"
+      ],
+      "n_determinants": 1,
+      "database": "NCBI_antibiogram;NDARO",
+      "country": "United States of America",
+      "year": 2019.0
+    }
+  ],
+  "n_fn_determinant_free": 12,
+  "n_fp_determinant_free": 0,
+  "determinant_frequency_by_bucket": {
+    "fn": {},
+    "fp": {
+      "gyrA_D87Y": 167,
+      "gyrA_D87N": 57,
+      "gyrA_S83F": 40,
+      "gyrA_S83Y": 19,
+      "gyrA_D87G": 19,
+      "gyrB_S464F": 14,
+      "qnrB19": 7,
+      "ramR_T18P": 6,
+      "oqxA": 6,
+      "oqxB": 6,
+      "qnrS1": 4,
+      "qnrA1": 3,
+      "aac(6')-Ib-cr5": 3,
+      "gyrB_S464Y": 2,
+      "qnrA": 1,
+      "gyrA_D82N": 1,
+      "gyrB_E466D": 1,
+      "ramR_T50P": 1,
+      "parC_S80R": 1,
+      "qnrS2": 1
+    },
+    "tp": {
+      "gyrA_S83F": 46,
+      "gyrA_D87N": 36,
+      "parC_S80R": 27,
+      "aac(6')-Ib-cr5": 21,
+      "parC_S80I": 18,
+      "oqxA": 14,
+      "oqxB": 14,
+      "gyrA_D87G": 10,
+      "qnrS1": 4,
+      "gyrA_S83Y": 4,
+      "qepA1": 3,
+      "gyrA_D87Y": 2
+    },
+    "tn": {}
+  },
+  "n_determinants_distribution": {
+    "tp": {
+      "1": 8,
+      "2": 4,
+      "3": 17,
+      "4": 12,
+      "6": 14
+    },
+    "tn": {
+      "0": 7421
+    },
+    "fp": {
+      "1": 336,
+      "2": 8,
+      "4": 2
+    },
+    "fn": {
+      "0": 12
+    }
+  },
+  "honest_limits": [
+    "`determinants` are the hits the FROZEN rule COUNTS for this drug, not everything AMRFinder reported. An FN listed as determinant-free may still carry an uncounted element, which is precisely the distinction between a declared blind spot and a catalog gap -- so a determinant-free FN bounds the rule's input, it does not prove the genome is bare.",
+    "Labels are portal MIC run through this repo's STRICT tiers; a mislabelled isolate presents as an FN and nothing here can separate that from a genotype miss.",
+    "Campylobacter cipro R is overwhelmingly gyrA_T86I, so bucket determinant frequencies are dominated by one substitution and are not a broad coverage census.",
+    "The cohort is 96.4% one country (see the cell artifact's source_concentration verdict), so an absent determinant family may be absent from the COHORT rather than rare in the world.",
+    "A zero-true-R determinant is reported with its Wilson CI because the carrier counts are SMALL; 0 of 6 is suggestive and is NOT a demonstration that the substitution is benign.",
+    "PPV here is MARGINAL per determinant, not causal: a carrier may hold several determinants, so credit is not attributable to one symbol from these counts alone.",
+    "Not clonality-corrected, so carriers of one determinant may be a handful of clones."
+  ]
+}

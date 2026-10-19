@@ -123,6 +123,21 @@ fba = [
     "cobra>=0.29",
 ]
 
+# Native genome-distance route for lineage/clonality work (`eval/sourmash_distance.py`).
+# WHY IT IS A SEPARATE, NON-DEFAULT EXTRA: there is NO native Windows Mash binary -- the v2.3
+# release ships only Linux64/OSX64 and bioconda publishes no `win-64` -- so on this host Mash
+# has exactly two routes, Docker or WSL2, and BOTH need the same BIOS-gated virtualization
+# layer. sourmash ships a `win_amd64` wheel and is therefore the one route that runs natively.
+# FracMinHash is NOT Mash's bottom-sketch MinHash, so the fixed (0.001, 0.005) thresholds this
+# repo's clonality work calibrated against MASH distances are ASSUMED under sourmash until the
+# crosscheck in `scripts/sourmash_vs_mash_crosscheck.py` scores against its frozen bar.
+# Kept out of the default deps because sourmash pulls its own numeric stack (scipy, screed,
+# matplotlib) -- the Kaptive lesson: an unpinned scientific package can move numpy under the
+# whole suite, so this installs isolated and the full suite is re-run before it is relied on.
+lineage = [
+    "sourmash>=4.9",
+]
+
 # MILP strain design (`dna-decode fba --design-target --milp`). The bounded pair/triple enumeration in
 # `fba/design.py` is exhaustive only at depth 1 and is blind to designs whose members are individually
 # unremarkable -- which is most real ones (see that module's `competition_ranking` for two measured

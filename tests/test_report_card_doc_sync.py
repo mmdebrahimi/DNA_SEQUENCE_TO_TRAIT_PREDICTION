@@ -16,7 +16,17 @@ SAME stale "25 cells (6 SCORED / 4 NOT_CENSUSED)" figure for three more days, in
 only by a human reading it. A hand-listed target set beside the data that defines it always drifts; this
 is the fourth instance of that bug class in this repo. The doc set is now DERIVED from the tree.
 
-WHY DATED wiki/ ARTIFACTS ARE EXEMPT (load-bearing, not laziness)
+WHY DATED wiki/ ARTIFACTS ARE EXEMPT **FROM NUMBER-SYNC SPECIFICALLY** (load-bearing, not laziness)
+
+NAMED AFTER THE CHECK, NOT THE ARTIFACT (renamed 2026-10-11). The heading used to read "why dated
+wiki/ artifacts are exempt", which states the exemption as a property of the FILE -- so every later
+obligation placed on those files inherits it silently, and that inheritance is wrong at least once:
+`tests/test_cabbage_memo_disclosures.py` requires a dated memo to disclose every limit its artifact
+declares, because a disclosure is NOT a number that drifts ("isolate-level, not clonality-corrected"
+describes how a cell was measured and is as true today as when written). A dated memo is therefore
+exempt from THIS check and BOUND by that one. Two obligations can relate oppositely to the same
+property, which is what makes the artifact-shaped phrasing a trap. If you add a third check over
+these files, say explicitly whether it inherits this exemption.
 A dated memo -- `wiki/reproducibility_freeze_2026-06-13.md`, every `*_2026-*.md` result packet -- RECORDS
 WHAT WAS TRUE THEN. Forcing it to today's numbers would make it lie about its own moment and destroy the
 audit trail. The exemption is scoped by SHAPE (a dated artifact), never by an allowlist of files someone

@@ -44,6 +44,54 @@ SPLIT_UNITS = frozenset({"position", "study", "protein", "organism", "clade", "c
 ORGANISM_TRANSFER_UNMEASURED = "unmeasured"
 ORGANISM_TRANSFER_LEVELS = (ORGANISM_TRANSFER_UNMEASURED, "held_out_organism", "held_out_clade")
 
+# --- the de-confounder's own calibration status (F3) ---------------------------------------
+# REQUIRES_DECONFOUNDING tells a caller to de-confound. This records whether the INSTRUMENT
+# that would do it has been shown to work -- without it, "de-confound this" silently implies a
+# validated tool where only a tested code path exists. Read from the artifact, not asserted.
+DECONFOUNDER_CALIBRATION = {
+    "instrument": "dna_decode.eval.genomic_prediction.cv_ridge_gp(groups=...) + "
+                  "dna_decode.eval.panel_structure.panel_groups",
+    "status": "CALIBRATED_ON_ONE_PANEL_PAIR",
+    "verdict": "VALID_DIFFERENTIAL_RESPONSE",
+    "artifact": "wiki/f3_deconfound_calibration_1001g_2026-10-10.md",
+    "superseded_blocker": "blocked:positive_control_not_fold_compatible (2026-10-09). The only "
+                          "cached natural-population panel then (dgrp) had no grouping both "
+                          "fold-compatible and not mostly singletons. RESOLVED 2026-10-10 by using "
+                          "1001 Genomes (1,135 natural Arabidopsis accessions) with AraPheno "
+                          "phenotypes as the positive control.",
+    "what_is_established": "the grouped-CV path exists, is tested, its permutation null shares the "
+                           "measured run's fold structure by construction, groups=None is a "
+                           "bit-for-bit no-op, AND it responds DIFFERENTIALLY to real population "
+                           "structure: median paired drop +0.0441 on a natural population (7 of 8 "
+                           "traits) against 0.0000 on a bi-parental cross (4 of 8), both arms at "
+                           "matched granularity, every arm still beating its own grouped null",
+    "what_is_NOT_established": "that the calibration TRANSFERS to another substrate -- it rests on "
+                               "ONE positive and ONE negative panel. It bounds the INSTRUMENT and "
+                               "validates no downstream organism-level prediction. The positive "
+                               "arm's sign test is two-sided p=0.0703 and does NOT clear 0.05, so "
+                               "the differential criterion is what is met, not significance.",
+    "differential": {"positive_panel": "1001g_arabidopsis (natural population)",
+                     "negative_panel": "bloom yeast segregants (constructed bi-parental)",
+                     "median_drop_positive_fine": 0.0441, "median_drop_negative_fine": 0.0,
+                     "median_drop_positive_coarse": 0.0334, "median_drop_negative_coarse": -0.0052,
+                     "symmetric_differential_fine": 0.0441,
+                     "symmetric_differential_coarse": 0.0386,
+                     "n_traits_per_arm": 8, "n_perm": 100,
+                     "controls_selected_by": "each panel's `design` field, BY CONSTRUCTION, never a "
+                                             "structure statistic -- pc1 ranks a cross as the most "
+                                             "structured panel, which is the negative control"},
+    "caveat_for_callers": "a grouped number is now interpretable as de-confounded ON A PANEL WHOSE "
+                          "DESIGN RESEMBLES THE CALIBRATED ONES. Cite this artifact; do not "
+                          "generalise it to an arbitrary substrate.",
+}
+
+
+def deconfounder_calibration_status() -> dict:
+    """The de-confounding instrument's calibration status. Pure; a copy, so a caller cannot
+    mutate the module's record."""
+    return dict(DECONFOUNDER_CALIBRATION)
+
+
 CLOSED_NEGATIVE = "CLOSED_NEGATIVE"
 WORKS = "WORKS"
 OPEN = "OPEN"
@@ -289,6 +337,23 @@ def classify_regime(population: str, endpoint: str, method: str) -> Regime | Non
     return None
 
 
+def _deconfounder_conditions(verdict: str) -> list[str]:
+    """AUGMENT-ONLY: on a REQUIRES_DECONFOUNDING verdict, name the de-confounder's own
+    calibration status. Returns conditions ONLY and touches nothing else -- proved by a
+    with/without diff over every (population, endpoint, method, target, claim) combination,
+    rather than promised.
+
+    Ordered BEFORE `_transfer_gap_conditions` deliberately: the transfer layer's own
+    augment-only test asserts that a claim APPENDS to the unclaimed baseline, so this layer
+    must sit inside that baseline rather than after it.
+    """
+    if verdict != REQUIRES_DECONFOUNDING:
+        return []
+    c = DECONFOUNDER_CALIBRATION
+    return [f"the de-confounding INSTRUMENT itself is {c['status']} ({c['verdict']}): "
+            f"{c['what_is_NOT_established']} {c['caveat_for_callers']} See {c['artifact']}."]
+
+
 def screen_proposal(population: str, endpoint: str, method: str,
                     curated_catalog_exists: bool = False,
                     target: str = "replace",
@@ -352,5 +417,6 @@ def screen_proposal(population: str, endpoint: str, method: str,
     elif r.verdict == CLOSED_NEGATIVE:
         conds = ["do NOT re-run this at larger scale — the failure is signal-vs-structure",
                  "changing population DESIGN (constructed variation) moves it to a different regime"]
+    conds = conds + _deconfounder_conditions(r.verdict)      # augment-only; conditions only
     conds = conds + _transfer_gap_conditions(r, claims_organism_transfer)
     return ScreenResult(r.key, r.verdict, r.note or r.evidence, r.evidence, r.artifact, conds)

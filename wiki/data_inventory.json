@@ -1,6 +1,6 @@
 {
   "schema": "data-inventory-v1",
-  "date": "2026-09-10",
+  "date": "2026-10-09",
   "purpose": "Answer 'do we already have this, and has anything already used it?' without a context window that holds the whole tree.",
   "derived_fields": [
     "consumed_by",
@@ -12,10 +12,10 @@
     "note"
   ],
   "counts": {
-    "datasets_present": 248,
+    "datasets_present": 257,
     "documented": 28,
-    "undocumented": 220,
-    "orphans_no_reference_anywhere": 59,
+    "undocumented": 229,
+    "orphans_no_reference_anywhere": 49,
     "roots_missing": 0
   },
   "coverage_note": "`documented` counts datasets with a curated semantic note. The remainder are listed too -- an inventory that hid its own gaps would be the failure it exists to prevent.",
@@ -78,7 +78,7 @@
       "n_entries": 2,
       "size_bytes": 1240317439,
       "size_truncated": false,
-      "n_consumed_by": 14,
+      "n_consumed_by": 15,
       "n_reported_in": 12,
       "consumed_by": [
         "dna_decode/data/cell_registry.py",
@@ -119,12 +119,19 @@
       "n_entries": 2,
       "size_bytes": 1827058,
       "size_truncated": false,
-      "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_consumed_by": 2,
+      "n_reported_in": 5,
       "consumed_by": [
-        "scripts/arabmagic_gp_arm.py"
+        "scripts/arabmagic_gp_arm.py",
+        "scripts/f3_substrate_census.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "project_state/glm-umbrella-2026-10-07.md",
+        "wiki/decisions-log.md",
+        "wiki/f3_deconfound_calibration_2026-10-09.md",
+        "wiki/f3_substrate_census_2026-10-09.json",
+        "wiki/plans-index.md"
+      ],
       "orphan": false,
       "note": null
     },
@@ -154,15 +161,24 @@
       "n_entries": 6,
       "size_bytes": 47903118,
       "size_truncated": false,
-      "n_consumed_by": 4,
-      "n_reported_in": 1,
+      "n_consumed_by": 7,
+      "n_reported_in": 7,
       "consumed_by": [
+        "scripts/f3_substrate_census.py",
+        "scripts/transfer_benchmark_falsifier.py",
         "scripts/yeast_bloom_fm_prep.py",
         "scripts/yeast_bloom_gp_arm.py",
         "scripts/yeast_bloom_model_bench.py",
-        "scripts/yeast_power_curve.py"
+        "scripts/yeast_power_curve.py",
+        "tests/test_transfer_benchmark_falsifier.py"
       ],
       "reported_in": [
+        "project_state/glm-umbrella-2026-10-07.md",
+        "wiki/decisions-log.md",
+        "wiki/f3_deconfound_calibration_2026-10-09.json",
+        "wiki/f3_deconfound_calibration_2026-10-09.md",
+        "wiki/f3_substrate_census_2026-10-09.json",
+        "wiki/transfer_benchmark_falsifier_2026-10-03.json",
         "wiki/yeast_bloom_gp_arm_2026-07-31.md"
       ],
       "orphan": false,
@@ -250,7 +266,7 @@
       "size_bytes": 385214434,
       "size_truncated": false,
       "n_consumed_by": 14,
-      "n_reported_in": 17,
+      "n_reported_in": 21,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/clinvar/cli.py",
@@ -267,6 +283,9 @@
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
+        "project_state/doubt-layer-2026-08-31.md",
+        "project_state/learned-narrow-2026-08-31.md",
+        "wiki/alphagenome_integration_analysis_2026-10-07.md",
         "wiki/chatgpt_catalog_screen_2026-07-02.md",
         "wiki/clinical_gene_landscape_census_2026-07-22.md",
         "wiki/clinical_variant_effect_validation_2026-07-22.md",
@@ -274,10 +293,7 @@
         "wiki/data_source_census_tree_of_life_2026-07-13.json",
         "wiki/dataset_hunt_shortlist_2026-07-02.md",
         "wiki/free_data_capture_registry_2026-07-04.md",
-        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar.json",
-        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar86.json",
-        "wiki/pgp_uk_clinvar_results/FR07961003_clinvar86.json",
-        "wiki/pgp_uk_clinvar_results/FR07961006_clinvar.json"
+        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar.json"
       ],
       "orphan": false,
       "note": {
@@ -295,8 +311,8 @@
       "n_entries": 1,
       "size_bytes": 997384040,
       "size_truncated": true,
-      "n_consumed_by": 22,
-      "n_reported_in": 12,
+      "n_consumed_by": 24,
+      "n_reported_in": 15,
       "consumed_by": [
         "dna_decode/metabolic/carbon_catalog.py",
         "dna_decode/organism_rules/tb_vcf.py",
@@ -306,10 +322,10 @@
         "scripts/amr_portal_score_independent.py",
         "scripts/build_tb_goldset_manifest.py",
         "scripts/cryptic_feasibility_probe.py",
+        "scripts/f3_substrate_census.py",
         "scripts/kaggle/staleness_ab_v2_kernel.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
-        "scripts/kaggle/staleness_ab_v3_kernel.py",
-        "scripts/kaggle/staleness_final2_kernel.py"
+        "scripts/kaggle/staleness_ab_v3_kernel.py"
       ],
       "reported_in": [
         "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
@@ -319,11 +335,11 @@
         "wiki/SESSION_HANDOFF_2026-06-17_tb_decoder_plan.md",
         "wiki/cryptic_feasibility_probe_result_2026-06-16.md",
         "wiki/ebi_amr_portal_finding_2026-06-23.md",
+        "wiki/f3_deconfound_calibration_2026-10-09.json",
+        "wiki/f3_substrate_census_2026-10-09.json",
         "wiki/pgx_functional_evidence_2026-06-25.json",
         "wiki/pgx_functional_evidence_2026-06-25.md",
-        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
-        "wiki/staleness_eval_snapshot_prerepair.json",
-        "wiki/tb_decoder_idea_anchor_prompt_2026-06-16.md"
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
       ],
       "orphan": false,
       "note": {
@@ -360,7 +376,7 @@
       "kind": "external_cache",
       "path": "D:\\dna_decode_cache\\data files donwload",
       "n_entries": 8,
-      "size_bytes": 3535610823,
+      "size_bytes": 3535625445,
       "size_truncated": false,
       "n_consumed_by": 0,
       "n_reported_in": 0,
@@ -401,13 +417,21 @@
       "n_entries": 7,
       "size_bytes": 303236627,
       "size_truncated": false,
-      "n_consumed_by": 1,
-      "n_reported_in": 1,
+      "n_consumed_by": 4,
+      "n_reported_in": 6,
       "consumed_by": [
-        "scripts/dgrp_learned_decoder.py"
+        "dna_decode/eval/regime.py",
+        "scripts/dgrp_learned_decoder.py",
+        "scripts/f3_substrate_census.py",
+        "tests/test_f3_substrate_census.py"
       ],
       "reported_in": [
-        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md"
+        "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
+        "project_state/glm-umbrella-2026-10-07.md",
+        "wiki/decisions-log.md",
+        "wiki/f3_deconfound_calibration_2026-10-09.json",
+        "wiki/f3_deconfound_calibration_2026-10-09.md",
+        "wiki/f3_substrate_census_2026-10-09.json"
       ],
       "orphan": false,
       "note": null
@@ -487,8 +511,8 @@
       "n_entries": 3,
       "size_bytes": 550545816,
       "size_truncated": false,
-      "n_consumed_by": 40,
-      "n_reported_in": 103,
+      "n_consumed_by": 42,
+      "n_reported_in": 111,
       "consumed_by": [
         "dna_decode/amr/cli.py",
         "dna_decode/cli.py",
@@ -498,10 +522,10 @@
         "dna_decode/eval/clade_baseline.py",
         "dna_decode/eval/loso_kmer.py",
         "dna_decode/eval/regime.py",
+        "dna_decode/glm/generate.py",
         "dna_decode/models/cache.py",
         "dna_decode/models/classical_baselines.py",
-        "dna_decode/models/classifiers.py",
-        "dna_decode/models/foundation.py"
+        "dna_decode/models/classifiers.py"
       ],
       "reported_in": [
         "plans/AMR_embedding_niche_decision_2026-06-05.md",
@@ -563,21 +587,21 @@
       "n_entries": 12,
       "size_bytes": 65946992,
       "size_truncated": false,
-      "n_consumed_by": 38,
-      "n_reported_in": 24,
+      "n_consumed_by": 40,
+      "n_reported_in": 31,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/data/cell_registry.py",
         "dna_decode/data/hcmv_amr.py",
         "dna_decode/eval/genomic_prediction.py",
+        "dna_decode/eval/regime.py",
         "dna_decode/forward/variant_effect.py",
         "dna_decode/organism_rules/arabidopsis_flowering.py",
         "dna_decode/pigment/cat_coat.py",
         "dna_decode/pigment/cat_coat_cli.py",
         "dna_decode/pigment/chicken_plumage.py",
         "dna_decode/pigment/chicken_plumage_cli.py",
-        "dna_decode/pigment/coat_cli.py",
-        "dna_decode/pigment/dog_coat.py"
+        "dna_decode/pigment/coat_cli.py"
       ],
       "reported_in": [
         "plans/Ecoli_G2P_Platform_Technical_Plan.md",
@@ -585,13 +609,13 @@
         "plans/Genome_World_Model_Creative_Data_Reuse_Plan_2026-07-11.md",
         "project_state/dna-decode-2026-05-11.md",
         "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "project_state/learned-narrow-2026-08-31.md",
         "wiki/arabidopsis_flowering_cell_2026-07-16.md",
         "wiki/arch_vs_power_verdict_2026-08-02.md",
         "wiki/borrowable_methods_resistance_scoring_2026-08-31.md",
         "wiki/bxd_generality_verdict_2026-08-02.md",
-        "wiki/datasource_scouting_2026-07-20.md",
-        "wiki/dog_coat_darwins_ark_measured_2026-07-30.md",
-        "wiki/fm_value_regime_map_2026-08-02.md"
+        "wiki/chatgpt_architecture_discussion_lessons_2026-10-09.md",
+        "wiki/datasource_scouting_2026-07-20.md"
       ],
       "orphan": false,
       "note": null
@@ -619,35 +643,35 @@
       "n_entries": 17,
       "size_bytes": 16009165,
       "size_truncated": false,
-      "n_consumed_by": 54,
-      "n_reported_in": 71,
+      "n_consumed_by": 68,
+      "n_reported_in": 99,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/data/cell_regime.py",
         "dna_decode/data/cell_registry.py",
         "dna_decode/essentiality/__init__.py",
+        "dna_decode/essentiality/annotation_join.py",
         "dna_decode/essentiality/cli.py",
         "dna_decode/essentiality/core_decoder.py",
+        "dna_decode/essentiality/label_sources.py",
         "dna_decode/eval/regime.py",
+        "dna_decode/eval/transfer_ladder.py",
         "dna_decode/fba/__init__.py",
-        "dna_decode/fba/carbon_growth.py",
-        "dna_decode/fba/cli.py",
-        "dna_decode/fba/compose.py",
-        "dna_decode/fba/conditional_essentiality.py"
+        "dna_decode/fba/carbon_growth.py"
       ],
       "reported_in": [
         "plans/New_Phenotype_Direction_Ideation_And_Plan_2026-07-28.md",
+        "plans/Trait_Decoding_Roadmap.md",
         "project_state/dna-decode-2026-05-11.md",
-        "wiki/data_source_master_map_2026-07-09.md",
-        "wiki/design_epoch_plan_2026-08-07.md",
-        "wiki/essentiality_decoder_v0_2026-07-28.md",
-        "wiki/essentiality_e3_human_2026-07-28.md",
-        "wiki/essentiality_e3_learned_2026-07-28.md",
-        "wiki/essentiality_e4_transfer_2026-07-28.md",
-        "wiki/essentiality_ecoli_v0_1_auroc_2026-07-28.json",
-        "wiki/essentiality_ecoli_v0_1_auroc_2026-07-28.md",
-        "wiki/essentiality_label_wall_2026-07-28.md",
-        "wiki/fba_2x2_result_2026-08-20.md"
+        "project_state/evidence-surface-2026-08-31.md",
+        "wiki/contract_number_audit_2026-09-27.json",
+        "wiki/contract_number_audit_2026-09-28.json",
+        "wiki/contract_number_audit_2026-10-03.json",
+        "wiki/contract_number_audit_2026-10-04.json",
+        "wiki/contract_number_audit_2026-10-05.json",
+        "wiki/contract_number_audit_2026-10-06.json",
+        "wiki/contract_number_audit_2026-10-09.json",
+        "wiki/contract_number_matcher_strictness_2026-09-28.md"
       ],
       "orphan": false,
       "note": {
@@ -882,6 +906,62 @@
       "note": null
     },
     {
+      "key": "hiv",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\hiv",
+      "n_entries": 1,
+      "size_bytes": 288185,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "identify",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\identify",
+      "n_entries": 5,
+      "size_bytes": 17318300,
+      "size_truncated": false,
+      "n_consumed_by": 22,
+      "n_reported_in": 35,
+      "consumed_by": [
+        "dna_decode/cli.py",
+        "dna_decode/data/cell_registry.py",
+        "dna_decode/decode_router.py",
+        "dna_decode/identify/runner.py",
+        "dna_decode/profile/cli.py",
+        "scripts/build_identify_reference.py",
+        "scripts/dog_coat_darwins_ark_validate.py",
+        "scripts/identify_lineage_disjoint.py",
+        "scripts/identify_threshold_analysis.py",
+        "scripts/identify_validate.py",
+        "scripts/kaggle/staleness_ab_v2_kernel.py",
+        "scripts/kaggle/staleness_ab_v3_6000_kernel.py"
+      ],
+      "reported_in": [
+        "plans/EP_4_Non_AMR_Phenotype_Candidates.md",
+        "plans/EP_4_Pathotype_Discovery_Closeout_Memos_Plan.md",
+        "project_state/catalog-curation-2026-08-31.md",
+        "wiki/antimalarial_k13_g1_2026-06-09.md",
+        "wiki/context_loss_diagnosis_2026-09-29.md",
+        "wiki/contract_number_audit_2026-10-04.json",
+        "wiki/contract_number_audit_2026-10-05.json",
+        "wiki/contract_number_audit_2026-10-06.json",
+        "wiki/contract_number_audit_2026-10-09.json",
+        "wiki/contract_number_semantics_2026-10-05.json",
+        "wiki/data_acquisition_voi_memo_2026-07-18.md",
+        "wiki/dna_decoder_cross_session_handoff_2026-06-22.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
       "key": "kleb",
       "root": "cache",
       "kind": "external_cache",
@@ -889,30 +969,35 @@
       "n_entries": 5,
       "size_bytes": 657503008,
       "size_truncated": false,
-      "n_consumed_by": 18,
-      "n_reported_in": 7,
+      "n_consumed_by": 21,
+      "n_reported_in": 25,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/data/cell_registry.py",
         "dna_decode/kleb/cli.py",
         "dna_decode/kleb/depolymerase_caller.py",
+        "scripts/contract_number_audit.py",
         "scripts/fetch_dpotropisearch.py",
         "scripts/kaggle/staleness_ab_v2_kernel.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
         "scripts/kaggle/staleness_ab_v3_kernel.py",
         "scripts/kaggle/staleness_final2_kernel.py",
         "scripts/kaggle/staleness_final_kernel.py",
-        "scripts/klebsiella_depolymerase_crossorganism.py",
-        "scripts/klebsiella_topk_ksweep.py"
+        "scripts/klebsiella_depolymerase_crossorganism.py"
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
         "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
-        "wiki/embedding_niche_cross_domain_synthesis_2026-06-12.md",
-        "wiki/north_star_distance_brainstorm_2026-06-17.md",
-        "wiki/staleness_ab_v2_raw.json",
-        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
-        "wiki/staleness_eval_snapshot_prerepair.json"
+        "project_state/evidence-surface-2026-08-31.md",
+        "wiki/contract_number_audit_2026-09-27.json",
+        "wiki/contract_number_audit_2026-09-28.json",
+        "wiki/contract_number_audit_2026-10-03.json",
+        "wiki/contract_number_audit_2026-10-04.json",
+        "wiki/contract_number_audit_2026-10-05.json",
+        "wiki/contract_number_audit_2026-10-06.json",
+        "wiki/contract_number_audit_2026-10-09.json",
+        "wiki/contract_number_matcher_strictness_2026-09-28.md",
+        "wiki/contract_number_provenance_triage_2026-09-27.md"
       ],
       "orphan": false,
       "note": null
@@ -969,8 +1054,8 @@
       "n_entries": 2,
       "size_bytes": 13452792,
       "size_truncated": false,
-      "n_consumed_by": 10,
-      "n_reported_in": 7,
+      "n_consumed_by": 11,
+      "n_reported_in": 8,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/clinvar/decode.py",
@@ -981,13 +1066,15 @@
         "scripts/kaggle/staleness_ab_v3_kernel.py",
         "scripts/kaggle/staleness_corpus_rest_kernel.py",
         "scripts/kaggle/staleness_final2_kernel.py",
-        "scripts/kaggle/staleness_final_kernel.py"
+        "scripts/kaggle/staleness_final_kernel.py",
+        "tests/test_tier_evidence_audit.py"
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
         "wiki/clinvar_pgp_uk_realization_2026-07-06.md",
         "wiki/dog_body_size_darwins_ark_pinned_2026-07-30.md",
         "wiki/dog_coat_darwins_ark_measured_2026-07-30.md",
+        "wiki/pooling_vs_locus_resolution_2026-09-10.md",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
         "wiki/staleness_eval_snapshot_prerepair.json",
         "wiki/yeast_bloom_layer2_verdict_2026-07-31.md"
@@ -1026,6 +1113,36 @@
         "wiki/dms_benchmark_big_scores.json",
         "wiki/dms_variant_effect_benchmark_scores.json",
         "wiki/holdout_hybrid_manifest.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "mpra",
+      "root": "cache",
+      "kind": "external_cache",
+      "path": "D:\\dna_decode_cache\\mpra",
+      "n_entries": 5,
+      "size_bytes": 109770073,
+      "size_truncated": false,
+      "n_consumed_by": 8,
+      "n_reported_in": 5,
+      "consumed_by": [
+        "dna_decode/glm/expression.py",
+        "dna_decode/glm/genomewide.py",
+        "scripts/glm_expression_oracle.py",
+        "scripts/glm_reference_geometry.py",
+        "tests/test_glm_expression.py",
+        "tests/test_glm_genomewide.py",
+        "tests/test_glm_reference_geometry.py",
+        "tests/test_glm_tile_headroom.py"
+      ],
+      "reported_in": [
+        "wiki/glm_condition_conditioning_2026-10-08.json",
+        "wiki/glm_condition_conditioning_result_2026-10-08.md",
+        "wiki/glm_encoder_gate_result_2026-10-08.md",
+        "wiki/glm_genomewide_oracle_2026-10-07.json",
+        "wiki/glm_tile_headroom_2026-10-08.json"
       ],
       "orphan": false,
       "note": null
@@ -1145,15 +1262,16 @@
       "root": "cache",
       "kind": "external_cache",
       "path": "D:\\dna_decode_cache\\pear",
-      "n_entries": 4,
-      "size_bytes": 361635464,
+      "n_entries": 5,
+      "size_bytes": 361771389,
       "size_truncated": false,
-      "n_consumed_by": 5,
+      "n_consumed_by": 6,
       "n_reported_in": 7,
       "consumed_by": [
         "scripts/pear_extract_fitness.R",
         "scripts/pear_forward_replication.py",
         "scripts/pear_g6_screen.py",
+        "scripts/pear_genotype_alphabet.py",
         "scripts/screen_candidate_gates.py",
         "tests/test_pear_forward_replication.py"
       ],
@@ -1303,12 +1421,16 @@
       "n_entries": 2,
       "size_bytes": 61505228,
       "size_truncated": false,
-      "n_consumed_by": 1,
-      "n_reported_in": 8,
+      "n_consumed_by": 2,
+      "n_reported_in": 11,
       "consumed_by": [
-        "scripts/fba_eflux_bridge.py"
+        "scripts/fba_eflux_bridge.py",
+        "tests/test_deep_research_candidates.py"
       ],
       "reported_in": [
+        "wiki/deep_research_candidates_2026-09-28.json",
+        "wiki/deep_research_missing_part_2026-09-28.md",
+        "wiki/deep_research_screen_2026-09-28.json",
         "wiki/fba_bridge_precise_overlap_2026-08-16.json",
         "wiki/fba_eflux_bridge_2026-08-16.json",
         "wiki/fba_eflux_bridge_2026-08-16.md",
@@ -1329,10 +1451,11 @@
       "n_entries": 2,
       "size_bytes": 1310,
       "size_truncated": false,
-      "n_consumed_by": 27,
-      "n_reported_in": 50,
+      "n_consumed_by": 37,
+      "n_reported_in": 70,
       "consumed_by": [
         "dna_decode/amr/uncounted.py",
+        "dna_decode/data/cell_registry.py",
         "dna_decode/data/organism_scope.py",
         "dna_decode/data/trust_surface.py",
         "dna_decode/eval/amr_rules.py",
@@ -1340,24 +1463,23 @@
         "dna_decode/protein_effect/predictor.py",
         "scripts/build_validation_report_card.py",
         "scripts/clinical_variant_effect_validate.py",
-        "scripts/evidence_surface_inventory.py",
-        "scripts/fetch_prospective_cohort.py",
-        "scripts/gentamicin_rmt_candidate.py",
-        "scripts/kaggle/staleness_ab_v2_kernel.py"
+        "scripts/cohort_manifest_coverage_audit.py",
+        "scripts/ecoff_tiering_evaluate.py",
+        "scripts/evidence_surface_inventory.py"
       ],
       "reported_in": [
+        "plans/ECOFF_Anchored_Tiering_Evaluation_Only_Technical_Plan/technical-plan.md",
         "plans/Hybrid_Decoder_Architecture_Plan.md",
         "plans/Trait_Decoding_Roadmap.md",
         "project_state/catalog-curation-2026-08-31.md",
         "project_state/dna-decode-2026-05-11.md",
         "project_state/evidence-surface-2026-08-31.md",
         "project_state/label-acquisition-2026-08-31.md",
+        "project_state/learned-narrow-2026-08-31.md",
+        "wiki/ar_bank_kleb_meropenem_result_2026-10-04.md",
+        "wiki/arcs/gentamicin_rmt_v2_lock.md",
         "wiki/borrowable_methods_resistance_scoring_2026-08-31.md",
-        "wiki/catalog_curation_procedure.md",
-        "wiki/clinical_am_hybrid_auroc_2026-07-22.md",
-        "wiki/clinical_variant_effect_validation_2026-07-22.md",
-        "wiki/data_hunt_round2_2026-07-23.md",
-        "wiki/decisions-log.md"
+        "wiki/catalog_curation_procedure.md"
       ],
       "orphan": false,
       "note": {
@@ -1457,9 +1579,10 @@
       "n_entries": 5,
       "size_bytes": 1165529223,
       "size_truncated": false,
-      "n_consumed_by": 19,
-      "n_reported_in": 12,
+      "n_consumed_by": 20,
+      "n_reported_in": 15,
       "consumed_by": [
+        "dna_decode/glm/edit.py",
         "dna_decode/pgx/compound_caller.py",
         "dna_decode/pgx/cyp2d6_caller.py",
         "dna_decode/phage/cli.py",
@@ -1470,8 +1593,7 @@
         "scripts/esm_zeroshot_dms.py",
         "scripts/expression_context_validate.py",
         "scripts/fba_composed_selector.py",
-        "scripts/pointfinder_amrfinder_concordance.py",
-        "scripts/sarscov2_mpro_validate.py"
+        "scripts/pointfinder_amrfinder_concordance.py"
       ],
       "reported_in": [
         "plans/Evidence_Contract_Registry_MVP_Plan/technical-plan.md",
@@ -1479,13 +1601,13 @@
         "project_state/dna-decode-2026-05-11.md",
         "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
         "wiki/HANDOFF_ep4_pathotype_model_2026-05-31.md",
+        "wiki/chatgpt_architecture_discussion_lessons_2026-10-09.md",
         "wiki/data_source_census_tree_of_life_2026-07-13.json",
+        "wiki/decisions-log.md",
         "wiki/expression_context_acinetobacter_validation_2026-06-10.json",
+        "wiki/glm_state_and_plan_brief_2026-10-08.md",
         "wiki/j2_phase2_beat_0.48_plan_2026-07-08.md",
-        "wiki/label_acquisition_strategy_2026-06-27.md",
-        "wiki/proteingym_esm2_650m_full_2026-07-09.md",
-        "wiki/sarscov2_mpro_v0.1_independence_infeasible_2026-06-27.md",
-        "wiki/sarscov2_prospective_lock_manifest_2026-06-27.json"
+        "wiki/label_acquisition_strategy_2026-06-27.md"
       ],
       "orphan": false,
       "note": null
@@ -1495,14 +1617,15 @@
       "root": "cache",
       "kind": "external_cache",
       "path": "D:\\dna_decode_cache\\refseq",
-      "n_entries": 1129,
-      "size_bytes": 19392176230,
+      "n_entries": 1204,
+      "size_bytes": 19327411325,
       "size_truncated": true,
-      "n_consumed_by": 56,
-      "n_reported_in": 33,
+      "n_consumed_by": 69,
+      "n_reported_in": 34,
       "consumed_by": [
         "dna_decode/data/__init__.py",
         "dna_decode/data/cohort.py",
+        "dna_decode/identify/core.py",
         "scripts/ar_bank_caur_validate.py",
         "scripts/ar_bank_gono_validate.py",
         "scripts/ar_bank_organism_validate.py",
@@ -1510,9 +1633,8 @@
         "scripts/build_drug_shared_lineage_cohort.py",
         "scripts/build_external_validation_report.py",
         "scripts/build_fungal_cohort.py",
-        "scripts/check_n40_cohort_genomes.py",
-        "scripts/cipro_attribution_preflight.py",
-        "scripts/cipro_curated_baseline.py"
+        "scripts/build_identify_reference.py",
+        "scripts/check_n40_cohort_genomes.py"
       ],
       "reported_in": [
         "plans/Cef_Audit_Aware_Packet_Design.md",
@@ -1881,7 +2003,7 @@
       "n_entries": 9,
       "size_bytes": 13103355396,
       "size_truncated": true,
-      "n_consumed_by": 10,
+      "n_consumed_by": 11,
       "n_reported_in": 12,
       "consumed_by": [
         "scripts/kaggle/staleness_ab_v2_kernel.py",
@@ -1893,7 +2015,8 @@
         "scripts/run_tb_independent_amr_portal.py",
         "scripts/tb_indep_finisher.sh",
         "scripts/tb_independent_lineage_collapse.py",
-        "scripts/tb_independent_mash_collapse.py"
+        "scripts/tb_independent_mash_collapse.py",
+        "tests/test_tb_cli.py"
       ],
       "reported_in": [
         "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
@@ -1925,8 +2048,8 @@
       "n_entries": 1,
       "size_bytes": 2604541236,
       "size_truncated": false,
-      "n_consumed_by": 58,
-      "n_reported_in": 32,
+      "n_consumed_by": 67,
+      "n_reported_in": 37,
       "consumed_by": [
         "dna_decode/forward/__init__.py",
         "dna_decode/forward/capabilities.py",
@@ -1934,16 +2057,18 @@
         "dna_decode/forward/esm_scorer.py",
         "dna_decode/forward/msa_transformer.py",
         "dna_decode/forward/prosst_scorer.py",
+        "dna_decode/glm/encoder.py",
+        "dna_decode/glm/generate.py",
         "dna_decode/models/foundation.py",
         "dna_decode/protein_effect/predictor.py",
         "scripts/esm_catalog_extension_test.py",
-        "scripts/esm_hiv_resistance_test.py",
-        "scripts/esm_supervised_resistance_head.py",
-        "scripts/esm_zeroshot_dms.py"
+        "scripts/esm_hiv_resistance_test.py"
       ],
       "reported_in": [
         "plans/Ecoli_G2P_Platform_Technical_Plan.md",
         "plans/GENOME_JEPA_J2_Protein_Representation_Technical_Plan_2026-07-04.md",
+        "plans/GLM_G_A_And_G_C_V2_Build_Plan/codebase-context.md",
+        "plans/GLM_G_A_And_G_C_V2_Build_Plan/technical-plan.md",
         "plans/Hybrid_Learned_Deterministic_Decoder_Plan.md",
         "plans/NT_Deferral_Docs_Cleanup_Plan.md",
         "plans/NT_Deferral_Docs_Cleanup_Ship_Path_Plan.md",
@@ -1951,9 +2076,7 @@
         "project_state/dna-decode-2026-05-11.md",
         "project_state/doubt-layer-2026-08-31.md",
         "wiki/GATE_B_REPORT.md",
-        "wiki/HANDOFF_ep4_2026-06-03.md",
-        "wiki/HANDOFF_ep4_pathotype_model_2026-05-31.md",
-        "wiki/PHASE2_PREFLIGHT.md"
+        "wiki/HANDOFF_ep4_2026-06-03.md"
       ],
       "orphan": false,
       "note": null
@@ -1983,8 +2106,8 @@
       "n_entries": 2,
       "size_bytes": 2464972472,
       "size_truncated": false,
-      "n_consumed_by": 40,
-      "n_reported_in": 103,
+      "n_consumed_by": 42,
+      "n_reported_in": 111,
       "consumed_by": [
         "dna_decode/amr/cli.py",
         "dna_decode/cli.py",
@@ -1994,10 +2117,10 @@
         "dna_decode/eval/clade_baseline.py",
         "dna_decode/eval/loso_kmer.py",
         "dna_decode/eval/regime.py",
+        "dna_decode/glm/generate.py",
         "dna_decode/models/cache.py",
         "dna_decode/models/classical_baselines.py",
-        "dna_decode/models/classifiers.py",
-        "dna_decode/models/foundation.py"
+        "dna_decode/models/classifiers.py"
       ],
       "reported_in": [
         "plans/AMR_embedding_niche_decision_2026-06-05.md",
@@ -2268,9 +2391,11 @@
       "n_entries": 1,
       "size_bytes": 161421,
       "size_truncated": false,
-      "n_consumed_by": 3,
+      "n_consumed_by": 5,
       "n_reported_in": 0,
       "consumed_by": [
+        "scripts/glm_alphabet_headroom.py",
+        "scripts/glm_headroom_allrt.py",
         "scripts/hiv_esm_vs_catalog.py",
         "scripts/integrated_query_demo.py",
         "scripts/protein_heatmap.py"
@@ -2337,8 +2462,8 @@
       "n_entries": 2,
       "size_bytes": 868505,
       "size_truncated": false,
-      "n_consumed_by": 59,
-      "n_reported_in": 138,
+      "n_consumed_by": 64,
+      "n_reported_in": 160,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/data/cell_registry.py",
@@ -2346,12 +2471,12 @@
         "dna_decode/fba/model.py",
         "dna_decode/forward/inverse.py",
         "dna_decode/forward/variant_effect.py",
+        "dna_decode/glm/falsifier.py",
         "dna_decode/metabolic/carbon_catalog.py",
         "dna_decode/models/classifiers.py",
         "dna_decode/models/foundation.py",
         "dna_decode/pigment/cli.py",
-        "dna_decode/pigment/hirisplex_models.py",
-        "dna_decode/pigment/multinomial.py"
+        "dna_decode/pigment/hirisplex_models.py"
       ],
       "reported_in": [
         "plans/Audit_Calibration_NT_AutoModel_Plan.md",
@@ -2363,9 +2488,9 @@
         "plans/Cipro_Decision_Bundle_Technical_Plan.md",
         "plans/Cipro_Post_Falsifier_Ship_Path_Technical_Plan.md",
         "plans/DNA_Decoder_v0_1_Genome_Input_Cipro_Plan.md",
+        "plans/Deep_Research_Missing_Part_2026-09-28_Plan.md",
         "plans/EP6_Carbon_Utilization_Substrate.md",
-        "plans/EP8_PathB_PreStage_Manifest.md",
-        "plans/EP_1_5_Architecture_Decision_Packet.md"
+        "plans/EP8_PathB_PreStage_Manifest.md"
       ],
       "orphan": false,
       "note": {
@@ -2699,7 +2824,7 @@
       "n_entries": 1,
       "size_bytes": 45158,
       "size_truncated": false,
-      "n_consumed_by": 15,
+      "n_consumed_by": 16,
       "n_reported_in": 20,
       "consumed_by": [
         "scripts/amr_falsifier.py",
@@ -2740,13 +2865,16 @@
       "n_entries": 1,
       "size_bytes": 3428546,
       "size_truncated": false,
-      "n_consumed_by": 2,
-      "n_reported_in": 0,
+      "n_consumed_by": 3,
+      "n_reported_in": 1,
       "consumed_by": [
+        "scripts/tb_implied_boundary.py",
         "scripts/tb_mic_calibration.py",
         "tests/test_tb_mic_calibration.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/tb_implied_boundary_acceptance_bar.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -2845,7 +2973,7 @@
       "kind": "cohort",
       "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\_biosample_cache.json",
       "n_entries": 1,
-      "size_bytes": 182175,
+      "size_bytes": 182892,
       "size_truncated": false,
       "n_consumed_by": 1,
       "n_reported_in": 0,
@@ -2917,9 +3045,10 @@
       "n_entries": 7,
       "size_bytes": 331619191,
       "size_truncated": false,
-      "n_consumed_by": 3,
+      "n_consumed_by": 4,
       "n_reported_in": 1,
       "consumed_by": [
+        "dna_decode/data/organism_vocab.py",
         "scripts/ar_bank_caur_micafungin_finalize.py",
         "scripts/ar_bank_caur_powered_finalize.py",
         "scripts/ar_bank_caur_validate.py"
@@ -2939,11 +3068,13 @@
       "size_bytes": 5913,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/ar_bank_caur_powered_finalize.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -2956,11 +3087,13 @@
       "size_bytes": 5389,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/ar_bank_caur_micafungin_finalize.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -2973,10 +3106,12 @@
       "size_bytes": 111,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -2988,10 +3123,12 @@
       "size_bytes": 263034694,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 1,
+      "n_reported_in": 3,
       "consumed_by": [],
       "reported_in": [
-        "wiki/ar_isolate_bank_external_validation_2026-07-18.md"
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/ar_isolate_bank_external_validation_2026-07-18.md",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
       ],
       "orphan": false,
       "note": null
@@ -3005,10 +3142,13 @@
       "size_bytes": 23227120,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3020,10 +3160,13 @@
       "size_bytes": 43547040,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3052,11 +3195,13 @@
       "size_bytes": 618,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/score_enterococcus_from_kaggle.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -3069,12 +3214,14 @@
       "size_bytes": 589,
       "size_truncated": false,
       "n_consumed_by": 2,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/ar_bank_organism_validate.py",
         "scripts/score_enterococcus_from_kaggle.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -3087,11 +3234,13 @@
       "size_bytes": 255,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/score_enterococcus_from_kaggle.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -3104,11 +3253,13 @@
       "size_bytes": 255,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/score_enterococcus_from_kaggle.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -3121,10 +3272,13 @@
       "size_bytes": 22875,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3136,10 +3290,13 @@
       "size_bytes": 28460,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3151,10 +3308,13 @@
       "size_bytes": 28789,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3166,10 +3326,13 @@
       "size_bytes": 215806894,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3181,10 +3344,13 @@
       "size_bytes": 23525,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3196,10 +3362,13 @@
       "size_bytes": 24058,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3260,10 +3429,14 @@
       "size_bytes": 758925895,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 3,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json",
+        "wiki/innovate_sweep_2026-09-10.md"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3275,10 +3448,13 @@
       "size_bytes": 636699149,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3288,6 +3464,76 @@
       "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_extval_gentamicin",
       "n_entries": 7,
       "size_bytes": 214495867,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 2,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_kleb_extval_meropenem",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_extval_meropenem",
+      "n_entries": 4,
+      "size_bytes": 5519,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 2,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json",
+        "wiki/external_validation_ar_bank_kleb_extval_meropenem_meropenem_kp129_2026-10-04_2026-10-04.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_kleb_extval_meropenem_extval_meropenem",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_extval_meropenem_extval_meropenem",
+      "n_entries": 6,
+      "size_bytes": 1143606018,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 0,
+      "consumed_by": [],
+      "reported_in": [],
+      "orphan": true,
+      "note": null
+    },
+    {
+      "key": "ar_bank_kleb_smoke3",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_smoke3",
+      "n_entries": 2,
+      "size_bytes": 819,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 3,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/external_validation_ar_bank_kleb_smoke3_meropenem_smoke3_2026-10-04.json",
+        "wiki/external_validation_ar_bank_kleb_smoke3_meropenem_smoke3b_2026-10-04.json",
+        "wiki/external_validation_ar_bank_kleb_smoke3_meropenem_smoke3c_2026-10-04.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "ar_bank_kleb_smoke3_extval_meropenem",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\ar_bank_kleb_smoke3_extval_meropenem",
+      "n_entries": 6,
+      "size_bytes": 40320866,
       "size_truncated": false,
       "n_consumed_by": 0,
       "n_reported_in": 0,
@@ -3305,11 +3551,13 @@
       "size_bytes": 336,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/score_neisseria_from_kaggle.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -3322,11 +3570,13 @@
       "size_bytes": 336,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 0,
+      "n_reported_in": 1,
       "consumed_by": [
         "scripts/score_neisseria_from_kaggle.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
       "orphan": false,
       "note": null
     },
@@ -3339,10 +3589,13 @@
       "size_bytes": 123359357,
       "size_truncated": false,
       "n_consumed_by": 0,
-      "n_reported_in": 0,
+      "n_reported_in": 2,
       "consumed_by": [],
-      "reported_in": [],
-      "orphan": true,
+      "reported_in": [
+        "wiki/ar_bank_source_concentration_2026-09-10.json",
+        "wiki/cohort_manifest_coverage_2026-10-03.json"
+      ],
+      "orphan": false,
       "note": null
     },
     {
@@ -3353,16 +3606,20 @@
       "n_entries": 11,
       "size_bytes": 51659046,
       "size_truncated": false,
-      "n_consumed_by": 5,
-      "n_reported_in": 0,
+      "n_consumed_by": 6,
+      "n_reported_in": 2,
       "consumed_by": [
         "dna_decode/data/ar_isolate_bank.py",
+        "scripts/ar_bank_source_concentration.py",
         "scripts/build_ar_bank_gono_labels.py",
         "scripts/build_ar_bank_labels.py",
         "scripts/build_ar_bank_organism_labels.py",
         "tests/test_ar_isolate_bank.py"
       ],
-      "reported_in": [],
+      "reported_in": [
+        "project_state/label-acquisition-2026-08-31.md",
+        "wiki/label_source_landscape_2026-10-03.md"
+      ],
       "orphan": false,
       "note": null
     },
@@ -3448,7 +3705,7 @@
       "size_bytes": 285499700,
       "size_truncated": false,
       "n_consumed_by": 6,
-      "n_reported_in": 3,
+      "n_reported_in": 5,
       "consumed_by": [
         "scripts/kaggle/staleness_ab_v2_kernel.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
@@ -3459,6 +3716,8 @@
       ],
       "reported_in": [
         "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
         "wiki/staleness_eval_snapshot_prerepair.json"
       ],
@@ -3490,8 +3749,8 @@
       "n_entries": 2,
       "size_bytes": 107769410,
       "size_truncated": false,
-      "n_consumed_by": 22,
-      "n_reported_in": 12,
+      "n_consumed_by": 24,
+      "n_reported_in": 15,
       "consumed_by": [
         "dna_decode/metabolic/carbon_catalog.py",
         "dna_decode/organism_rules/tb_vcf.py",
@@ -3501,10 +3760,10 @@
         "scripts/amr_portal_score_independent.py",
         "scripts/build_tb_goldset_manifest.py",
         "scripts/cryptic_feasibility_probe.py",
+        "scripts/f3_substrate_census.py",
         "scripts/kaggle/staleness_ab_v2_kernel.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
-        "scripts/kaggle/staleness_ab_v3_kernel.py",
-        "scripts/kaggle/staleness_final2_kernel.py"
+        "scripts/kaggle/staleness_ab_v3_kernel.py"
       ],
       "reported_in": [
         "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
@@ -3514,11 +3773,11 @@
         "wiki/SESSION_HANDOFF_2026-06-17_tb_decoder_plan.md",
         "wiki/cryptic_feasibility_probe_result_2026-06-16.md",
         "wiki/ebi_amr_portal_finding_2026-06-23.md",
+        "wiki/f3_deconfound_calibration_2026-10-09.json",
+        "wiki/f3_substrate_census_2026-10-09.json",
         "wiki/pgx_functional_evidence_2026-06-25.json",
         "wiki/pgx_functional_evidence_2026-06-25.md",
-        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
-        "wiki/staleness_eval_snapshot_prerepair.json",
-        "wiki/tb_decoder_idea_anchor_prompt_2026-06-16.md"
+        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
       ],
       "orphan": false,
       "note": {
@@ -3605,7 +3864,7 @@
       "size_bytes": 1080878242,
       "size_truncated": false,
       "n_consumed_by": 6,
-      "n_reported_in": 4,
+      "n_reported_in": 6,
       "consumed_by": [
         "scripts/kaggle/staleness_ab_v2_kernel.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
@@ -3616,6 +3875,8 @@
       ],
       "reported_in": [
         "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md",
         "wiki/provenance_disjoint_validation_escherichia_coli_shigella_ceftr_2026-06-12.json",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
         "wiki/staleness_eval_snapshot_prerepair.json"
@@ -3632,7 +3893,7 @@
       "size_bytes": 1210852311,
       "size_truncated": false,
       "n_consumed_by": 5,
-      "n_reported_in": 2,
+      "n_reported_in": 4,
       "consumed_by": [
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
         "scripts/kaggle/staleness_final2_kernel.py",
@@ -3642,6 +3903,8 @@
       ],
       "reported_in": [
         "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
       ],
       "orphan": false,
@@ -3656,7 +3919,7 @@
       "size_bytes": 1252335993,
       "size_truncated": false,
       "n_consumed_by": 5,
-      "n_reported_in": 4,
+      "n_reported_in": 6,
       "consumed_by": [
         "scripts/gentamicin_rmt_candidate.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
@@ -3667,6 +3930,8 @@
       "reported_in": [
         "wiki/gentamicin_rmt_candidate.json",
         "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md",
         "wiki/provenance_disjoint_validation_escherichia_coli_shigella_genta_2026-06-12.json",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
       ],
@@ -3682,12 +3947,14 @@
       "size_bytes": 937189544,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 2,
+      "n_reported_in": 4,
       "consumed_by": [
         "scripts/naive_baseline_provdisjoint.py"
       ],
       "reported_in": [
         "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md",
         "wiki/provenance_disjoint_validation_escherichia_coli_shigella_tetra_2026-06-12.json"
       ],
       "orphan": false,
@@ -3701,8 +3968,8 @@
       "n_entries": 0,
       "size_bytes": 0,
       "size_truncated": false,
-      "n_consumed_by": 13,
-      "n_reported_in": 7,
+      "n_consumed_by": 14,
+      "n_reported_in": 8,
       "consumed_by": [
         "dna_decode/amr/cli.py",
         "scripts/ar_bank_caur_micafungin_finalize.py",
@@ -3710,18 +3977,19 @@
         "scripts/ar_bank_caur_validate.py",
         "scripts/assemble_sra_cohort.py",
         "scripts/build_fungal_cohort.py",
+        "scripts/constraint_kill_count_probe.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
         "scripts/kaggle/staleness_final2_kernel.py",
         "scripts/kaggle/staleness_final_kernel.py",
         "tests/test_amr_cli_fungal.py",
-        "tests/test_build_fungal_cohort.py",
-        "tests/test_fungal_erg11_caller.py"
+        "tests/test_build_fungal_cohort.py"
       ],
       "reported_in": [
         "plans/EP7_Fungal_AMR_Substrate.md",
         "project_state/dna-decode-2026-05-11.md",
         "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
         "wiki/ar_bank_caur_micafungin_fks1_2026-07-20.md",
+        "wiki/cdc_fks1_benchmark_screen_2026-10-03.md",
         "wiki/data_source_master_map_2026-07-09.md",
         "wiki/fungal_ep7_g1_closeout_2026-06-08.md",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
@@ -3747,6 +4015,24 @@
       ],
       "reported_in": [
         "wiki/gono_ncbipd_extval_2026-07-21.json"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
+      "key": "herpesdrg",
+      "root": "raw",
+      "kind": "cohort",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\raw\\herpesdrg",
+      "n_entries": 1,
+      "size_bytes": 705930,
+      "size_truncated": false,
+      "n_consumed_by": 0,
+      "n_reported_in": 2,
+      "consumed_by": [],
+      "reported_in": [
+        "wiki/herpesdrg_g1_screen_2026-10-03.md",
+        "wiki/label_source_landscape_2026-10-03.md"
       ],
       "orphan": false,
       "note": null
@@ -3905,13 +4191,15 @@
       "size_bytes": 1318759403,
       "size_truncated": false,
       "n_consumed_by": 2,
-      "n_reported_in": 1,
+      "n_reported_in": 3,
       "consumed_by": [
         "scripts/naive_baseline_provdisjoint.py",
         "tests/test_determinant_cooccurrence.py"
       ],
       "reported_in": [
-        "wiki/provdisjoint_lineage_metrics.json"
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md"
       ],
       "orphan": false,
       "note": null
@@ -3925,7 +4213,7 @@
       "size_bytes": 1253631167,
       "size_truncated": false,
       "n_consumed_by": 10,
-      "n_reported_in": 4,
+      "n_reported_in": 6,
       "consumed_by": [
         "scripts/compute_lineage_metrics.py",
         "scripts/kaggle/staleness_ab_v2_kernel.py",
@@ -3941,6 +4229,8 @@
       "reported_in": [
         "wiki/decisions-log.md",
         "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
         "wiki/staleness_eval_snapshot_prerepair.json"
       ],
@@ -3956,14 +4246,16 @@
       "size_bytes": 1264879013,
       "size_truncated": false,
       "n_consumed_by": 2,
-      "n_reported_in": 2,
+      "n_reported_in": 4,
       "consumed_by": [
         "scripts/gentamicin_rmt_candidate.py",
         "scripts/naive_baseline_provdisjoint.py"
       ],
       "reported_in": [
         "wiki/gentamicin_rmt_candidate.json",
-        "wiki/provdisjoint_lineage_metrics.json"
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md"
       ],
       "orphan": false,
       "note": null
@@ -3976,13 +4268,21 @@
       "n_entries": 3,
       "size_bytes": 1266480036,
       "size_truncated": false,
-      "n_consumed_by": 1,
-      "n_reported_in": 2,
+      "n_consumed_by": 6,
+      "n_reported_in": 5,
       "consumed_by": [
-        "scripts/naive_baseline_provdisjoint.py"
+        "scripts/meropenem_fn_identify_crosscheck.py",
+        "scripts/naive_baseline_provdisjoint.py",
+        "scripts/provdisjoint_species_audit.py",
+        "tests/test_build_validation_report_card.py",
+        "tests/test_genbank_organism.py",
+        "tests/test_provdisjoint_species_audit.py"
       ],
       "reported_in": [
+        "wiki/meropenem_fn16_diagnosis_2026-10-05.md",
         "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md",
         "wiki/provenance_disjoint_validation_klebsiella_merop_2026-06-10.json"
       ],
       "orphan": false,
@@ -3997,12 +4297,14 @@
       "size_bytes": 1319786534,
       "size_truncated": false,
       "n_consumed_by": 1,
-      "n_reported_in": 1,
+      "n_reported_in": 3,
       "consumed_by": [
         "scripts/naive_baseline_provdisjoint.py"
       ],
       "reported_in": [
-        "wiki/provdisjoint_lineage_metrics.json"
+        "wiki/provdisjoint_lineage_metrics.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.json",
+        "wiki/provdisjoint_species_audit_2026-10-05.md"
       ],
       "orphan": false,
       "note": null
@@ -4064,13 +4366,16 @@
       "n_entries": 2,
       "size_bytes": 38166650,
       "size_truncated": false,
-      "n_consumed_by": 9,
-      "n_reported_in": 8,
+      "n_consumed_by": 13,
+      "n_reported_in": 12,
       "consumed_by": [
+        "scripts/ecoff_tiering_evaluate.py",
+        "scripts/ecoff_tiering_feasibility.py",
         "scripts/oxford_naive_baseline.py",
         "scripts/oxford_rmt_prevalence_probe.py",
         "scripts/oxford_score.py",
         "scripts/run_oxford_revalidation.py",
+        "scripts/screen_candidate_gates.py",
         "scripts/tmp_smx_external_validate.py",
         "tests/test_build_external_validation_report.py",
         "tests/test_external_cohort_preflight.py",
@@ -4078,14 +4383,18 @@
         "tests/test_oxford_rmt_prevalence.py"
       ],
       "reported_in": [
+        "plans/ECOFF_Anchored_Tiering_Evaluation_Only_Technical_Plan/technical-plan.md",
         "project_state/dna-decode-2026-05-11.md",
         "wiki/SESSION_HANDOFF_2026-06-16.md",
         "wiki/decisions-log.md",
+        "wiki/ecoff_tiering_acceptance_bar.json",
+        "wiki/ecoff_tiering_feasibility_2026-09-11.json",
         "wiki/external_validation_oxford_naive_comparator_2026-06-27.md",
         "wiki/external_validation_oxfordtmpsmx_tmpsmx20260616_2026-06-16.json",
         "wiki/external_validation_report_card.json",
         "wiki/external_validation_report_card.md",
-        "wiki/oxford_external_validation_result_2026-06-15.md"
+        "wiki/oxford_external_validation_result_2026-06-15.md",
+        "wiki/oxford_gate_screen_2026-09-11.md"
       ],
       "orphan": false,
       "note": null
@@ -4098,12 +4407,13 @@
       "n_entries": 1,
       "size_bytes": 3307600,
       "size_truncated": false,
-      "n_consumed_by": 5,
+      "n_consumed_by": 6,
       "n_reported_in": 7,
       "consumed_by": [
         "scripts/pear_extract_fitness.R",
         "scripts/pear_forward_replication.py",
         "scripts/pear_g6_screen.py",
+        "scripts/pear_genotype_alphabet.py",
         "scripts/screen_candidate_gates.py",
         "tests/test_pear_forward_replication.py"
       ],
@@ -4408,7 +4718,7 @@
       "n_entries": 4,
       "size_bytes": 295821248,
       "size_truncated": false,
-      "n_consumed_by": 10,
+      "n_consumed_by": 11,
       "n_reported_in": 12,
       "consumed_by": [
         "scripts/kaggle/staleness_ab_v2_kernel.py",
@@ -4420,7 +4730,8 @@
         "scripts/run_tb_independent_amr_portal.py",
         "scripts/tb_indep_finisher.sh",
         "scripts/tb_independent_lineage_collapse.py",
-        "scripts/tb_independent_mash_collapse.py"
+        "scripts/tb_independent_mash_collapse.py",
+        "tests/test_tb_cli.py"
       ],
       "reported_in": [
         "plans/GENOME_WORLD_MODEL_Scoping_Brief_2026-07-04.md",
@@ -4478,17 +4789,19 @@
       "n_entries": 4,
       "size_bytes": 46006830,
       "size_truncated": false,
-      "n_consumed_by": 8,
+      "n_consumed_by": 10,
       "n_reported_in": 5,
       "consumed_by": [
         "dna_decode/data/tb_who_catalogue.py",
+        "dna_decode/organism_rules/tb_cli.py",
         "scripts/kaggle/staleness_ab_v2_kernel.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
         "scripts/kaggle/staleness_ab_v3_kernel.py",
         "scripts/kaggle/staleness_final2_kernel.py",
         "scripts/kaggle/staleness_final_kernel.py",
         "scripts/pre_resistance_predictive_backtest.py",
-        "scripts/tb_coordinate_alignment_probe.py"
+        "scripts/tb_coordinate_alignment_probe.py",
+        "tests/test_tb_cli.py"
       ],
       "reported_in": [
         "plans/TB_AMR_Decoder_CRyPTIC_Technical_Plan.md",
@@ -4551,11 +4864,11 @@
       "root": "ref",
       "kind": "reference",
       "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\amrfinder_runs",
-      "n_entries": 730,
-      "size_bytes": 55836206,
+      "n_entries": 1172,
+      "size_bytes": 63635540,
       "size_truncated": false,
-      "n_consumed_by": 42,
-      "n_reported_in": 16,
+      "n_consumed_by": 45,
+      "n_reported_in": 18,
       "consumed_by": [
         "dna_decode/amr/cli.py",
         "dna_decode/cli.py",
@@ -4577,12 +4890,12 @@
         "plans/calibrate_organism_brainstorm.md",
         "project_state/dna-decode-2026-05-11.md",
         "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "project_state/label-acquisition-2026-08-31.md",
         "wiki/HANDOFF_amr_phase2_RESULT_2026-06-05.md",
         "wiki/determinant_cooccurrence_result_2026-07-11.json",
         "wiki/determinant_cooccurrence_result_2026-07-11_dedup.json",
         "wiki/dna_amr_external_validation_2026-06-05.md",
-        "wiki/dna_amr_multidrug_validation_2026-06-06.md",
-        "wiki/dna_llm_cohorts_durability_2026-06-27.md"
+        "wiki/dna_amr_multidrug_validation_2026-06-06.md"
       ],
       "orphan": false,
       "note": {
@@ -4645,8 +4958,8 @@
       "n_entries": 4,
       "size_bytes": 1808964,
       "size_truncated": false,
-      "n_consumed_by": 13,
-      "n_reported_in": 11,
+      "n_consumed_by": 14,
+      "n_reported_in": 30,
       "consumed_by": [
         "dna_decode/data/cell_registry.py",
         "scripts/fetch_arabidopsis_pathb.py",
@@ -4659,20 +4972,21 @@
         "scripts/kaggle/staleness_ab_v3_kernel.py",
         "scripts/kaggle/staleness_final2_kernel.py",
         "scripts/kaggle/staleness_final_kernel.py",
-        "tests/test_arabidopsis_flowering.py"
+        "scripts/tier_evidence_audit.py"
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
         "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
+        "project_state/evidence-surface-2026-08-31.md",
+        "project_state/glm-umbrella-2026-10-07.md",
         "wiki/HANDOFF_workhorse_eukaryotic_2026-06-07.md",
         "wiki/acquisition/ask_flowering_supplement_2026-07-16.md",
         "wiki/arabidopsis_af002_ft16_bounded_execution_2026-06-21.md",
-        "wiki/flowering_tables3_score_2026-07-16.json",
-        "wiki/flowering_tables3_score_2026-07-16.md",
-        "wiki/staleness_ab_v3_6000_raw.json",
-        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
-        "wiki/staleness_eval_snapshot_prerepair.json",
-        "wiki/staleness_full_corpus_final_raw.json"
+        "wiki/contract_number_audit_2026-09-24.json",
+        "wiki/contract_number_audit_2026-09-26.json",
+        "wiki/contract_number_audit_2026-09-27.json",
+        "wiki/contract_number_audit_2026-09-28.json",
+        "wiki/contract_number_audit_2026-10-03.json"
       ],
       "orphan": false,
       "note": {
@@ -4692,7 +5006,7 @@
       "size_bytes": 52551102,
       "size_truncated": false,
       "n_consumed_by": 14,
-      "n_reported_in": 17,
+      "n_reported_in": 21,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/clinvar/cli.py",
@@ -4709,6 +5023,9 @@
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
+        "project_state/doubt-layer-2026-08-31.md",
+        "project_state/learned-narrow-2026-08-31.md",
+        "wiki/alphagenome_integration_analysis_2026-10-07.md",
         "wiki/chatgpt_catalog_screen_2026-07-02.md",
         "wiki/clinical_gene_landscape_census_2026-07-22.md",
         "wiki/clinical_variant_effect_validation_2026-07-22.md",
@@ -4716,10 +5033,7 @@
         "wiki/data_source_census_tree_of_life_2026-07-13.json",
         "wiki/dataset_hunt_shortlist_2026-07-02.md",
         "wiki/free_data_capture_registry_2026-07-04.md",
-        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar.json",
-        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar86.json",
-        "wiki/pgp_uk_clinvar_results/FR07961003_clinvar86.json",
-        "wiki/pgp_uk_clinvar_results/FR07961006_clinvar.json"
+        "wiki/pgp_uk_clinvar_results/FR07961000_clinvar.json"
       ],
       "orphan": false,
       "note": {
@@ -4808,8 +5122,8 @@
       "n_entries": 2,
       "size_bytes": 4851971,
       "size_truncated": false,
-      "n_consumed_by": 87,
-      "n_reported_in": 191,
+      "n_consumed_by": 93,
+      "n_reported_in": 217,
       "consumed_by": [
         "dna_decode/data/cell_registry.py",
         "dna_decode/eval/prospective_lock.py",
@@ -4903,8 +5217,8 @@
       "n_entries": 8,
       "size_bytes": 18948,
       "size_truncated": false,
-      "n_consumed_by": 13,
-      "n_reported_in": 7,
+      "n_consumed_by": 14,
+      "n_reported_in": 8,
       "consumed_by": [
         "dna_decode/amr/cli.py",
         "scripts/ar_bank_caur_micafungin_finalize.py",
@@ -4912,18 +5226,19 @@
         "scripts/ar_bank_caur_validate.py",
         "scripts/assemble_sra_cohort.py",
         "scripts/build_fungal_cohort.py",
+        "scripts/constraint_kill_count_probe.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
         "scripts/kaggle/staleness_final2_kernel.py",
         "scripts/kaggle/staleness_final_kernel.py",
         "tests/test_amr_cli_fungal.py",
-        "tests/test_build_fungal_cohort.py",
-        "tests/test_fungal_erg11_caller.py"
+        "tests/test_build_fungal_cohort.py"
       ],
       "reported_in": [
         "plans/EP7_Fungal_AMR_Substrate.md",
         "project_state/dna-decode-2026-05-11.md",
         "project_state/eukaryotic-trait-decoding-cycle-2026-06-07.md",
         "wiki/ar_bank_caur_micafungin_fks1_2026-07-20.md",
+        "wiki/cdc_fks1_benchmark_screen_2026-10-03.md",
         "wiki/data_source_master_map_2026-07-09.md",
         "wiki/fungal_ep7_g1_closeout_2026-06-08.md",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
@@ -4976,26 +5291,27 @@
       "kind": "reference",
       "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\hiv_ref",
       "n_entries": 7,
-      "size_bytes": 43724,
+      "size_bytes": 45374,
       "size_truncated": false,
-      "n_consumed_by": 19,
-      "n_reported_in": 4,
+      "n_consumed_by": 24,
+      "n_reported_in": 5,
       "consumed_by": [
         "dna_decode/amr/cli.py",
         "dna_decode/data/hiv_supervised_complement.py",
         "scripts/build_hiv_complement_model.py",
+        "scripts/constraint_kill_count_probe.py",
         "scripts/esm_hiv_resistance_test.py",
         "scripts/esm_supervised_resistance_head.py",
+        "scripts/hiv_alphabet_generalization.py",
+        "scripts/hiv_deployability_per_gene.py",
         "scripts/hiv_esm_vs_catalog.py",
         "scripts/hiv_rt_caller.py",
         "scripts/hiv_supervised_targetsite_panel.py",
-        "scripts/kaggle/staleness_ab_v2_kernel.py",
-        "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
-        "scripts/kaggle/staleness_ab_v3_kernel.py",
-        "scripts/kaggle/staleness_final2_kernel.py"
+        "scripts/kaggle/staleness_ab_v2_kernel.py"
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
+        "wiki/hiv_deployability_per_gene_2026-09-30.md",
         "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json",
         "wiki/staleness_eval_snapshot_prerepair.json",
         "wiki/supervised_learned_layer_synthesis_2026-07-12.md"
@@ -5039,8 +5355,8 @@
       "n_entries": 1,
       "size_bytes": 967,
       "size_truncated": false,
-      "n_consumed_by": 19,
-      "n_reported_in": 13,
+      "n_consumed_by": 20,
+      "n_reported_in": 25,
       "consumed_by": [
         "dna_decode/cli.py",
         "dna_decode/data/cell_registry.py",
@@ -5057,17 +5373,17 @@
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
+        "project_state/evidence-surface-2026-08-31.md",
         "wiki/borrowable_methods_resistance_scoring_2026-08-31.md",
         "wiki/colour_cell_substrate_screen_2026-08-26.json",
         "wiki/colour_cell_substrate_screen_2026-08-26.md",
-        "wiki/data_source_master_map_2026-07-09.md",
-        "wiki/data_source_research_human_animal_2026-06-25.md",
-        "wiki/highest_voi_next_step_2026-08-02.md",
-        "wiki/horse_coat_cell_result_2026-07-01.md",
-        "wiki/label_first_scan_2026-07-01.md",
-        "wiki/off_pathogen_track_banked_2026-07-01.md",
-        "wiki/single_snp_traits_breadth_2026-07-03.md",
-        "wiki/staleness_corpus_snapshot_2026-08-27_POSTREPAIR_NO_POSITIVES.json"
+        "wiki/contract_number_audit_2026-09-27.json",
+        "wiki/contract_number_audit_2026-09-28.json",
+        "wiki/contract_number_audit_2026-10-03.json",
+        "wiki/contract_number_audit_2026-10-04.json",
+        "wiki/contract_number_audit_2026-10-05.json",
+        "wiki/contract_number_audit_2026-10-06.json",
+        "wiki/contract_number_audit_2026-10-09.json"
       ],
       "orphan": false,
       "note": null
@@ -5214,6 +5530,27 @@
       "note": null
     },
     {
+      "key": "mycoplasma_ref",
+      "root": "ref",
+      "kind": "reference",
+      "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\mycoplasma_ref",
+      "n_entries": 1,
+      "size_bytes": 759,
+      "size_truncated": false,
+      "n_consumed_by": 2,
+      "n_reported_in": 2,
+      "consumed_by": [
+        "scripts/constraint_kill_count_probe.py",
+        "tests/test_constraint_report_and_probe_gaps.py"
+      ],
+      "reported_in": [
+        "wiki/constraint_kill_count_2026-10-01.json",
+        "wiki/decisions-log.md"
+      ],
+      "orphan": false,
+      "note": null
+    },
+    {
       "key": "nt_windows",
       "root": "ref",
       "kind": "reference",
@@ -5301,27 +5638,28 @@
       "root": "ref",
       "kind": "reference",
       "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pgx_1000g",
-      "n_entries": 20,
-      "size_bytes": 80360994,
+      "n_entries": 22,
+      "size_bytes": 82821972,
       "size_truncated": false,
-      "n_consumed_by": 14,
-      "n_reported_in": 1,
+      "n_consumed_by": 19,
+      "n_reported_in": 2,
       "consumed_by": [
+        "dna_decode/pgx/abcg2.py",
         "dna_decode/pgx/cyp2b6_catalog.py",
         "dna_decode/pgx/tpmt_catalog.py",
         "scripts/cyp2d6_structural_probe.py",
+        "scripts/cyp4f2_getrm_concordance.py",
         "scripts/fetch_1000g_region.py",
         "scripts/hla_concordance.py",
         "scripts/pgx_1000g_population.py",
+        "scripts/pgx_af_panel_audit.py",
         "scripts/pgx_getrm_concordance.py",
         "scripts/pgx_single_snp_concordance.py",
-        "scripts/pgx_trio_concordance.py",
-        "scripts/pigment_1000g_population_validate.py",
-        "scripts/resolve_1000g_cram.py",
-        "tests/test_pgx_cyp2d6_structural.py"
+        "scripts/pgx_trio_concordance.py"
       ],
       "reported_in": [
-        "wiki/data_source_master_map_2026-07-09.md"
+        "wiki/data_source_master_map_2026-07-09.md",
+        "wiki/pgx_af_panel_audit_2026-09-24.json"
       ],
       "orphan": false,
       "note": null
@@ -5331,27 +5669,37 @@
       "root": "ref",
       "kind": "reference",
       "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\pgx_getrm",
-      "n_entries": 4,
-      "size_bytes": 313872,
+      "n_entries": 5,
+      "size_bytes": 434613,
       "size_truncated": false,
-      "n_consumed_by": 7,
-      "n_reported_in": 6,
+      "n_consumed_by": 11,
+      "n_reported_in": 12,
       "consumed_by": [
+        "dna_decode/data/cell_registry.py",
         "scripts/cyp2d6_hybrid_validate.py",
         "scripts/cyp2d6_structural_probe.py",
+        "scripts/cyp4f2_getrm_concordance.py",
         "scripts/getrm_consolidated_ingest.py",
         "scripts/pgx_getrm_concordance.py",
         "scripts/pgx_single_snp_concordance.py",
+        "scripts/slco1b1_getrm_concordance.py",
+        "scripts/ugt1a1_getrm_concordance.py",
         "tests/test_pgx_cyp2d6_structural.py",
         "tests/test_pgx_getrm.py"
       ],
       "reported_in": [
         "plans/EP_PGx_CYP2C19_Cell_Scoping_2026-06-25.md",
         "project_state/dna-decode-2026-05-11.md",
+        "wiki/cyp4f2_getrm_concordance_2026-09-24.json",
+        "wiki/cyp4f2_star_acceptance_bar.json",
         "wiki/data_source_master_map_2026-07-09.md",
         "wiki/hla_validation_2026-07-06.md",
         "wiki/pgx_getrm_consolidated_coverage_2026-07-28.md",
-        "wiki/pgx_precision_leak_audit_2026-07-28.md"
+        "wiki/pgx_precision_leak_audit_2026-07-28.md",
+        "wiki/slco1b1_getrm_concordance_2026-09-22.json",
+        "wiki/slco1b1_star_acceptance_bar.json",
+        "wiki/ugt1a1_getrm_concordance_2026-09-22.json",
+        "wiki/ugt1a1_tag_acceptance_bar.json"
       ],
       "orphan": false,
       "note": null
@@ -5461,12 +5809,13 @@
       "n_entries": 1,
       "size_bytes": 20299,
       "size_truncated": false,
-      "n_consumed_by": 3,
+      "n_consumed_by": 4,
       "n_reported_in": 2,
       "consumed_by": [
         "dna_decode/pointfinder/cli.py",
         "dna_decode/profile/cli.py",
-        "scripts/pointfinder_amrfinder_concordance.py"
+        "scripts/pointfinder_amrfinder_concordance.py",
+        "tests/test_profile_identify_organism.py"
       ],
       "reported_in": [
         "plans/Variety_Decoder_Roadmap.md",
@@ -5480,11 +5829,11 @@
       "root": "ref",
       "kind": "reference",
       "path": "C:\\Users\\Farshad\\PythonProjects\\dna_decode\\data\\refseq_cache",
-      "n_entries": 238,
-      "size_bytes": 5742754810,
+      "n_entries": 680,
+      "size_bytes": 9477667318,
       "size_truncated": false,
       "n_consumed_by": 12,
-      "n_reported_in": 6,
+      "n_reported_in": 7,
       "consumed_by": [
         "scripts/amr_falsifier.py",
         "scripts/build_fungal_cohort.py",
@@ -5501,6 +5850,7 @@
       ],
       "reported_in": [
         "project_state/dna-decode-2026-05-11.md",
+        "project_state/label-acquisition-2026-08-31.md",
         "wiki/ceftriaxone_mechanism_audit_2026-05-26.json",
         "wiki/cipro_mechanism_audit_2026-05-17.json",
         "wiki/cipro_mechanism_audit_smoke.json",
@@ -5576,11 +5926,12 @@
       "n_entries": 1,
       "size_bytes": 1004,
       "size_truncated": false,
-      "n_consumed_by": 11,
+      "n_consumed_by": 12,
       "n_reported_in": 6,
       "consumed_by": [
         "dna_decode/amr/cli.py",
         "dna_decode/data/sarscov2_amr.py",
+        "scripts/constraint_kill_count_probe.py",
         "scripts/esm_catalog_extension_test.py",
         "scripts/kaggle/staleness_ab_v2_kernel.py",
         "scripts/kaggle/staleness_ab_v3_6000_kernel.py",
