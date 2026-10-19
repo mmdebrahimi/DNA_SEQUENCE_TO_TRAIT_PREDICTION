@@ -238,11 +238,38 @@ def test_every_cohort_resolved_its_species_so_the_bar_never_bound():
     assert unresolved == 0, f"{unresolved} of {total} assemblies no longer resolve a species"
 
 
+def _meropenem_skip_reason():
+    """Reason to skip the real-data anchors, or None when the cohort can actually be audited.
+
+    DELEGATES to the audit module's OWN eligibility predicate (`provdisjoint_cohorts`,
+    which requires BOTH `selected.tsv` and `refseq/`) and its OWN `runs_completeness`,
+    rather than re-deriving the requirement here.
+
+    `MEROP.is_dir()` was too weak. A cohort directory holding ONLY `selected.tsv` --
+    exactly what a partial recovery of the gitignored labels produces -- satisfied it,
+    so the anchor RAN against a cohort with no assemblies and no cached AMRFinder runs
+    and FAILED with INSUFFICIENT_RESOLUTION instead of skipping. A directory existing is
+    not evidence that data is in it: 214 of this host's 680 refseq_cache entries are
+    empty dirs, and the same proxy-for-presence mistake is what overstated genome
+    coverage there. An anchor that fails on absent input cannot be told apart from an
+    anchor that fails on drifted attribution -- which is the one thing it exists to detect.
+    """
+    if MEROP not in aud.provdisjoint_cohorts():
+        return ("meropenem cohort lacks labels or assemblies "
+                "(data/ unmounted, or labels recovered without refseq/)")
+    accessions = sorted(aud.read_selected(MEROP / "selected.tsv"))
+    have, total = aud.runs_completeness(MEROP, accessions)
+    if have != total:
+        return f"meropenem amrfinder_runs incomplete ({have}/{total} cached)"
+    return None
+
+
 def test_the_real_meropenem_cohort_reconciles_to_14_3_27_16():
     """THE anchor. If this stops reproducing, the audit's attribution is void and must be re-derived
     rather than patched -- the committed artifact is a frozen unit."""
-    if not MEROP.is_dir():
-        pytest.skip("cached meropenem cohort absent (data/ junction may be unmounted)")
+    reason = _meropenem_skip_reason()
+    if reason:
+        pytest.skip(reason)
     row = aud.audit_cohort(MEROP)
     assert row["reconciled"] is True
     assert row["reconciled_confusion"]["tp"] == 14
@@ -253,8 +280,9 @@ def test_the_real_meropenem_cohort_reconciles_to_14_3_27_16():
 
 def test_the_real_meropenem_cohort_is_MIXED_and_every_FN_is_off_species():
     """The measured finding: all 16 false negatives are K. aerogenes, zero are K. pneumoniae."""
-    if not MEROP.is_dir():
-        pytest.skip("cached meropenem cohort absent")
+    reason = _meropenem_skip_reason()
+    if reason:
+        pytest.skip(reason)
     row = aud.audit_cohort(MEROP)
     assert row["composition"]["verdict"] == "MIXED_SPECIES"
     fna = row["false_negative_anatomy"]
