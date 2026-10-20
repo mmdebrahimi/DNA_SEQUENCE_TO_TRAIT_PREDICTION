@@ -40,10 +40,18 @@ confusion. With no runs, every recomputation is 0, and the gate correctly refuse
 
 lineage metrics → per-isolate predictions → `amrfinder_runs/` → AMRFinderPlus → Docker.
 
-**Not claimed: that no non-Docker AMRFinder route exists here.** BLAST+ 2.17.0 is installed
-natively at `C:/Users/Farshad/ncbi-blast/bin`, and AMRFinderPlus is partly a wrapper over
-blast. Whether it can run without Docker on this host is **UNTESTED**. Six failed routes
+**Not claimed: that no non-Docker AMRFinder route exists here.** AMRFinderPlus is partly a
+wrapper over blast, so a native route is conceivable and is **UNTESTED**. Six failed routes
 would be evidence about six routes, not about the tool — the ECOFF lesson.
+
+**CORRECTION (2026-10-20): this memo originally asserted BLAST+ 2.17.0 is installed natively
+at `C:/Users/Farshad/ncbi-blast/bin` on this host. That is FALSE and I took it from CLAUDE.md
+prose without checking** — exactly the error this repo's own orientation header warns about.
+Measured through the DEPLOYED resolver: `vf_runner.find_blastn()` returns **None**; `$BLASTN_BIN`
+unset, `blastn` not on PATH, and the file is absent under BOTH `~/ncbi-blast/bin` and
+`C:/Users/Farshad/ncbi-blast/bin` (that profile exists; it has no `ncbi-blast`). So a native
+BLAST+ is not available here as a starting point either — it would have to be installed
+first, which is a separate decision.
 
 ## Two defects found in this run, both mine
 
