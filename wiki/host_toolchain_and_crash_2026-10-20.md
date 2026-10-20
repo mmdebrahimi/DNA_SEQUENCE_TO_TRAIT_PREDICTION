@@ -62,8 +62,15 @@ hf_hub_download -> httpx/httpcore` — a **network fetch during tokenizer load**
 (`model.safetensors` 4,648,274,384 B = 4.33 GiB) and E: has 911 GB free, so it is not corruption or space.
 This is the same Hub re-fetch path `setup_tokenizer` exists to work around: the remote modeling code
 re-fetches its own tokenizer with no `cache_dir` and no `local_files_only`. **`HF_HUB_OFFLINE=1` bypasses
-it** (the load then proceeds past the tokenizer instead of faulting instantly). Use that for any local GLM
-run on this host.
+it** — verified: the load runs to completion and generates (183.4 s/seq at n=1, matching the 187.8 s/seq
+measured independently on 2026-10-19). Use it for any local GLM run on this host.
+
+**The path is FLAKY, not always broken, and that distinction matters.** The 2026-10-19 sweep ran the same
+loader with `HF_HOME` set and NO offline flag, and completed three full temperature points — so the fetch
+succeeded then and segfaulted today on an unchanged cache. So `HF_HUB_OFFLINE=1` is a RELIABILITY measure
+against an intermittent native fault in the network path, not a fix for a deterministic break. Corollary:
+a GLM run that dies with no output has NOT necessarily hit a code defect — re-run it offline before
+diagnosing anything else.
 
 **Why it only started biting:** the file dates from 2026-07-11 and is guarded by
 `pytest.importorskip("torch")`, so for three months it SKIPPED. Installing torch during a session converts
