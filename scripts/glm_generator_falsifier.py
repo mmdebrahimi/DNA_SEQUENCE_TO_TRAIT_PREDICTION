@@ -90,6 +90,10 @@ def main(argv=None) -> int:
                    help="sampling temperature passed to HFGenerator (1.0 = the recorded default)")
     p.add_argument("--top-k", type=int, default=0,
                    help="top-k truncation passed to HFGenerator (0 = disabled, the recorded default)")
+    p.add_argument("--verify-knob", action="store_true",
+                   help="BEFORE sweeping, prove the sampling knob moves the OUTPUT (one extra "
+                        "model-backed 2-value diff). Required to claim a sweep VARIED sampling; "
+                        "without it the artifact records knob_verified_end_to_end=false.")
     p.add_argument("--out", default=None)
     a = p.parse_args(argv)
 
@@ -128,8 +132,35 @@ def main(argv=None) -> int:
         from dna_decode.glm.generate import DEFAULT_MODEL, HFGenerator
         gen = HFGenerator(model_id or DEFAULT_MODEL, cache_dir=a.cache_dir, seed=a.seed,
                           device=a.device, temperature=a.temperature, top_k=a.top_k)
+        from dna_decode.glm.knob_contract import requested_non_default, verify_knob_live
+
+        knob_record = {"requested_non_default": requested_non_default(a.temperature, a.top_k),
+                       "knob_wired": bool(gen._sampling_processors()),
+                       "knob_verified_end_to_end": False}
+        if a.verify_knob and knob_record["requested_non_default"]:
+            # The check the 2026-10-19 sweep lacked: three grid points produced three
+            # identical numbers because the knob was inert, and the invariance was reported
+            # as a finding. Refuse to sweep through an unverified knob.
+            print(f"loading {gen.model_id} to verify the sampling knob moves the OUTPUT "
+                  f"before sweeping ...", flush=True)
+            def _at(t: float):
+                gen.temperature = t
+                return gen.generate(1, a.length, progress_every=0)
+            v = verify_knob_live(_at)
+            gen.temperature = a.temperature
+            knob_record.update(verification=v, knob_verified_end_to_end=bool(v["live"]))
+            print(f"  knob verification: {v['verdict']} "
+                  f"({v['identical']}/{v['n']} identical)", flush=True)
+            if not v["live"]:
+                print("REFUSING to sweep: the swept variable does not move the output, so "
+                      "every grid point would measure the same sampling and any difference "
+                      "reported would be noise.", file=sys.stderr)
+                return 5
         try:
-            print(f"loading {gen.model_id} (dtype {gen.dtype}) ...")
+            # The knob gate above may already have loaded it; saying "loading" twice implies
+            # a second load that does not happen.
+            if getattr(gen, "_model", None) is None:
+                print(f"loading {gen.model_id} (dtype {gen.dtype}) ...")
             if a.conditional:
                 # Prompts come from the EVAL windows, so the generated sequence sits at the SAME aligned
                 # offsets as the reference it is scored against. Only the continuation is scored.
@@ -204,6 +235,10 @@ def main(argv=None) -> int:
                            "note": "Markov null fitted on FIT only; all discrimination on EVAL only, so "
                                    "no generator is scored against sequences it was trained on"},
         "device": dev,
+        "knob_contract": (knob_record if a.model else
+                          {"requested_non_default": False, "knob_wired": False,
+                           "knob_verified_end_to_end": False,
+                           "note": "no HF generator in this run"}),
         "sampling": {"temperature": a.temperature, "top_k": a.top_k,
                      "is_recorded_default": (a.temperature == 1.0 and a.top_k == 0),
                      "note": "stamped so a sweep row is attributable; an unstamped artifact cannot "

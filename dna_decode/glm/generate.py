@@ -96,6 +96,9 @@ class HFGenerator:
         self.prompt = prompt
         self.temperature = temperature
         self.top_k = top_k
+        # Fail in milliseconds, BEFORE the ~80 s load -- not deep inside generation.
+        from dna_decode.glm.knob_contract import validate_sampling
+        validate_sampling(temperature, top_k)
         self._tok = None
         self._model = None
         #: Set by `load()` when the GPU was too small and CPU was used instead. Reported, never silent.
@@ -188,6 +191,8 @@ class HFGenerator:
         the one-hot collapse and does warp the marginals it samples from. Sampling itself was never
         broken -- sequences within one call differ -- only the knobs were.
         """
+        from dna_decode.glm.knob_contract import assert_knob_wired
+
         procs = []
         if self.temperature is not None and self.temperature != 1.0:
             from transformers import TemperatureLogitsWarper
@@ -195,6 +200,9 @@ class HFGenerator:
         if self.top_k:
             from transformers import TopKLogitsWarper
             procs.append(TopKLogitsWarper(int(self.top_k)))
+        # A requested knob that installs nothing is INERT, and a run that proceeds would
+        # stamp a sampling value it did not use. Refuse instead.
+        assert_knob_wired(self.temperature, self.top_k, procs)
         return procs
 
     def generate_conditional(self, prompts: list[str], length: int, *,

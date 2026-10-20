@@ -56,6 +56,7 @@ def test_the_default_temperature_installs_NOTHING():
 
 
 def test_top_k_installs_a_warper_and_zero_means_disabled():
+    # 40 is above the measured reachability floor; see knob_contract.TOP_K_KMER_FLOOR.
     assert any(isinstance(p, TopKLogitsWarper) for p in _gen(top_k=40)._sampling_processors())
     assert _gen(top_k=0)._sampling_processors() == []
 
@@ -88,7 +89,7 @@ def test_the_warpers_reach_generate_as_logits_processor_and_the_INERT_kwarg_is_G
             seen.update(kwargs)
             return torch.ones((1, 3), dtype=torch.long)
 
-    g = _gen(temperature=0.7, top_k=5)
+    g = _gen(temperature=0.7, top_k=40)   # >= the measured top_k floor
     g.load = lambda: None            # type: ignore[method-assign]
     g._tok, g._model, g._dev = _Tok(), _Model(), "cpu"
     g.generate(1, 12)

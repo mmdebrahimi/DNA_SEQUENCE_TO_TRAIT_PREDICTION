@@ -74,3 +74,68 @@ A knob can be plumbed correctly at the call site and still be dead, when a downs
 **destroys the quantity the knob acts on**. `do_sample=True` and `temperature=self.temperature` were
 both present and correct; the defect was ORDER. Check a knob by varying it and diffing the OUTPUT —
 not by reading the call site, which looked right for months.
+
+## The pre-run gate (added the same day, after the user pressed on the real failure)
+
+The diagnosis above is postmortem, and the user's objection was that the check belonged **before**
+the run: *"that should have obviously been checked before the runs, not after… we really need to make
+sure the run is structured correctly before actually running it, and not just trial and error and hope
+for the best and fixing things postmortem."* That is correct, and it is worse than a missed check —
+the invariance was **reported as a finding** before the knob was verified. This repo also already
+carried the lesson in another vocabulary (two shipped filters that removed nothing, recorded as *"a
+filter that removes nothing is not a control"*), and it was not applied to this experiment's own design.
+
+So the answer is a precondition, not a resolution to be careful. `dna_decode/glm/knob_contract.py`:
+
+| guard | when it fires | cost |
+|---|---|---|
+| `validate_sampling` | `HFGenerator.__init__`, BEFORE the ~80 s load | microseconds |
+| `assert_knob_wired` | whenever warpers are built | a list-length check |
+| `verify_knob_live` | `--verify-knob`, before any sweep work | one 2-value diff |
+
+- **`validate_sampling`** refuses `temperature <= 0` / NaN, and `top_k` below a measured floor. This
+  also closes a defect the fix itself introduced: once the knob was live, `--temperature 0` became a
+  `ValueError` raised ~80 s in, after the model load. Now it fails in **0.000 s**.
+- **`assert_knob_wired`** refuses a run whose requested knob installed no warper. That is the exact
+  state that let three artifacts stamp `is_recorded_default: false` over runs that all used default
+  sampling — a false provenance claim no reader could detect.
+- **`verify_knob_live`** is the check that was actually missing: generate at two far-apart
+  temperatures with a fixed seed and diff the raw output. `--verify-knob` runs it **before** the sweep
+  and **exits 5** if the output does not move, because every grid point would otherwise measure the
+  same sampling. Verified live on the real model: `knob verification: TEMPERATURE_IS_LIVE (0/1
+  identical)`, stamped into the artifact as `knob_verified_end_to_end: true`.
+  **Soundness note:** n=1 suffices for liveness ONLY because the pre-fix run established the pipeline
+  is deterministic at a fixed seed (6/6 identical). Without that control a single differing sequence
+  would prove nothing.
+
+### `top_k` was NOT disabled, and the floor was derived twice
+
+The review's instinct was to disable `top_k`, since it truncates the **4096 six-mers**, not the 4
+bases. Measuring instead changed the answer: counting (position, base) cells driven to probability
+exactly 0 out of 24, across 5 seeds × logit sharpness 1.0/2.0/4.0 —
+
+| top_k | 4 | 10 | 14–21 | **22** | 24 | 64 | 1024 |
+|---|---|---|---|---|---|---|---|
+| worst zero-cells | 7–9 | up to 5 | 1 | **0** | 0 | 0 | 0 |
+
+So it is a legitimate graded knob at and above 22, and below it at least one base becomes
+**unreachable** at some position — silently greedy there. `top_k=4`, the value someone types meaning
+"4 bases", zeroes 7–9 of 24 cells. Disabling would have recreated a dead knob; the contract refuses
+the measured-broken region with that explanation and leaves the rest live.
+
+**The floor was first set to 24 and that was wrong.** The scan went 16, 24, 32 — so 17–23 were never
+measured and the constant was **padded by 2** because a rounder number felt safer.
+`test_the_floor_is_the_SMALLEST_value_with_no_reachability_loss` re-derives the boundary and fails if
+the constant is too low **or too high**; it caught the padding, and that is the only reason it reads
+22. Padding a threshold is still asserting it.
+
+## Honest limits of the gate
+
+- `--verify-knob` is **opt-in**, so a sweep can still be run without it. What is not optional is the
+  artifact field: an unverified run records `knob_verified_end_to_end: false`, so a reader can tell.
+- The floor is measured on **synthetic Gaussian logits**, not the real model's. Indicative, not
+  exhaustive; the real-model check is the `--verify-knob` diff.
+- `assert_knob_wired` checks OUR half of the plumbing. The half living in third-party code and in
+  framework ordering is only covered by the end-to-end diff.
+- None of this is enforcement — a run can be launched without the flag, and nothing compels reading
+  the stamped field. It converts a silent void into a recorded one.
