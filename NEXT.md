@@ -339,6 +339,24 @@ essential gene is two-sided by construction, so a constant call can never match 
 bottleneck is fixed in both datasets: PRECISE-1K ∩ Keio carbon = **11 of 28**, 621 of 1,035 samples
 glucose.
 
+## User-authority calls open 2026-10-20
+
+- **Install BLAST+ on this host?** Measured absent (`find_blastn()` -> `None`;
+  `wiki/host_toolchain_and_crash_2026-10-20.md`). CLAUDE.md asserted it was installed for months —
+  true of the host it was written on, never synced here. Until it is installed, every blastn path takes
+  its offline branch: `vf_diff` / virulence overlay, fungal ERG11, HIV RT/PR/IN/CA and SARS-CoV-2 Mpro
+  genome-FASTA modes, and the whole typing suite. **Not claimed: that any committed typing validation is
+  invalid** — only that none can be RE-RUN here. `winget install --id NCBI.BLAST`, or the NCBI win64
+  installer into `C:/Users/Laptop Portable/ncbi-blast/bin` (satisfies the resolver's 3rd branch, no env var).
+- **Mash on server2?** Two blockers, neither executor-closable: Docker Desktop will not start from
+  session 0 over SSH, and ~5.37 GB free RAM against a ~8 GB WSL2 default. Unblocks via a `.wslconfig`
+  cap (`[wsl2] memory=2GB processors=2` — profile scope, so the user's file) or closing BlueStacks
+  (~3.3 GB of the pagefile). Reversible route once capped: `wsl --install -d Ubuntu --no-launch` then
+  `apt-get install -y mash`; undo with `wsl --unregister Ubuntu`.
+- **The lineage metrics stay blocked regardless of both.** `amrfinder_runs/` is absent in 10 of 10
+  cohorts and the committed artifacts carry zero per-isolate keys, so the chain ends at AMRFinderPlus ->
+  Docker. Sourmash solved distances and does not touch this.
+
 ## Known-stale / do not trust without re-deriving
 
 - Any **cell count or trait count written in prose**, including in this file.

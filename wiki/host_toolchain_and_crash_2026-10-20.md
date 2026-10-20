@@ -47,9 +47,23 @@ Two hypotheses were measured WRONG first:
 - **Not memory.** Pagefile PEAK 466 MB against a 2432 MB allocation, 8.6 GB RAM free.
 - **Not the test file.** Isolated, nothing else running: **6 passed, 3 runs for 3, zero faults.**
 
-The trigger is two torch processes at once. Installed torch is **2.7.1+cu118**, a CUDA build pinned
+**What is established vs inferred.** Established by measurement: not memory, and not the test file.
+The remaining attribution — two torch processes at once — rests on **ONE crash event** plus three clean
+isolated runs. That is consistent with concurrency and is NOT proof of it; `n=1` on the failing side
+cannot separate "concurrency" from "intermittent native fault." Treat *do not run them together* as a
+sound precaution, not a demonstrated mechanism. Installed torch is **2.7.1+cu118**, a CUDA build pinned
 deliberately (`[tool.uv.sources] torch = { index = "pytorch-cu118" }`) for a **GTX 860M (Maxwell, CC 5.0)**
-that modern torch no longer supports.
+that modern torch no longer supports — a plausible common root for native instability here, also unproven.
+
+**A SECOND, DIFFERENT native crash, found 2026-10-20 while testing the generator alone.** Loading the GLM
+segfaults (exit 139, zero stdout/stderr) with **nothing else running**, so it is NOT the crash above.
+`faulthandler` localises it exactly: `glm/generate.py:233 -> load() -> AutoTokenizer.from_pretrained ->
+hf_hub_download -> httpx/httpcore` — a **network fetch during tokenizer load**. The model file is intact
+(`model.safetensors` 4,648,274,384 B = 4.33 GiB) and E: has 911 GB free, so it is not corruption or space.
+This is the same Hub re-fetch path `setup_tokenizer` exists to work around: the remote modeling code
+re-fetches its own tokenizer with no `cache_dir` and no `local_files_only`. **`HF_HUB_OFFLINE=1` bypasses
+it** (the load then proceeds past the tokenizer instead of faulting instantly). Use that for any local GLM
+run on this host.
 
 **Why it only started biting:** the file dates from 2026-07-11 and is guarded by
 `pytest.importorskip("torch")`, so for three months it SKIPPED. Installing torch during a session converts
