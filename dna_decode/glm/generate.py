@@ -172,6 +172,31 @@ class HFGenerator:
         self._dev = dev
         return self
 
+    def _sampling_processors(self):
+        """Sampling warpers that actually BITE on this model, placed ahead of its bp processor.
+
+        MEASURED 2026-10-20: passing `temperature=` to `generate()` is a NO-OP here, and the
+        upstream docstring claiming otherwise has the order backwards. The remote
+        `_BPLogitsProcessor` marginalises k-mer logits to per-base probabilities, samples, and
+        returns a ONE-HOT (`-inf` everywhere, `0.0` at the chosen token). HF then appends
+        `TemperatureLogitsWarper` AFTER the user/custom processors
+        (`transformers/generation/utils.py`: merge at 1257, temperature appended at 1276, measured
+        on 5.14.1), and dividing a one-hot by any T is identity -- `0/T == 0`, `-inf/T == -inf`.
+        Empirically: T=0.7 vs T=1.5, same seed, 6/6 BYTE-IDENTICAL sequences.
+
+        The remote `generate` builds `existing + [bp_proc]`, so anything returned here runs BEFORE
+        the one-hot collapse and does warp the marginals it samples from. Sampling itself was never
+        broken -- sequences within one call differ -- only the knobs were.
+        """
+        procs = []
+        if self.temperature is not None and self.temperature != 1.0:
+            from transformers import TemperatureLogitsWarper
+            procs.append(TemperatureLogitsWarper(float(self.temperature)))
+        if self.top_k:
+            from transformers import TopKLogitsWarper
+            procs.append(TopKLogitsWarper(int(self.top_k)))
+        return procs
+
     def generate_conditional(self, prompts: list[str], length: int, *,
                              progress_every: int = 5) -> list[str]:
         """Continue each real genomic prompt for `length` bases. ONE output per prompt.
@@ -196,8 +221,7 @@ class HFGenerator:
                 n_prompt_tok = ids.shape[1]
                 g = self._model.generate(
                     ids, max_new_tokens=max_new, do_sample=True,
-                    temperature=self.temperature,
-                    top_k=self.top_k if self.top_k else None,
+                    logits_processor=self._sampling_processors(),
                     pad_token_id=self._tok.pad_token_id or self._tok.eos_token_id or 0,
                 )
                 # decode ONLY the newly generated tokens -- never the prompt
@@ -242,8 +266,7 @@ class HFGenerator:
             for i in range(n):
                 g = self._model.generate(
                     ids, max_new_tokens=max_new, do_sample=True,
-                    temperature=self.temperature,
-                    top_k=self.top_k if self.top_k else None,
+                    logits_processor=self._sampling_processors(),
                     pad_token_id=self._tok.pad_token_id or self._tok.eos_token_id or 0,
                 )
                 txt = self._tok.decode(g[0], skip_special_tokens=True)
