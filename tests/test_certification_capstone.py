@@ -12,9 +12,16 @@ import json
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 from dna_decode.data.cell_registry import cells
 
 REPO = Path(__file__).resolve().parent.parent
+_WRITTEN_ARTIFACTS = (
+    REPO / "wiki" / "certification_capstone.json",
+    REPO / "wiki" / "certification_capstone.md",
+)
+
 CAP_JSON = REPO / "wiki" / "certification_capstone.json"
 
 _builder = importlib.import_module("scripts.build_certification_capstone")
@@ -146,3 +153,28 @@ def test_the_rebuild_shaped_tests_above_cannot_catch_committed_drift():
     assert cap["registry_census"]["total_cells"] == len(cs)
     # ... and the committed file is a SEPARATE claim, which is what the guard checks.
     assert _committed_capstone is not None
+
+
+# --------------------------------------------------------------------------- #
+# Added 2026-10-20: these tests call the builder's real `main()`, which WRITES the
+# committed `wiki/` artifacts. The only field that moves is `analysis_date`, so every
+# full-suite run left 2 files dirty with a meaningless date bump -- noise in every
+# session's `git status`, and a standing invitation to commit a no-op change. (It was
+# manually restored twice on 2026-10-20 before anyone fixed the cause.)
+#
+# Redirecting the builder's output constant is NOT an option: it also READS its input
+# sidecars from the same directory. So the test keeps exercising the real write path and
+# simply cleans up after itself. Safe for the currency test, which reads the COMMITTED
+# blob via `git show HEAD:...` rather than the working file.
+@pytest.fixture(autouse=True)
+def _restore_committed_artifacts():
+    before = {p: (p.read_bytes() if p.exists() else None) for p in _WRITTEN_ARTIFACTS}
+    try:
+        yield
+    finally:
+        for p, blob in before.items():
+            if blob is None:
+                if p.exists():
+                    p.unlink()
+            elif p.read_bytes() != blob:
+                p.write_bytes(blob)

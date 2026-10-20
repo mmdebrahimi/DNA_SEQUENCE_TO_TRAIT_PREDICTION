@@ -120,11 +120,45 @@ def test_an_unfit_candidate_is_never_substituted(tmp_path):
 
 
 def test_describe_names_the_missing_requirement(tmp_path):
-    _make(tmp_path, "dna_decode_cache", "amr_portal", "mpra")
-    text = describe(tmp_path / "nope", required=CACHE_REQUIRED_SUBDIRS)
+    """HERMETIC as of 2026-10-20. It was not, and that is why it broke.
+
+    This used to call `describe` with no candidates, so it scanned the REAL host and its
+    UNFIT/refseq assertion only held while some attached volume carried a refseq-less
+    `dna_decode_cache`. It passed for as long as `E:` did, then failed the hour that volume
+    detached -- a unit test whose verdict tracked the operator's hardware. The candidate is
+    now injected, exactly as the sibling `resolve_external_root` tests already do.
+    """
+    unfit = Candidate(path=tmp_path / "E_PythonProjects_cache", signature="dna_decode_cache",
+                      entries=("amr_portal", "mpra"))
+    text = describe(tmp_path / "nope", required=CACHE_REQUIRED_SUBDIRS, candidates=[unfit])
     assert "ABSENT" in text
     assert "UNFIT" in text and "refseq" in text
     assert "do not point the project here" in text
+
+
+def test_describe_with_injected_candidates_does_NOT_touch_the_real_host(monkeypatch):
+    """Non-vacuity for the seam: if it still called probe(), this would raise.
+
+    Without this, the fix above could pass while `describe` quietly ignored the argument.
+    """
+    import dna_decode.data.external_root as mod
+
+    def _boom(*_a, **_k):
+        raise AssertionError("describe() probed the real host despite injected candidates")
+
+    monkeypatch.setattr(mod, "probe", _boom)
+    fit = Candidate(path=Path("X:/cache"), signature="dna_decode_cache", entries=("refseq",))
+    text = mod.describe("Q:/nope", required=CACHE_REQUIRED_SUBDIRS, candidates=[fit])
+    assert "fit" in text
+
+
+def test_describe_with_NO_candidates_still_reports_the_live_host(monkeypatch):
+    """The live path must be unchanged -- the seam is additive, not a behaviour switch."""
+    import dna_decode.data.external_root as mod
+
+    monkeypatch.setattr(mod, "probe", lambda *_a, **_k: [])
+    assert "none on any resolving drive" in mod.describe("Q:/nope",
+                                                         required=CACHE_REQUIRED_SUBDIRS)
 
 
 def test_describe_reports_a_clean_configured_root(tmp_path):

@@ -2,7 +2,14 @@
 import sys
 from pathlib import Path
 
+import pytest
+
 REPO = Path(__file__).resolve().parent.parent
+_WRITTEN_ARTIFACTS = (
+    REPO / "wiki" / "pgx_report_card.json",
+    REPO / "wiki" / "pgx_report_card.md",
+)
+
 sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(REPO / "scripts"))
 
@@ -35,3 +42,28 @@ def test_report_card_reflects_getrm_numbers_when_present():
 if __name__ == "__main__":
     import pytest
     raise SystemExit(pytest.main([__file__, "-q"]))
+
+
+# --------------------------------------------------------------------------- #
+# Added 2026-10-20: these tests call the builder's real `main()`, which WRITES the
+# committed `wiki/` artifacts. The only field that moves is `analysis_date`, so every
+# full-suite run left 2 files dirty with a meaningless date bump -- noise in every
+# session's `git status`, and a standing invitation to commit a no-op change. (It was
+# manually restored twice on 2026-10-20 before anyone fixed the cause.)
+#
+# Redirecting the builder's output constant is NOT an option: it also READS its input
+# sidecars from the same directory. So the test keeps exercising the real write path and
+# simply cleans up after itself. Safe for the currency test, which reads the COMMITTED
+# blob via `git show HEAD:...` rather than the working file.
+@pytest.fixture(autouse=True)
+def _restore_committed_artifacts():
+    before = {p: (p.read_bytes() if p.exists() else None) for p in _WRITTEN_ARTIFACTS}
+    try:
+        yield
+    finally:
+        for p, blob in before.items():
+            if blob is None:
+                if p.exists():
+                    p.unlink()
+            elif p.read_bytes() != blob:
+                p.write_bytes(blob)

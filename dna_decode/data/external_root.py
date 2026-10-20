@@ -139,11 +139,23 @@ def resolve_external_root(
     return fit[0].path, "discovered"
 
 
-def describe(configured: Path | str, *, required: tuple[str, ...] = ()) -> str:
-    """A human-readable report. Never substitutes; only tells you what is there."""
+def describe(configured: Path | str, *, required: tuple[str, ...] = (),
+             candidates: list[Candidate] | None = None) -> str:
+    """A human-readable report. Never substitutes; only tells you what is there.
+
+    `candidates` is an INJECTION SEAM, added 2026-10-20. Every other entry point here already
+    had one -- `probe` takes `drives=`, `resolve_external_root` takes `candidates=` -- and
+    `describe` was the only one that reached the real host unconditionally. The consequence
+    was not hypothetical: `test_describe_names_the_missing_requirement` asserted the
+    unfit-candidate wording against whatever volumes happened to be attached, so it PASSED
+    while one carried a name-matching cache that was missing a required sub-directory, and
+    FAILED the moment that volume detached -- a unit test reporting a fact about the
+    operator's hardware. Pass candidates explicitly to make a test hermetic; leave it None
+    for the live report, which is unchanged.
+    """
     conf = Path(configured)
     lines = [f"configured off-volume root : {conf}  [{'EXISTS' if conf.is_dir() else 'ABSENT'}]"]
-    cands = probe()
+    cands = probe() if candidates is None else list(candidates)
     if not cands:
         lines.append("discovered candidates    : none on any resolving drive")
         return chr(10).join(lines)
