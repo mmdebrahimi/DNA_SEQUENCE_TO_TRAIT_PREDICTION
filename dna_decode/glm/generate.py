@@ -156,6 +156,19 @@ class HFGenerator:
         self._model = AutoModelForCausalLM.from_pretrained(
             self.model_id, cache_dir=self.cache_dir, dtype=td, trust_remote_code=True,
         ).to(dev).eval()
+        # GENERator-v2's remote `modeling_generator.py` does the bp-level setup by RE-FETCHING its own
+        # tokenizer from the Hub inside `from_pretrained` -- with no cache_dir and no local_files_only.
+        # That fetch is incidental: it fails on an offline/air-gapped host (and on a flaky DNS stack),
+        # whereupon the remote code CATCHES the error, prints "Call model.setup_tokenizer(tokenizer)
+        # manually if needed", and returns a model whose `_bp_base_index` buffer was never registered.
+        # `generate()` then raises "Call setup_tokenizer(tokenizer) first" -- which the falsifier's
+        # `except Exception` turns into a recorded "generator UNAVAILABLE" with ZERO sequences. So the
+        # GLM path silently scored nothing while still emitting a complete-looking artifact. We already
+        # hold the correct tokenizer; wire it up explicitly instead of depending on that network call.
+        # Same tokenizer, same vocab -> identical buffers, so this does not move any recorded number.
+        setup = getattr(self._model, "setup_tokenizer", None)
+        if callable(setup) and not hasattr(self._model, "_bp_base_index"):
+            setup(self._tok)
         self._dev = dev
         return self
 
