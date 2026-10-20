@@ -47,6 +47,25 @@ from scripts.organism_drug_validate import _run_dir
 
 SCHEMA = "provdisjoint-lineage-metrics-v1"
 SIDECAR = Path("wiki/provdisjoint_lineage_metrics.json")
+
+# Each distance backend owns its OWN sidecar. The ten committed Mash cells and a
+# sourmash re-derivation share the same (organism, drug) cell key, so a single file
+# would let one backend silently overwrite the other's numbers -- the shared-key
+# trap this repo has hit before. `sidecar_path_for` is the only way to pick a path.
+SIDECAR_BY_BACKEND: dict[str, Path] = {
+    "mash": SIDECAR,
+    "sourmash": Path("wiki/provdisjoint_lineage_metrics_sourmash.json"),
+}
+
+
+def sidecar_path_for(backend: str) -> Path:
+    """The sidecar owned by `backend`. Raises on an unknown backend rather than guessing."""
+    try:
+        return SIDECAR_BY_BACKEND[backend]
+    except KeyError:
+        raise ValueError(
+            f"unknown distance backend {backend!r}; known: {sorted(SIDECAR_BY_BACKEND)}"
+        ) from None
 THRESHOLDS: tuple[float, ...] = (0.001, 0.005)
 # Grade is taken at the COARSER threshold (more merging -> fewer, more-conservative
 # lineages) so the headline annotation is the honest lower bound on diversity.
@@ -280,10 +299,15 @@ def write_sidecar(sidecar: dict, path: Path = SIDECAR) -> None:
 # --------------------------------------------------------------------------- #
 # orchestration (Docker Mash here only)
 # --------------------------------------------------------------------------- #
-def process_cohort(cohort_dir: Path, *, use_docker: bool = True) -> dict:
-    """Full per-cohort pipeline: reconcile -> genome gate -> Mash cluster -> cell."""
+def process_cohort(cohort_dir: Path, *, use_docker: bool = True,
+                   backend: str = "mash") -> dict:
+    """Full per-cohort pipeline: reconcile -> genome gate -> cluster -> cell.
+
+    `backend` selects the distance producer. Both return the SAME
+    `phylogeny.DistanceMatrix`, so everything downstream of the matrix is identical
+    by construction -- which is what makes the two runs comparable at all.
+    """
     from dna_decode.eval.clonality import greedy_representative_clusters_from_matrix
-    from dna_decode.eval.phylogeny import compute_mash_distances
 
     slug, drug = parse_cohort_dir(cohort_dir.name)
     artifact_path = find_artifact(slug, drug)
@@ -317,14 +341,27 @@ def process_cohort(cohort_dir: Path, *, use_docker: bool = True) -> dict:
 
     # ONE Mash sketch+dist per cohort; cluster at every threshold from the same matrix
     # (avoids redundant Docker invocations — each container spin-up is a churn-corruption risk on this host).
-    dm = compute_mash_distances(present, use_docker=use_docker)
+    if backend == "mash":
+        from dna_decode.eval.phylogeny import compute_mash_distances
+
+        dm = compute_mash_distances(present, use_docker=use_docker)
+    elif backend == "sourmash":
+        from dna_decode.eval.sourmash_distance import compute_sourmash_distances
+
+        dm = compute_sourmash_distances(present)
+    else:
+        raise ValueError(f"unknown distance backend {backend!r}")
     clusters_by_threshold = {
         t: greedy_representative_clusters_from_matrix(dm, t) for t in THRESHOLDS
     }
     tr = build_threshold_results(preds, selected, clusters_by_threshold)
-    return build_cell(organism=organism, drug=a_drug, cohort=cohort_dir.name,
+    cell = build_cell(organism=organism, drug=a_drug, cohort=cohort_dir.name,
                       raw=raw, raw_reconciled=True, partial=False,
                       n_genomes_missing=0, threshold_results=tr)
+    # An artifact that does not say which distance source produced it cannot be
+    # compared against the other backend later.
+    cell["distance_backend"] = backend
+    return cell
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -332,7 +369,26 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--cohort-dir", type=Path, default=None,
                     help="process a single cohort dir (default: all data/raw/*_provdisjoint_*)")
     ap.add_argument("--no-docker", action="store_true", help="use a native mash binary instead of Docker")
+    ap.add_argument("--distance-backend", choices=sorted(SIDECAR_BY_BACKEND), default="mash",
+                    help="distance producer (default: mash, the committed route). "
+                         "'sourmash' is pip-installable and needs no Docker; it writes its "
+                         "OWN sidecar and never touches the Mash one.")
+    ap.add_argument("--sidecar", type=Path, default=None,
+                    help="override the output sidecar (must be the one owned by the backend)")
     a = ap.parse_args(argv)
+
+    out_path = a.sidecar or sidecar_path_for(a.distance_backend)
+    # Fail closed on a cross-backend write: the two backends' cells share a key, so
+    # pointing one at the other's file would overwrite committed numbers in place.
+    owned = sidecar_path_for(a.distance_backend)
+    if out_path != owned:
+        other = {b: pth for b, pth in SIDECAR_BY_BACKEND.items() if b != a.distance_backend}
+        for b, pth in other.items():
+            if out_path == pth:
+                print(f"REFUSING: --sidecar {out_path} is owned by backend {b!r}, not "
+                      f"{a.distance_backend!r}; that write would overwrite its cells",
+                      file=sys.stderr)
+                return 2
 
     if a.cohort_dir:
         cohort_dirs = [a.cohort_dir]
@@ -342,20 +398,33 @@ def main(argv: list[str] | None = None) -> int:
         print("no provdisjoint cohort dirs found", file=sys.stderr)
         return 1
 
-    sidecar = load_sidecar()
+    sidecar = load_sidecar(out_path)
     for cd in cohort_dirs:
         print(f"[lineage] {cd.name} ...", flush=True)
         try:
-            cell = process_cohort(cd, use_docker=not a.no_docker)
+            cell = process_cohort(cd, use_docker=not a.no_docker,
+                                  backend=a.distance_backend)
         except Exception as e:  # noqa: BLE001 — checkpoint discipline: one bad cohort doesn't lose the rest
             print(f"  [{cd.name}] ERROR: {type(e).__name__}: {e}", file=sys.stderr)
             continue
+        # NOT stamped here: `process_cohort` stamps the backend only on the path that
+        # actually reached the distance producer. An early-return cell (reconcile
+        # failure / partial genomes) computed no distances, so claiming a backend for
+        # it would attribute the cell to a tool that never ran.
         sidecar = upsert_cell(sidecar, cell)
-        write_sidecar(sidecar)  # checkpoint per-cohort (Docker-wedge-safe)
+        write_sidecar(sidecar, out_path)  # checkpoint per-cohort (wedge-safe)
         tier = cell.get("lineage_grade") or ("partial" if cell["partial"] else "no-tier")
         print(f"  [{cd.name}] raw_N={cell['raw_N']} tier={tier}", flush=True)
 
-    print(f"wrote {SIDECAR} ({len(sidecar['cells'])} cells)")
+    scored = [c for c in sidecar["cells"] if c.get("distance_backend") == a.distance_backend]
+    print(f"wrote {out_path} ({len(sidecar['cells'])} cells, "
+          f"{len(scored)} with backend={a.distance_backend} distances)")
+    if not scored:
+        print(f"NO cohort reached the {a.distance_backend} distance step -- every cohort "
+              f"returned early (reconcile failure or missing genomes). This run exercised "
+              f"the distance backend ZERO times; the artifact carries no {a.distance_backend} "
+              f"numbers.", file=sys.stderr)
+        return 4
     return 0
 
 
