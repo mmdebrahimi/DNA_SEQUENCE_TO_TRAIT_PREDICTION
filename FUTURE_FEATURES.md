@@ -30,6 +30,12 @@ Phase 1 ships matplotlib + TSV viz (ship-path plan D4). Phase 2 adds publication
 
 ## Medium priority (Phase 3 — architectural upgrades)
 
+### Generalize knob-liveness + mode-validity preconditions to every sweep script — 20/10/2026
+`dna_decode/glm/knob_contract.py` was written for one runner, and all four of its guards are generic: refuse an out-of-range or measured-broken knob value before the expensive load (`validate_sampling`), refuse a run whose requested knob installed no effect (`assert_knob_wired`), prove the swept variable moves the output at two far-apart values on a fixed seed and stamp that verdict into the artifact (`verify_knob_live`), and refuse a meaningless parameter *combination* before any work (`validate_comparison_mode`). The motivating failures were not GLM-specific: a sweep reported invariance across three temperature grid points that were all secretly the same run, and a separate run violated a precondition the repo had documented in two places and enforced in zero. Candidate adopters are every `scripts/*sweep*.py` / `*_arm.py` / threshold-sweep runner — several of which already freeze a bar before reading a number but do **not** check that the swept lever is live. Scope note: `verify_knob_live` needs a cheap two-call probe per runner, so adoption is per-script, not a decorator.
+
+### Mirror heavy model weights off removable media — 20/10/2026
+Steps 3-6 of the sampling-sweep plan died mid-execution because `E:` detached and the 4.33 GiB GENERator-1.2B weights lived only at `E:/hf_cache`. `dna_decode/data/external_root.py` already probes every drive for signature directories and refuses to auto-substitute, which correctly turns a missing ROOT into a loud failure — but there is no notion of *which* cached artifacts are load-bearing for a queued run. Idea: a small manifest of must-have artifacts (model weights, the few GB that gate a named plan step) plus a `scripts/` check that reports which are reachable right now, so a blocked step is identified before a run starts rather than ~80 s into a model load. Pairs with the standing D:-rule; does not change it.
+
 ### Multi-task learning shared encoder — 12/05/2026
 Currently each drug gets its own XGBoost classifier on frozen embeddings. Phase 3 shifts to a shared sequence encoder with multiple task heads (AMR per drug, MIC per drug, AMR-gene detection auxiliary, mutation-effect, plasmid-marker, calibration/OOD). Curriculum training: start with simple drugs + known markers; progressively add multi-drug + clade-aware + counterfactual edits.
 

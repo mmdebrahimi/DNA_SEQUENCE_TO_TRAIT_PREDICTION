@@ -129,7 +129,8 @@ Junction created 2026-09-01; recreate with `MSYS_NO_PATHCONV=1 cmd /c "mklink /J
 **STATE HERE, measured 2026-10-19 (pm) — the junction is GONE, and THE DRIVE LETTER IS NOT RELIABLE.**
 `D:` is a card-reader slot with **no media** (disk 1, `Generic Mass-Storage`, 0 GB, RAW), so no `D:/` path
 resolves — and an earlier version of this line said *"no `E:` either"*, which is now FALSE: **`E:` is a
-931.5 GB ST1000LM024 with 925.4 GB free**. It is **NOT the dna_decode data drive** — it holds
+931.5 GB ST1000LM024 with 925.4 GB free** — **and `E:` detached too (2026-10-20): attachment is
+per-session, never inherited**. It is **NOT the dna_decode data drive** — it holds
 `PythonProjects/` + `Recovery/` + `Videos-kept/`, and its one `dna_decode_cache` (nested at
 `E:/PythonProjects/dna_decode_cache`, NOT the drive root) holds only `amr_portal` + `mpra` with **no
 `refseq`**. The disk carrying `refseq`/embeddings/ProteinGym is a DIFFERENT physical disk, still absent, so

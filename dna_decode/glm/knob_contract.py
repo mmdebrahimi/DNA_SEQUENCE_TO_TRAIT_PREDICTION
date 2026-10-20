@@ -138,3 +138,78 @@ def verify_knob_live(generate_at, *, low: float = 0.7, high: float = 1.5) -> dic
         "n": n, "identical": identical, "low": low, "high": high,
         "note": "same seed both calls; only temperature differs",
     }
+
+
+# --------------------------------------------------------------------------- #
+# Comparison-mode contract (Step 1 of the sampling-sweep plan, 2026-10-20)
+# --------------------------------------------------------------------------- #
+# WHY: a sweep was run with `--natural-set promoter` and NO `--conditional`, which
+# scores an UNCONDITIONAL sample (drawn from the whole-genome prior, mostly coding)
+# against ALIGNED promoter windows, while the Markov null is fitted on the promoter
+# FIT half. The null holds the target distribution and the model does not, so the
+# comparison is close to tautological. The repo documented this in two places
+# BEFORE the run and nothing enforced it:
+#   corpus.py:168-175  "An unconditional sample cannot be scored against an aligned
+#                       set fairly, so the meaningful task is *given the genomic
+#                       context, continue into the promoter*."
+#   glm_generator_falsifier.py --conditional help: "required for a meaningful
+#                       comparison against the ALIGNED promoter set"
+VALID_COMPARISON = ("promoter", True)
+
+
+class ComparisonModeError(ValueError):
+    """A (natural_set, conditional) pairing that cannot produce a meaningful number."""
+
+
+def validate_comparison_mode(natural_set: str, conditional: bool) -> None:
+    """Refuse every (reference, conditioning) pairing but the one that is meaningful.
+
+    Called before any corpus build or model load, so a mis-specified run costs
+    milliseconds instead of ~30 minutes of generation plus a number nobody can use.
+    """
+    if natural_set == "both":
+        raise ComparisonModeError(
+            "natural_set='both' is refused: the runner builds conditional prompts from "
+            "`naturals[kinds[0]]['eval_windows']` only, so the SECOND set's candidates "
+            "would be prompted from the FIRST set's windows -- a silent cross-reference "
+            "mismatch. Run the two references as separate invocations."
+        )
+
+    if natural_set == "promoter":
+        if not conditional:
+            raise ComparisonModeError(
+                "natural_set='promoter' without --conditional is refused.\n"
+                "An UNCONDITIONAL sample is drawn from the whole-genome prior (mostly "
+                "coding) while the promoter reference is ALIGNED to the CDS start and the "
+                "Markov null is fitted on the promoter FIT half -- so the null holds the "
+                "target distribution and the model does not, making the comparison close "
+                "to tautological.\n"
+                "This is not a new judgement: corpus.py:168-175 says an unconditional "
+                "sample cannot be scored against an aligned set fairly, and the "
+                "--conditional help calls it REQUIRED for this reference. A sweep run this "
+                "way on 2026-10-19 produced distinguishability 0.8141 against a null of "
+                "0.3876 and the gap was almost entirely the conditioning mismatch.\n"
+                "Pass --conditional."
+            )
+        return  # the one valid pairing
+
+    if natural_set == "genomic":
+        if conditional:
+            raise ComparisonModeError(
+                "natural_set='genomic' with --conditional is refused: a prompted "
+                "continuation is positionally anchored, and the genomic reference is "
+                "UNALIGNED uniform windows, so there is no shared offset structure to "
+                "score against."
+            )
+        raise ComparisonModeError(
+            "natural_set='genomic' without --conditional is refused on MEASURED grounds, "
+            "not on preference: corpus.py:171-173 records that against unaligned random "
+            "genomic windows an order-3 Markov null scores 0.5086 against a 0.5255 "
+            "ceiling -- BELOW its own noise floor -- so that reference has no "
+            "discriminating power at all. A run against it cannot distinguish a good "
+            "generator from a bad one."
+        )
+
+    raise ComparisonModeError(
+        f"unknown natural_set {natural_set!r}; expected 'promoter', 'genomic' or 'both'"
+    )

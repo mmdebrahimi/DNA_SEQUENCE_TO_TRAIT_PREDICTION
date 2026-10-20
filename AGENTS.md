@@ -34,7 +34,7 @@ This project also supports `uv` (recommended): `uv sync` then prefix commands wi
 
 ```bash
 dna-decode list          # the authoritative supported-trait + validation surface
-pytest tests/ -q         # ~1770 tests; the deterministic decoder needs no torch/GPU
+pytest tests/ -q         # ~6,900 tests collected (measured 2026-10-20); deterministic decoder needs no torch/GPU
 ```
 
 ## Minimal runnable examples (all verified, no Docker / no GPU)

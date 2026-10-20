@@ -5,6 +5,59 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Fixed — the GLM's sampling knobs were shipped DEAD, and the sweep that used them is void (2026-10-20)
+
+`HFGenerator(temperature=T)` had no effect at all. The remote `_BPLogitsProcessor` marginalises k-mer
+logits to per-base probabilities and returns a **one-hot**, and `transformers` appends
+`TemperatureLogitsWarper` AFTER the merged user processors (`generation/utils.py`, merge at 1257,
+temperature at 1276) — dividing a one-hot by any temperature is identity. Measured on the real model:
+T=0.7 vs T=1.5 at the same seed gave **6/6 byte-identical sequences**, GC identical to six decimals.
+Sampling itself was never broken; only the knobs were. Fixed by passing the warpers through
+`logits_processor`, which the remote code appends its own processor *after*
+(`dna_decode/glm/generate.py::_sampling_processors`); the inert `temperature=`/`top_k=` kwargs are no
+longer passed, and nothing in the remote code or the model cache is touched. After the fix: 0/6
+identical, GC 0.547 at T=0.7 vs 0.497 at T=1.5 — the direction is right, not merely different.
+
+**New contract module `dna_decode/glm/knob_contract.py` — four guards, ordered cheapest-first, so a
+mis-specified run costs milliseconds instead of ~30 minutes of generation plus an unusable number.**
+
+| guard | refuses |
+|---|---|
+| `validate_sampling` | non-positive / NaN temperature, and `top_k` in the measured-broken region (`<22` drives per-base marginals to exactly zero, making a base unreachable; at and above 22 it is a legitimate graded knob, so it is **not** disabled) |
+| `assert_knob_wired` | a run whose requested knob installed no warper — exactly the state that let three artifacts stamp a sampling value over runs that all used default sampling |
+| `verify_knob_live` | generate at two far-apart temperatures on a fixed seed and diff the raw output; the falsifier runs it under `--verify-knob` and exits 5 if the output does not move, then stamps the verdict so an unverified run reads as unverified rather than clean |
+| `validate_comparison_mode` | every `(natural_set, conditional)` pairing but `("promoter", True)` — see below |
+
+**The comparison-mode gate closes a precondition that was documented twice and enforced nowhere.**
+`corpus.py:168-175` ("an unconditional sample cannot be scored against an aligned set fairly") and the
+`--conditional` help ("**required** for a meaningful comparison against the ALIGNED promoter set") both
+said so before the 2026-10-19 run, which still passed `--natural-set promoter` with no `--conditional`.
+That scores an unconditional sample — drawn from the whole-genome prior, mostly coding — against
+aligned promoter windows while the Markov null is fitted on the promoter FIT half, so the null holds the
+target distribution and the model does not. `natural_set='both'` is refused too: the runner builds
+conditional prompts from `naturals[kinds[0]]['eval_windows']` only, so the second reference's candidates
+would be prompted from the first's windows. `natural_set='genomic'` is refused on measured grounds —
+against unaligned random windows an order-3 Markov null scores 0.5086 against a 0.5255 ceiling, below
+its own noise floor, so that reference has no discriminating power at all.
+
+**Consequence for the record: the 2026-10-19 sweep is doubly invalid and its headline must not be
+quoted** (GLM 0.8141 vs null 0.3876 — inert knobs AND the wrong comparison mode). The valid baseline is
+the committed `wiki/glm_generator_falsifier_REAL_2026-10-07.json` (conditional, n=120): GLM **0.7237**
+vs null **0.5990** (`kmer`), **0.7706** vs **0.6679** (`both`), both `WORSE_THAN_MARKOV_NULL`. That
+direction is the project's **recorded premise, not a new finding** — `features/glm-generator-finetune/feature.md:13`
+already states family G-D exists to test whether fine-tuning gets below a 3-mer Markov chain "which it
+currently loses to at default sampling". Conditioning closes most of the gap (+0.4265 unconditional →
++0.1247 conditional, `kmer`) and does not close it.
+
+**No valid sweep artifact exists, so GLM family G-D's unblock trigger remains UNDISCHARGED.** Verified
+by `git ls-files` — the only committed falsifier artifacts are the two 2026-10-07 runs, both at default
+sampling. Worth separating because it was never named before: the 8 GB GPU blocker gates *fine-tuning*,
+not the sweep; the sweep is CPU inference and was runnable all along. What actually blocked it was the
+inert knob. Memos `wiki/glm_temperature_knob_2026-10-20.md` + `wiki/glm_sweep_invalidation_2026-10-20.md`.
+
+**Research-arm only — no decoder change, no CLI trait, no console entry point, no `cell_registry`
+contract.** The five sha256-pinned frozen files are untouched and the prospective lock verifies.
+
 ### Added — a native-Windows genome-distance route, with its thresholds explicitly NOT yet valid (2026-10-19)
 
 `dna_decode/eval/sourmash_distance.py` produces an `eval.phylogeny.DistanceMatrix` from sourmash

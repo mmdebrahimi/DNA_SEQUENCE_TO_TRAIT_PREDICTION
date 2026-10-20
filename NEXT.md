@@ -339,6 +339,29 @@ essential gene is two-sided by construction, so a constant call can never match 
 bottleneck is fixed in both datasets: PRECISE-1K ∩ Keio carbon = **11 of 28**, 621 of 1,035 samples
 glucose.
 
+## BLOCKED ON A DRIVE — the GLM sampling sweep, 2 of 6 steps shipped (2026-10-20)
+
+`plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/`. Steps 1-2 landed: the sampling
+knobs are live (`wiki/glm_temperature_knob_2026-10-20.md`), the comparison mode is now a **contract
+refusal** rather than two comments nobody enforced (`knob_contract.validate_comparison_mode`), and
+`wiki/glm_sweep_invalidation_2026-10-20.md` records that the 2026-10-19 sweep was **doubly invalid**
+(inert knob AND `conditional=False` against the aligned promoter set).
+
+**Steps 3-6 never ran: `E:` detached mid-execution and the 4.33 GiB GENERator weights lived on
+`E:/hf_cache`, with no copy on C:.** Re-confirmed absent at write time — only `C:` and the `S:` subst
+alias are mounted.
+
+**So G-D's unblock trigger is STILL UNDISCHARGED, and that is now the only thing standing between the
+record and a decision** — not a measurement, not a GPU. Two facts worth carrying: the sweep is **CPU
+inference** (the 8 GB GPU blocker gates fine-tuning, not this), and what actually blocked it for months
+was the inert knob, so no pre-2026-10-20 run could have discharged it. Resume = reattach a drive
+carrying `hf_cache` (or re-download the model to C:) and run with `--verify-knob --conditional`; both
+are enforced now. Full resume conditions + the carried honest limits are in `TODOS.md`.
+
+**Do not quote the 2026-10-19 headline** (GLM 0.8141 vs null 0.3876). Valid baseline is the committed
+`wiki/glm_generator_falsifier_REAL_2026-10-07.json`: 0.7237 vs null 0.5990 (`kmer`),
+`WORSE_THAN_MARKOV_NULL` — which is the project's **recorded premise**, not a new finding.
+
 ## User-authority calls open 2026-10-20
 
 - **Install BLAST+ on this host?** Measured absent (`find_blastn()` -> `None`;

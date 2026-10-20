@@ -105,6 +105,12 @@ def main(argv=None) -> int:
         print(f"REFUSE: reference not found at {REFSEQ}")
         return 2
 
+    # Refuse a meaningless (reference, conditioning) pairing BEFORE any corpus build or
+    # model load -- milliseconds, versus ~30 min of generation for an unusable number.
+    from dna_decode.glm.knob_contract import validate_comparison_mode
+
+    validate_comparison_mode(a.natural_set, bool(a.conditional))
+
     kinds = ["promoter", "genomic"] if a.natural_set == "both" else [a.natural_set]
     naturals = {}
     for kind in kinds:
