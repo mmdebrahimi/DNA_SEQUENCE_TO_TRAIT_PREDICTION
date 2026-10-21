@@ -60,6 +60,20 @@ class GenomeWideDataError(RuntimeError):
     """The genome-wide MPRA substrate could not be loaded in a trustworthy state."""
 
 
+def _substrate_report(configured: Path | str) -> str:
+    """The `external_root` report for a cache path, or a plain statement if the probe is unavailable.
+
+    Fail-soft on purpose: a drive scan that raises must not replace a diagnosable data error with an
+    import error. Reuses the project's existing resolver rather than adding a second one -- and it is
+    the `describe` entry point specifically, because `describe` NEVER substitutes.
+    """
+    try:
+        from dna_decode.data.external_root import describe
+        return describe(configured, required=("mpra",))
+    except Exception as exc:  # pragma: no cover - probe guard
+        return f"configured off-volume root : {configured}  [ABSENT]  (probe unavailable: {exc!r})"
+
+
 @dataclass
 class Fragment:
     """One measured genomic fragment."""
@@ -110,13 +124,53 @@ def _split(line: str, delim: str | None) -> list[str]:
     return line.rstrip("\n").split(delim) if delim else line.split()
 
 
+def _reachable(d: Path) -> bool:
+    """True iff `d` exists, or SOME ancestor of it does so `mkdir` could create it.
+
+    Injection seam, and the reason this is a module-level function rather than two lines inline: a
+    test that wanted an unreachable directory would otherwise have to name a drive letter, which makes
+    the test a statement about the operator's hardware. `describe`'s `candidates` parameter exists for
+    exactly that reason (see `external_root`), and this is the same lesson one module over.
+    """
+    for p in (d, *d.parents):
+        try:
+            if p.exists():
+                return True
+        except OSError:
+            return False
+    return False
+
+
 def ensure_cached(cache_dir: Path | str = DEFAULT_CACHE, *, which: str = "LB",
                   allow_download: bool = True) -> Path:
-    """Make sure one GSE144621 file is present; download it if not. Returns the file path."""
+    """Make sure one GSE144621 file is present; download it if not. Returns the file path.
+
+    **The reachability check comes BEFORE `mkdir`, and that ordering is the whole fix.** `mkdir` on a
+    drive letter with no media raises `PermissionError: [WinError 21] The device is not ready`, which
+    reaches the caller as a raw traceback -- measured 2026-10-21 from `scripts/glm_tile_predictions.py`,
+    where it read as a crash rather than as "the configured volume is not attached". A path on an
+    absent volume is a DIAGNOSABLE condition, so it now raises `GenomeWideDataError` carrying the
+    `external_root` report: the configured path and its ABSENT status, plus every discovered candidate
+    WITH ITS CONTENTS, so the operator can see where the data actually is.
+
+    **Nothing changes when the configured path is reachable.** If `cache_dir` exists, or any ancestor
+    of it does, the old `mkdir` path runs unmodified -- so on the host that HAS the drive this function
+    is bit-for-bit what it was. That matters because `load_fragments` and `load_peak_tiles` both come
+    through here and the fragment-rung arms depend on them.
+    """
     name = FRAG_FILES.get(which, PEAK_TILE_FILE if which == "peak_tile" else None)
     if name is None:
         raise GenomeWideDataError(f"unknown file key {which!r}; have {sorted(FRAG_FILES)} + 'peak_tile'")
     d = Path(cache_dir)
+    if not _reachable(d):
+        raise GenomeWideDataError(
+            f"the configured MPRA cache is on a volume that is not attached, so it cannot be "
+            f"created or read:\n\n{_substrate_report(d)}\n\n"
+            f"This is NOT a download problem and retrying will not fix it. Point the caller at a "
+            f"reachable copy -- for a candidate listed above that HOLDS `mpra`, the directory to pass "
+            f"is <candidate>/mpra, not the candidate itself. The root is NOT substituted "
+            f"automatically: a directory of the right NAME is not evidence of the right CONTENTS."
+        )
     d.mkdir(parents=True, exist_ok=True)
     p = d / name
     if not p.exists():

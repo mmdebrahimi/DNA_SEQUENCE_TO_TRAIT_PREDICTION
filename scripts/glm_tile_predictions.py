@@ -246,10 +246,35 @@ def manifest_payload(*, seeds: list[int], scorers: list[str], n_tiles: int, cove
 # --------------------------------------------------------------------------------------------------
 # impure: load, fit, persist
 # --------------------------------------------------------------------------------------------------
+def require_external_dir(configured: str, *, required: tuple[str, ...], flag: str) -> Path:
+    """The configured directory, or a refusal naming where the data actually is.
+
+    **`allow_discovered` is left at its default False and must stay there.** The resolver CAN return a
+    discovered root, and pointing this chain at one automatically would convert a loud missing-ROOT
+    into a quiet missing-DATASET across every call site -- the exact failure `external_root` was
+    written about, since a directory of the right NAME is not evidence of the right CONTENTS. So this
+    helper diagnoses and refuses; the operator passes the path.
+    """
+    from dna_decode.data.external_root import describe, resolve_external_root
+
+    path, status = resolve_external_root(configured, required=required)
+    if status == "configured":
+        return path
+    raise SystemExit(
+        f"{flag} {configured} is not reachable [{status}].\n\n"
+        f"{describe(configured, required=required)}\n\n"
+        f"Pass {flag} explicitly. The root is NOT substituted automatically."
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--in-dir", default="D:/dna_decode_cache/promcalc",
                     help="stage-B decomposition directory (main file + resume shards)")
+    ap.add_argument("--mpra-cache", default=None,
+                    help="GSE144621 cache directory. Defaults to genomewide.DEFAULT_CACHE, which is a "
+                         "hardcoded D: path -- on a host where that volume is absent, pass the "
+                         "reachable copy (e.g. E:/PythonProjects/dna_decode_cache/mpra).")
     ap.add_argument("--out-dir", default=str(DEFAULT_OUT))
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--scorers", default=",".join(SCORERS))
@@ -277,9 +302,29 @@ def main() -> int:
         tile_features,
     )
 
-    from dna_decode.glm.genomewide import leave_peak_out, load_peak_tiles, noise_ceiling, spearman
+    from dna_decode.glm.genomewide import (
+        DEFAULT_CACHE,
+        GenomeWideDataError,
+        leave_peak_out,
+        load_peak_tiles,
+        noise_ceiling,
+        spearman,
+    )
 
-    tiles_all, _ = load_peak_tiles()
+    # Until 2026-10-21 this read `load_peak_tiles()` with NO arguments, so it took the hardcoded
+    # `DEFAULT_CACHE` unconditionally even though the loader has always accepted `cache_dir` -- and on
+    # a host without that volume the whole chain died with an unhandled WinError 21. Stage A
+    # (`promcalc_export_tiles.py`) already had a `--cache-dir`; this was the one un-parameterised call.
+    #
+    # The loader RAISES (typed) and this script PRESENTS. Keeping the layering that way matters: a
+    # library that called `SystemExit` would be unusable from anything but a CLI, while a script that
+    # let the exception escape shows a traceback -- and a traceback reads as "this tool is broken"
+    # rather than "the volume is not attached", which is what the raw WinError did for a day.
+    mpra_cache = a.mpra_cache or str(DEFAULT_CACHE)
+    try:
+        tiles_all, _ = load_peak_tiles(cache_dir=mpra_cache)
+    except GenomeWideDataError as exc:
+        raise SystemExit(f"--mpra-cache {mpra_cache}\n\n{exc}") from None
     tiles = [t for t in tiles_all if t.category == "tile" and len(t.seq) == 150]
     if not a.smoke and len(tiles) != EXPECTED_TILES:
         raise SystemExit(f"{len(tiles)} tiles after the published filter, expected {EXPECTED_TILES} "
@@ -287,6 +332,13 @@ def main() -> int:
     ceil = noise_ceiling(tiles)["ceiling_for_a_sequence_model"]
     print(f"tiles {len(tiles)} | ceiling {ceil:.4f}", flush=True)
 
+    # Resolved HERE, at the point of use, and NOT at argument-parsing time. The ordering is
+    # load-bearing: the two substrate dependencies have different wall classes -- the MPRA table is
+    # present and was merely mis-addressed, while the promcalc predictions are genuinely absent -- and
+    # checking both up front would collapse them into one undifferentiated "substrate missing". With
+    # `--mpra-cache` pointed at a reachable copy, getting PAST the tile load and failing only here is
+    # the measurement that tells those two walls apart.
+    require_external_dir(a.in_dir, required=("promcalc",), flag="--in-dir")
     dec, shards = load_decomposition(a.in_dir, smoke=a.smoke)
     cov = len(dec) / len(tiles)
     print(f"decomposition: {len(dec)} tiles | coverage {cov:.4f} | shards {shards}", flush=True)
