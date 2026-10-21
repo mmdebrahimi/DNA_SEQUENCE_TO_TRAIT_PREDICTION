@@ -29,8 +29,14 @@ if not "%~4"=="" set "TEMP_ARG=--temperature %~4 --verify-knob"
 
 set "LOCKFILE=%~dp0.glm_run.lock"
 
-set UV_CACHE_DIR=E:/uv_cache
-set HF_HOME=E:/hf_cache
+REM --- D:, not E:, and that is now CORRECT rather than aspirational. 2026-10-21 the
+REM --- External1TB volume was pinned to D: permanently (its MountedDevices entry is a
+REM --- 24-byte disk-signature binding, so it survives reboots and replugs); the card
+REM --- reader that had been squatting on D: was evicted with `mountvol D: /D`. These
+REM --- lines said E: because the letter had drifted, which is the problem that got fixed
+REM --- rather than worked around. `D:/hf_cache` holds the 4.33 GiB GENERator-1.2B weights.
+set UV_CACHE_DIR=D:/uv_cache
+set HF_HOME=D:/hf_cache
 set HF_HUB_OFFLINE=1
 set TRANSFORMERS_OFFLINE=1
 
@@ -54,7 +60,7 @@ REM --- use) and not under the 3.14.7 on PATH. With the fix either works, but pi
 REM --- interpreter means the launcher no longer depends on whichever python is first on PATH.
 uv run python "%~dp0scripts\glm_run_lock.py" run "%LOCKFILE%" --label "glm anchor %~1" -- ^
   uv run python scripts/glm_generator_falsifier.py ^
-  --model auto --cache-dir E:/hf_cache --device cpu ^
+  --model auto --cache-dir D:/hf_cache --device cpu ^
   --conditional --context 300 --natural-set promoter ^
   --n 120 --length 150 --limit-natural 1200 ^
   --modes kmer,both --markov-order 3 --bins 6 ^

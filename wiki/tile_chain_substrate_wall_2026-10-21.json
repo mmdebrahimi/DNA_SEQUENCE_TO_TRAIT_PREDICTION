@@ -57,7 +57,8 @@
     {
       "drive": "D:",
       "resolves": false,
-      "note": "card-reader slot, no media"
+      "note": "card-reader slot, no media",
+      "superseded_2026_10_21": "D: is now the External1TB volume (931.5 GB, 907.5 free) after the pinning; this row records the pre-pinning card-reader state"
     },
     {
       "drive": "E:",
@@ -65,5 +66,22 @@
       "total_gb": 931.5
     }
   ],
-  "reusable": "A dependency that is PRESENT BUT MIS-ADDRESSED and one that is ABSENT produce the same symptom and have completely different remedies. Separating them also required resolving each dependency AT ITS POINT OF USE: one front-loaded 'validate all inputs' check would have collapsed both into one failure and destroyed the distinguishing measurement."
+  "reusable": "A dependency that is PRESENT BUT MIS-ADDRESSED and one that is ABSENT produce the same symptom and have completely different remedies. Separating them also required resolving each dependency AT ITS POINT OF USE: one front-loaded 'validate all inputs' check would have collapsed both into one failure and destroyed the distinguishing measurement.",
+  "amendment": {
+    "date": "2026-10-21",
+    "what_changed": "the HOST, not the code: the External1TB volume was pinned to D: permanently",
+    "mechanism": "card reader evicted with `mountvol D: /D`, then Set-Partition -DriveLetter E -NewDriveLetter D. MountedDevices now holds a 24-byte disk-signature binding for D:, so it survives reboots and replugs. A junction D:/dna_decode_cache -> D:/PythonProjects/dna_decode_cache reconciles the nested layout.",
+    "measured_after": {
+      "glm_tile_predictions_no_arguments": "tiles 44106 | ceiling 0.9410, then fails only on promcalc",
+      "promcalc_decomposition_arm_bare_call": "gets past its tile load, fails at the same promcalc step",
+      "hf_cache_at_D": "4.4 GB reachable at D:/hf_cache (GENERator-1.2B weights)"
+    },
+    "wall_classification_unchanged": "the promcalc decomposition is still absent, so one half stays code-closable and one half stays data-absent. refseq / tools / dna_decode_data are on a different physical disk that is still not attached, so D:/dna_decode_cache is UNFIT under CACHE_REQUIRED_SUBDIRS and the probe reports it so.",
+    "failure_mode_shift_accepted": "those paths now resolve and fail as DATASET missing rather than DRIVE missing. external_root.py calls this the worse direction; CACHE_REQUIRED_SUBDIRS=('refseq',) and data_inventory's per-report probe are the pre-existing mitigation.",
+    "statements_above_now_false_left_in_place": [
+      "'D: is a card-reader slot with no media'",
+      "volumes_measured entry: D: resolves False"
+    ],
+    "why_left_in_place": "they were true when measured and are what justified the code change; rewriting them would erase the evidence rather than date it"
+  }
 }

@@ -64,6 +64,40 @@ scope drift the plan's non-goals exist to prevent.
 Ledger: 10 arms, 6 measured / 4 planned; `ceiling_verdict` still **`blocked:untried-arm`** — a cheap arm
 winning does not settle the ceiling question (R5 holding as designed).
 
+### THE DRIVE LETTER IS PINNED — `D:` is now the 1 TB volume, permanently (2026-10-21, user-authorised)
+
+The card reader that had been squatting on `D:` was evicted (`mountvol D: /D`) and the
+**External1TB** volume (ST1000LM024, 931.5 GB, 907.5 free) reassigned to it. `MountedDevices` now
+holds a **24-byte disk-signature binding** for `D:`, so it survives reboots and replugs — the
+letter will not drift again for this disk. A junction `D:\dna_decode_cache ->
+D:\PythonProjects\dna_decode_cache` reconciles the nested layout.
+
+**Measured consequences, not inferred:**
+
+- `scripts/glm_tile_predictions.py` **with no arguments** prints `tiles 44106 | ceiling 0.9410`.
+  The hardcoded default resolves; so does `scripts/promcalc_decomposition_arm.py`'s **bare**
+  `load_peak_tiles()` (it has no `--cache-dir` flag and is now unblocked anyway).
+- `D:/hf_cache` (4.4 GB, the GENERator-1.2B weights) and `D:/uv_cache` resolve at the documented
+  paths. `run_glm_anchor_detached.bat` no longer hardcodes `E:` — **so the sweep's "`E:` attachment
+  is per-session and never inherited" hazard is retired for this disk.**
+- The 12th constraint's expiry test is now **live**: it names `D:/dna_decode_cache/promcalc/...`,
+  whose parent resolves, so `file-exists` can actually fire. The drive-letter half of its stated
+  limitation is discharged (the rationale keeps the original wording by design — that field is the
+  reason *as written at the time*).
+
+**STILL ABSENT and the wall classification is UNCHANGED:** `refseq`, `tools/` and
+`dna_decode_data` live on a **different physical disk** that is not attached, so
+`D:/dna_decode_cache` is `UNFIT` under `CACHE_REQUIRED_SUBDIRS` and the probe says so.
+**The failure mode shifted and that cost was accepted up front:** those paths now resolve and fail
+as *dataset* missing rather than *drive* missing, which `external_root.py` calls the worse
+direction — the mitigation (`CACHE_REQUIRED_SUBDIRS` + `data_inventory`'s per-report probe) shipped
+before the risk did.
+
+**Two CLAUDE.md claims are now false** and were not edited (the file has **one word** of headroom
+against its enforced ceiling): *"`D:` is a card-reader slot with no media"* and *"`E:` is a 931.5 GB
+ST1000LM024"*. Also false and pre-existing: *"`HF_HOME`/`UV_CACHE_DIR` set persistently"* — both are
+unset in User, Machine **and** process scope; they exist only inside the `.bat`.
+
 ### The tile chain's real blocker — DIAGNOSED 2026-10-21, and it is two walls not one
 
 `wiki/tile_chain_substrate_wall_2026-10-21.{md,json}`. The follow-up above ("re-run the selection

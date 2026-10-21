@@ -272,9 +272,11 @@ def main() -> int:
     ap.add_argument("--in-dir", default="D:/dna_decode_cache/promcalc",
                     help="stage-B decomposition directory (main file + resume shards)")
     ap.add_argument("--mpra-cache", default=None,
-                    help="GSE144621 cache directory. Defaults to genomewide.DEFAULT_CACHE, which is a "
-                         "hardcoded D: path -- on a host where that volume is absent, pass the "
-                         "reachable copy (e.g. E:/PythonProjects/dna_decode_cache/mpra).")
+                    help="GSE144621 cache directory. Defaults to genomewide.DEFAULT_CACHE, a hardcoded "
+                         "D: path. Pass this when that volume is absent or carries the cache at a "
+                         "different layout; the refusal names every candidate it found and what each "
+                         "one holds, so the value to pass comes from the error rather than from a "
+                         "guess. Do not name a drive letter from memory -- letters move.")
     ap.add_argument("--out-dir", default=str(DEFAULT_OUT))
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--scorers", default=",".join(SCORERS))

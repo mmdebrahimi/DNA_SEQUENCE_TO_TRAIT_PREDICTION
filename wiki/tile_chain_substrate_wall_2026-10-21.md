@@ -98,3 +98,40 @@ A dependency that is *present but mis-addressed* and one that is *absent* produc
 parameterised call and one run. The diagnosis also required resolving each dependency **at its point of
 use** rather than validating all inputs up front: a single front-loaded check would have collapsed both
 into one failure and destroyed the measurement that distinguishes them.
+
+## AMENDMENT, same day — the host changed: D: is now the 1 TB volume
+
+**Everything above was measured while `D:` was an empty card-reader slot. It no longer is.**
+The `External1TB` volume (ST1000LM024, 931.5 GB) was pinned to `D:` permanently — the card
+reader was evicted with `mountvol D: /D` and the volume reassigned, so `HKLM\SYSTEM\MountedDevices`
+now holds a 24-byte disk-signature binding for `D:` that survives reboots and replugs. A junction
+`D:\dna_decode_cache -> D:\PythonProjects\dna_decode_cache` reconciles the nested layout.
+
+**What this changes, measured not assumed:**
+
+* `scripts/glm_tile_predictions.py` **with no arguments at all** now prints
+  `tiles 44106 | ceiling 0.9410` and fails only on promcalc. The hardcoded default resolves.
+* `scripts/promcalc_decomposition_arm.py` — which calls `load_peak_tiles()` **bare** and has no
+  `--cache-dir` flag — gets past its tile load too, and fails at the same promcalc step. So the
+  second un-parameterised call site is no longer blocking anything, though it remains unable to
+  be pointed anywhere else.
+* `D:/hf_cache` (4.4 GB, the GENERator-1.2B weights) and `D:/uv_cache` resolve at the paths the
+  project's own D: rule always claimed. `run_glm_anchor_detached.bat` no longer hardcodes `E:`.
+
+**What this does NOT change.** The promcalc decomposition is still absent, so the wall
+classification above stands: one half code-closable, one half data-absent. `refseq`, `tools/`
+and `dna_decode_data` are on a different physical disk that is still not attached — so
+`D:/dna_decode_cache` is `UNFIT` by the project's own `CACHE_REQUIRED_SUBDIRS` check, and the
+probe reports it that way.
+
+**The failure mode shifted, and that was a known cost accepted up front.** Before, those paths
+failed loudly because the volume was absent. Now they resolve and fail as *dataset* missing.
+`external_root.py` says plainly that this is the worse direction — *"a wrong root that resolves
+is worse than a right root that is missing, because only the second one is visible"* — which is
+exactly why `CACHE_REQUIRED_SUBDIRS = ("refseq",)` exists and why `data_inventory` runs the probe
+on every report. The mitigation shipped before the risk did.
+
+**Two statements above are now false and are left in place deliberately**, because the original
+measurement is what justified the code change: "`D:` is a card-reader slot with no media" and
+the volume table's `D: resolves False`. Both were true when written, on 2026-10-21, before the
+pinning.
