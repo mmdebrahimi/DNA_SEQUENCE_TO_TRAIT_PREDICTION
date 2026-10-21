@@ -60,6 +60,37 @@ def build_natural(length: int, limit: int | None, seed: int, kind: str = "promot
     return wins, stats
 
 
+def geometry_from_args(a) -> dict:
+    """The run's FROZEN geometry — the single expression both consumers read.
+
+    There used to be two: the `--compare-to` projection and the artifact dict, hand-written in
+    parallel. They diverged on exactly one field. The artifact recorded `positional_bins` as
+    `a.bins` unconditionally while the projection recorded `None` unless the mode was
+    positional/both, so a `--modes kmer` run compared against its OWN kmer-only baseline was
+    REFUSED with `{'positional_bins': (10, None)}` — a false mismatch on a comparable run. It
+    could not bite the `kmer,both` runs in flight at the time (both branches yield `a.bins`),
+    which is why it survived review of the code that introduced it.
+
+    Changing the one literal would have fixed that instance and left the mechanism — two parallel
+    descriptions of one run — fully intact. One expression is what makes a recurrence impossible,
+    so the artifact spreads this dict rather than restating its fields.
+
+    Keys are exactly `knob_contract.COMPARISON_GEOMETRY_FIELDS`; a test pins that correspondence,
+    because a field named in the tuple but missing here would silently compare as `<absent>`.
+    """
+    return {
+        "window_length_bp": a.length,
+        "kmer_k": a.k,
+        "positional_bins": a.bins,
+        "markov_order": a.markov_order,
+        "n_generated_per_candidate": a.n,
+        "natural_set_arg": a.natural_set,
+        "feature_modes": a.modes,
+        "conditional": bool(a.conditional),
+        "context_bp": a.context if a.conditional else None,
+    }
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--length", type=int, default=150, help="upstream window length (bp)")
@@ -122,17 +153,7 @@ def main(argv=None) -> int:
         from dna_decode.glm.knob_contract import assert_geometry_comparable
 
         recorded = json.loads(Path(a.compare_to).read_text(encoding="utf-8"))
-        assert_geometry_comparable(recorded, {
-            "window_length_bp": a.length,
-            "kmer_k": a.k,
-            "positional_bins": a.bins if "positional" in a.modes or "both" in a.modes else None,
-            "markov_order": a.markov_order,
-            "n_generated_per_candidate": a.n,
-            "natural_set_arg": a.natural_set,
-            "feature_modes": a.modes,
-            "conditional": bool(a.conditional),
-            "context_bp": a.context if a.conditional else None,
-        })
+        assert_geometry_comparable(recorded, geometry_from_args(a))
         print(f"geometry: comparable to {a.compare_to}")
 
     kinds = ["promoter", "genomic"] if a.natural_set == "both" else [a.natural_set]
@@ -252,14 +273,11 @@ def main(argv=None) -> int:
         "record": "glm-generator-falsifier-v1",
         "date": today,
         "reference": "GCF_000005845.2 (E. coli K-12 MG1655), locally cached (NOT tracked in git)",
-        "window_length_bp": a.length,
-        "kmer_k": a.k,
-        "feature_modes": a.modes,
-        "positional_bins": a.bins,
-        "markov_order": a.markov_order,
-        "n_generated_per_candidate": a.n,
+        # The nine frozen-geometry fields come from the SAME expression the --compare-to guard
+        # reads, so the two descriptions of one run cannot drift apart again (see
+        # `geometry_from_args`). Everything below is per-run output, not geometry.
+        **geometry_from_args(a),
         "natural_sets": {k: naturals[k]["stats"].as_dict() for k in kinds},
-        "natural_set_arg": a.natural_set,
         "fit_eval_split": {"n_fit": len(naturals[kinds[0]]["fit"]),
                            "n_eval": len(naturals[kinds[0]]["eval"]),
                            "note": "Markov null fitted on FIT only; all discrimination on EVAL only, so "
@@ -273,8 +291,10 @@ def main(argv=None) -> int:
                      "is_recorded_default": (a.temperature == 1.0 and a.top_k == 0),
                      "note": "stamped so a sweep row is attributable; an unstamped artifact cannot "
                              "be distinguished from the default-sampling run already on record"},
-        "conditional": bool(a.conditional),
-        "context_bp": a.context if a.conditional else None,
+        # `conditional` / `context_bp` are supplied by the `geometry_from_args(a)` spread above.
+        # They used to be restated here too; a later duplicate key silently WINS over the spread,
+        # so leaving them would have re-created the second expression this step exists to remove --
+        # and it would have done so invisibly, since both expressions agreed on the value.
         "results": results,
         "honest_limits": [
             "An upstream window is a PROXY for a promoter, not a mapped transcription start site.",

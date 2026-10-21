@@ -199,3 +199,92 @@ def test_WITHOUT_compare_to_the_runner_does_NOT_refuse(tmp_path, monkeypatch):
     mod = _runner(tmp_path, monkeypatch)
     with pytest.raises(_CorpusReached):
         mod.main([*_ARGS, "--bins", "10"])
+
+
+# ===================================================================================== #
+# Step 1 of the pre-grid-defects plan: the geometry is ONE expression, not two.
+# ===================================================================================== #
+# The original defect was not a wrong value, it was a SECOND description of the same run.
+# The artifact recorded `positional_bins` as `a.bins`; the --compare-to projection recorded
+# `None` unless the mode was positional/both. A `--modes kmer` run compared against its OWN
+# kmer-only baseline was therefore refused. Tests that only check values would pass again the
+# moment someone re-adds a parallel literal that happens to agree, so the pin is on the SOURCE.
+import ast as _ast
+import types as _types
+
+
+def _runner_source_tree():
+    return _ast.parse((ROOT / "scripts" / "glm_generator_falsifier.py").read_text(encoding="utf-8"))
+
+
+def _artifact_dict_node(tree):
+    """The `art = {...}` dict literal inside `main()`."""
+    for node in _ast.walk(tree):
+        if (isinstance(node, _ast.Assign)
+                and any(isinstance(t, _ast.Name) and t.id == "art" for t in node.targets)
+                and isinstance(node.value, _ast.Dict)):
+            return node.value
+    raise AssertionError("could not find the `art = {...}` artifact dict in the runner")
+
+
+def _ns(**over):
+    base = dict(length=150, k=4, bins=10, markov_order=3, n=120,
+                natural_set="promoter", modes="kmer,both", conditional=True, context=300)
+    base.update(over)
+    return _types.SimpleNamespace(**base)
+
+
+def test_geometry_from_args_covers_the_declared_field_set_EXACTLY():
+    """A field in the tuple but missing here would silently compare as `<absent>`."""
+    mod = _load_runner()
+    assert set(mod.geometry_from_args(_ns())) == set(COMPARISON_GEOMETRY_FIELDS)
+
+
+def test_the_MEASURED_false_refusal_is_gone():
+    """A kmer-only run against its own kmer-only baseline used to refuse with (10, None)."""
+    mod = _load_runner()
+    ns = _ns(modes="kmer")
+    recorded = mod.geometry_from_args(ns)          # what the artifact writes for this run
+    assert geometry_diff(recorded, mod.geometry_from_args(ns)) == {}
+
+
+def test_the_REAL_bins_mismatch_still_refuses_after_the_refactor():
+    """Fixing the false refusal must not cost the true one."""
+    rec = ROOT / "wiki" / "glm_generator_falsifier_REAL_2026-10-07.json"
+    if not rec.is_file():
+        pytest.skip("recorded baseline absent")
+    mod = _load_runner()
+    recorded = json.loads(rec.read_text(encoding="utf-8"))
+    assert geometry_diff(recorded, mod.geometry_from_args(_ns(bins=6))) == {}
+    assert geometry_diff(recorded, mod.geometry_from_args(_ns(bins=10))) == {"positional_bins": (6, 10)}
+
+
+def test_the_ARTIFACT_restates_NONE_of_the_frozen_fields_as_its_own_literal():
+    """The pin that would have caught the original divergence.
+
+    Two parallel literals can agree today and drift tomorrow, so this asserts the artifact
+    carries NO literal key among the nine — they can only arrive through the shared spread.
+    It also closes the duplicate-key trap: a restated key placed AFTER the spread silently
+    WINS over it, so an agreeing duplicate would re-create the second expression invisibly.
+    """
+    art = _artifact_dict_node(_runner_source_tree())
+    restated = [k.value for k in art.keys
+                if isinstance(k, _ast.Constant) and k.value in COMPARISON_GEOMETRY_FIELDS]
+    assert restated == [], f"artifact restates frozen geometry fields: {restated}"
+
+
+def test_and_the_artifact_DOES_take_the_shared_spread():
+    """Non-vacuity for the test above: absent this, deleting the fields entirely would pass."""
+    art = _artifact_dict_node(_runner_source_tree())
+    spreads = [v for k, v in zip(art.keys, art.values) if k is None]      # `**x` => key None
+    calls = [s for s in spreads
+             if isinstance(s, _ast.Call) and getattr(s.func, "id", None) == "geometry_from_args"]
+    assert len(calls) == 1, f"expected exactly one **geometry_from_args(...) spread, got {len(calls)}"
+
+
+def test_BOTH_consumers_read_the_same_function():
+    """The guard and the artifact must both call it — one call site would mean one is stale."""
+    tree = _runner_source_tree()
+    n = sum(1 for node in _ast.walk(tree)
+            if isinstance(node, _ast.Call) and getattr(node.func, "id", None) == "geometry_from_args")
+    assert n == 2, f"expected 2 call sites (--compare-to guard + artifact), found {n}"
