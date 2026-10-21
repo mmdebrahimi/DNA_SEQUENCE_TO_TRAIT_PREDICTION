@@ -628,3 +628,36 @@ the same fixture. Same family as this repo's vacuous-filter and vacuous-guard re
 **Lesson:** **When a fix removes a SECOND description of one thing, pin the source, not the values** — two parallel literals can agree today and drift tomorrow, and in Python a restated key after a `**` spread silently wins, so an agreeing duplicate re-creates the defect invisibly and every value-equality test stays green. Second: **a unit test whose own process is the subject cannot test a cross-process lifetime relationship** — an in-process test keeps the caller alive by construction, so a pid/handle/lock whose correctness depends on the holder outliving the work it guards must be exercised on the real surface (launch it twice) before it is trusted. Third: **a text-matching guard will match the comment that documents the pattern it forbids**, so scope the match to code and prove every new guard by deliberately re-introducing the defect — four of four guards written in one session needed that check to be worth anything. Fourth: when a rule looks like a bool, ask whether the "false" case is *failed* or *not applicable*; collapsing nothing-to-verify into unverified excluded the one point the whole comparison rests on.
 
 ---
+
+## [retrospective: adjudicating a reported defect I could not reproduce] 2026-10-21
+**Salience:** HIGH
+**Session:** freeform
+**Modules:** scripts/glm_run_lock.py, run_glm_anchor_detached.bat, tests/test_glm_run_lock.py
+**Corrections:** None from the user. One against my own adjudication: a parallel epilogue reported that
+the lock wrapper shipped in `5bbbeed` could not start a job -- argparse rejecting the launcher's verbatim
+`run ... -- <command>` form with `unrecognized arguments`, exit 2. I tried to verify rather than accept
+it, which was right, and then nearly got the verification wrong. FIVE probes all passed: the exact `.bat`
+form, my original manual form, a child carrying its own flags, `main()` with an explicit argv list, and
+the same command through cmd.exe. I was moving toward recording the report as unreproducible.
+**Reversals:** The sixth probe inverted it. Run under `uv run python` -- the venv's **3.11.17**, which is
+what `uv` and therefore the test suite use -- the pre-fix code fails exactly as reported. Every earlier
+probe had used the **3.14.7** on PATH, where argparse strips the separator and the code works. So the
+defect is real on the interpreter the project's own tooling runs, and was masked for me by PATH order.
+Two consequences followed: the fix's provenance note was amended (its first version asserted "argparse
+does NOT strip the separator" with no scope, which is what made it look false under 3.14.7), and the
+launcher was pinned to `uv run python` -- with the fix either interpreter works, but the shipped launcher
+had been depending on whichever `python` came first on PATH, so it worked on this host by luck.
+**Discoveries:** (a) The reported defect's own test evidence was structurally blind to it -- all 21
+existing lock tests cross `run_guarded` in-process or use an action taking no command, so none reached
+the argparse layer the launcher goes through. Third instance in that one module of a guard proven on a
+path its only caller does not take, after the dead temperature knob and `acquire`-vs-`run`. (b) My
+non-vacuity check for the interpreter pin reported the test as VACUOUS, and that was wrong too: the
+`sed` performing the mutation matched nothing and exited 0, so the file was unchanged and the test
+passed for the correct reason. Re-run with a mutation verified to have landed (`changed: True`), the
+test fails as designed.
+**Lesson:** A failure to reproduce is evidence about the environment you reproduced in, not about the
+claim -- so scope a measurement to the runtime that produced it and retry under the one the project's
+own tooling uses before calling a report false. And a mutation-based non-vacuity check inverts silently
+when the mutation does not apply: confirm the edit landed before reading red-or-green as a verdict.
+
+---
