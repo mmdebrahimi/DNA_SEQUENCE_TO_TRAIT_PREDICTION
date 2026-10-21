@@ -1,0 +1,85 @@
+{
+  "schema": "promcalc-toolchain-probe-v1",
+  "probed_on": "2026-10-21",
+  "verdict": "ENV_ABSENT_DEPS_SATISFIABLE_HERE",
+  "verdict_vocabulary": [
+    "INDETERMINATE_PROBE_FAILED",
+    "INPUTS_ABSENT",
+    "ENV_PRESENT",
+    "ENV_ABSENT_DEPS_UNSATISFIABLE",
+    "ENV_ABSENT_DEPS_SATISFIABLE_HERE"
+  ],
+  "verdict_vocabulary_frozen": "in this module, above any measurement",
+  "checks_resolved": 6,
+  "problems": [],
+  "env": {
+    "documented_interpreter": "D:/tools/promcalc_env/Scripts/python.exe",
+    "resolves": false,
+    "this_interpreter": "C:/Users/Laptop Portable/pythonprojects/dna_decode/.venv/Scripts/python.exe",
+    "requirement": "promoter_calculator",
+    "requirement_importable_here": false,
+    "isolation_required": true,
+    "isolation_reason": "promoter_calculator pulls sklearn 1.9.1; this project resolves 1.8.0, and stage B's own docstring says installing it in the project venv would move sklearn under the whole test suite. SATISFIABLE therefore means a SEPARATE environment, never this one.",
+    "project_sklearn": "1.8.0"
+  },
+  "inputs": {
+    "ultimate_raw_substrate": "GSE144621_peak_tile_expression_formatted_std.txt.gz",
+    "found_at": [
+      "E:/PythonProjects/dna_decode_cache/mpra/GSE144621_peak_tile_expression_formatted_std.txt.gz"
+    ],
+    "note": "stage A derives tiles.tsv from this file, so its presence -- not the derived TSV's -- is what decides whether there is anything to decompose. The file is NOT opened here; genomewide.load_peak_tiles owns GSE144621."
+  },
+  "stage_b": {
+    "module_level_imports": [
+      "argparse",
+      "csv",
+      "gzip",
+      "json",
+      "os",
+      "sys",
+      "time",
+      "multiprocessing",
+      "pathlib"
+    ],
+    "nested_imports": [
+      "promoter_calculator"
+    ],
+    "imports_dna_decode_at_module_level": false
+  },
+  "stage_a": {
+    "module_level_imports": [
+      "argparse",
+      "csv",
+      "json",
+      "sys",
+      "pathlib",
+      "dna_decode"
+    ],
+    "takes_cache_dir_parameter": true
+  },
+  "volumes": [
+    {
+      "drive": "C:",
+      "free_gb": 52.5,
+      "total_gb": 475.9
+    },
+    {
+      "drive": "E:",
+      "free_gb": 907.5,
+      "total_gb": 931.5
+    },
+    {
+      "drive": "S:",
+      "free_gb": 52.5,
+      "total_gb": 475.9
+    }
+  ],
+  "min_free_gb_assumed": 5.0,
+  "installs_performed": 0,
+  "honest_limits": [
+    "Read-only. Reporting that an install is possible is NOT the same claim as having done one.",
+    "MIN_FREE_GB is ASSERTED from stage A's own 'the per-site table is ~3M rows' comment, not measured against a completed sweep.",
+    "A SATISFIABLE verdict bounds only whether an isolated environment could be CREATED here. It says nothing about whether the regenerated pipeline would reproduce the frozen bar's committed per-seed anchors, which is a separate and stricter question.",
+    "Module-level import extraction is textual (column-0 regex), not an AST parse; a dynamic import would not appear."
+  ]
+}

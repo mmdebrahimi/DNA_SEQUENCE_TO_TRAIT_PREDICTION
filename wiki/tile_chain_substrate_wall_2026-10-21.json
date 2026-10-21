@@ -1,0 +1,69 @@
+{
+  "schema": "tile-chain-substrate-wall-v1",
+  "measured_on": "2026-10-21",
+  "host": "SHNEITZER",
+  "scope": "diagnosis and legibility only. No arm of the frozen acceptance bar was run.",
+  "wall_class_vocabulary": [
+    "code-closable",
+    "data-absent",
+    "external-wall"
+  ],
+  "correction": {
+    "what_i_said": "earlier this session I answered a VOI question by calling the tile/orthogonal-modality arm's substrate PRESENT, on the strength of E:/PythonProjects/dna_decode_cache/mpra",
+    "why_it_was_wrong": "that directory holds the RAW MPRA tables, which are not the input the chain consumes. The chain's input is the promcalc per-tile decomposition, absent from every volume."
+  },
+  "dependencies": [
+    {
+      "name": "MPRA peak-tile table (GSE144621)",
+      "wall_class": "code-closable",
+      "configured_at": "D:/dna_decode_cache/mpra",
+      "actually_at": "E:/PythonProjects/dna_decode_cache/mpra",
+      "defect": "scripts/glm_tile_predictions.py:282 called load_peak_tiles() with NO arguments, so it took genomewide.DEFAULT_CACHE unconditionally; ensure_cached then reached mkdir on an absent volume and raised an unhandled PermissionError [WinError 21]",
+      "evidence": "with --mpra-cache pointed at the reachable copy the script prints 'tiles 44106 | ceiling 0.9410' and fails only on the promcalc input",
+      "evidence_strength": "44106 == glm_tile_predictions.EXPECTED_TILES and 0.9410 == promcalc_export_tiles.EXPECTED_CEILING, both asserted by the published baseline and both reproduced exactly after the two published filters -- so the E: copy IS the published substrate, not merely a file of the right name",
+      "needed_from_whom": "nobody; closed in code by parameterising the one call"
+    },
+    {
+      "name": "promcalc per-tile decomposition",
+      "wall_class": "data-absent",
+      "configured_at": "D:/dna_decode_cache/promcalc",
+      "actually_at": null,
+      "probe_verdict": "ENV_ABSENT_DEPS_SATISFIABLE_HERE",
+      "probe_artifact": "wiki/promcalc_toolchain_probe_2026-10-21.json",
+      "isolation_required": true,
+      "isolation_reason": "promoter_calculator pulls sklearn 1.9.1; this project resolves 1.8.0, and stage B's own docstring says installing it in the project venv would move sklearn under the whole test suite. SATISFIABLE means a SEPARATE environment, never this one.",
+      "needed_from_whom": "a user decision to install an isolated interpreter plus promoter_calculator, then a ~44k-tile stage-B sweep -- OR the host that already holds the decomposition"
+    }
+  ],
+  "frozen_bar_execution_notes_audit": {
+    "artifact": "wiki/glm_tile_hybrid_primary_acceptance_bar.json",
+    "recorded": "the SHNEITZER laptop: no D: data tree, no uv, no Docker",
+    "no_uv": "STALE -- false. uv ran the full suite on this host today.",
+    "no_d_data_tree": "SUBSTANTIVELY RIGHT but conflates the two classes above: it reads as one undifferentiated wall when one half was a hardcoded drive letter and the other is absent data.",
+    "bar_edited": false,
+    "why_not": "it is a frozen pre-registration; amending any part of one is an authority call, left as an open question rather than taken"
+  },
+  "what_this_does_not_establish": [
+    "It is not a result. No arm was run and no headline figure of the bar is quoted here.",
+    "A reachable regeneration path is not a reproduction: the bar's anchor gate demands the regenerated pipeline reproduce committed per-seed headroom within 0.01 on 9 of 10 seeds, and REFUSED_ANCHOR_MISMATCH remains a live outcome.",
+    "The probe installed nothing. Reporting that an install is possible is a different claim from having performed one."
+  ],
+  "volumes_measured": [
+    {
+      "drive": "C:",
+      "free_gb": 52.5,
+      "total_gb": 475.9
+    },
+    {
+      "drive": "D:",
+      "resolves": false,
+      "note": "card-reader slot, no media"
+    },
+    {
+      "drive": "E:",
+      "free_gb": 907.5,
+      "total_gb": 931.5
+    }
+  ],
+  "reusable": "A dependency that is PRESENT BUT MIS-ADDRESSED and one that is ABSENT produce the same symptom and have completely different remedies. Separating them also required resolving each dependency AT ITS POINT OF USE: one front-loaded 'validate all inputs' check would have collapsed both into one failure and destroyed the distinguishing measurement."
+}
