@@ -167,3 +167,25 @@ def test_NO_point_is_ever_dropped_silently():
     g = assemble_grid(pts, recorded_null=0.5990)
     assert len(g["eligible"]) + len(g["excluded"]) == g["n_points"] == 3
     assert all(e.get("reason") for e in g["excluded"])
+def test_the_plan_prose_cites_THIS_function_as_the_single_definition():
+    """Step 4 of the sweep plan aligns its wording with this module; pin the citation.
+
+    The rule previously lived in three places and disagreed with itself, so the prose must
+    point at the code rather than restating the rule a fourth time.
+    """
+    plan = (ROOT / "plans" / "Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan"
+            / "technical-plan.md")
+    if not plan.is_file():
+        pytest.skip("sweep plan not at this path (archived?)")
+    t = plan.read_text(encoding="utf-8")
+    assert "verdict_eligibility" in t, "the plan must cite the code-owned rule"
+
+    # The real pin is the ABSENCE of the unscoped sentence. Measured: before the amendment
+    # `verdict_eligibility` appeared 0 times (so that assertion bites) while "non-default"
+    # already appeared once at gate 2 -- so asserting its PRESENCE was vacuous, and is dropped.
+    flat = " ".join(t.split())
+    assert "a point whose knob is unverified is excluded from the verdict" not in flat, (
+        "the unscoped wording is back; it excludes the T=1.0 anchor, which is the comparator")
+    assert "requested a** non-default knob" in flat or "requested a non-default knob" in flat \
+        or "**requested a non-default knob**" in flat, (
+        "the exclusion must be scoped to points that REQUESTED a non-default knob")

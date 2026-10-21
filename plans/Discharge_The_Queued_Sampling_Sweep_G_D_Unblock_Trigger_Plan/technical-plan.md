@@ -191,12 +191,30 @@ Depends on: Step 3
 - `top_k` is NOT swept in this plan: `TOP_K_KMER_FLOOR = 22` bounds it to k-mer-level truncation whose
   effect on per-base marginals is measured but whose interaction with the discriminator is not, so it
   would add an unattributable second lever. Named as deferred, not forgotten.
-- Each grid point stamps `knob_contract.knob_verified_end_to_end`; a point whose knob is unverified is
-  excluded from the verdict rather than averaged in.
+- Each grid point stamps `knob_contract.knob_verified_end_to_end`. A point that **requested a
+  non-default knob** and failed to verify it is excluded from the verdict rather than averaged in.
+  **AMENDED 2026-10-21 — this bullet previously read "a point whose knob is unverified is excluded",
+  which would have excluded the T=1.0 ANCHOR, i.e. the comparator the sharpened points are measured
+  against.** Verification is gated on a non-default knob having been requested, so at T=1.0 none was and
+  the real anchor artifact records all three knob fields `false`. A default point is not *unverified*; it
+  is *nothing-to-verify*. Gate 2 under **Verification Signal** was already correctly scoped to non-default
+  points — the rule simply lived in three places and disagreed with itself.
+- **The rule has ONE definition and it is code, not prose:** `dna_decode/glm/sweep_gates.py::
+  verdict_eligibility`, which returns a reason string (`eligible:default-sampling` /
+  `eligible:verified` / `excluded:knob-dead` / `excluded:requested-but-unverified`) rather than a
+  boolean — a boolean is precisely what collapsed *nothing-to-verify* into *unverified*. Cite it; do
+  not restate the rule a fourth time.
+- Per-point null invariance is also code now (`sweep_gates.null_reproduced`): temperature touches only
+  the GLM candidate, so every point's Markov null must equal the anchor's AND the recorded value. The
+  plan already specified the cross-check against the recorded `0.5990` / `0.6679`; what it lacked was a
+  coded gate and the anchor-vs-point comparison, which is the one that catches drift *within* a sweep.
 
 **Test strategy:**
 - Per-point validity gates as in Step 3.
-- Unit: the grid assembly refuses a point whose `knob_verified_end_to_end` is false.
+- Unit: `verdict_eligibility` classifies the real anchor record as `eligible:default-sampling`, and a
+  point that requested a non-default knob without verifying it as `excluded:requested-but-unverified`.
+- Unit: `assemble_grid` never drops a point without a reason string — an unexplained absence reads as
+  "not run", which is the wrong story.
 
 ### Step 5: Report against the pre-registered comparator
 Files: wiki/glm_sweep_result_2026-10-20.md, wiki/glm_sweep_result_2026-10-20.json
