@@ -5,6 +5,58 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Fixed/Added — the tile chain's substrate wall, split into one code defect and one install decision (2026-10-21)
+
+Plan `plans/Make_The_Tile_Chain_S_Substrate_Legible_And_Classify_Its_Wall_Plan/technical-plan.md`, all
+5 steps landed. **Research-arm only** — no decoder change, no CLI trait, no console entry point, no
+`cell_registry` contract; the five sha256-pinned frozen files are byte-unchanged and the prospective
+lock still verifies at 2026-08-31.
+
+**No arm ran.** The frozen pre-registration `wiki/glm_tile_hybrid_primary_acceptance_bar.json`
+(2026-10-17) is still UNEXECUTED and none of its figures are claimed here. What changed is that it
+had sat unexecuted on a single opaque "substrate was never located" state, and measurement split that
+into **two dependencies with different wall classes** — which is the transferable part, because only
+one of them ever needed a decision.
+
+**1. MPRA peak-tile table — code-closable, now CLOSED.** `scripts/glm_tile_predictions.py:282` called
+`load_peak_tiles()` with **no arguments**, so it took the hardcoded `genomewide.DEFAULT_CACHE`
+(`D:/dna_decode_cache/mpra`) unconditionally. `D:` is a card-reader slot with no media, so
+`ensure_cached` reached `mkdir` and raised an unhandled `PermissionError: [WinError 21] The device is
+not ready`. The loader had **always** accepted `cache_dir` and stage A (`promcalc_export_tiles.py`)
+already exposed `--cache-dir` — this was the one un-parameterised call in the chain. It now takes
+`--mpra-cache`, and with `--mpra-cache E:/PythonProjects/dna_decode_cache/mpra` the chain prints
+`tiles 44106 | ceiling 0.9410`: **both** published anchors (`EXPECTED_TILES`, `EXPECTED_CEILING`)
+reproduced exactly, which is what establishes that the `E:` copy IS the published substrate rather
+than a same-named lookalike.
+
+**2. promcalc per-tile decomposition — data-absent, and the remaining half is an INSTALL decision.**
+No `promcalc` output on any resolving volume. New read-only probe
+`scripts/promcalc_toolchain_probe.py` (`installs_performed: 0`) returns
+`ENV_ABSENT_DEPS_SATISFIABLE_HERE`: an isolated interpreter *could* be created here, but
+`promoter_calculator` pulls **sklearn 1.9.1** against this project's resolved **1.8.0**, so it must be
+a **separate** environment. The satisfiable verdict therefore always carries
+`isolation_required: true` — "satisfiable" never licenses installing into the project venv, which
+would move sklearn under the whole test suite. The verdict vocabulary is frozen in the module above
+any measurement, so the probe cannot pick a verdict that flatters the easy path.
+
+**`ensure_cached` checks reachability BEFORE `mkdir`.** A path on an absent volume is a *diagnosable*
+condition, so it now raises the typed `GenomeWideDataError` carrying the
+`external_root.describe()` report — configured path, ABSENT status, and every discovered candidate
+**with its contents**. The root is still never substituted automatically (a right NAME is not
+evidence of the right CONTENTS). **The reachable path is deliberately bit-identical**: `load_fragments`
+and `load_peak_tiles` both come through here and the fragment-rung arms depend on them. Layering is
+deliberate as well — the library RAISES, the script PRESENTS (`SystemExit`), because a traceback reads
+as a broken tool rather than an unattached volume.
+
+12th expiry constraint registered, `glm-tile-chain-promcalc-substrate-absent` (`file-exists`), with
+its limitation **stated not hidden**: the test names the configured `D:` path, so decomposition data
+arriving on another volume would not trip it, which degrades it to a scheduled human check. The
+drive-independent form is re-running the probe and re-opening at `ENV_PRESENT`.
+
+Artifacts `wiki/tile_chain_substrate_wall_2026-10-21.{md,json}` +
+`wiki/promcalc_toolchain_probe_2026-10-21.json`. **71 new tests**; suite 14 failed / 6,905 passed /
+186 skipped against a 14 / 6,834 / 186 baseline — identical failure set, zero regressions.
+
 ### Fixed/Added — the sweep's harness: one geometry, three-state grid gates, one GLM job at a time (2026-10-21)
 
 Five commits hardening the sampling-sweep runner after a *completed* run was voided by a variable
