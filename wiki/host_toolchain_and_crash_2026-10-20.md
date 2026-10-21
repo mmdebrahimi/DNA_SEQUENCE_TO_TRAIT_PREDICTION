@@ -59,7 +59,11 @@ that modern torch no longer supports — a plausible common root for native inst
 segfaults (exit 139, zero stdout/stderr) with **nothing else running**, so it is NOT the crash above.
 `faulthandler` localises it exactly: `glm/generate.py:233 -> load() -> AutoTokenizer.from_pretrained ->
 hf_hub_download -> httpx/httpcore` — a **network fetch during tokenizer load**. The model file is intact
-(`model.safetensors` 4,648,274,384 B = 4.33 GiB) and E: has 911 GB free, so it is not corruption or space.
+(`model.safetensors` 4,648,274,384 B = 4.33 GiB) and the volume holding it had **two orders of magnitude**
+more free space than the file needs (~900 GB against 4.33 GiB, measured at crash time), so it is neither
+corruption nor space. Stated as a ratio on purpose: the drive **letter** is not a durable fact on this host
+(this volume detached and re-attached the same day, and `CLAUDE.md` records that attachment is per-session),
+so a specific free-space figure behind a specific letter goes stale while the inference it supports does not.
 This is the same Hub re-fetch path `setup_tokenizer` exists to work around: the remote modeling code
 re-fetches its own tokenizer with no `cache_dir` and no `local_files_only`. **`HF_HUB_OFFLINE=1` bypasses
 it** — verified: the load runs to completion and generates (183.4 s/seq at n=1, matching the 187.8 s/seq
