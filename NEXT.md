@@ -64,6 +64,37 @@ scope drift the plan's non-goals exist to prevent.
 Ledger: 10 arms, 6 measured / 4 planned; `ceiling_verdict` still **`blocked:untried-arm`** — a cheap arm
 winning does not settle the ceiling question (R5 holding as designed).
 
+### The tile chain's real blocker — DIAGNOSED 2026-10-21, and it is two walls not one
+
+`wiki/tile_chain_substrate_wall_2026-10-21.{md,json}`. The follow-up above ("re-run the selection
+measurement with the HYBRID as primary scorer") got its pre-registration on 2026-10-17 and has not run
+because nobody had located its substrate. **I said in conversation that the substrate was present and
+that was wrong** — I had found the raw MPRA tables on `E:` and taken them for the input the chain
+consumes. Measured, there are **two** dependencies with **different** wall classes:
+
+- **MPRA peak-tile table — `code-closable`, and now CLOSED.** `glm_tile_predictions.py:282` called
+  `load_peak_tiles()` with no arguments, taking the hardcoded `D:` default and dying on an unhandled
+  `WinError 21`. It now takes `--mpra-cache`; with the reachable copy the chain prints
+  **`tiles 44106 | ceiling 0.9410`** — both the published anchors, exactly — and gets past the tile load.
+- **promcalc per-tile decomposition — `data-absent`.** No `promcalc` on any resolving volume. Probe
+  verdict **`ENV_ABSENT_DEPS_SATISFIABLE_HERE`** (`wiki/promcalc_toolchain_probe_2026-10-21.json`): an
+  isolated interpreter could be created here, but `promoter_calculator` pulls sklearn 1.9.1 against this
+  project's 1.8.0, so it must be a **separate** env — an install, i.e. a user decision. Registered as
+  the 12th expiry constraint `glm-tile-chain-promcalc-substrate-absent`.
+
+**The `orthogonal-modality-stack-promcalc-plus-N-channels` arm stays `planned` in
+`soraya_runs/arms-ledger.json` and that is CORRECT** — per R6 a declared arm cannot evaporate, and its
+blocker is substrate, not merit. The ledger was deliberately **not** edited: moving an arm's status to
+reflect a substrate problem would destroy the information that it is still owed.
+
+**The frozen bar was not edited either.** Its `not_runnable_on` note is half stale (`no uv` is false —
+uv ran the full suite here today) and half right (`no D: data tree`), but amending a frozen
+pre-registration is an authority call. Audited in the memo, not changed.
+
+**The one verified-runnable high-VOI item this leaves standing** is resuming Steps 4–6 of
+`plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/` — its substrate is byte-verified
+present (GLM weights on `E:/hf_cache`, MG1655 reference in `data/cache/refseq`), unlike the tile chain's.
+
 ## THE MISSION IS NOW DEFINED — `project_state/trait-to-edit/big-idea.md` (authored 2026-10-09)
 
 A validated mission definition for the north star, authored at the user's request from everything
@@ -96,7 +127,7 @@ learned that isn't durable yet. Durable findings belong in `CLAUDE.md` / `wiki/`
 
 Prune aggressively. A stale entry here is worse than an empty file.
 
-_Last updated: 2026-10-09._
+_Last updated: 2026-10-21._
 
 > **Pruned 2026-10-05.** This file had sat at 2026-09-28 / 428 lines, and its own "known-stale" section
 > had itself gone stale in the opposite direction (it warned that 46 traits was really 44; the live count
@@ -348,8 +379,9 @@ refusal** rather than two comments nobody enforced (`knob_contract.validate_comp
 (inert knob AND `conditional=False` against the aligned promoter set).
 
 **Step 3 then RAN — `E:` was reattached and the anchor reproduced the recorded 2026-10-07 baseline
-exactly**, all six rows bit-identical at `positional_bins=6` (`wiki/glm_sweep_anchor_2026-10-20.json`,
-**untracked — commit it**): `kmer` 0.7237 vs null 0.5990, `both` 0.7706 vs 0.6679, both
+exactly**, all six rows bit-identical at `positional_bins=6` (`wiki/glm_sweep_anchor_2026-10-20.json`
+— **committed; the earlier "untracked, commit it" note here was stale, verified 2026-10-21**):
+`kmer` 0.7237 vs null 0.5990, `both` 0.7706 vs 0.6679, both
 `WORSE_THAN_MARKOV_NULL`. So the harness, the device (CPU) and the corpus build are all vindicated;
 what is NOT done is the sweep.
 
