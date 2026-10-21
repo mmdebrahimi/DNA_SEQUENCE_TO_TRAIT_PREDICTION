@@ -121,6 +121,17 @@
       "last_checked": "",
       "last_verdict": "",
       "resolved": false
+    },
+    "glm-tile-chain-promcalc-substrate-absent": {
+      "cid": "glm-tile-chain-promcalc-substrate-absent",
+      "blocked": "The frozen pre-registration wiki/glm_tile_hybrid_primary_acceptance_bar.json cannot run, so the ORACLE_READY_AS_SCORING_HEAD vs SELECTION_IS_THE_BOTTLENECK fork stays unresolved and the orthogonal-modality-stack-promcalc-plus-N-channels arm stays `planned` in the arms ledger. What is NOT blocked: the MPRA half was code-closable and is closed (scripts/glm_tile_predictions.py now takes --mpra-cache), so the chain reaches the published substrate (tiles 44106, ceiling 0.9410).",
+      "rationale": "Measured 2026-10-21. The promcalc per-tile decomposition is absent from every resolving volume (C:, E:; D: is a card-reader slot with no media). The probe verdict is ENV_ABSENT_DEPS_SATISFIABLE_HERE (wiki/promcalc_toolchain_probe_2026-10-21.json): an isolated interpreter COULD be created here, but promoter_calculator pulls sklearn 1.9.1 against this project's resolved 1.8.0, so it must be a SEPARATE environment -- an install, which is a user decision, not an executor action. Regeneration would then face the bar's anchor gate (reproduce committed per-seed headroom within 0.01 on 9 of 10 seeds), so REFUSED_ANCHOR_MISMATCH is live. EXPIRY LIMITATION, STATED NOT HIDDEN: the file-exists test below names the configured D: path, so it fires only if that drive letter returns. Decomposition data arriving on another volume would NOT trip it, which degrades this to a scheduled human check -- the same honest limit already recorded for R9, where the compute that eventually arrived was cloud and a local-VRAM test could never have fired. THE DRIVE-INDEPENDENT FORM OF THE SAME CHECK, which is the complete test: run `uv run python scripts/promcalc_toolchain_probe.py` and re-open when its verdict is ENV_PRESENT, or when `scripts/glm_tile_predictions.py --mpra-cache <reachable> --in-dir <dir holding decomposition.csv.gz>` gets past the decomposition load. That is not auto-run, because check_all does not execute test-exit-0 kinds.",
+      "expiry_kind": "file-exists",
+      "expiry_arg": "D:/dna_decode_cache/promcalc/decomposition.csv.gz",
+      "registered_at": "2026-10-21T19:53:33Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
     }
   }
 }
