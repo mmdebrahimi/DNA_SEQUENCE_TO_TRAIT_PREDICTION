@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import ast
 import importlib.util
+import inspect
 import pathlib
 
 import pytest
@@ -83,6 +84,48 @@ def test_the_UNCONDITIONAL_fallback_still_works_when_there_are_no_prompts():
         mod.make_knob_probe(g, empty, 150)(0.7)
         assert [c[0] for c in g.calls] == ["generate"]
         assert g.calls[0][1] == 1, "the probe generates one sequence, not n"
+
+
+# ------------------------------------- the stub must not be an interface of our own invention
+# Everything above drives `_StubGen`, whose signatures were written by hand to match what the
+# probe calls. That makes the whole file self-consistent and, on its own, unable to notice if
+# the REAL generator's signature drifts: `HFGenerator.generate_conditional` gaining a required
+# argument, or `progress_every` being renamed, leaves all five tests above green while the real
+# probe raises TypeError -- AFTER the 4.33 GiB model load, minutes into a 22-minute point.
+#
+# So the probe's two call SHAPES are bound against the real class. `generate.py` lazily imports
+# torch, so this needs no weights, no GPU and no network.
+def test_the_probes_call_shapes_BIND_to_the_REAL_generator_signatures():
+    from dna_decode.glm.generate import HFGenerator
+
+    cond = inspect.signature(HFGenerator.generate_conditional)
+    uncond = inspect.signature(HFGenerator.generate)
+    # exactly the two calls `make_knob_probe` makes
+    cond.bind(object(), ["ACGTACGT"], 150)
+    uncond.bind(object(), 1, 150, progress_every=0)
+
+
+def test_and_that_binding_check_is_NOT_vacuous():
+    """A binding assertion is worthless if every call shape binds. Show a wrong one failing."""
+    from dna_decode.glm.generate import HFGenerator
+
+    uncond = inspect.signature(HFGenerator.generate)
+    with pytest.raises(TypeError):
+        uncond.bind(object(), 1, 150, progress_interval=0)      # plausible rename
+    with pytest.raises(TypeError):
+        inspect.signature(HFGenerator.generate_conditional).bind(object())   # missing args
+
+
+def test_the_stub_and_the_real_class_agree_on_the_PARAMETER_NAMES_that_matter():
+    """The probe passes prompts/length positionally, but a rename would still be a silent drift.
+
+    Pinned on the real class so the stub cannot be the only thing that defines the contract.
+    """
+    from dna_decode.glm.generate import HFGenerator
+
+    assert list(inspect.signature(HFGenerator.generate_conditional).parameters)[:3] == \
+        ["self", "prompts", "length"]
+    assert list(inspect.signature(HFGenerator.generate).parameters)[:3] == ["self", "n", "length"]
 
 
 # ------------------------------------------- ordering + restoration, pinned on the source

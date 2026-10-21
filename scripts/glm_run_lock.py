@@ -182,7 +182,45 @@ class GlmLockError(ValueError):
     """A lock operation that cannot mean what the caller intends."""
 
 
+def _split_command(argv=None) -> tuple[list[str], list[str]]:
+    """Partition at the first bare `--`, because argparse's own handling of it is unusable here.
+
+    MEASURED 2026-10-21, on the real script and on the launcher's verbatim form: with two leading
+    positionals plus `command nargs="*"`, argparse does NOT strip the separator. It reports
+    `unrecognized arguments: -- uv run python ...` and exits 2. So the documented launcher form
+    could not start a job AT ALL -- the guarded command never ran and the sentinel recorded
+    `EXIT=2`, which reads as "the job failed" rather than "the job was never launched".
+
+    AMENDED the same day, because the first version of this note was INCOMPLETE in a way that
+    made it look false. The failure is INTERPRETER-DEPENDENT: it reproduces under this project's
+    venv (**Python 3.11.17**, which is what `uv run` and therefore the test suite use) and does
+    NOT reproduce under the 3.14.7 on PATH, where argparse strips the separator and the pre-fix
+    code works. Five separate verification attempts under bare `python` all passed and nearly
+    had this recorded as an unreproducible claim; it took running the same command under
+    `uv run python` to see it. A measurement is scoped to the interpreter that produced it, and
+    "argparse does X" was the wrong shape of claim.
+
+    That version split is also why the launcher now invokes this script through `uv run python`
+    rather than bare `python`. With the fix either works, but the shipped launcher was depending
+    on whichever `python` happened to be first on PATH -- it worked on this host by luck, and
+    would have broken on any machine whose `python` is the venv's.
+
+    The in-process tests structurally could not see it, for the same reason the `acquire`-vs-`run`
+    defect was invisible: they call `run_guarded` directly, or use an action that takes no
+    command, so nothing crossed the argparse layer the launcher actually goes through. This is
+    the third instance in this module of a guard proven on a path its only caller does not take.
+
+    A command given WITHOUT `--` still works, so the simple form is not broken by the fix.
+    """
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if "--" in argv:
+        i = argv.index("--")
+        return argv[:i], argv[i + 1:]
+    return argv, []
+
+
 def main(argv=None) -> int:
+    head, after_separator = _split_command(argv)
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("action", choices=["run", "acquire", "release", "status"])
     p.add_argument("lockfile")
@@ -191,11 +229,11 @@ def main(argv=None) -> int:
                    help="release only if the lock is held by this pid")
     p.add_argument("command", nargs="*",
                    help="for `run`: the command to guard (everything after `--`)")
-    a = p.parse_args(argv)
+    a = p.parse_args(head)
     path = Path(a.lockfile)
 
     if a.action == "run":
-        return run_guarded(path, list(a.command), a.label)
+        return run_guarded(path, after_separator or list(a.command), a.label)
 
     if a.action == "acquire":
         ok, rec = acquire(path, a.label)

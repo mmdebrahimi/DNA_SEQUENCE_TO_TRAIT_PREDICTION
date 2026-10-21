@@ -48,7 +48,11 @@ REM --- recorded is already dead when a second launch looks, the lock is correct
 REM --- stale, and the second job starts anyway. Found by the two-launch manual check; the
 REM --- in-process unit tests could not see it. `run` holds the lock for the CHILD's lifetime.
 REM --- Exit 9 means refused-to-start, which is distinguishable from any child exit code.
-python "%~dp0scripts\glm_run_lock.py" run "%LOCKFILE%" --label "glm anchor %~1" -- ^
+REM --- Through `uv run python`, NOT bare `python`. The `--`-separator defect this depends on
+REM --- is INTERPRETER-DEPENDENT: it bites under the venv (3.11.17, what uv and the test suite
+REM --- use) and not under the 3.14.7 on PATH. With the fix either works, but pinning the
+REM --- interpreter means the launcher no longer depends on whichever python is first on PATH.
+uv run python "%~dp0scripts\glm_run_lock.py" run "%LOCKFILE%" --label "glm anchor %~1" -- ^
   uv run python scripts/glm_generator_falsifier.py ^
   --model auto --cache-dir E:/hf_cache --device cpu ^
   --conditional --context 300 --natural-set promoter ^

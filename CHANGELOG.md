@@ -5,6 +5,82 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Fixed/Added — the sweep's harness: one geometry, three-state grid gates, one GLM job at a time (2026-10-21)
+
+Five commits hardening the sampling-sweep runner after a *completed* run was voided by a variable
+nobody had held fixed. **Research-arm only** — no decoder change, no CLI trait, no console entry
+point, no `cell_registry` contract; the five sha256-pinned frozen files are untouched.
+
+**`scripts/glm_generator_falsifier.py` — one description of a run's frozen geometry, not two.** The
+`--compare-to` guard's projection and the artifact dict were both hand-written, and they had already
+diverged on one field: the artifact recorded `positional_bins` as `a.bins` unconditionally while the
+projection recorded `None` unless the mode was positional/`both`. Measured consequence — a
+`--modes kmer` run was refused against its OWN kmer-only baseline on
+`{'positional_bins': (10, None)}`. Both now read one `geometry_from_args(a)`. Removing the duplication
+also exposed a quieter trap: `conditional` / `context_bp` were restated AFTER the spread, and **a
+later duplicate key silently WINS over a spread**, so an agreeing duplicate would have re-created the
+second expression invisibly — a divergence that cannot be seen in a diff of either value.
+
+**New `dna_decode/glm/sweep_gates.py` — POST-run grid gates, kept separate from `knob_contract.py`
+(which holds PRE-run refusals); mixing the two would make neither name true.**
+
+| gate | what it decides |
+|---|---|
+| `verdict_eligibility` | whether a point's sampling may enter the verdict, as one of **four reason strings** — `eligible:default-sampling` / `eligible:verified` / `excluded:knob-dead` / `excluded:requested-but-unverified` |
+| `null_reproduced` | the cross-point invariant: temperature touches only the GLM candidate, so a point whose Markov null moved is not a single-variable comparison and its GLM number is uninterpretable |
+| `assemble_grid` | partitions points into eligible/excluded, **never dropping one without a recorded reason** — an unexplained absence reads as "not run" |
+
+Reason strings rather than a bool, because **a bool is what collapsed "nothing-to-verify" into
+"unverified"**: a default-sampling point (T=1.0) has all three knob fields false, so the plan's
+unscoped exclusion rule would have excluded the **ANCHOR** — the comparator the sharpened points are
+measured against. The real in-flight anchor artifact shows it exactly
+(`requested_non_default: false`, `knob_wired: false`, `knob_verified_end_to_end: false`). This is the
+same three-state distinction the doubt layer already makes (not-applicable / not-assessable /
+assessed), and one this repo has lost before. `null_reproduced` adds what the plan's prose did not
+have: a *coded* gate, and the **anchor-vs-grid-point** comparison that detects drift WITHIN one sweep
+(the plan specified only the check against the recorded 0.5990 / 0.6679). `tol=0.0` by default, since
+the null reproduced to four decimals across two independent runs on different devices.
+
+**New `scripts/glm_run_lock.py` + `run_glm_anchor_detached.bat` — one GLM job at a time**, because two
+concurrent torch processes is this host's documented access-violation hazard and the detached runner
+had nothing preventing a second launch. Liveness is by **PID existence, not the sentinel** — the
+sentinel is written only at EXIT, so it says nothing at all while a job runs. A stale lock whose PID
+is gone is **RECLAIMED**, deliberately: a killed job must not wedge the next launch, and the crash
+hazard is already covered by the PID check. Two measured findings:
+
+- **A launcher must use `run`, not `acquire` + `release`.** `acquire` records the pid of the process
+  that CALLS it, and a launcher's short-lived `acquire` process is already dead when the next launch
+  looks — so the lock is correctly reclaimed as stale and the second job **starts** (measured: exit 0,
+  job ran). With `run` — which acquires, spawns, waits, releases in a `finally` and propagates the
+  child's exit code — the second launch exits **9** and never starts. The in-process unit tests
+  structurally could not see this: there the caller's pid really does stay alive for the duration.
+- **`echo EXIT=%RC%>> file` never wrote anything.** It expands to `echo EXIT=0>> file`, and cmd reads
+  a digit immediately before `>>` as a **file-handle number**, so it redirected stdin and left the
+  sentinel EMPTY — which is why a completed detached run's completion had to be noticed from
+  `git status` rather than from its own completion marker.
+
+**The knob probe now runs on the path the sweep actually uses.** `--verify-knob` called the
+unconditional `generate`, while every sweep point is `generate_conditional`; a knob proven live on one
+path is not evidence about the other. Prompts are now built once above the verification and reused
+(the genome loads once), and `verify_knob_live` is wrapped in `try/finally` restoring
+`gen.temperature`, so a failed probe cannot leave the generator mutated for the run that follows.
+
+**Plan amendment (in place, not a new file):** Step 4 of
+`plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technical-plan.md` now scopes
+exclusion to points that **requested** a non-default knob, citing `sweep_gates.verdict_eligibility` as
+the single definition — the rule previously lived in three places and disagreed with itself.
+
+**Status — Step 3's reproduction ANCHOR completed and reproduced the recorded 2026-10-07 baseline
+EXACTLY.** All six rows bit-identical at `positional_bins=6`: `kmer` GLM **0.7237** / null **0.5990** /
+uniform **0.9408**; `both` GLM **0.7706** / null **0.6679** / uniform **0.9641**; verdict
+`WORSE_THAN_MARKOV_NULL` in both modes (`wiki/glm_sweep_anchor_2026-10-20.json`). An earlier attempt at
+the same anchor ran at the runner's **default `--bins 10`** against a baseline recorded at 6 and is
+retained as `wiki/glm_sweep_anchor_bins10_UNCOMPARABLE_2026-10-20.json` for two reasons: its `kmer`
+rows (which do not use bins) are the only evidence that the generation path reproduces across a
+GPU→CPU device change, and it measures the `both`-mode geometry sensitivity — **bins 6→10 shrank the
+GLM-vs-null gap 0.1027 → 0.0612**, which makes `both` a less robust comparator than `kmer`. G-D's
+unblock trigger is still **UNDISCHARGED**: the anchor is the T=1.0 comparator, not a swept point.
+
 ### Fixed — the GLM's sampling knobs were shipped DEAD, and the sweep that used them is void (2026-10-20)
 
 `HFGenerator(temperature=T)` had no effect at all. The remote `_BPLogitsProcessor` marginalises k-mer

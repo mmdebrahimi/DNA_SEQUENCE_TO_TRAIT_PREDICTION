@@ -159,6 +159,67 @@ def test_assemble_grid_EXCLUDES_a_point_whose_NULL_MOVED():
     assert bad["null_check"]["delta_vs_anchor"] > 0
 
 
+def test_a_grid_with_NO_anchor_point_excludes_EVERY_point_rather_than_inventing_a_comparator():
+    """Assembling only the SHARPENED half is reachable, and must not quietly self-approve.
+
+    `anchor_null` is inferred from the first default-sampling point. With none present there is
+    no comparator, so reproduction is undecidable -- and the honest outcome is that every point
+    is excluded WITH a reason, not that every point passes a check that never ran.
+    """
+    pts = [p for p in _grid() if p["label"] != "T=1.0"]
+    g = assemble_grid(pts)
+    assert g["anchor_null"] is None
+    assert g["eligible"] == []
+    assert [e["reason"] for e in g["excluded"]] == ["excluded:null_missing"] * 2
+
+
+def test_and_an_EXPLICIT_anchor_null_rescues_exactly_those_points():
+    """Non-vacuity for the test above: the exclusion is about the MISSING ANCHOR, not the points.
+
+    Same points, same gates, one argument different -- so the previous test cannot be passing
+    because the points were defective in some other way.
+    """
+    pts = [p for p in _grid() if p["label"] != "T=1.0"]
+    g = assemble_grid(pts, anchor_null=0.5990)
+    assert [e["label"] for e in g["eligible"]] == ["T=0.8", "T=0.6"]
+    assert g["excluded"] == []
+
+
+def test_an_EMPTY_grid_cannot_read_as_all_clear():
+    """`not g["excluded"]` is the natural all-clear test, and it is TRUE of a grid of zero points.
+
+    Pinned because an empty result wearing the costume of a clean one is this repo's recurring
+    false-verdict shape; a caller must key on `n_points`, which this asserts is honest.
+    """
+    g = assemble_grid([])
+    assert g["n_points"] == 0
+    assert g["eligible"] == [] and g["excluded"] == []
+    assert not g["excluded"], "the trap, stated: emptiness is not evidence of validity"
+
+
+def test_a_point_that_recorded_NO_NULL_carries_NO_null_check_rather_than_a_passing_one():
+    """Absence of verification must be VISIBLE, never rendered as verified.
+
+    With no anchor and no null there is nothing to compare, so the point stays eligible on its
+    knob alone -- but it must not acquire a `null_check` saying `null_reproduced`, which a
+    reader would take as a check that passed.
+    """
+    g = assemble_grid([{"label": "X", "knob_contract": _VERIFIED}])
+    assert [e["label"] for e in g["eligible"]] == ["X"]
+    assert "null_check" not in g["eligible"][0]
+
+
+def test_but_the_SAME_point_is_EXCLUDED_once_an_anchor_exists_to_compare_against():
+    """Non-vacuity partner: once a comparator exists, a missing null is a real failure.
+
+    Same point, opposite outcome, and both are correct -- which is the distinction a single
+    boolean could not carry.
+    """
+    g = assemble_grid([{"label": "X", "knob_contract": _VERIFIED}], anchor_null=0.5990)
+    assert g["eligible"] == []
+    assert g["excluded"][0]["reason"] == "excluded:null_missing"
+
+
 def test_NO_point_is_ever_dropped_silently():
     """An unexplained absence reads as 'not run', which is the wrong story."""
     pts = _grid()

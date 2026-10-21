@@ -339,7 +339,7 @@ essential gene is two-sided by construction, so a constant call can never match 
 bottleneck is fixed in both datasets: PRECISE-1K ∩ Keio carbon = **11 of 28**, 621 of 1,035 samples
 glucose.
 
-## BLOCKED ON A DRIVE — the GLM sampling sweep, 2 of 6 steps shipped (2026-10-20)
+## THE ANCHOR REPRODUCED — the GLM sampling sweep, 3 of 6 steps shipped (updated 2026-10-21)
 
 `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/`. Steps 1-2 landed: the sampling
 knobs are live (`wiki/glm_temperature_knob_2026-10-20.md`), the comparison mode is now a **contract
@@ -347,16 +347,22 @@ refusal** rather than two comments nobody enforced (`knob_contract.validate_comp
 `wiki/glm_sweep_invalidation_2026-10-20.md` records that the 2026-10-19 sweep was **doubly invalid**
 (inert knob AND `conditional=False` against the aligned promoter set).
 
-**Steps 3-6 never ran: `E:` detached mid-execution and the 4.33 GiB GENERator weights lived on
-`E:/hf_cache`, with no copy on C:.** Re-confirmed absent at write time — only `C:` and the `S:` subst
-alias are mounted.
+**Step 3 then RAN — `E:` was reattached and the anchor reproduced the recorded 2026-10-07 baseline
+exactly**, all six rows bit-identical at `positional_bins=6` (`wiki/glm_sweep_anchor_2026-10-20.json`,
+**untracked — commit it**): `kmer` 0.7237 vs null 0.5990, `both` 0.7706 vs 0.6679, both
+`WORSE_THAN_MARKOV_NULL`. So the harness, the device (CPU) and the corpus build are all vindicated;
+what is NOT done is the sweep.
 
-**So G-D's unblock trigger is STILL UNDISCHARGED, and that is now the only thing standing between the
-record and a decision** — not a measurement, not a GPU. Two facts worth carrying: the sweep is **CPU
-inference** (the 8 GB GPU blocker gates fine-tuning, not this), and what actually blocked it for months
-was the inert knob, so no pre-2026-10-20 run could have discharged it. Resume = reattach a drive
-carrying `hf_cache` (or re-download the model to C:) and run with `--verify-knob --conditional`; both
-are enforced now. Full resume conditions + the carried honest limits are in `TODOS.md`.
+**G-D's unblock trigger is STILL UNDISCHARGED, and it is now ONE run away** — the anchor is the T=1.0
+comparator, not a swept point. Three facts worth carrying: the sweep is **CPU inference** (the 8 GB GPU
+blocker gates fine-tuning, not this); `E:` attachment is **per-session and never inherited**, so the
+4.33 GiB weight file under `E:/hf_cache` can vanish between sessions; and launching must go through
+`run_glm_anchor_detached.bat` / `glm_run_lock.py run`, since two concurrent torch jobs is this host's
+access-violation hazard and `acquire`+`release` does NOT hold the lock from a launcher (measured — the
+second job starts). Pass `--bins 6` explicitly: the runner default is 10 and one anchor attempt was
+already voided by it (`..._bins10_UNCOMPARABLE_...json`, which also shows the `both` gap shrinking
+0.1027 → 0.0612 from bins 6→10, so prefer `kmer` as the primary comparator). Full resume conditions +
+the carried honest limits are in `TODOS.md`.
 
 **Do not quote the 2026-10-19 headline** (GLM 0.8141 vs null 0.3876). Valid baseline is the committed
 `wiki/glm_generator_falsifier_REAL_2026-10-07.json`: 0.7237 vs null 0.5990 (`kmer`),

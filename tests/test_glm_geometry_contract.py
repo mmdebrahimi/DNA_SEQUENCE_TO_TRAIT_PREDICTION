@@ -259,6 +259,46 @@ def test_the_REAL_bins_mismatch_still_refuses_after_the_refactor():
     assert geometry_diff(recorded, mod.geometry_from_args(_ns(bins=10))) == {"positional_bins": (6, 10)}
 
 
+def test_a_NON_conditional_run_records_context_bp_NONE_whatever_context_says():
+    """`context_bp` is the ONE field still conditioned on a mode -- deliberately, and untested.
+
+    That is precisely the shape of the defect this refactor fixed: `positional_bins` was
+    conditioned in one consumer and not the other, so a `--modes kmer` run was refused against
+    its own baseline. The remaining conditional is CORRECT -- `--context` is inert when nothing
+    is being conditioned on, so two unconditional runs launched with different `--context`
+    values describe the same geometry -- but nothing pinned that, and one expression makes the
+    two consumers agree without making the branch right.
+    """
+    mod = _load_runner()
+    a = mod.geometry_from_args(_ns(conditional=False, context=300))
+    b = mod.geometry_from_args(_ns(conditional=False, context=500))
+    assert a["context_bp"] is None and b["context_bp"] is None
+    assert geometry_diff(a, b) == {}, "an inert flag must not void a comparable run"
+
+
+def test_but_a_CONDITIONAL_run_DOES_compare_on_context_bp():
+    """Non-vacuity partner: when the flag is live, a drift in it must still refuse.
+
+    Without this, returning `None` unconditionally would pass the test above -- and would
+    silently make two genuinely different conditional runs look comparable, which is the worse
+    direction of the same error.
+    """
+    mod = _load_runner()
+    a = mod.geometry_from_args(_ns(conditional=True, context=300))
+    b = mod.geometry_from_args(_ns(conditional=True, context=500))
+    assert a["context_bp"] == 300 and b["context_bp"] == 500
+    with pytest.raises(GeometryMismatchError, match="context_bp"):
+        assert_geometry_comparable(a, b)
+
+
+def test_conditional_itself_separates_the_two_regimes():
+    """A conditional and an unconditional run are never comparable, whatever context_bp holds."""
+    mod = _load_runner()
+    with pytest.raises(GeometryMismatchError, match="conditional"):
+        assert_geometry_comparable(mod.geometry_from_args(_ns(conditional=True, context=300)),
+                                   mod.geometry_from_args(_ns(conditional=False, context=300)))
+
+
 def test_the_ARTIFACT_restates_NONE_of_the_frozen_fields_as_its_own_literal():
     """The pin that would have caught the original divergence.
 
