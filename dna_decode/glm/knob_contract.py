@@ -213,3 +213,93 @@ def validate_comparison_mode(natural_set: str, conditional: bool) -> None:
     raise ComparisonModeError(
         f"unknown natural_set {natural_set!r}; expected 'promoter', 'genomic' or 'both'"
     )
+
+
+# --------------------------------------------------------------------------- #
+# Geometry-comparability contract (added 2026-10-20, after it bit)
+# --------------------------------------------------------------------------- #
+# WHY: the sampling-sweep plan specified "all other flags identical to Step 3" and
+# "recorded geometry", and NOTHING CHECKED IT. The reproduction anchor was launched
+# without `--bins`, so it took the runner's DEFAULT of 10 against a recorded baseline
+# measured at 6. The `kmer` arm -- which does not use positional bins -- reproduced
+# BIT-IDENTICALLY (GLM 0.7237, null 0.5990, uniform 0.9408), while every `both` row
+# moved, and the `both` null moved AWAY from the pre-registered comparator 0.6679 to
+# 0.7475. A whole 25-minute run that could not be compared to the thing it existed to
+# be compared to.
+#
+# This is the SAME failure as the dead temperature knob one layer out: a run whose
+# validity rests on a variable being held, with nothing asserting it was held. The knob
+# guards above cover the variable we MEANT to move; this covers the ones we meant to
+# FREEZE.
+#
+# DELIBERATELY EXCLUDED, and each exclusion is a claim:
+#   * `sampling` -- that is the swept variable. Including it would refuse every sweep
+#     point, which is the mirror failure: a guard that refuses everything is as useless
+#     as one that refuses nothing.
+#   * `device` -- MEASURED not to matter here: the `kmer` arm reproduced bit-identically
+#     across a GTX-860M-to-CPU change. That is n=1 on one mode, so it is an exclusion on
+#     evidence rather than on principle, and it is recorded as such instead of assumed.
+#   * `date`, `results`, `honest_limits`, `record` -- outputs and metadata, not geometry.
+COMPARISON_GEOMETRY_FIELDS = (
+    "window_length_bp",
+    "kmer_k",
+    "positional_bins",
+    "markov_order",
+    "n_generated_per_candidate",
+    "natural_set_arg",
+    "feature_modes",
+    "conditional",
+    "context_bp",
+)
+
+
+class GeometryMismatchError(ValueError):
+    """A run that cannot be compared to the artifact it names as its baseline."""
+
+
+def geometry_of(artifact: dict) -> dict:
+    """Project an artifact onto the fields that decide comparability.
+
+    A field ABSENT from the artifact is reported as absent rather than defaulted, because
+    silently defaulting a missing field is how two runs come to look comparable when one
+    of them never recorded the value.
+    """
+    return {k: artifact[k] for k in COMPARISON_GEOMETRY_FIELDS if k in artifact}
+
+
+def geometry_diff(recorded: dict, candidate: dict) -> dict:
+    """`{field: (recorded_value, candidate_value)}` for every field that differs.
+
+    Includes fields present in one artifact and missing from the other, keyed to the
+    sentinel `"<absent>"`, so a schema change cannot hide behind an empty diff.
+    """
+    a, b = geometry_of(recorded), geometry_of(candidate)
+    out = {}
+    for k in COMPARISON_GEOMETRY_FIELDS:
+        va, vb = a.get(k, "<absent>"), b.get(k, "<absent>")
+        if va != vb:
+            out[k] = (va, vb)
+    return out
+
+
+def assert_geometry_comparable(recorded: dict, candidate: dict) -> None:
+    """Refuse a run whose frozen geometry differs from the baseline it cites.
+
+    Call this BEFORE the corpus build and the model load, so a mis-specified run costs
+    milliseconds instead of ~25 minutes plus a number that cannot be used.
+    """
+    diff = geometry_diff(recorded, candidate)
+    if not diff:
+        return
+    lines = "\n".join(
+        f"    {k}: recorded={va!r}  this run={vb!r}" for k, (va, vb) in sorted(diff.items())
+    )
+    raise GeometryMismatchError(
+        f"this run's geometry differs from the baseline it is being compared against, in "
+        f"{len(diff)} field(s):\n{lines}\n"
+        f"A comparison across a moved variable measures the variable, not the thing under "
+        f"test. This guard exists because exactly that happened on 2026-10-20: `--bins` was "
+        f"left at its default 10 against a baseline recorded at 6, and the `both`-mode null "
+        f"moved 0.6679 -> 0.7475, away from the pre-registered comparator. Either pass flags "
+        f"matching the baseline, or state explicitly that you are NOT comparing to it."
+    )

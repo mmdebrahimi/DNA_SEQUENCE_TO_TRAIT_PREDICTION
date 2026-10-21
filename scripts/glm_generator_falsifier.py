@@ -94,6 +94,11 @@ def main(argv=None) -> int:
                    help="BEFORE sweeping, prove the sampling knob moves the OUTPUT (one extra "
                         "model-backed 2-value diff). Required to claim a sweep VARIED sampling; "
                         "without it the artifact records knob_verified_end_to_end=false.")
+    p.add_argument("--compare-to", default=None,
+                   help="path to a recorded artifact this run will be compared against. Refuses "
+                        "BEFORE any work if the frozen geometry differs (the swept `sampling` and "
+                        "`device` are deliberately exempt). Added after --bins was left at its "
+                        "default 10 against a baseline recorded at 6, voiding a 25-min run.")
     p.add_argument("--out", default=None)
     a = p.parse_args(argv)
 
@@ -110,6 +115,25 @@ def main(argv=None) -> int:
     from dna_decode.glm.knob_contract import validate_comparison_mode
 
     validate_comparison_mode(a.natural_set, bool(a.conditional))
+
+    # And refuse a run whose FROZEN geometry drifted from the baseline it cites. Same
+    # ordering argument: this costs a file read, not a generation pass.
+    if a.compare_to:
+        from dna_decode.glm.knob_contract import assert_geometry_comparable
+
+        recorded = json.loads(Path(a.compare_to).read_text(encoding="utf-8"))
+        assert_geometry_comparable(recorded, {
+            "window_length_bp": a.length,
+            "kmer_k": a.k,
+            "positional_bins": a.bins if "positional" in a.modes or "both" in a.modes else None,
+            "markov_order": a.markov_order,
+            "n_generated_per_candidate": a.n,
+            "natural_set_arg": a.natural_set,
+            "feature_modes": a.modes,
+            "conditional": bool(a.conditional),
+            "context_bp": a.context if a.conditional else None,
+        })
+        print(f"geometry: comparable to {a.compare_to}")
 
     kinds = ["promoter", "genomic"] if a.natural_set == "both" else [a.natural_set]
     naturals = {}
