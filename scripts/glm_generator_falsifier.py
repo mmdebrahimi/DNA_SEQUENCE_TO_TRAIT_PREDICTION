@@ -91,6 +91,29 @@ def geometry_from_args(a) -> dict:
     }
 
 
+def make_knob_probe(gen, prompts, length: int):
+    """The `generate_at(temperature)` callable `verify_knob_live` drives.
+
+    Module-level, and deliberately so: as a closure inside `main` the choice of generation path
+    could only be pinned by reading the source, and this is the one decision in the verification
+    that was WRONG. It called the unconditional `generate` while the sweep runs
+    `generate_conditional`, which proves the knob moves output on a path no grid point takes.
+
+    One real prompt suffices. Both paths reseed to `self.seed` on entry (`generate.py:222`,
+    `:266`), so the only difference between the probe's two calls is temperature.
+
+    The unconditional fallback is unreachable today -- `validate_comparison_mode` leaves
+    `promoter + conditional` as the single valid pairing -- but it is kept so the helper is not
+    silently wrong if that contract ever widens.
+    """
+    def _at(t: float):
+        gen.temperature = t
+        if prompts:
+            return gen.generate_conditional(prompts[:1], length)
+        return gen.generate(1, length, progress_every=0)
+    return _at
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--length", type=int, default=150, help="upstream window length (bp)")
@@ -188,18 +211,45 @@ def main(argv=None) -> int:
         knob_record = {"requested_non_default": requested_non_default(a.temperature, a.top_k),
                        "knob_wired": bool(gen._sampling_processors()),
                        "knob_verified_end_to_end": False}
+
+        # Prompts are built HERE, before the knob check, so the verification can run on the
+        # CONDITIONAL path -- the one the sweep actually uses. It used to call the unconditional
+        # `generate`, which proves the knob moves output on a path no grid point takes. Both
+        # paths do install the warpers (generate.py:232 and :277), so the risk was low; but the
+        # whole subject of this episode is a knob that LOOKED wired and was inert, and a proxy
+        # for the path under test is exactly the shape of evidence that failed before.
+        # Built once and reused by the real generation below, so the genome is loaded once.
+        prompts = None
+        if a.conditional:
+            # Prompts come from the EVAL windows, so the generated sequence sits at the SAME
+            # aligned offsets as the reference it is scored against. Only the continuation is
+            # scored.
+            from dna_decode.glm.corpus import load_fasta as _lf, window_context
+            _g = _lf(REFSEQ / "genome.fna")
+            prompts = []
+            for w in naturals[kinds[0]]["eval_windows"]:
+                c = window_context(_g, w, a.context)
+                if c:
+                    prompts.append(c)
+                if len(prompts) >= a.n:
+                    break
+            print(f"conditional: {len(prompts)} real prompts of {a.context} bp "
+                  f"(continuation ONLY is scored; no prompt leakage)")
+
         if a.verify_knob and knob_record["requested_non_default"]:
             # The check the 2026-10-19 sweep lacked: three grid points produced three
             # identical numbers because the knob was inert, and the invariance was reported
             # as a finding. Refuse to sweep through an unverified knob.
             print(f"loading {gen.model_id} to verify the sampling knob moves the OUTPUT "
                   f"before sweeping ...", flush=True)
-            def _at(t: float):
-                gen.temperature = t
-                return gen.generate(1, a.length, progress_every=0)
-            v = verify_knob_live(_at)
-            gen.temperature = a.temperature
-            knob_record.update(verification=v, knob_verified_end_to_end=bool(v["live"]))
+            # try/finally: an exception inside the probe must not leave the generator sitting at
+            # the probe's temperature, which would silently mis-sample the run that follows.
+            try:
+                v = verify_knob_live(make_knob_probe(gen, prompts, a.length))
+            finally:
+                gen.temperature = a.temperature
+            knob_record.update(verification=v, knob_verified_end_to_end=bool(v["live"]),
+                               verified_on=("conditional" if prompts else "unconditional"))
             print(f"  knob verification: {v['verdict']} "
                   f"({v['identical']}/{v['n']} identical)", flush=True)
             if not v["live"]:
@@ -213,19 +263,8 @@ def main(argv=None) -> int:
             if getattr(gen, "_model", None) is None:
                 print(f"loading {gen.model_id} (dtype {gen.dtype}) ...")
             if a.conditional:
-                # Prompts come from the EVAL windows, so the generated sequence sits at the SAME aligned
-                # offsets as the reference it is scored against. Only the continuation is scored.
-                from dna_decode.glm.corpus import load_fasta as _lf, window_context
-                _g = _lf(REFSEQ / "genome.fna")
-                prompts = []
-                for w in naturals[kinds[0]]["eval_windows"]:
-                    c = window_context(_g, w, a.context)
-                    if c:
-                        prompts.append(c)
-                    if len(prompts) >= a.n:
-                        break
-                print(f"conditional: {len(prompts)} real prompts of {a.context} bp "
-                      f"(continuation ONLY is scored; no prompt leakage)")
+                # Prompts were built above the knob check (so the verification could use this
+                # same path) and are reused here -- the genome is loaded ONCE.
                 seqs = gen.generate_conditional(prompts, a.length)
             else:
                 seqs = gen.generate(a.n, a.length)
