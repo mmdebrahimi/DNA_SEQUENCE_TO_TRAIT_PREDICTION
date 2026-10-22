@@ -54,6 +54,20 @@ set "PY=C:\Users\Laptop Portable\tools\promcalc_env\Scripts\python.exe"
 if not exist "%OUTDIR%" mkdir "%OUTDIR%"
 del "%SENTINEL%" 2>nul
 
+REM --- ONE BLAS THREAD PER WORKER. Measured 2026-10-22 and worth ~10 h on this job.
+REM --- The solve is BLAS-parallel: one tile costs 8.7 core-seconds pinned to a single thread but
+REM --- only ~3.0 s wall unpinned, so an unpinned process quietly spreads across ~3 cores. With 7
+REM --- worker PROCESSES each ALSO spawning its own thread pool, 8 cores get oversubscribed several
+REM --- times over and most of the machine goes into context switching: the first launch of this
+REM --- exact job measured 28 tiles/min (~26 h projected). Pinning each worker to one thread makes
+REM --- the process-level parallelism the only parallelism, which is the level that scales here.
+REM --- promotercalculator pulls numpy + scipy + scikit-learn, so all four vendor knobs are set.
+REM --- Env vars are inherited by the spawned Pool children, which is what makes this reach them.
+set OMP_NUM_THREADS=1
+set OPENBLAS_NUM_THREADS=1
+set MKL_NUM_THREADS=1
+set NUMEXPR_NUM_THREADS=1
+
 REM --- The ISOLATED interpreter, not `uv run python`. Stage B must not see the
 REM --- project env: promotercalculator pulls sklearn 1.9.1 while the project is
 REM --- pinned at 1.8.0, and `uv.lock` is a frozen reproducibility unit so the
