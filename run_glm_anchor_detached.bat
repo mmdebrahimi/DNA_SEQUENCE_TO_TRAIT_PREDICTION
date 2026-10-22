@@ -1,10 +1,40 @@
 @echo off
-REM Detached runner for the GLM sweep anchor and its temperature grid points.
+REM Long-running runner for the GLM sweep anchor and its temperature grid points.
 REM
-REM WHY DETACHED: each point takes ~22 min of generation (11.2 s/seq x 120 on CPU) and TWO
-REM consecutive attempts died at session end -- one at 95/120, writing nothing. The job was
-REM never defective; the session boundary was. Same reason run_mechanism_audit_detached.bat
-REM exists for the ~1 hr mechanism audit.
+REM TWO SEPARATE THINGS KILL THIS JOB. Both are diagnosed; neither is a defect in the job.
+REM
+REM (1) THE USB DRIVE, and this is the one that actually bites. MEASURED 2026-10-21, died at
+REM     cond-gen 65/120 with sentinel EXIT=-1 and NO Python traceback anywhere in the log.
+REM     torch MEMORY-MAPS the 4.4 GB model.safetensors off D:. When that drive hiccups, the
+REM     mapped pages fault at the OS level and the process dies in NATIVE code below Python,
+REM     so no traceback can ever be printed. Windows event-log signature, 30 s apart:
+REM       disk id 153  'IO operation at LBA ... for Disk 1 was retried'
+REM       disk id  51  'error detected on \Device\Harddisk1\DR1 during a PAGING operation'
+REM       app  id 1000 'Faulting application python.exe, faulting module VCRUNTIME'
+REM     RAM was NOT the cause (15.9 GB total, 8.7 GB free). The drive had already detached
+REM     once earlier the same day, mid-test-suite. If a run dies with EXIT=-1 and a clean log,
+REM     CHECK THE DISK EVENT LOG before suspecting the model or the code.
+REM     Mitigation, NOT applied here because it collides with the standing 'heavy files on D:,
+REM     never C:' rule and is the user's call: stage the weights on local storage and point
+REM     HF_HOME at that copy, so nothing is memory-mapped off USB.
+REM
+REM (2) THIS FILE DOES NOT DETACH ANYTHING -- detaching is the CALLER's job. The name says
+REM     'detached' and that describes the MOTIVE; there is no `start`, no `/b`, nothing that
+REM     reparents. Launched from an agent's background shell it stays parented to a shell that
+REM     is torn down at session end, which is how the 95/120 and 15/120 deaths happened.
+REM     LAUNCH IT LIKE THIS (PowerShell) so it outlives the session:
+REM       Start-Process -FilePath <repo>\run_glm_anchor_detached.bat ^
+REM         -ArgumentList '<out-json>','<sentinel>','<log>','<temperature>' ^
+REM         -WorkingDirectory <repo> -WindowStyle Hidden
+REM     VERIFIED 2026-10-21: launched that way, the job outlived a real session boundary that
+REM     had killed its predecessor -- then died to cause (1) sixteen minutes later.
+REM
+REM Cost per point MEASURED 2026-10-21: ~25-30 min, not 22. 12.4 s/seq x 120 plus ~3 min of
+REM model load and a 173 s cold-start sequence before the knob check.
+REM The out-JSON is written ONLY at the end, so any mid-run death costs elapsed time and
+REM corrupts nothing. Read the sentinel to tell the two cases apart: EXIT=-1 means it RAN and
+REM crashed (cause 1); an ABSENT sentinel means it was KILLED before the .bat reached its exit
+REM line (cause 2). Same considerations apply to run_mechanism_audit_detached.bat (~1 hr).
 REM
 REM Usage:
 REM   run_glm_anchor_detached.bat <out-json> <sentinel> <log> [temperature]
