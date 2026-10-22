@@ -50,23 +50,63 @@ def _int_start(v) -> int:
         return -1
 
 
+def _load_calculator():
+    """Resolve the `Promoter_Calculator` CLASS across promotercalculator versions.
+
+    The install name is `promotercalculator`; the import name is `promoter_calculator`. On top of that
+    the CLASS moved relative to the package root: the version used for the 2026-10-12 run re-exported
+    it from the top level, and **1.2.4 does not** -- its `__init__.py` exports only the lowercase
+    `promoter_calculator` FUNCTION from `wrapper`, so the recorded `from promoter_calculator import
+    Promoter_Calculator` raises ImportError on every tile. Measured 2026-10-22: that failure produced
+    40 errored tiles and zero rows in 24 s.
+
+    The class itself is UNCHANGED -- `wrapper.py` in 1.2.4 constructs it with the same
+    `Promoter_Calculator(threads=, verbosity=)` and reads `output()['Forward_Predictions_per_TSS']`
+    exactly as this worker does. So this is an import-PATH fix, not a model swap, which is what lets
+    the frozen reconcile anchors in stage C stay the right acceptance test.
+
+    Top level is tried FIRST so an older install keeps its recorded import path.
+    """
+    try:
+        from promoter_calculator import Promoter_Calculator  # the recorded path
+        return Promoter_Calculator
+    except ImportError:
+        from promoter_calculator.promoter_calculator import Promoter_Calculator  # >=1.2.4
+        return Promoter_Calculator
+
+
+def _site_field(d, name: str, default=None):
+    """One per-TSS field, for EITHER of the two shapes this value has had.
+
+    In the recorded run each per-TSS value was a plain dict and this worker called `d.get(...)`. In
+    1.2.4 it is a `PromoCalcResults` object that defines `__getitem__`, `__setitem__` and `keys()` but
+    **NOT `get`** -- so `d.get(...)` raises AttributeError per site and the tile is counted as failed.
+    Subscript works on both shapes; a missing key is the only thing that needs the default.
+    """
+    try:
+        return d[name]
+    except (KeyError, AttributeError, TypeError):
+        return default
+
+
 def decompose_one(job: tuple[int, str]) -> tuple[int, list[list], str]:
     """Return `(tile_id, per-site rows, error)`. An error yields NO rows and is counted, never silently
     dropped: a tile that failed is not a tile with no promoters, and the two must stay distinguishable."""
     tile_id, seq = job
     try:
-        from promoter_calculator import Promoter_Calculator
+        Promoter_Calculator = _load_calculator()
         c = Promoter_Calculator()
         c.run(seq, TSS_range=[0, len(seq)])
         fwd = c.output().get("Forward_Predictions_per_TSS") or {}
         rows = []
         for tss, d in fwd.items():
-            spacer = d.get("spacer") or ""
+            spacer = _site_field(d, "spacer") or ""
             rows.append([
                 tile_id, int(tss),
-                *[float(d.get(f, "nan")) for f in DG_FIELDS],
-                float(d.get("Tx_rate", "nan")),
-                _int_start(d.get("hex35_position")), _int_start(d.get("hex10_position")),
+                *[float(_site_field(d, f, "nan")) for f in DG_FIELDS],
+                float(_site_field(d, "Tx_rate", "nan")),
+                _int_start(_site_field(d, "hex35_position")),
+                _int_start(_site_field(d, "hex10_position")),
                 len(spacer),
             ])
         return tile_id, rows, ""
