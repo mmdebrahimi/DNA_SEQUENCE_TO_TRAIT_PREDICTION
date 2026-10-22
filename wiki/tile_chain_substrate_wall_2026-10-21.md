@@ -170,3 +170,72 @@ wall** — ordinary executor work with a real risk of landing on `REFUSED_ANCHOR
 `REFUTED` status, the evidence, the import-vs-install-name trap, and an explicit note that the probe did
 NOT measure this itself (it issues no subprocess by contract). The test was inverted to pin that the
 claim and its status **travel**, rather than pinning an answer that already changed once.
+
+---
+
+## AMENDMENT 3, 2026-10-22 -- the D: volume is PHYSICALLY ABSENT, and the letter pin is exonerated
+
+Amendment 1 recorded that D: is now the 1 TB volume, pinned by a 24-byte disk-signature binding.
+That pin **held and is not the problem.** What is measured today is one level down.
+
+**The sweep's 4th death, and the first one whose mechanism the OS names.** T=0.6 attempt 2
+(wrapper pid 19640, lock holder 20100) died ~2 minutes in, *during the weight load* -- the log's
+last line is `Loading weights: 100%|...| 237/237` and no sequence was ever generated. Sentinel
+`EXIT=-1`. Event log, same second:
+
+| time | log | id | content |
+|---|---|---|---|
+| 09:57:48 | Application | 1000 | `python.exe`, faulting module **`torch_cpu.dll`**, **Exception code 0xc0000006** |
+| 09:57:48 | System | 51 (x4) | `An error was detected on device \Device\Harddisk1\DR1 during a paging operation.` |
+
+`0xc0000006` is `STATUS_IN_PAGE_ERROR` -- literally "a memory-mapped page could not be read from
+its backing store". The 2026-10-21 death reported faulting module `VCRUNTIME` and the
+mmap-off-USB story was an **inference** from the disk events beside it. This one names the torch
+module and the exception code, so that account is now **measured**.
+
+**Then the drive left.** Checked minutes after the crash:
+
+* `Get-Disk` -> disk 0 `SAMSUNG MZVLW512HMJP` (NVMe) and disk 2 `Generic Mass-Storage` (USB, **No
+  Media** -- the card reader). **The 1 TB External1TB is not enumerated at all.**
+* `Get-PSDrive D` -> `A drive with the name 'D' does not exist.`
+* and the tell for *why* the 09:55 launch got as far as it did: the morning's `Ntfs` id-98 health
+  events name **D: under two different device paths** -- `HarddiskVolume9` at 08:46,
+  `HarddiskVolume6` at 09:38. The volume **re-enumerated between the two sweep attempts**, then
+  dropped for good.
+
+So the letter is stable and the physical link is not. Pinning the letter fixed a real problem
+(paths resolving to nothing after a rename); it was never going to fix a disk that detaches.
+
+### Wall class: `external-wall`, not code-closable
+
+This matters for what to do next, so it is stated rather than implied:
+
+* No launcher or loader change makes a 4.4 GB `mmap` survive a volume that disappears mid-read.
+* The weights are **on the missing volume** (`D:/hf_cache`, 4.33 GiB), so the model cannot be
+  loaded at all while it is absent -- independent of any code.
+* **Checkpointing the generation loop would NOT have saved this run.** It is still the right fix
+  for the 65/120 and 35/120 mid-run deaths, but this one died before sequence 1, so the structural
+  fix I named as highest-value yesterday is **not** the binding constraint today. Recorded because
+  the honest version of that recommendation is narrower than how I first put it.
+
+Scoreboard: **4 deaths, 1 completed grid point** (T=0.8, `wiki/glm_sweep_point_T0.8_2026-10-21.json`).
+
+### The three options, and which are the user's
+
+| | option | owner | note |
+|---|---|---|---|
+| (a) | replug / different port / different cable, then relaunch | **user** | cheapest; the drive is physically gone, nothing here can re-attach it |
+| (b) | run the sweep on server1 (GPU + local storage) | **user** | the right machine. Its Claude sessions (`Server1 cloud sessions for Soraya`, `DNA AI Decoder 13`, `Soraya Development`) all read `offline` in `ListAgents` on 2026-10-22, so nothing can be dispatched there yet |
+| (c) | stage the 4.33 GiB weights on local storage (C: had 58.8 GB free) | **AUTHORITY** | it contradicts the standing *"every heavy file on D:, never C:"* rule. Measured as viable, deliberately NOT done |
+
+(c) is recorded as a measurement, not a recommendation acted on: overriding a standing user rule
+is a scope decision, and the rule exists because C: has run 85-99% full historically.
+
+### Honest limits of this amendment
+
+* It establishes that the volume detached and that the crash was an in-page fault. It does **not**
+  establish *why* the USB link drops -- cable, port, enclosure, controller, and bus power are all
+  un-separated. Every `MSPower_DeviceEnable` row for USB reads `Enable: True` (Windows is permitted
+  to power these devices down), which is a **candidate** and not a finding; it was not tested,
+  because the device has to be present to test it.
+* One host, one drive. Nothing here generalises to the project's other external volumes.

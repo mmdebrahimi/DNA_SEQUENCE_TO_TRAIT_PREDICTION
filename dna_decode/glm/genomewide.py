@@ -171,6 +171,18 @@ def ensure_cached(cache_dir: Path | str = DEFAULT_CACHE, *, which: str = "LB",
             f"is <candidate>/mpra, not the candidate itself. The root is NOT substituted "
             f"automatically: a directory of the right NAME is not evidence of the right CONTENTS."
         )
+    # `_reachable` answers "is this path's VOLUME attached", and a file satisfies that. Measured
+    # 2026-10-21 and reproduced 2026-10-22: `--mpra-cache <an existing file>` reached `mkdir` and
+    # raised a raw `FileExistsError [WinError 183]` traceback, because `exist_ok=True` suppresses
+    # that error only when the existing path is a DIRECTORY. Diagnosed HERE, in the owner, so every
+    # consumer inherits it -- the same reason the loader owns the substrate rather than each script.
+    if d.exists() and not d.is_dir():
+        raise GenomeWideDataError(
+            f"the configured MPRA cache names an existing FILE, not a directory:\n\n  {d}\n\n"
+            f"This path cannot hold `{name}`. Pass the DIRECTORY that contains the GSE144621 cache "
+            f"files; the reachability check passes because the volume is attached, which is a "
+            f"different question from whether the path is a usable cache root."
+        )
     d.mkdir(parents=True, exist_ok=True)
     p = d / name
     if not p.exists():

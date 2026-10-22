@@ -18,6 +18,35 @@ REM     Mitigation, NOT applied here because it collides with the standing 'heav
 REM     never C:' rule and is the user's call: stage the weights on local storage and point
 REM     HF_HOME at that copy, so nothing is memory-mapped off USB.
 REM
+REM     CONFIRMED AND SHARPENED 2026-10-22, death #4, and the mechanism is now named by the OS
+REM     rather than inferred. T=0.6 attempt 2 died ~2 min in, during the weight load itself (the
+REM     log stops at 'Loading weights: 100%'), sentinel EXIT=-1:
+REM       app  id 1000 'python.exe, faulting module torch_cpu.dll, Exception code: 0xc0000006'
+REM       disk id  51  x4, same second, '\Device\Harddisk1\DR1 during a paging operation'
+REM     0xc0000006 IS STATUS_IN_PAGE_ERROR -- the literal 'a memory-mapped page could not be read
+REM     from its backing store' code. The earlier run blamed VCRUNTIME; this one names torch_cpu
+REM     and the exception code, so the mmap-off-USB account is no longer an inference.
+REM
+REM     AND THE DRIVE DID NOT COME BACK. Measured minutes later: `Get-Disk` lists only the NVMe
+REM     and the empty card reader, `Get-PSDrive D` errors 'A drive with the name D does not
+REM     exist', and the morning's Ntfs health events name D: under TWO different device paths --
+REM     HarddiskVolume9 at 08:46, HarddiskVolume6 at 09:38. The volume re-enumerated between the
+REM     two sweep attempts and then left. So the 2026-10-21 letter pin WORKED and is not the
+REM     issue: the letter is stable, the physical USB link is not.
+REM
+REM     WALL CLASS: external-wall, not code-closable. No launcher change makes a 4.4 GB mmap survive a
+REM     disk that detaches, and the weights themselves live on the missing volume, so the model
+REM     cannot be loaded at all right now. Checkpointing the generation loop -- the right fix for
+REM     the 65/120 and 35/120 mid-run deaths -- would NOT have saved this one, which died before
+REM     the first sequence. Scoreboard: 4 deaths / 1 completed point (T=0.8).
+REM     The three real options, two of which are the user's to pick:
+REM       (a) replug / different port / different cable, then relaunch     <- user, cheapest
+REM       (b) run it on server1 (GPU + local storage)                      <- user; its Claude
+REM           sessions read `offline` in ListAgents as of 2026-10-22 09:xx, so nothing can be
+REM           dispatched there yet
+REM       (c) stage the 4.33 GiB weights on local storage (C: had 58.8 GB free) <- AUTHORITY call:
+REM           it contradicts the standing 'never C:' rule, so it is not taken unilaterally
+REM
 REM (2) THIS FILE DOES NOT DETACH ANYTHING -- detaching is the CALLER's job. The name says
 REM     'detached' and that describes the MOTIVE; there is no `start`, no `/b`, nothing that
 REM     reparents. Launched from an agent's background shell it stays parented to a shell that

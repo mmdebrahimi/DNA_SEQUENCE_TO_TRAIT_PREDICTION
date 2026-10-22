@@ -279,6 +279,12 @@ def verdict(arms: dict, pre: dict = PREREGISTERED) -> tuple[str, str]:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--in-dir", default=str(DEFAULT_DIR))
+    ap.add_argument("--mpra-cache", default=None,
+                    help="GSE144621 cache directory. Defaults to genomewide.DEFAULT_CACHE, a "
+                         "hardcoded D: path. Pass this when that volume is absent or carries the "
+                         "cache at a different layout; the refusal names every candidate it found "
+                         "and what each one holds, so the value to pass comes from the error rather "
+                         "than from a guess. Do not name a drive letter from memory -- letters move.")
     ap.add_argument("--smoke", action="store_true")
     ap.add_argument("--seeds", type=int, default=10)
     ap.add_argument("--out", default=None)
@@ -287,9 +293,29 @@ def main() -> int:
     sys.path.insert(0, str(Path(__file__).resolve().parent))
     import numpy as np
     from glm_encoder_gate import ridge_gc
-    from dna_decode.glm.genomewide import leave_peak_out, load_peak_tiles, noise_ceiling, spearman
+    from dna_decode.glm.genomewide import (
+        DEFAULT_CACHE,
+        GenomeWideDataError,
+        leave_peak_out,
+        load_peak_tiles,
+        noise_ceiling,
+        spearman,
+    )
 
-    tiles_all, st = load_peak_tiles()
+    # Until 2026-10-22 this read `load_peak_tiles()` bare, so it took the hardcoded `DEFAULT_CACHE`
+    # unconditionally and died with an unhandled WinError on any host without that volume. The
+    # sibling consumer (`glm_tile_predictions.py`) was parameterised on 2026-10-21 and this one was
+    # MISSED, because the AST guard that was supposed to catch exactly this read a single file while
+    # being named `..._in_the_tile_chain`. The guard now DERIVES its file set from the callers, so a
+    # third consumer cannot be added without being covered.
+    #
+    # The loader RAISES (typed) and this script PRESENTS -- same layering as the sibling. A traceback
+    # here reads as "this tool is broken" rather than "the volume is not attached".
+    mpra_cache = a.mpra_cache or str(DEFAULT_CACHE)
+    try:
+        tiles_all, st = load_peak_tiles(cache_dir=mpra_cache)
+    except GenomeWideDataError as exc:
+        raise SystemExit(f"--mpra-cache {mpra_cache}\n\n{exc}") from None
     tiles = [t for t in tiles_all if t.category == "tile" and len(t.seq) == 150]
     ceil = noise_ceiling(tiles)["ceiling_for_a_sequence_model"]
 

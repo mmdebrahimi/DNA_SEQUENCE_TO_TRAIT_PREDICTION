@@ -286,27 +286,124 @@ def _calls(src: Path, func: str) -> list[ast.Call]:
     return out
 
 
-def test_load_peak_tiles_is_never_called_with_no_arguments_in_the_tile_chain():
-    """The single line that caused the crash: `load_peak_tiles()` bare, taking the hardcoded D: path."""
-    calls = _calls(PRED_SRC, "load_peak_tiles")
-    assert calls, "expected at least one call; did the script move?"
-    for c in calls:
-        assert c.args or c.keywords, "load_peak_tiles() with no arguments takes the hardcoded D: path"
+#: Every `.py` under the package and `scripts/` -- the search space for a DERIVED caller set.
+#: Derived, never enumerated. Measured 2026-10-22: the two guards below were each named
+#: `..._in_the_tile_chain` and read a HARDCODED 1- and 2-file tuple, and both were wrong in a way
+#: the name concealed.
+#:
+#:   * `load_peak_tiles` was pinned on `PRED_SRC` alone while `promcalc_decomposition_arm.py:292`
+#:     called it BARE -- the exact defect the guard is named after, in a sibling file, uncaught. That
+#:     sibling was parameterised 2026-10-21 and this one was missed for a day.
+#:   * `resolve_external_root` was pinned on `(PRED_SRC, GENOMEWIDE_SRC)`, and `genomewide.py` calls
+#:     it ZERO times (it calls `external_root.describe`). So half that guard looped over an empty
+#:     list and passed VACUOUSLY, while `scripts/data_inventory.py` -- which does call it -- was
+#:     never checked at all.
+#:
+#: Fifth recorded instance in this repo of a hand-enumerated list drifting from the data that
+#: defines it. A caller has to NAME the function to call it, so deriving the set from the call sites
+#: is the same move as keying the substrate guard on the accession rather than on a module list.
+def _py_sources() -> list[Path]:
+    return sorted({*(REPO / "dna_decode").rglob("*.py"), *(REPO / "scripts").glob("*.py")})
 
 
-def test_allow_discovered_is_never_passed_True_anywhere_in_the_tile_chain():
+def _callers_of(func: str) -> dict[Path, list[ast.Call]]:
+    """path -> its calls to `func`, for every source that calls it at all. Non-callers omitted."""
+    out: dict[Path, list[ast.Call]] = {}
+    unparseable: list[str] = []
+    for src in _py_sources():
+        try:
+            calls = _calls(src, func)
+        except SyntaxError as exc:
+            # MEASURED 2026-10-22, and this branch started life as `continue`. While adding the
+            # `--mpra-cache` flag to `promcalc_decomposition_arm.py` the patch broke an f-string, so
+            # the file stopped parsing -- and `continue` silently removed it from the caller set.
+            # The bare-call guard then went GREEN over a script that would not even import.
+            #
+            # A file that does not parse is NOT evidence that it does not call the function; it is
+            # evidence that nothing can tell. Collected and raised, never skipped.
+            unparseable.append(f"{src.relative_to(REPO).as_posix()}: {exc}")
+            continue
+        if calls:
+            out[src] = calls
+    assert not unparseable, (
+        "these sources do not PARSE, so whether they call the guarded function is unknowable -- "
+        "a skip here makes the guard pass vacuously over broken code:\n  "
+        + "\n  ".join(unparseable))
+    return out
+
+
+def test_load_peak_tiles_is_never_called_with_no_arguments_ANYWHERE():
+    """The line that caused the crash: `load_peak_tiles()` bare, taking the hardcoded D: path.
+
+    Scoped to every caller, not to one file -- the bare call that survived the first fix was in a
+    DIFFERENT file from the one the guard read."""
+    callers = _callers_of("load_peak_tiles")
+    assert callers, "no caller of load_peak_tiles found at all; the search space is wrong"
+    bare = [f"{src.relative_to(REPO).as_posix()}:{c.lineno}"
+            for src, calls in callers.items() for c in calls if not (c.args or c.keywords)]
+    assert not bare, (
+        f"load_peak_tiles() called with NO arguments at {bare}.\n"
+        f"A bare call takes genomewide.DEFAULT_CACHE, a hardcoded D: path, so the script dies with "
+        f"an unhandled OSError on any host where that volume is absent -- and a traceback reads as "
+        f"'this tool is broken' rather than 'the volume is not attached'.\n"
+        f"Add an `--mpra-cache` flag and pass `cache_dir=`, catching GenomeWideDataError to present "
+        f"the refusal; `scripts/glm_tile_predictions.py` is the reference shape."
+    )
+
+
+def test_allow_discovered_is_never_passed_True_ANYWHERE():
     """Pinned on SOURCE SHAPE, because the defect being guarded is a FUTURE convenience flip.
 
     Auto-adopting a discovered root is the silent-substitution failure `external_root` exists to
     prevent -- a same-named root with different contents turns a loud missing-ROOT into a quiet
     missing-DATASET.
     """
-    for src in (PRED_SRC, GENOMEWIDE_SRC):
-        for c in _calls(src, "resolve_external_root"):
-            for kw in c.keywords:
-                if kw.arg == "allow_discovered":
-                    assert not (isinstance(kw.value, ast.Constant) and kw.value.value is True), \
-                        f"{src.name} passes allow_discovered=True"
+    callers = _callers_of("resolve_external_root")
+    assert callers, "no caller of resolve_external_root found at all; the search space is wrong"
+    offenders = [f"{src.relative_to(REPO).as_posix()}:{c.lineno}"
+                 for src, calls in callers.items() for c in calls for kw in c.keywords
+                 if kw.arg == "allow_discovered"
+                 and isinstance(kw.value, ast.Constant) and kw.value.value is True]
+    assert not offenders, f"allow_discovered=True at {offenders}"
+
+
+def test_the_derived_caller_sets_are_NOT_VACUOUS():
+    """Guards the guards. A derived set that silently resolves to nothing reads as a clean pass.
+
+    Counts are LOWER BOUNDS and both known call sites are named, so a refactor that moves or renames
+    a consumer fails loudly instead of shrinking the covered set to zero."""
+    tiles = {q.relative_to(REPO).as_posix() for q in _callers_of("load_peak_tiles")}
+    assert "scripts/glm_tile_predictions.py" in tiles
+    assert "scripts/promcalc_decomposition_arm.py" in tiles, (
+        "the caller whose BARE call the widened guard was written for is not in the derived set")
+    assert len(tiles) >= 6, f"only {len(tiles)} callers found; the search space shrank: {tiles}"
+
+    roots = {q.relative_to(REPO).as_posix() for q in _callers_of("resolve_external_root")}
+    assert "scripts/glm_tile_predictions.py" in roots
+    assert "scripts/data_inventory.py" in roots, (
+        "data_inventory.py calls resolve_external_root and the OLD hardcoded tuple never read it")
+    # genomewide.py is deliberately NOT asserted here: it calls `describe`, not
+    # `resolve_external_root`, which is exactly why naming it in the old tuple bought nothing.
+    assert "dna_decode/glm/genomewide.py" not in roots
+
+
+def test_the_derived_detector_ACTUALLY_DETECTS_a_bare_call(tmp_path):
+    """Non-vacuity of the DETECTOR, on synthetic source rather than by planting a real file.
+
+    A guard that cannot see the shape it bans is worse than no guard: it reads as a clean bill."""
+    bare = tmp_path / "bare.py"
+    bare.write_text("load_peak_tiles()\n", encoding="utf-8")
+    assert [c for c in _calls(bare, "load_peak_tiles") if not (c.args or c.keywords)]
+
+    ok = tmp_path / "ok.py"
+    ok.write_text("load_peak_tiles(cache_dir=x)\n", encoding="utf-8")
+    assert not [c for c in _calls(ok, "load_peak_tiles") if not (c.args or c.keywords)]
+
+    flipped = tmp_path / "flipped.py"
+    flipped.write_text("resolve_external_root(c, allow_discovered=True)\n", encoding="utf-8")
+    assert [kw for c in _calls(flipped, "resolve_external_root") for kw in c.keywords
+            if kw.arg == "allow_discovered"
+            and isinstance(kw.value, ast.Constant) and kw.value.value is True]
 
 
 def test_the_in_dir_check_comes_AFTER_the_tile_load():
@@ -345,3 +442,91 @@ def test_the_loader_raises_typed_and_the_script_presents(monkeypatch, tmp_path):
     gsrc = GENOMEWIDE_SRC.read_text(encoding="utf-8")
     fn_start = gsrc.index("def ensure_cached")
     assert "SystemExit" not in gsrc[fn_start:fn_start + 3000]
+
+# ----------------------------------------------- a FILE named as the cache dir (owner-level)
+def test_a_cache_dir_naming_an_existing_FILE_is_diagnosed_not_a_raw_WinError(tmp_path):
+    """MEASURED 2026-10-21, reproduced and fixed 2026-10-22.
+
+    `_reachable` answers "is this path's VOLUME attached", which is True for a file, and
+    `mkdir(exist_ok=True)` suppresses `FileExistsError` only when the existing path is a DIRECTORY.
+    So `--mpra-cache <an existing file>` reached `mkdir` and surfaced a raw
+    `FileExistsError: [WinError 183]` traceback -- the same "this tool is broken" reading the
+    unreachable-volume fix was written to remove, one condition over.
+
+    Fixed in the OWNER (`genomewide.ensure_cached`), not in the consumer that surfaced it, so both
+    scripts inherit it from one place.
+    """
+    import dna_decode.glm.genomewide as G
+
+    afile = tmp_path / "not_a_directory.txt"
+    afile.write_text("x", encoding="utf-8")
+    with pytest.raises(G.GenomeWideDataError) as ei:
+        G.ensure_cached(afile, which="peak_tile", allow_download=False)
+    msg = str(ei.value)
+    assert "existing FILE, not a directory" in msg
+    assert str(afile) in msg
+    # it must NOT be reported as an unattached volume -- that was the wrong diagnosis for this case
+    assert "not attached" not in msg
+
+
+def test_the_file_as_cache_dir_check_runs_BEFORE_mkdir(tmp_path):
+    """Ordering, not just presence. Placed after `mkdir` the check is unreachable: `mkdir` raises
+    first, which is the defect. Pinned on source shape because the ordering is what was wrong."""
+    tree = ast.parse(GENOMEWIDE_SRC.read_text(encoding="utf-8"))
+    fn = next(n for n in ast.walk(tree)
+              if isinstance(n, ast.FunctionDef) and n.name == "ensure_cached")
+    mkdir_lines = [n.lineno for n in ast.walk(fn) if isinstance(n, ast.Call)
+                   and isinstance(n.func, ast.Attribute) and n.func.attr == "mkdir"]
+    isdir_lines = [n.lineno for n in ast.walk(fn) if isinstance(n, ast.Call)
+                   and isinstance(n.func, ast.Attribute) and n.func.attr == "is_dir"]
+    assert mkdir_lines and isdir_lines, "expected both an is_dir guard and a mkdir in ensure_cached"
+    assert min(isdir_lines) < min(mkdir_lines), (
+        "the is_dir guard must precede mkdir; after it, mkdir raises WinError 183 first and the "
+        "guard never runs")
+
+
+def test_a_REACHABLE_directory_cache_dir_is_still_accepted(tmp_path):
+    """The companion half: the new refusal must not reject a legitimate empty directory.
+
+    `allow_download=False` makes this offline -- it gets past both guards and `mkdir`, then fails on
+    the MISSING FILE, which is the correct and different diagnosis."""
+    import dna_decode.glm.genomewide as G
+
+    d = tmp_path / "mpra"
+    d.mkdir()
+    with pytest.raises(G.GenomeWideDataError) as ei:
+        G.ensure_cached(d, which="peak_tile", allow_download=False)
+    msg = str(ei.value)
+    assert "missing and downloading is disabled" in msg
+    assert "existing FILE" not in msg and "not attached" not in msg
+
+
+# ----------------------------------------------- the SECOND consumer's flag (C1)
+def test_the_decomposition_arm_declares_an_mpra_cache_flag_defaulting_to_None():
+    """C1. The sibling consumer got `--mpra-cache` on 2026-10-21; this one was missed for a day
+    because the AST guard named `..._in_the_tile_chain` read a single file."""
+    arm = REPO / "scripts" / "promcalc_decomposition_arm.py"
+    tree = ast.parse(arm.read_text(encoding="utf-8"))
+    flags = [c for c in ast.walk(tree) if isinstance(c, ast.Call)
+             and isinstance(c.func, ast.Attribute) and c.func.attr == "add_argument"
+             and c.args and isinstance(c.args[0], ast.Constant)
+             and c.args[0].value == "--mpra-cache"]
+    assert len(flags) == 1, "promcalc_decomposition_arm.py must declare exactly one --mpra-cache"
+    default = next((kw.value for kw in flags[0].keywords if kw.arg == "default"), None)
+    assert isinstance(default, ast.Constant) and default.value is None, (
+        "default must be None so the fallback to DEFAULT_CACHE is explicit at the point of use")
+
+
+def test_the_decomposition_arm_presents_the_loader_refusal_instead_of_a_traceback():
+    """`raise SystemExit(...) from None`. `from None` is the load-bearing half: without it the
+    chained GenomeWideDataError prints above the refusal and the output reads as a crash."""
+    arm = REPO / "scripts" / "promcalc_decomposition_arm.py"
+    tree = ast.parse(arm.read_text(encoding="utf-8"))
+    handlers = [h for n in ast.walk(tree) if isinstance(n, ast.Try) for h in n.handlers
+                if isinstance(h.type, ast.Name) and h.type.id == "GenomeWideDataError"]
+    assert handlers, "no GenomeWideDataError handler in the decomposition arm"
+    raises = [n for h in handlers for n in ast.walk(h) if isinstance(n, ast.Raise)]
+    assert raises, "the handler must re-raise as SystemExit, not swallow the refusal"
+    for r in raises:
+        assert isinstance(r.cause, ast.Constant) and r.cause.value is None, \
+            "raise ... from None, or the chained traceback prints above the refusal"

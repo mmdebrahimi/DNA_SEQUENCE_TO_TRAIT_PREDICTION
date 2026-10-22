@@ -93,5 +93,74 @@
     "consequence": "isolation_required is FALSE here; the authority fork was mis-framed as an install that would move sklearn under the test suite. It would not.",
     "trap_recorded": "import name `promoter_calculator` vs distribution name `promotercalculator` -- `pip install promoter_calculator` 404s",
     "wall_reclassified": "still data-absent, but a COMPUTE + anchor-reproduction wall rather than an environment/authority one: the ~44k-tile stage-B sweep must still run and must reproduce committed per-seed numbers within 0.01 on 9 of 10 seeds or the bar returns REFUSED_ANCHOR_MISMATCH."
+  },
+  "amendment_3": {
+    "date": "2026-10-22",
+    "headline": "the D: volume is PHYSICALLY ABSENT; the 2026-10-21 letter pin is exonerated",
+    "sweep_death_number": 4,
+    "died_during": "weight load, before sequence 1 (log ends at 'Loading weights: 100% 237/237')",
+    "sentinel": "EXIT=-1",
+    "elapsed_before_death_minutes": 2,
+    "os_named_mechanism": {
+      "exception_code": "0xc0000006",
+      "exception_name": "STATUS_IN_PAGE_ERROR",
+      "faulting_module": "torch_cpu.dll",
+      "application_event_id": 1000,
+      "disk_event_id": 51,
+      "disk_event_count": 4,
+      "disk_device": "\\Device\\Harddisk1\\DR1",
+      "same_second": true,
+      "why_this_is_stronger_than_2026_10_21": "the 10-21 death reported faulting module VCRUNTIME and the mmap-off-USB account was INFERRED from the adjacent disk events; this one names the torch module AND an exception code that literally means a mapped page could not be read from its backing store, so the account is measured rather than inferred"
+    },
+    "drive_absent_evidence": {
+      "get_disk": [
+        "disk 0 SAMSUNG MZVLW512HMJP (NVMe)",
+        "disk 2 Generic Mass-Storage (USB, No Media -- the card reader)"
+      ],
+      "external_1tb_enumerated": false,
+      "get_psdrive_D": "A drive with the name 'D' does not exist.",
+      "ntfs_id98_device_path_for_D": {
+        "08:46": "HarddiskVolume9",
+        "09:38": "HarddiskVolume6"
+      },
+      "reading": "D: re-enumerated under a DIFFERENT device path between the two sweep attempts and then dropped entirely -- the letter was stable, the physical USB link was not"
+    },
+    "wall_class": "external-wall",
+    "wall_class_rationale": "no launcher or loader change makes a 4.4 GB mmap survive a volume that disappears mid-read, and the weights themselves live on the missing volume so the model cannot be loaded at all while it is absent",
+    "checkpointing_would_not_have_saved_this_run": {
+      "value": true,
+      "note": "periodic checkpointing of the generation loop remains the right fix for the 65/120 and 35/120 MID-RUN deaths, but this death preceded sequence 1. The 2026-10-21 recommendation that called it the structural fix is NARROWED, not withdrawn: it addresses 2 of 4 deaths, not the binding constraint today."
+    },
+    "scoreboard": {
+      "deaths": 4,
+      "completed_points": 1,
+      "completed_artifact": "wiki/glm_sweep_point_T0.8_2026-10-21.json"
+    },
+    "options": [
+      {
+        "id": "a",
+        "action": "replug / different port / different cable, then relaunch",
+        "owner": "user",
+        "note": "cheapest; the drive is physically gone and nothing in-session can re-attach it"
+      },
+      {
+        "id": "b",
+        "action": "run the sweep on server1 (GPU + local storage)",
+        "owner": "user",
+        "note": "the right machine. Its Claude sessions -- 'Server1 cloud sessions for Soraya', 'DNA AI Decoder 13', 'Soraya Development' -- all read offline in ListAgents on 2026-10-22, so nothing can be dispatched there yet"
+      },
+      {
+        "id": "c",
+        "action": "stage the 4.33 GiB weights on local storage",
+        "owner": "AUTHORITY",
+        "measured_free_on_C_gb": 58.8,
+        "note": "contradicts the standing 'every heavy file on D:, never C:' rule, which exists because C: has run 85-99% full historically. Measured as viable; deliberately NOT done, because overriding a standing user rule is a scope decision"
+      }
+    ],
+    "what_this_does_not_establish": [
+      "WHY the USB link drops: cable, port, enclosure, controller and bus power are un-separated",
+      "every MSPower_DeviceEnable row for USB reads Enable:True, i.e. Windows is permitted to power these devices down. That is a CANDIDATE, not a finding -- it was not tested, because the device has to be present to test it",
+      "one host, one drive; nothing here generalises to the project's other external volumes"
+    ]
   }
 }
