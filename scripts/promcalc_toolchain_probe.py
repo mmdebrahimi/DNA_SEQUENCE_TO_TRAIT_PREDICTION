@@ -57,6 +57,9 @@ ENV_PYTHON = Path("D:/tools/promcalc_env/Scripts/python.exe")
 
 #: The ULTIMATE raw substrate. Stage A derives `tiles.tsv` from this file, so its presence -- not the
 #: presence of the derived TSV -- is what decides whether there is anything to decompose.
+#: Repo root. `scripts/` is one level down, so `parents[1]`.
+_REPO = Path(__file__).resolve().parents[1]
+
 PEAK_TILE_FILE = "GSE144621_peak_tile_expression_formatted_std.txt.gz"
 
 #: Measured need. The per-site table is ~3M rows; stage A's own comment puts it on D: for this reason.
@@ -147,6 +150,21 @@ def find_inputs(*, roots: list[Path] | None = None) -> list[str]:
             roots = [c.path for c in probe()]
         except Exception as exc:  # pragma: no cover - import guard
             raise ProbeError(f"external_root probe unavailable: {exc!r}") from exc
+        # MEASURED 2026-10-22: the probe reported INPUTS_ABSENT while the substrate was ON DISK.
+        # `external_root.probe()` enumerates DRIVE roots, and the ~100 MB GSE144621 download was
+        # restored to the repo-local `data/` tree after the external volume detached for good. A
+        # false absence is the most expensive answer this probe can give -- it sends the next
+        # session to re-fetch data it already has, which is the rediscovery pattern
+        # `scripts/data_inventory.py` exists to prevent.
+        #
+        # This is NOT the auto-substitution `external_root` refuses. That refusal is about ADOPTING
+        # a root to READ a dataset from, where a directory of the right NAME is not evidence of the
+        # right CONTENTS. This function only answers "are the bytes reachable", and it checks for an
+        # exact filename rather than matching a directory name, so naming one more place to LOOK
+        # cannot silently redirect a reader.
+        local = _REPO / "data"
+        if local.is_dir():
+            roots = [*roots, local]
     for r in roots:
         p = Path(r) / "mpra" / PEAK_TILE_FILE
         try:

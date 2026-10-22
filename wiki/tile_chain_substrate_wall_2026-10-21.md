@@ -239,3 +239,84 @@ is a scope decision, and the rule exists because C: has run 85-99% full historic
   to power these devices down), which is a **candidate** and not a finding; it was not tested,
   because the device has to be present to test it.
 * One host, one drive. Nothing here generalises to the project's other external volumes.
+
+---
+
+## AMENDMENT 4, 2026-10-22 -- the MPRA half is CLOSED; promcalc is now the SINGLE blocker
+
+This memo's reason for existing was that the tile chain had **two** substrate dependencies with
+**different wall classes**, and that nothing separated them. One of the two is now resolved, so the
+memo would be wrong if left as written.
+
+**What was done.** The whole of GSE144621 was re-fetched from NCBI GEO to a repo-local, gitignored
+`data/mpra/` -- measured first rather than assumed: **9,604,523 + 45,779,938 + 45,217,727 bytes =
+~100 MB** by `curl -sIL` content-length, before downloading anything.
+
+**Why that is not a D:-rule violation, stated rather than slipped past.** The standing rule is
+*"every heavy/extra file for this project lives on D:, never C:"*, and it exists because C: has run
+85-99% full. ~100 MB is **two orders of magnitude** below the GB-scale genomes, embeddings and model
+weights the rule was written for, and `data/` on this host already holds **4.0 GB** of
+`refseq_cache`. C: had 58.8 GB free. Judged inside the rule's intent; recorded here so the judgement
+is auditable rather than invisible. The 4.33 GiB **model weights** are a different matter and were
+NOT staged -- that remains the authority call in amendment 3, option (c).
+
+**VALIDITY CHECK, and this is the part that makes the restoration trustworthy.** An independent
+re-download reproduces figures recorded before it:
+
+| quantity | recorded | re-derived from the fresh download |
+|---|---|---|
+| rows in the peak-tile file | 46,713 ("the entire file", CLAUDE.md) | **46,713** |
+| 150 bp tiles after the published filter | 44,106 (`EXPECTED_TILES`, pinned) | **44,106** |
+| replicate-derived noise ceiling | 0.941 (the ceiling criterion's own comparator) | **0.9410** |
+
+Three independent figures, three matches. A corrupted or truncated fetch could not do that, which is
+why these are quoted instead of a byte count.
+
+**The wall-class separation now PRODUCES its designed measurement.** Running the tile chain end to
+end off the local cache:
+
+```
+tiles 44106 | ceiling 0.9410
+--in-dir D:/dna_decode_cache/promcalc is not reachable [absent].
+```
+
+It gets **past** the tile load and fails on **only** promcalc. That is exactly what the step ordering
+in `executed_plans/Make_The_Tile_Chain_S_Substrate_Legible_And_Classify_Its_Wall_Plan/` was built to
+show -- and it could not be shown until one of the two dependencies was actually resolved.
+
+**The promcalc half, measured today, not relayed.** `scripts/promcalc_toolchain_probe.py` reported
+`INPUTS_ABSENT` *while the substrate sat on disk*, because `external_root.probe()` enumerates DRIVE
+roots and the restored copy is repo-local. A false absence is the most expensive answer that probe
+can give -- it sends the next session to re-fetch data it already has. `find_inputs` now also looks
+at the repo-local `data/` tree, and the verdict moved to `ENV_ABSENT_DEPS_SATISFIABLE_HERE` with the
+location named.
+
+And the install question is now measured **in this environment**:
+
+```
+uv pip install --dry-run promotercalculator
+  Resolved 7 packages ... Would install 1 package
+  + promotercalculator==1.2.4          (sklearn stays at 1.8.0)
+```
+
+So amendment 2's refutation of the isolation premise is confirmed here, first-hand: **one package, no
+isolation, sklearn untouched.**
+
+### What is STILL open, and whose call it is
+
+* **Regenerating the promcalc predictions is NOT done and was not started.** The saved plan
+  explicitly parked it as an open question rather than folding it into scope, and it is a
+  multi-hour compute job over 44,106 tiles. The install is a one-package, reversible step; the
+  regeneration is the part that needs a decision.
+* `ENV_ABSENT_DEPS_SATISFIABLE_HERE` **still over-claims** and must not be read as a green light:
+  it fires on an interpreter existing plus >=5 GB free. What is measured is the dry-run resolution
+  above, not that the toolchain produces correct predictions.
+* **Nothing here touches the sweep.** The GENERator weights are on the detached volume and the
+  sweep arm is unchanged -- amendment 3 stands in full.
+
+### Honest limits
+
+* The restored substrate is verified by three reproduced figures, not by checksum against the
+  original copy: the original is on the detached volume and could not be compared.
+* The end-to-end run above is a REFUSAL path. It proves the tile load succeeds and the promcalc
+  dependency is correctly diagnosed; it does **not** demonstrate that any arm scores anything.

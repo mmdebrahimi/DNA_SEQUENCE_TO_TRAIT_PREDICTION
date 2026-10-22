@@ -162,5 +162,73 @@
       "every MSPower_DeviceEnable row for USB reads Enable:True, i.e. Windows is permitted to power these devices down. That is a CANDIDATE, not a finding -- it was not tested, because the device has to be present to test it",
       "one host, one drive; nothing here generalises to the project's other external volumes"
     ]
+  },
+  "amendment_4": {
+    "date": "2026-10-22",
+    "headline": "the MPRA half is CLOSED; promcalc is now the SINGLE blocker on the tile chain",
+    "mpra_substrate": {
+      "action": "re-fetched the whole of GSE144621 from NCBI GEO to a repo-local gitignored data/mpra/",
+      "sizes_measured_before_download_bytes": {
+        "GSE144621_peak_tile_expression_formatted_std.txt.gz": 9604523,
+        "GSE144621_U00096.2_frag-rLP5_LB_expression.txt.gz": 45779938,
+        "GSE144621_U00096.2_frag-rLP5_M9_expression.txt.gz": 45217727
+      },
+      "total_mb": 100,
+      "d_rule_judgement": "the standing rule is 'every heavy/extra file on D:, never C:' and exists because C: has run 85-99% full. ~100 MB is two orders of magnitude below the GB-scale genomes, embeddings and weights the rule targets; data/ on this host already holds 4.0 GB of refseq_cache and C: had 58.8 GB free. Judged inside the rule's intent and recorded so the judgement is auditable. The 4.33 GiB MODEL WEIGHTS were NOT staged -- that stays amendment 3 option (c), an authority call.",
+      "validity_check": {
+        "method": "an independent re-download reproducing figures recorded BEFORE it; a truncated or corrupted fetch could not match three of them",
+        "rows": {
+          "recorded": 46713,
+          "rederived": 46713
+        },
+        "tiles_150bp": {
+          "recorded": 44106,
+          "rederived": 44106,
+          "recorded_as": "EXPECTED_TILES, pinned in scripts/glm_tile_predictions.py"
+        },
+        "noise_ceiling": {
+          "recorded": 0.941,
+          "rederived": 0.941,
+          "recorded_as": "the ceiling criterion's own comparator"
+        },
+        "not_done": "no checksum against the original copy -- it is on the detached volume and could not be compared"
+      }
+    },
+    "wall_class_separation_now_produces_its_measurement": {
+      "observed": "tiles 44106 | ceiling 0.9410, then refusal on --in-dir promcalc only",
+      "meaning": "gets PAST the tile load and fails on ONLY promcalc -- what the plan's step ordering was built to show, and unshowable until one dependency was resolved",
+      "caveat": "this is a REFUSAL path: it proves the tile load succeeds and promcalc is correctly diagnosed, NOT that any arm scores anything"
+    },
+    "promcalc_half": {
+      "probe_false_absence_fixed": "promcalc_toolchain_probe reported INPUTS_ABSENT while the substrate sat on disk, because external_root.probe() enumerates DRIVE roots and the restored copy is repo-local. A false absence is the most expensive answer it can give: it sends the next session to re-fetch data it already has. find_inputs now also searches the repo-local data/ tree.",
+      "verdict_before": "INPUTS_ABSENT",
+      "verdict_after": "ENV_ABSENT_DEPS_SATISFIABLE_HERE",
+      "install_measured_here": {
+        "command": "uv pip install --dry-run promotercalculator",
+        "resolved_packages": 7,
+        "would_install": [
+          "promotercalculator==1.2.4"
+        ],
+        "sklearn_before_and_after": "1.8.0 (untouched)",
+        "meaning": "amendment 2's refutation of the isolation premise confirmed FIRST-HAND in this environment: one package, no isolation, sklearn undisturbed"
+      }
+    },
+    "still_open": [
+      {
+        "item": "regenerate the promcalc predictions",
+        "owner": "user",
+        "why": "the saved plan explicitly parked this as an open question rather than folding it into scope, and it is a multi-hour compute job over 44,106 tiles. The install is a one-package reversible step; the REGENERATION is what needs a decision"
+      },
+      {
+        "item": "do not read ENV_ABSENT_DEPS_SATISFIABLE_HERE as a green light",
+        "owner": "reader",
+        "why": "it fires on an interpreter existing plus >=5 GB free. What is measured is the dry-run resolution, NOT that the toolchain produces correct predictions"
+      },
+      {
+        "item": "the sweep arm is untouched",
+        "owner": "n/a",
+        "why": "the GENERator weights are on the detached volume; amendment 3 stands in full and nothing here moves the sweep"
+      }
+    ]
   }
 }

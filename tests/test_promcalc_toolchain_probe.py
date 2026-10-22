@@ -215,3 +215,59 @@ def test_volumes_sees_at_least_one_real_drive():
 
 def volumes_nonempty() -> bool:
     return len(P.volumes()) >= 1
+
+# ------------------------------------------------- the repo-local substrate root (2026-10-22)
+def test_the_repo_local_data_tree_is_SEARCHED_not_only_drive_roots(monkeypatch, tmp_path):
+    """MEASURED: the probe returned INPUTS_ABSENT while the substrate was ON DISK.
+
+    `external_root.probe()` enumerates DRIVE roots. After the external volume detached for good the
+    ~100 MB GSE144621 download was restored to the repo-local `data/` tree, and the probe could not
+    see it -- a FALSE absence, which is the most expensive answer this probe can give: it sends the
+    next session to re-fetch data it already has.
+    """
+    fake_repo = tmp_path / "repo"
+    (fake_repo / "data" / "mpra").mkdir(parents=True)
+    (fake_repo / "data" / "mpra" / P.PEAK_TILE_FILE).write_bytes(b"\x1f\x8b")  # gzip magic, 2 bytes
+    monkeypatch.setattr(P, "_REPO", fake_repo)
+    monkeypatch.setattr("dna_decode.data.external_root.probe", lambda *a, **k: [])
+
+    found = P.find_inputs()
+    assert len(found) == 1, found
+    assert found[0].endswith("data/mpra/" + P.PEAK_TILE_FILE)
+
+
+def test_the_local_root_is_NOT_invented_when_the_data_tree_is_absent(monkeypatch, tmp_path):
+    """The companion half. A probe that manufactures a root reports a false PRESENCE, which is
+    worse than the false absence it was added to fix."""
+    monkeypatch.setattr(P, "_REPO", tmp_path / "no_such_repo")
+    monkeypatch.setattr("dna_decode.data.external_root.probe", lambda *a, **k: [])
+    assert P.find_inputs() == []
+
+
+def test_an_EXPLICIT_roots_argument_still_overrides_entirely(tmp_path):
+    """The local root is added only on the `roots is None` default path.
+
+    Load-bearing for every existing test in this file: they pass `roots=` to get a hermetic answer,
+    and silently unioning the real repo tree into an explicit list would make those answers depend
+    on whether this machine happens to have the data."""
+    empty = tmp_path / "elsewhere"
+    empty.mkdir()
+    assert P.find_inputs(roots=[empty]) == []
+
+
+def test_finding_the_inputs_moves_the_verdict_OFF_inputs_absent():
+    """The ladder consequence, as a pure call -- no filesystem.
+
+    Stated so the change's effect is checkable: `INPUTS_ABSENT` outranks both env verdicts, so a
+    false absence MASKS whatever the environment question's real answer is."""
+    common = dict(probe_ok=True, env_resolves=False, interpreter_available=True, free_gb_max=50.0)
+    assert P.decide(inputs_found=False, **common) == "INPUTS_ABSENT"
+    assert P.decide(inputs_found=True, **common) == "ENV_ABSENT_DEPS_SATISFIABLE_HERE"
+
+
+# NOTE, 2026-10-22: a restored repo-local substrate can now move the verdict ONTO
+# `ENV_ABSENT_DEPS_SATISFIABLE_HERE`, where a false absence used to mask it. That makes the
+# verdict's already-recorded over-claim easier to misread as a green light -- it fires on an
+# interpreter existing plus free space, nothing more. No new test here: that concern is already
+# pinned by `test_satisfiable_carries_the_isolation_CLAIM_and_its_STATUS` above, which asserts the
+# claim, its REFUTED status, its evidence and what the probe did NOT measure all travel with it.
