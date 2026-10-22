@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** glm-learned-representation-2026-10-07
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-10-07
 - **Originating goal:** Replace the expression oracle's fixed sequence features with a learned multi-resolution encoder plus a trivial head, and measure whether it transfers to real genomic sequence.
 - **Refined goal (3c):** Determine, with a committed artifact either way, whether a learned multi-resolution sequence encoder with a trivial head beats GC content (Spearman 0.3000) by >=0.05 on real *E. coli* genomic promoter tiles under leave-peak-out, reported as a fraction of the replicate-derived 0.9410 ceiling.

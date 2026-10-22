@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** label-acquisition-2026-08-31
-- **Project root:** C:/Users/Farshad/PythonProjects/dna_decode
+- **Project root:** C:/Users/Laptop Portable/pythonprojects/dna_decode
 - **Captured:** 2026-08-31
 - **Originating goal:** Address the binding constraint — labels, not models — by identifying and, if authorized, acquiring a label source that clears the eight rejection gates by construction
 - **Refined goal:** Maintain a screened, ranked list of candidate label sources scored against the ten rejection gates, so that IF the user authorizes an acquisition the target is already chosen and its gate profile already known. Executor scope is screening only; acquisition is authority.

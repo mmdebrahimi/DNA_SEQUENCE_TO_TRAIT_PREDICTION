@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** doubt-layer-2026-08-31
-- **Project root:** C:/Users/Farshad/PythonProjects/dna_decode
+- **Project root:** C:/Users/Laptop Portable/pythonprojects/dna_decode
 - **Captured:** 2026-08-31
 - **Originating goal:** Build the L2 DOUBT layer: generalize and surface the catalog-completeness signals so every decoder call can carry a machine-readable "this call may be incomplete, and here is why" block that never emits a competing resistance call
 - **Refined goal (if 3c produced one):** Ship a pure, cell-agnostic doubt layer whose signals are functions over already-computed determinant calls, wired into the decoder record behind a guard test that the block can never contain a resistance call, and measured per cell against the position-novelty flag's 0.604 incumbent.

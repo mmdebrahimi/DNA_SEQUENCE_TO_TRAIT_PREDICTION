@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** learned-narrow-2026-08-31
-- **Project root:** C:/Users/Farshad/PythonProjects/dna_decode
+- **Project root:** C:/Users/Laptop Portable/pythonprojects/dna_decode
 - **Captured:** 2026-08-31
 - **Originating goal:** Hold the learned layer to its measured regime — molecular endpoints and constructed variation — and keep the boundary enforced rather than merely written down
 - **Refined goal:** Encode the measured regime boundary as a checkable artifact, so a proposal to extend L4 outside it is REFUSED by a screen rather than by whoever happens to remember the negative.

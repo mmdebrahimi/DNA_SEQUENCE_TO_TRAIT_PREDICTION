@@ -43,7 +43,7 @@ That is a closed negative (0-for-5, de-confounded) and is deliberately outside t
 
 ## Project Context
 - **Project ID:** dna-decode-2026-05-11
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-05-11
 - **Originating goal:** use AI to decode and understand any DNA code which is a programming language written in the language of 3-5 proteins
 - **Refined goal (from 3c top-ranked candidate):** Build a biologically interpretable, research-grade evidence system for E. coli antibiotic resistance prediction (cipro/ceftriaxone/tet) with attribution to known resistance loci, validated under leave-one-Mash-clade-out CV. Multi-organism comparative work is a non-committed horizon track.

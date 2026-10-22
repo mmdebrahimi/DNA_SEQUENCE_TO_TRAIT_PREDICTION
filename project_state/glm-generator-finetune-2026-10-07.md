@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** glm-generator-finetune-2026-10-07
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-10-07
 - **Originating goal:** Fine-tune GENERator-1.2B on real *E. coli* promoter windows rather than consuming it zero-shot.
 - **Refined goal (3c):** Determine whether LoRA fine-tuning on MG1655 upstream-of-CDS windows brings GENERator's distinguishability BELOW the 3-mer Markov null's 0.6679 under feature mode `both`, on the frozen natural comparison set, with the corpus fingerprint stamped so the comparison is auditable.

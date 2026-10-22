@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** glm-self-distillation-2026-10-07
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-10-07
 - **Originating goal:** Adopt AlphaGenome's self-distillation to manufacture a variant-effect signal from perturbed inputs labelled by the model's own outputs.
 - **Refined goal (3c):** AFTER G-A delivers a higher-capacity oracle, determine whether distilling it on perturbed sequences beats the teacher on held-out REAL MEASURED data by >=0.02 — never on distillation agreement, which a degenerate student also achieves.

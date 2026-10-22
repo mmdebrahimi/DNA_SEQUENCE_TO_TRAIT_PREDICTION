@@ -14,7 +14,7 @@
 
 ## Project Context
 - **Project ID:** ecoli-pathotype-prediction-cli-2026-05-26
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-05-26
 - **Originating goal:** E. coli pathotype prediction from a user-supplied genome assembly: an open-source CLI tool that takes FASTA + optional GFF3 and emits a multiclass pathotype call (EPEC / EHEC / ETEC / UPEC / EAEC / commensal) with audit-grade provenance, including which acquired virulence-gene clusters drove the call (stx for EHEC; LEE for EPEC; afa/papC for UPEC; ETEC enterotoxins) and a side-by-side comparison against CGE VirulenceFinder gene-call output.
 - **Refined goal (if 3c produced one):** (no rewrite — 3c PASS; candidate refinements recorded in `## Refinement Candidates`). **Updated 2026-05-27 post-/research substrate-survey:** v0 architecture FINAL LOCK = deterministic multilabel cluster resolver + abstention (Candidate 5); substrate-tier strategy LOCKED (Tier-1 DECA + von Mentzer + prototypes / Tier-2 Horesh 2021 pending File F1 audit / Tier-3 NCBI host_disease / Tier-4 EnteroBase clonal-lineage only); classifier track (Candidates 2+3) deferred to v0.1+ conditional on H1 PASS. Concrete v0 output contract at `## v0 Output Contract` (23 markers + 11-class decision table + abstention rules + provenance JSON).

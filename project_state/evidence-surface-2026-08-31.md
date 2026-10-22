@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** evidence-surface-2026-08-31
-- **Project root:** C:/Users/Farshad/PythonProjects/dna_decode
+- **Project root:** C:/Users/Laptop Portable/pythonprojects/dna_decode
 - **Captured:** 2026-08-31
 - **Originating goal:** Expose the evaluation machinery — de-confounding, nulls, denominators, leakage gates, provenance and source concentration — as a first-class product surface rather than internal scaffolding
 - **Refined goal:** Make the L3 evidence machinery reachable and legible from the shipped CLI, so a user can ask "how was this validated, and what could it not have seen?" and get a machine-readable answer without reading `wiki/`.

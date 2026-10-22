@@ -14,7 +14,7 @@
 
 ## Project Context
 - **Project ID:** eukaryotic-trait-decoding-cycle-2026-06-07
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-06-07
 - **Originating goal:** Extend the validated deterministic genome→phenotype decoder beyond bacterial AMR into the eukaryotic kingdom via two parallel substrates across two machines with phase gates (Path A fungal AMR / Path B Arabidopsis embedding test).
 - **Refined goal (from 3c top-ranked candidate):** Across two machines with no duplication + share-and-decide phase gates: (A, laptop, no compute) validate a deterministic fungal-AMR decoder on C. auris azole resistance (G1: acc≥0.80/sens≥0.80 on a de-confounded WGS+MIC cohort OR documented efflux/aneuploidy failure mode); (B, GPU workhorse, gated on compute) run the first methodologically-clean embedding-niche test on Arabidopsis flowering-time (G2: embedding R² beats SNP-PRS + kinship baselines under clade-stratified CV, PASS/FAIL).

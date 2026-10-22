@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** catalog-curation-2026-08-31
-- **Project root:** C:/Users/Farshad/PythonProjects/dna_decode
+- **Project root:** C:/Users/Laptop Portable/pythonprojects/dna_decode
 - **Captured:** 2026-08-31
 - **Originating goal:** Close the measured catalog-completeness gaps, and define the procedure by which a curated biological fact is allowed to enter a shipped catalog
 - **Refined goal:** For each measured gap, land the curation ONLY when (a) every entry is sourced to a named external authority, (b) the recovery is measured against the F-A doubt-layer baseline, and (c) the lock/freeze consequence is stated explicitly and authorized.

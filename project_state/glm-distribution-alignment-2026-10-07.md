@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** glm-distribution-alignment-2026-10-07
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-10-07
 - **Originating goal:** Ensure generator and oracle are validated on the same sequence distribution.
 - **Refined goal (3c):** Measure WHICH distribution generated sequence falls in — designed-grid-like, genome-like, or neither — using a stated discriminator, and report an oracle number on THAT distribution. If the answer is "neither", say so, because that invalidates both existing oracle validations for loop purposes.

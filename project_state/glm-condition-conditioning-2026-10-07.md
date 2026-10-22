@@ -5,7 +5,7 @@
 
 ## Project Context
 - **Project ID:** glm-condition-conditioning-2026-10-07
-- **Project root:** C:\Users\Farshad\PythonProjects\dna_decode
+- **Project root:** C:\Users\Laptop Portable\pythonprojects\dna_decode
 - **Captured:** 2026-10-07
 - **Originating goal:** One expression oracle conditioned on growth medium, versus two separate per-medium oracles.
 - **Refined goal (3c):** Determine whether a single model taking (sequence, medium) beats two independent per-medium models on held-out position-blocked data, by >=0.02 Spearman, with each arm scored against its own replicate-derived ceiling.
