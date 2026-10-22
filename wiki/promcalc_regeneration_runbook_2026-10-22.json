@@ -11,15 +11,24 @@
     "version": "1.2.4",
     "note": "install name != import name; installing the import name 404s",
     "fresh_env_resolves": [
-      "scikit-learn==1.9.1", "numpy==2.4.6", "scipy==1.17.1", "biopython==1.88",
-      "joblib==1.6.0", "threadpoolctl==3.7.0", "cloudpickle==3.1.2", "narwhals==2.27.1"
+      "scikit-learn==1.9.1",
+      "numpy==2.4.6",
+      "scipy==1.17.1",
+      "biopython==1.88",
+      "joblib==1.6.0",
+      "threadpoolctl==3.7.0",
+      "cloudpickle==3.1.2",
+      "narwhals==2.27.1"
     ]
   },
   "stage_a": {
     "n_filtered_tiles": 44106,
     "n_parsed": 46713,
     "replicate_ceiling": 0.941,
-    "own_asserts_passed": ["EXPECTED_TILES", "EXPECTED_CEILING"],
+    "own_asserts_passed": [
+      "EXPECTED_TILES",
+      "EXPECTED_CEILING"
+    ],
     "meaning": "the re-fetched GSE144621 substrate reproduces the published one exactly"
   },
   "version_breaks": [
@@ -52,11 +61,40 @@
     "published_sites_per_tile": 73,
     "nan_rows": 0,
     "hex35_parse_failures": 0,
-    "spacer_len_range": [15, 19],
+    "spacer_len_range": [
+      15,
+      19
+    ],
     "errors": 0,
     "elapsed_s": 58,
     "header_equals_SITE_FIELDS": true,
-    "value": "caught both version breaks in 24 s instead of after ~11 h"
+    "value": "CORRECTED by re-running the gate three ways: the 24 s figure was true of the IMPORT break only. Break 2 fails only AFTER the expensive solve, so on the full substrate it would have burned the entire ~12.7 h and returned an empty table.",
+    "non_vacuity_measured_2026-10-22": {
+      "method": "ran the 40-tile smoke three ways at 4 workers on throwaway copies -- current code, break 1 re-introduced, break 2 re-introduced. The live script and the live run's output directory were not touched.",
+      "current_code": {
+        "ok": 40,
+        "err": 0,
+        "sites_per_tile": 73.0,
+        "elapsed_s": 165.8
+      },
+      "break_1_top_level_class_import": {
+        "ok": 0,
+        "err": 40,
+        "error_class": "ImportError",
+        "elapsed_s": 21.2,
+        "note": "fails before any work is done"
+      },
+      "break_2_dot_get_on_PromoCalcResults": {
+        "ok": 0,
+        "err": 40,
+        "error_class": "AttributeError",
+        "elapsed_s": 173.5,
+        "note": "fails only AFTER the solve -- each tile spends its full ~8.7 core-seconds then dies formatting the result, so a full run would cost ~12.7 h and yield an empty table"
+      },
+      "verdict": "NON-VACUOUS -- passes clean code, fails every tile under either break, correct error class each time",
+      "why_this_was_re_run": "the first write-up CITED an earlier run rather than verifying the claim; the re-run found the 24 s figure wrong for one of the two breaks",
+      "clean_case_slower_than_the_58s_above": "the box was running the real 7-worker job and this used 4 workers -- same work, contended machine"
+    }
   },
   "cost": {
     "per_tile_core_seconds_1_thread": 8.7,
@@ -65,16 +103,40 @@
     "constructor_note": "free, so the cost is inside Promoter_Calculator.run() and is NOT amortizable by reusing the object",
     "solve_is_blas_parallel": true,
     "tiles_per_min_7_workers_unpinned": 28,
-    "tiles_per_min_7_workers_pinned": 65,
     "speedup": 2.34,
     "projection_h_unpinned": 26.0,
-    "projection_h_pinned": 11.0,
     "ab_design": "true A/B on the real workload - same tiles, same 7 workers, same launcher, only the environment differing",
-    "pinned_vars": ["OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS", "NUMEXPR_NUM_THREADS"],
-    "reusable_rule": "when a worker pool underperforms its single-process timing, suspect the single-process timing was ALREADY parallel; the per-WORKER rate, not the aggregate, is the diagnostic"
+    "pinned_vars": [
+      "OMP_NUM_THREADS",
+      "OPENBLAS_NUM_THREADS",
+      "MKL_NUM_THREADS",
+      "NUMEXPR_NUM_THREADS"
+    ],
+    "reusable_rule": "when a worker pool underperforms its single-process timing, suspect the single-process timing was ALREADY parallel; the per-WORKER rate, not the aggregate, is the diagnostic",
+    "tiles_per_min_7_workers_pinned_PROXY_SUPERSEDED": 65,
+    "tiles_per_min_7_workers_pinned": 51.9,
+    "projection_h_pinned_PROXY_SUPERSEDED": 11.0,
+    "projection_h_pinned": 12.7,
+    "rate_correction_2026-10-22": {
+      "measured_by": "the job's OWN log counter, which prints every 2000 tiles",
+      "log_lines": [
+        "2000/43611 tiles | 146000 sites | 37.9 min | eta 788.1 min",
+        "4000/43611 tiles | 292000 sites | 77.1 min | eta 763.3 min"
+      ],
+      "rate_between_marks": 51.0,
+      "rate_overall": 51.9,
+      "job_own_eta_min": 763.3,
+      "why_the_proxy_was_wrong": "tile counts were inferred from gzip file size against a bytes-per-tile constant from the 40-tile smoke; the 5-minute window sampled caught a write/flush burst as the pool spun up, not steady state. A short size sample on a buffered gzip stream is not a rate measurement.",
+      "same_error_class_as": "the wiki cost figure corrected in this same document -- a derived proxy quoted as a measurement, committed one commit later in the same session, while an exact counter was already being written to disk",
+      "speedup_ratio_standing": "BOTH A/B arms were proxy-derived, so 2.34x inherits their lumpiness. The direction is corroborated independently by the mechanism: 8.7 core-seconds/tile over 7 workers predicts ~48 tiles/min and the log measured 51.9. Treat the direction as solid, the exact multiple as approximate."
+    }
   },
   "recorded_cost_figure": {
-    "recorded": {"per_tile_s": 0.26, "tiles_per_min_7_workers": 785, "published_minutes": 74},
+    "recorded": {
+      "per_tile_s": 0.26,
+      "tiles_per_min_7_workers": 785,
+      "published_minutes": 74
+    },
     "source": "wiki/promcalc_decomposition_arm_2026-10-13.md",
     "reproducible_here": false,
     "gap": "785 tiles/min needs ~0.5 core-seconds/tile against the 8.7 measured, a ~17x gap no thread setting explains",
@@ -116,8 +178,14 @@
     "item": "if stage C frozen reconcile gate FAILS",
     "rule": "report INDETERMINATE_RECONCILE_FAILED. Do NOT tune it away. Editing PREREGISTERED is a USER-AUTHORITY call",
     "anchors": {
-      "max_tx_median": {"expected": 0.3968, "tol": 0.02},
-      "gc_seed0": {"expected": 0.3000, "tol": 0.01}
+      "max_tx_median": {
+        "expected": 0.3968,
+        "tol": 0.02
+      },
+      "gc_seed0": {
+        "expected": 0.3,
+        "tol": 0.01
+      }
     }
   },
   "honest_limits": [

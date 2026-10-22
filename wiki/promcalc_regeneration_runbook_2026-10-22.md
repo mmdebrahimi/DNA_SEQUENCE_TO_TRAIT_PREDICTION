@@ -27,8 +27,8 @@ tiles/min on 7 workers**, published as ~74 min for 44,106 tiles. Measured on thi
 | per tile, BLAS pinned to 1 thread | **8.7 core-seconds** | 0.26 s single-core |
 | per tile, wall, unpinned single process | ~3.0 s | — |
 | constructor cost | **0.000 s** (free) | — |
-| 7 workers, unpinned | **28 tiles/min** (~26 h) | 785 tiles/min |
-| 7 workers, 1 thread each | **65 tiles/min** (~11 h) | 785 tiles/min |
+| 7 workers, unpinned | ~28 tiles/min (proxy; see correction) | 785 tiles/min |
+| 7 workers, 1 thread each | **51.9 tiles/min** (~12.7 h) | 785 tiles/min |
 
 785 tiles/min would require roughly **0.5 core-seconds per tile** against the 8.7 measured — a ~17x
 gap that no thread setting explains. Either the 2026-10-12 run used a materially faster
@@ -113,8 +113,27 @@ constructs it with the same `Promoter_Calculator(threads=, verbosity=)` and read
 a container-shape fix, **not a model swap** — which is what lets stage C's frozen reconcile anchors
 remain the right acceptance test rather than a comparison against a different model.
 
-Cost of catching it at the smoke gate: **24 seconds, 40 tiles**. Cost of catching it after the full
-run: ~11 hours and a 140 MB file of nothing but errors.
+**CORRECTED 2026-10-22, by actually re-running the gate three ways instead of citing the first run.**
+"Caught both breaks in 24 s" was true of break 1 ONLY. Measured on 40 tiles at 4 workers, with the
+breaks deliberately re-introduced into throwaway copies:
+
+| case | tiles ok | errored | sites/tile | error class | elapsed |
+|---|---|---|---|---|---|
+| current code | 40 | 0 | 73.0 | -- | 165.8 s |
+| break 1 re-introduced | 0 | 40 | -- | `ImportError` | **21.2 s** |
+| break 2 re-introduced | 0 | 40 | -- | `AttributeError` | **173.5 s** |
+
+Break 1 fails before any work. **Break 2 fails only AFTER the expensive solve** -- each tile spends its
+full ~8.7 core-seconds and then dies formatting the result -- so on the full 44,106 tiles it would have
+consumed the ENTIRE ~12.7 h run and returned an empty table. That makes the gate more valuable for
+break 2 than the original claim, not less; the stated 24 s figure was simply wrong for that case.
+
+The clean case takes 165.8 s here rather than the 58 s recorded above because the box was running the
+real 7-worker job at the time and this used 4 workers. Same work, contended machine.
+
+**The gate is NON-VACUOUS, which is the claim that matters** -- it passes clean code and fails every
+tile under either break, with the correct error class each time. A gate that only ever passes proves
+nothing.
 
 A third shape difference turned out to be harmless and is pinned so it stays that way:
 `hex35_position` comes back as a real list `[25, 31]`, not the string the docstring describes.
@@ -141,7 +160,7 @@ cores were oversubscribed several times over and most of the machine went into c
 Pinning `OMP_NUM_THREADS` / `OPENBLAS_NUM_THREADS` / `MKL_NUM_THREADS` / `NUMEXPR_NUM_THREADS` to 1
 makes process-level parallelism the only parallelism, which is the level that actually scales here.
 
-**28 → 65 tiles/min, 2.34x.** Measured as a true A/B on the real workload — same tiles, same 7
+**28 → 65 tiles/min, 2.34x** as originally measured — but BOTH arms of that A/B were derived from gzip file size, and the pinned figure is now known wrong (see the correction below). Measured on the real workload — same tiles, same 7
 workers, same launcher, only the environment differing — not on a synthetic benchmark. The restart
 cost nothing, because `--resume` recovered 495 completed tiles.
 
@@ -183,8 +202,21 @@ and an unquoted `-File` path splitting on the space in "Laptop Portable".
   substrate is the open empirical question, and it is exactly what the gate exists to answer.
 - Rate is derived from output-file growth against a bytes-per-tile constant measured on the 40-tile
   smoke (3,654 bytes/tile). Compression ratio can drift with content, so the ETA is approximate.
-- The ~11 h projection assumes the measured 65 tiles/min holds. It was measured over one 5-minute
-  window on a machine doing nothing else.
+- **RATE CORRECTED 2026-10-22: 51.9 tiles/min, not 65, and the ETA is ~12.7 h, not ~11 h.** The
+  job prints EXACT counts to its own log every 2,000 tiles and I never read them -- I inferred tile
+  counts from gzip file size against a bytes-per-tile constant taken from the 40-tile smoke. The log
+  says `2000/43611 tiles | 37.9 min` then `4000/43611 tiles | 77.1 min`, i.e. 51.0 tiles/min between
+  those marks and 51.9 overall, with the job's own eta at 763 min. **The 5-minute file-size window I
+  sampled caught a write/flush burst as the pool spun up, not steady state** -- a short size sample on
+  a buffered gzip stream is not a rate measurement.
+- **This is the SAME error class as the wiki figure corrected at the top of this document**, committed
+  in the same session one commit later: a derived proxy quoted as a measurement when an exact counter
+  was already being written to disk. Read the log's progress lines.
+- **The 2.34x speedup ratio does NOT rest on those proxy windows** (both arms were proxy-derived, so
+  the ratio inherits their lumpiness). It is corroborated independently by the mechanism: 8.7
+  core-seconds/tile over 7 workers predicts ~48 tiles/min, and the log-measured 51.9 sits right at
+  that hardware efficiency, while unpinned 8-core oversubscription accounts for the remainder. Treat
+  the DIRECTION as solid and the exact multiple as approximate.
 - 8 workers instead of 7 would be expected to gain roughly another 1.3 h. **Not tried** — the job was
   already running efficiently and a second restart was not worth the progress and attention.
 - The 2026-10-12 shard set (88.4% complete) is **not recoverable** — it was on the detached volume.
