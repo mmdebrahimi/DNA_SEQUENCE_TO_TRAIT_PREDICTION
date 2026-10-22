@@ -361,8 +361,13 @@ def main() -> int:
             f"coverage {cov:.4f} over {len(tiles)} tiles - the sweep is INCOMPLETE "
             f"({len(tiles) - len(dec)} tiles missing). Scoring now would feed every missing tile in as "
             f"a no-promoter observation and report a clean verdict over a partial substrate. "
-            f"Resume stage B: D:/tools/promcalc_env/Scripts/python.exe scripts/promcalc_decompose.py "
-            f"--workers 7 --resume"
+            f"Resume stage B via the LAUNCHER, which owns the reachable interpreter, the "
+            f"one-BLAS-thread-per-worker pinning (measured worth ~2.3x), the run-lock and the "
+            f"sentinel: Start-Process -FilePath run_promcalc_decompose_detached.bat "
+            f"-ArgumentList '--resume' -WindowStyle Hidden. "
+            f"(The interpreter path this message used to advertise, D:/tools/promcalc_env, left "
+            f"with its volume. Do not restate an interpreter path here - that is how the dead "
+            f"one shipped.)"
         )
 
     # Feature matrix aligned to the FILTERED tile list by position (stage A wrote that index).
