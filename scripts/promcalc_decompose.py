@@ -1,12 +1,39 @@
 """Stage B: run the Promoter Calculator over exported tiles and KEEP THE WHOLE DECOMPOSITION.
 
-**RUN THIS WITH THE ISOLATED INTERPRETER, NOT `uv run`:**
+**RUN THIS WITH THE ISOLATED INTERPRETER, NOT `uv run`.** `D:/tools/promcalc_env` was on the
+volume that detached permanently; the reachable interpreter is:
 
-    D:/tools/promcalc_env/Scripts/python.exe scripts/promcalc_decompose.py --workers 7
+    "C:/Users/Laptop Portable/tools/promcalc_env/Scripts/python.exe" scripts/promcalc_decompose.py --workers 7
 
-`promoter_calculator` pulls sklearn 1.9.1 against this project's pinned 1.8.0, so installing it in the
-project venv would move sklearn under all 6,409 tests. This module therefore imports NOTHING from
-`dna_decode` — it reads the TSV stage A wrote and writes a CSV stage C reads. Keep it that way.
+**PIN ONE BLAS THREAD PER WORKER, or this job takes 2.3x longer.** The solve is BLAS-parallel: one
+tile costs 8.7 core-seconds pinned to a single thread but only ~3.0 s wall unpinned, so each worker
+quietly spreads across ~3 cores and 7 of them oversubscribe 8 cores into context switching. Measured
+on the full 44,106-tile run: 28 tiles/min unpinned vs 65 pinned. `run_promcalc_decompose_detached.bat`
+sets OMP/OPENBLAS/MKL/NUMEXPR_NUM_THREADS=1; a bare invocation does not.
+
+This module imports NOTHING from `dna_decode` — it reads the TSV stage A wrote and writes a CSV
+stage C reads. Keep it that way; `tests/test_promcalc_decompose.py` now enforces it rather than merely
+asking.
+
+**The reason for that isolation was MEASURED 2026-10-22, and the two halves of the original claim
+have DIFFERENT truth values -- do not collapse them.** The old wording said `promoter_calculator`
+pulls sklearn 1.9.1 against this project's pinned 1.8.0, and concluded that installing it here would
+move sklearn under the whole suite.
+
+  * TRUE: the distribution declares no hard sklearn pin, so an UNCONSTRAINED resolve takes the newest.
+    A fresh `uv venv` + `uv pip install promotercalculator` really did install scikit-learn 1.9.1
+    (with numpy 2.4.6, scipy 1.17.1, biopython 1.88).
+  * FALSE: that does NOT make it unsatisfiable here. `uv pip install --dry-run promotercalculator` in
+    the PROJECT env resolves 7 packages, would install exactly ONE, and leaves sklearn at 1.8.0 --
+    because 1.8.0 already satisfies it. Nothing would move under the suite.
+  * So the stated CONSEQUENCE is refuted while its antecedent holds. A first pass at this correction
+    called the whole premise "REFUTED", which over-corrected in the other direction; the precise
+    statement is the three bullets above.
+
+The isolation is still right, for a different and now-primary reason: **`uv.lock` is a frozen
+reproducibility unit**, so `uv add` is unavailable and an imperative `uv pip install` into the project
+env is silently reverted by the next `uv sync`. A separate venv is near-free and keeps the boundary
+`tests/test_promcalc_decompose.py` now enforces.
 
 **Why it exists at all.** The 2026-10-12 measurement reduced each tile to ONE scalar (`max_tx`) and
 scored 0.3968, beating every learned arm. But the model returns ~71 candidate forward promoters per
@@ -166,9 +193,41 @@ def shard_paths(in_dir: Path, *, smoke: bool = False) -> list[Path]:
     return [p for p in out if p.exists()]
 
 
+def _require_reachable_in_dir(in_dir: Path | str, *, flag: str = "--in-dir") -> Path:
+    """`in_dir`, or a refusal naming the flag -- STDLIB ONLY, by contract.
+
+    This stage imports NOTHING from `dna_decode` (see the module docstring and
+    `tests/test_promcalc_decompose.py`), so it cannot use `external_root` the way stages A and C do.
+    It does not need to: the only question here is whether the directory is reachable at all.
+
+    **The distinction this draws is the point.** Previously an absent directory and a reachable
+    directory with no export both produced the same message -- "tiles.tsv missing, run stage A first"
+    -- which sends the operator to re-run stage A when the real problem is that the whole volume is
+    gone. Those are different walls and merging them destroys the diagnosis.
+
+    The D: default is unchanged, so a host that has the volume takes the identical path.
+    """
+    d = Path(in_dir)
+    if d.is_dir():
+        return d
+    if d.exists():
+        raise SystemExit(f"{flag} {d} exists but is a FILE, not a directory.")
+    reachable_ancestor = next((a for a in d.parents if a.is_dir()), None)
+    if reachable_ancestor is None:
+        raise SystemExit(
+            f"{flag} {d} is not reachable -- no ancestor of it exists, which is what a detached "
+            f"volume looks like. This is NOT 'stage A has not run yet'; pass {flag} pointing at a "
+            f"reachable directory. Drive letters move, so do not supply one from memory."
+        )
+    raise SystemExit(
+        f"{flag} {d} does not exist, though {reachable_ancestor} is reachable. Create it by running "
+        f"scripts/promcalc_export_tiles.py --out-dir {d} in the PROJECT env first."
+    )
+
+
 def run(in_dir: Path | str = DEFAULT_DIR, *, workers: int = 7, smoke: bool = False,
         limit: int | None = None, resume: bool = False) -> dict:
-    in_dir = Path(in_dir)
+    in_dir = _require_reachable_in_dir(in_dir)
     tsv = in_dir / ("tiles_smoke.tsv" if smoke else "tiles.tsv")
     if not tsv.exists():
         raise SystemExit(f"{tsv} missing - run scripts/promcalc_export_tiles.py first (project env)")

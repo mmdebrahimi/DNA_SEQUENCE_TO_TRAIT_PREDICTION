@@ -276,6 +276,34 @@ def verdict(arms: dict, pre: dict = PREREGISTERED) -> tuple[str, str]:
                     f"{pre['min_seeds_winning']}-seed bar; not enough to carry the representation")
 
 
+def _require_decomposition_dir(in_dir: Path | str, *, flag: str = "--in-dir") -> Path:
+    """`in_dir`, or a refusal naming the flag and where the data actually is.
+
+    Mirrors the shape `scripts/glm_tile_predictions.py::require_external_dir` already ships, and for
+    the same reason: `allow_discovered` stays at its default False, because adopting a same-named root
+    automatically would convert a loud missing-ROOT into a quiet missing-DATASET -- a directory of the
+    right NAME is not evidence of the right CONTENTS. This diagnoses and refuses; the operator passes
+    the path.
+
+    Unlike stage A's output dir, this one must ALREADY exist and hold shards, so the resolver's
+    `configured`-means-is_dir semantics are exactly right here.
+
+    Without this, an absent volume reached `load_decomposition` and surfaced as
+    "no decomposition shards in <path> - run stage B first", which points the operator at stage B when
+    the real wall is the missing volume. The D: default is unchanged.
+    """
+    from dna_decode.data.external_root import describe, resolve_external_root
+
+    path, status = resolve_external_root(in_dir)
+    if status == "configured":
+        return path
+    raise SystemExit(
+        f"{flag} {in_dir} is not reachable [{status}].\n\n{describe(in_dir)}\n\n"
+        f"Pass {flag} explicitly. The root is NOT substituted automatically. This is a different wall "
+        f"from 'stage B has not run yet' -- the directory itself is absent."
+    )
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--in-dir", default=str(DEFAULT_DIR))
@@ -319,7 +347,7 @@ def main() -> int:
     tiles = [t for t in tiles_all if t.category == "tile" and len(t.seq) == 150]
     ceil = noise_ceiling(tiles)["ceiling_for_a_sequence_model"]
 
-    dec, shards = load_decomposition(a.in_dir, smoke=a.smoke)
+    dec, shards = load_decomposition(_require_decomposition_dir(a.in_dir), smoke=a.smoke)
     cov = len(dec) / len(tiles)
     print(f"decomposition: {len(dec)} tiles | {sum(len(v) for v in dec.values())} site rows | "
           f"coverage {cov:.4f} | shards {shards}", flush=True)

@@ -1,0 +1,97 @@
+{
+  "schema": "promcalc-toolchain-probe-v1",
+  "probed_on": "2026-10-22",
+  "verdict": "ENV_ABSENT_DEPS_SATISFIABLE_HERE",
+  "verdict_vocabulary": [
+    "INDETERMINATE_PROBE_FAILED",
+    "INPUTS_ABSENT",
+    "ENV_PRESENT",
+    "ENV_ABSENT_DEPS_UNSATISFIABLE",
+    "ENV_ABSENT_DEPS_SATISFIABLE_HERE"
+  ],
+  "verdict_vocabulary_frozen": "in this module, above any measurement",
+  "checks_resolved": 6,
+  "problems": [],
+  "env": {
+    "documented_interpreter": "D:/tools/promcalc_env/Scripts/python.exe",
+    "reachable_interpreters": [
+      {
+        "interpreter": "C:/Users/Laptop Portable/tools/promcalc_env/Scripts/python.exe",
+        "is_documented_path": false,
+        "requirement_package_present": true,
+        "checked_how": "filesystem only -- this probe issues no subprocess by contract"
+      }
+    ],
+    "resolves": false,
+    "this_interpreter": "C:/Users/Laptop Portable/pythonprojects/dna_decode/.venv/Scripts/python.exe",
+    "requirement": "promoter_calculator",
+    "requirement_importable_here": false,
+    "isolation_required": false,
+    "isolation_claim": {
+      "claimed_by": "scripts/promcalc_decompose.py docstring",
+      "claim": "promoter_calculator pulls sklearn 1.9.1, so it must live in an ISOLATED interpreter or it would move sklearn under the whole test suite",
+      "status": "CONSEQUENCE REFUTED, antecedent HOLDS -- measured 2026-10-22; read `evidence` and `antecedent_holds` rather than this one line",
+      "antecedent_holds": "a FRESH `uv venv` + `uv pip install promotercalculator` installed scikit-learn 1.9.1, so 'pulls sklearn 1.9.1' is true of an unconstrained resolve; what is refuted is the CONSEQUENCE that installing it in the project env would move sklearn under the suite",
+      "isolation_still_correct_because": "`uv.lock` is a frozen reproducibility unit, so `uv add` is unavailable and an imperative `uv pip install` into the project env is silently reverted by the next `uv sync`. The separate venv is near-free and keeps the boundary that tests/test_promcalc_decompose.py now enforces.",
+      "evidence": "the distribution is `promotercalculator` 1.2.4 -- a py3-none-any PURE-PYTHON wheel, requires_python=None, with UNPINNED deps (biopython, numpy, scikit-learn, scipy). `uv pip install --dry-run promotercalculator` resolved 7 packages and would install exactly ONE (promotercalculator), leaving sklearn 1.8.0 untouched. There is no hard pin to 1.9.1 anywhere in its metadata; 1.9.1 is simply what an unconstrained resolver picks when it takes the latest.",
+      "not_measured_by_this_probe": "this probe issues NO subprocess by contract, so it cannot run that resolution itself. The dry-run was performed separately and its result is RECORDED here, not re-derived at call time. Re-run it if the lockfile or the dep set changes.",
+      "install_name_differs_from_import_name": "import `promoter_calculator`, but `pip install promoter_calculator` 404s -- the distribution on PyPI is `promotercalculator` (Salis Lab, Barrick Lab fork)."
+    },
+    "project_sklearn": "1.8.0"
+  },
+  "inputs": {
+    "ultimate_raw_substrate": "GSE144621_peak_tile_expression_formatted_std.txt.gz",
+    "found_at": [
+      "C:/Users/Laptop Portable/pythonprojects/dna_decode/data/mpra/GSE144621_peak_tile_expression_formatted_std.txt.gz"
+    ],
+    "note": "stage A derives tiles.tsv from this file, so its presence -- not the derived TSV's -- is what decides whether there is anything to decompose. The file is NOT opened here; genomewide.load_peak_tiles owns GSE144621."
+  },
+  "stage_b": {
+    "module_level_imports": [
+      "argparse",
+      "csv",
+      "gzip",
+      "json",
+      "os",
+      "sys",
+      "time",
+      "multiprocessing",
+      "pathlib"
+    ],
+    "nested_imports": [
+      "promoter_calculator"
+    ],
+    "imports_dna_decode_at_module_level": false
+  },
+  "stage_a": {
+    "module_level_imports": [
+      "argparse",
+      "csv",
+      "json",
+      "sys",
+      "pathlib",
+      "dna_decode"
+    ],
+    "takes_cache_dir_parameter": true
+  },
+  "volumes": [
+    {
+      "drive": "C:",
+      "free_gb": 57.7,
+      "total_gb": 475.9
+    },
+    {
+      "drive": "S:",
+      "free_gb": 57.7,
+      "total_gb": 475.9
+    }
+  ],
+  "min_free_gb_assumed": 5.0,
+  "installs_performed": 0,
+  "honest_limits": [
+    "Read-only. Reporting that an install is possible is NOT the same claim as having done one.",
+    "MIN_FREE_GB is ASSERTED from stage A's own 'the per-site table is ~3M rows' comment, not measured against a completed sweep.",
+    "A SATISFIABLE verdict bounds only whether an isolated environment could be CREATED here. It says nothing about whether the regenerated pipeline would reproduce the frozen bar's committed per-seed anchors, which is a separate and stricter question.",
+    "Module-level import extraction is textual (column-0 regex), not an AST parse; a dynamic import would not appear."
+  ]
+}

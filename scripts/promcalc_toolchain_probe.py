@@ -55,6 +55,45 @@ VERDICTS = (
 #: The interpreter stage B is documented to run under.
 ENV_PYTHON = Path("D:/tools/promcalc_env/Scripts/python.exe")
 
+#: The import name, which differs from the distribution name (`pip install promotercalculator`,
+#: `import promoter_calculator`). Installing the import name 404s.
+STAGE_B_IMPORT_PACKAGE = "promoter_calculator"
+
+#: Places a stage-B interpreter may have been provisioned once the documented volume detached.
+CANDIDATE_ENVS = (
+    ENV_PYTHON,
+    Path.home() / "tools" / "promcalc_env" / "Scripts" / "python.exe",
+)
+
+
+def find_reachable_interpreters(candidates: tuple[Path, ...] | None = None) -> list[dict]:
+    """Which candidate stage-B interpreters actually EXIST, and whether the requirement sits in one.
+
+    **Why this exists: reporting only the DOCUMENTED path as absent is a FALSE absence.** On
+    2026-10-22 the documented interpreter was gone with its volume while a working one had been
+    provisioned on C:, and this probe still said the environment was absent -- which is the most
+    expensive answer it can give, because it sends the next session to provision something it already
+    has. The same defect was fixed in `find_inputs` the same day: it searched only drive roots while
+    the substrate sat repo-local.
+
+    Presence of the requirement is checked on the FILESYSTEM (its import package under
+    site-packages), never by importing it, because this probe issues NO subprocess by contract. So a
+    hit here means "an interpreter exists and carries the package", NOT "that interpreter works".
+    """
+    out: list[dict] = []
+    for exe in (CANDIDATE_ENVS if candidates is None else candidates):
+        if not exe.exists():
+            continue
+        root = exe.parent.parent
+        pkg = root / "Lib" / "site-packages" / STAGE_B_IMPORT_PACKAGE
+        out.append({
+            "interpreter": str(exe).replace(chr(92), "/"),
+            "is_documented_path": exe == ENV_PYTHON,
+            "requirement_package_present": pkg.is_dir(),
+            "checked_how": "filesystem only -- this probe issues no subprocess by contract",
+        })
+    return out
+
 #: The ULTIMATE raw substrate. Stage A derives `tiles.tsv` from this file, so its presence -- not the
 #: presence of the derived TSV -- is what decides whether there is anything to decompose.
 #: Repo root. `scripts/` is one level down, so `parents[1]`.
@@ -263,6 +302,10 @@ def probe_toolchain(*, env_python: Path | str = ENV_PYTHON,
         "problems": problems,
         "env": {
             "documented_interpreter": str(env).replace(chr(92), "/"),
+            # A reachable interpreter elsewhere does NOT change the verdict below, which is scoped to
+            # the DOCUMENTED path and is correct about it. It is recorded so the record cannot read as
+            # "no stage-B interpreter exists anywhere", which was false from 2026-10-22 onward.
+            "reachable_interpreters": find_reachable_interpreters(),
             "resolves": env_resolves,
             "this_interpreter": sys.executable.replace(chr(92), "/"),
             "requirement": STAGE_B_REQUIREMENT,
@@ -275,7 +318,25 @@ def probe_toolchain(*, env_python: Path | str = ENV_PYTHON,
                     f"{STAGE_B_REQUIREMENT} pulls sklearn 1.9.1, so it must live in an ISOLATED "
                     f"interpreter or it would move sklearn under the whole test suite"
                 ),
-                "status": "REFUTED for this environment, 2026-10-22",
+                # The two halves have DIFFERENT truth values and a bare "REFUTED" collapsed them.
+                # Antecedent HOLDS: a fresh unconstrained resolve really does take sklearn 1.9.1
+                # (measured -- a new venv got 1.9.1). Consequence REFUTED: 1.8.0 already satisfies the
+                # package, so installing it here would move nothing. A first pass at this correction
+                # called the whole premise refuted, which over-corrected in the other direction.
+                "status": ("CONSEQUENCE REFUTED, antecedent HOLDS -- measured 2026-10-22; read "
+                           "`evidence` and `antecedent_holds` rather than this one line"),
+                "antecedent_holds": (
+                    "a FRESH `uv venv` + `uv pip install promotercalculator` installed scikit-learn "
+                    "1.9.1, so 'pulls sklearn 1.9.1' is true of an unconstrained resolve; what is "
+                    "refuted is the CONSEQUENCE that installing it in the project env would move "
+                    "sklearn under the suite"
+                ),
+                "isolation_still_correct_because": (
+                    "`uv.lock` is a frozen reproducibility unit, so `uv add` is unavailable and an "
+                    "imperative `uv pip install` into the project env is silently reverted by the next "
+                    "`uv sync`. The separate venv is near-free and keeps the boundary that "
+                    "tests/test_promcalc_decompose.py now enforces."
+                ),
                 "evidence": (
                     "the distribution is `promotercalculator` 1.2.4 -- a py3-none-any PURE-PYTHON wheel, "
                     "requires_python=None, with UNPINNED deps (biopython, numpy, scikit-learn, scipy). "
@@ -340,6 +401,9 @@ def main(argv=None) -> int:
 
     rec = probe_toolchain(env_python=a.env_python)
     print(f"verdict {rec['verdict']}  (checks_resolved {rec['checks_resolved']})")
+    for _it in rec["env"].get("reachable_interpreters", []):
+        print(f"  reachable interpreter  : {_it['interpreter']}  "
+              f"[package present: {_it['requirement_package_present']}]")
     print(f"  documented interpreter : {rec['env']['documented_interpreter']}  "
           f"[{'RESOLVES' if rec['env']['resolves'] else 'ABSENT'}]")
     print(f"  {rec['env']['requirement']} importable here : "
