@@ -31,10 +31,11 @@
 #     '-NoProfile','-ExecutionPolicy','Bypass','-File','<repo>\scripts\promcalc_watchdog.ps1'
 
 param(
-  [string]$Repo        = "C:\Users\Laptop Portable\pythonprojects\dna_decode",
-  [int]   $PollSeconds = 300,
-  [int]   $MaxRetries  = 8,
-  [int]   $ExpectTiles = 44106
+  [string]$Repo         = "C:\Users\Laptop Portable\pythonprojects\dna_decode",
+  [int]   $PollSeconds  = 300,
+  [int]   $MaxRetries   = 8,
+  [int]   $ExpectTiles  = 44106,
+  [int]   $StallMinutes = 20
 )
 
 $ErrorActionPreference = "Continue"
@@ -54,10 +55,31 @@ function Test-JobAlive {
   # The Pool children are spawn-based, so their command line names multiprocessing rather than the
   # script. Counting ONLY the named script would read a live job as dead whenever the short-lived
   # parent is between states, so both shapes count.
+  #
+  # **THIS MATCH IS DELIBERATELY OVER-BROAD, and Test-Progressing is what makes that safe.**
+  # Tightening it to the run-lock's recorded PID looks stricter and is WORSE: on 2026-10-22 killing
+  # the parent left six worker children running at 100% CPU with the lock PID already dead, so a
+  # PID-only check would have read "dead", relaunched, and put a second job alongside the orphans.
+  # An unrelated multiprocessing job can therefore read as "promcalc alive" here -- fail-safe toward
+  # alive, because a spurious NO-OP is cheap and a double-launch is not. The cost of that choice is
+  # that liveness alone cannot distinguish healthy from hung, which is exactly the gap the stall
+  # detector below closes.
   $procs = @(Get-CimInstance Win32_Process -Filter "Name='python.exe'" -ErrorAction SilentlyContinue |
              Where-Object { $_.CommandLine -like '*promcalc_decompose*' -or
                             $_.CommandLine -like '*multiprocessing*spawn*' })
   return $procs.Count
+}
+
+function Get-OutputBytes {
+  # Total bytes across the main file and every resume shard. Cheap: a size read, NEVER a decompress.
+  # Decompressing the growing gzip during a live run is the recorded trap that turned a ~1 h job into
+  # a 5.0 h projection, so progress is measured by SIZE while the job runs and by actual coverage only
+  # when it is idle.
+  $files = @(Get-ChildItem -Path (Join-Path $OutDir "decomposition.csv.gz"),
+                                 (Join-Path $OutDir "decomposition.part-*.csv.gz") `
+                           -ErrorAction SilentlyContinue)
+  if (-not $files) { return -1 }
+  return ($files | Measure-Object -Property Length -Sum).Sum
 }
 
 function Get-Coverage {
@@ -73,17 +95,42 @@ function Get-Coverage {
 
 Write-Wd "watchdog start (poll ${PollSeconds}s, max ${MaxRetries} retries, expect ${ExpectTiles} tiles)"
 
-$retries = 0
+$retries    = 0
+$lastBytes  = -1
+$lastGrowth = Get-Date
+
 while ($true) {
   Start-Sleep -Seconds $PollSeconds
 
-  if ((Test-JobAlive) -gt 0) { continue }   # healthy: say nothing, keep the log readable
+  $alive   = Test-JobAlive
+  $stalled = $false
 
-  # --- not alive: decide which of the three states this is -----------------------------------
+  if ($alive -gt 0) {
+    # --- PROGRESS CHECK. Liveness alone cannot tell healthy from hung, and the whole point of an
+    # --- unattended 12 h run is that nobody is watching: without this, "7 processes alive, zero
+    # --- tiles completing" waits forever and the night is lost.
+    $bytes = Get-OutputBytes
+    if ($bytes -gt $lastBytes) {
+      $lastBytes  = $bytes
+      $lastGrowth = Get-Date
+      continue                      # alive AND progressing: stay quiet, keep the log readable
+    }
+    $stallMin = ((Get-Date) - $lastGrowth).TotalMinutes
+    if ($stallMin -lt $StallMinutes) { continue }   # gzip writes are lumpy; not a stall yet
+    Write-Wd ("STALLED: {0} process(es) alive but output has not grown for {1:N0} min (threshold {2}). Treating as dead." -f $alive, $stallMin, $StallMinutes)
+    $stalled = $true
+    # --- DELIBERATELY NOT KILLING ANYTHING HERE. The liveness match above is over-broad on purpose,
+    # --- so an automated kill could take down an unrelated multiprocessing job. The relaunch below is
+    # --- guarded by the run-lock's own PID-liveness check, which refuses a second job while a live
+    # --- holder exists -- so the safe outcome is reached without this script choosing what to kill.
+  }
+
+  # --- not alive (or stalled): decide which of the three states this is ----------------------
   $sentinel = Join-Path $OutDir "decompose_run.sentinel"
   if (Test-Path $sentinel) { $exitTxt = (Get-Content $sentinel -Raw).Trim() } else { $exitTxt = "ABSENT" }
   $cov = Get-Coverage
-  Write-Wd "job not alive. sentinel=[$exitTxt] coverage=$cov/$ExpectTiles"
+  $why = if ($stalled) { "STALLED" } else { "not alive" }
+  Write-Wd "job ${why}. sentinel=[$exitTxt] coverage=$cov/$ExpectTiles"
 
   if ($cov -ge $ExpectTiles) {
     Write-Wd "COMPLETE at $cov tiles. Stopping; no further launches."
@@ -104,6 +151,12 @@ while ($true) {
   Start-Process -FilePath $Launcher -ArgumentList "--resume" -WorkingDirectory $Repo -WindowStyle Hidden
   Start-Sleep -Seconds 90
   if ((Test-JobAlive) -eq 0) { Write-Wd "WARNING: relaunch ${retries} did not come up within 90s" }
+
+  # Reset the stall tracker so the NEW job is judged on its own progress. Without this, the pre-relaunch
+  # stall timestamp carries over and the next poll would immediately re-declare a stall, burning every
+  # retry in a few minutes -- the retry cap would be spent without any of them having been given time.
+  $lastBytes  = Get-OutputBytes
+  $lastGrowth = Get-Date
 }
 
 Write-Wd "watchdog exit after $retries relaunch(es)"
