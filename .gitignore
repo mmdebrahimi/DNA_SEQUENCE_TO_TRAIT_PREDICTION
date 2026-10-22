@@ -157,3 +157,9 @@ soraya_runs/*
 !soraya_runs/negative-results.json
 !soraya_runs/arms-ledger.json
 !soraya_runs/constraint-expiry.json
+
+# Runtime GLM job lock. NEVER commit: it carries a PID, and `glm_run_lock.holder()` decides
+# liveness by PID existence -- so a committed lock from another machine would be read as a LIVE
+# holder on this one and refuse every launch with exit 9 until someone deleted it by hand. The
+# stale-reclaim path only covers a pid that is gone HERE, not a pid that never existed here.
+.glm_run.lock
