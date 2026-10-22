@@ -21,11 +21,14 @@ reason -- this repo has a recorded instance of a scorer erroring and printing a 
 zero resolved calls, so "I could not look" and "I looked and it is not there" must be different
 findings rather than the same empty dict.
 
-**`ENV_ABSENT_DEPS_SATISFIABLE_HERE` DOES NOT MEAN "install it into this venv".** `promoter_calculator`
-pulls sklearn 1.9.1 while this project's lock resolves 1.8.0, and stage B's own docstring says
-installing it in the project venv would move sklearn under the whole test suite. So the satisfiable
-verdict always carries `isolation_required: true`: what is satisfiable is a SEPARATE environment, never
-this one. A verdict read without that field would license exactly the action the arm forbids.
+**THE ISOLATION PREMISE WAS REFUTED 2026-10-22 -- read `isolation_claim`, not the old assumption.**
+Stage B's docstring says `promoter_calculator` pulls sklearn 1.9.1 and therefore needs an ISOLATED
+interpreter, and this module used to assert `isolation_required: true` on that basis. Measured: the
+distribution is `promotercalculator` 1.2.4, a py3-none-any pure-Python wheel with `requires_python=None`
+and UNPINNED deps, and a dry-run resolution would install exactly ONE package while leaving sklearn,
+numpy and scipy where they are. So isolation is NOT required here and the field now says so, with the
+evidence attached. What remains hard about promcalc is the DATA (a ~44k-tile sweep) and the frozen bar's
+anchor gate -- not the install. Note the install name differs from the import name.
 """
 from __future__ import annotations
 
@@ -246,13 +249,33 @@ def probe_toolchain(*, env_python: Path | str = ENV_PYTHON,
             "this_interpreter": sys.executable.replace(chr(92), "/"),
             "requirement": STAGE_B_REQUIREMENT,
             "requirement_importable_here": bool(requirement_importable),
-            "isolation_required": True,
-            "isolation_reason": (
-                f"{STAGE_B_REQUIREMENT} pulls sklearn 1.9.1; this project resolves "
-                f"{sk or 'an unknown version'}, and stage B's own docstring says installing it in the "
-                f"project venv would move sklearn under the whole test suite. SATISFIABLE therefore "
-                f"means a SEPARATE environment, never this one."
-            ),
+            # MEASURED 2026-10-22 and it REFUTES what this field used to assert. See `isolation_claim`.
+            "isolation_required": False,
+            "isolation_claim": {
+                "claimed_by": "scripts/promcalc_decompose.py docstring",
+                "claim": (
+                    f"{STAGE_B_REQUIREMENT} pulls sklearn 1.9.1, so it must live in an ISOLATED "
+                    f"interpreter or it would move sklearn under the whole test suite"
+                ),
+                "status": "REFUTED for this environment, 2026-10-22",
+                "evidence": (
+                    "the distribution is `promotercalculator` 1.2.4 -- a py3-none-any PURE-PYTHON wheel, "
+                    "requires_python=None, with UNPINNED deps (biopython, numpy, scikit-learn, scipy). "
+                    "`uv pip install --dry-run promotercalculator` resolved 7 packages and would install "
+                    f"exactly ONE (promotercalculator), leaving sklearn {sk or '?'} untouched. There is no "
+                    "hard pin to 1.9.1 anywhere in its metadata; 1.9.1 is simply what an unconstrained "
+                    "resolver picks when it takes the latest."
+                ),
+                "not_measured_by_this_probe": (
+                    "this probe issues NO subprocess by contract, so it cannot run that resolution itself. "
+                    "The dry-run was performed separately and its result is RECORDED here, not re-derived "
+                    "at call time. Re-run it if the lockfile or the dep set changes."
+                ),
+                "install_name_differs_from_import_name": (
+                    "import `promoter_calculator`, but `pip install promoter_calculator` 404s -- the "
+                    "distribution on PyPI is `promotercalculator` (Salis Lab, Barrick Lab fork)."
+                ),
+            },
             "project_sklearn": sk,
         },
         "inputs": {
@@ -302,7 +325,9 @@ def main(argv=None) -> int:
     print(f"  documented interpreter : {rec['env']['documented_interpreter']}  "
           f"[{'RESOLVES' if rec['env']['resolves'] else 'ABSENT'}]")
     print(f"  {rec['env']['requirement']} importable here : "
-          f"{rec['env']['requirement_importable_here']}  (isolation_required True)")
+          f"{rec['env']['requirement_importable_here']}  "
+          f"(isolation_required {rec['env']['isolation_required']} -- "
+          f"{rec['env']['isolation_claim']['status']})")
     print(f"  raw substrate          : {len(rec['inputs']['found_at'])} location(s)")
     for p in rec["inputs"]["found_at"]:
         print(f"      {p}")

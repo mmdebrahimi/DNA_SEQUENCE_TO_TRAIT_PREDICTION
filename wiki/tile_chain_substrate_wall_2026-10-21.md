@@ -135,3 +135,38 @@ on every report. The mitigation shipped before the risk did.
 measurement is what justified the code change: "`D:` is a card-reader slot with no media" and
 the volume table's `D: resolves False`. Both were true when written, on 2026-10-21, before the
 pinning.
+
+## SECOND AMENDMENT, 2026-10-22 — THE ISOLATION PREMISE IS REFUTED, and it was mine to check
+
+Everything above says the promcalc half needs a **separate** Python environment, because stage B's
+docstring states `promoter_calculator` pulls sklearn 1.9.1 against this project's 1.8.0. **I relayed that
+as a measured constraint and never checked it. It is false in this environment.**
+
+Measured 2026-10-22:
+
+* The PyPI distribution is **`promotercalculator` 1.2.4** ("Salis Lab's promoter-calculator, Barrick Lab
+  Fork") — a **`py3-none-any` PURE-PYTHON wheel**, `requires_python: None`, with **completely unpinned**
+  dependencies: `biopython`, `numpy`, `scikit-learn`, `scipy`. There is no 1.9.1 pin anywhere in its
+  metadata; 1.9.1 is simply what an unconstrained resolver picks when it takes the latest.
+* `uv pip install --dry-run promotercalculator` → **"Resolved 7 packages … would install 1 package:
+  `promotercalculator==1.2.4`"**, leaving sklearn **1.8.0**, numpy **2.4.4** and scipy **1.17.1**
+  untouched.
+
+**Consequence: `isolation_required` is FALSE here, and the authority fork I handed the user was
+mis-framed.** It was presented as *"installing this needs a user decision because it would move sklearn
+under 6,900 tests"*. It would not. The install is one pure-Python package that changes nothing else.
+
+**A trap worth keeping, found the same way:** the **import** name is `promoter_calculator` but
+`pip install promoter_calculator` **404s** — the distribution is `promotercalculator`. Anyone following
+the docstring literally would conclude the package does not exist.
+
+**What this does NOT change — the wall moved, it did not vanish.** The promcalc *decomposition data*
+still does not exist, generating it is a ~44k-tile stage-B sweep, and the frozen bar's anchor gate still
+demands the regenerated pipeline reproduce committed per-seed numbers within 0.01 on 9 of 10 seeds. So
+the honest reclassification is: **not an environment/authority wall, but a COMPUTE + anchor-reproduction
+wall** — ordinary executor work with a real risk of landing on `REFUSED_ANCHOR_MISMATCH`.
+
+`scripts/promcalc_toolchain_probe.py` no longer asserts the refuted claim: it carries the claim, its
+`REFUTED` status, the evidence, the import-vs-install-name trap, and an explicit note that the probe did
+NOT measure this itself (it issues no subprocess by contract). The test was inverted to pin that the
+claim and its status **travel**, rather than pinning an answer that already changed once.

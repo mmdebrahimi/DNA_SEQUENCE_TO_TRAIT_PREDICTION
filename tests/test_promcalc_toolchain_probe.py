@@ -137,15 +137,38 @@ def test_record_carries_the_frozen_vocabulary_and_a_reachable_verdict(tmp_path):
     assert rec["schema"] == P.SCHEMA
 
 
-def test_satisfiable_always_carries_isolation_required(tmp_path):
-    """A SATISFIABLE verdict read without this field would license the install the arm forbids."""
+def test_satisfiable_carries_the_isolation_CLAIM_and_its_STATUS(tmp_path):
+    """The claim must TRAVEL with the verdict, whichever way it resolved.
+
+    This test used to assert `isolation_required is True` and the words "SEPARATE environment",
+    because stage B's docstring says `promoter_calculator` pulls sklearn 1.9.1. That was MEASURED
+    FALSE on 2026-10-22: the distribution is `promotercalculator` 1.2.4, a py3-none-any pure-Python
+    wheel with unpinned deps, and a dry-run resolution would install exactly one package and leave
+    sklearn where it is.
+
+    So the guard is inverted into the durable shape: do not pin the ANSWER (which is environment-
+    dependent and already changed once), pin that the CLAIM, its STATUS and its EVIDENCE are all
+    present. A verdict that silently dropped the claim would let a future reader re-assume isolation
+    is required -- or re-assume it is not -- with nothing recorded either way.
+    """
     d = tmp_path / "mpra"
     d.mkdir()
     (d / P.PEAK_TILE_FILE).write_bytes(b"x")
     rec = _rec(tmp_path)
     assert rec["verdict"] == "ENV_ABSENT_DEPS_SATISFIABLE_HERE"
-    assert rec["env"]["isolation_required"] is True
-    assert "SEPARATE environment" in rec["env"]["isolation_reason"]
+
+    claim = rec["env"]["isolation_claim"]
+    assert claim["claimed_by"]                      # who said it
+    assert "sklearn" in claim["claim"]              # what was claimed
+    assert "REFUTED" in claim["status"]             # how it resolved
+    assert "dry-run" in claim["evidence"]           # on what evidence
+    assert isinstance(rec["env"]["isolation_required"], bool)
+
+    # The probe must NOT pretend it measured this itself -- it issues no subprocess by contract.
+    assert "no subprocess" in claim["not_measured_by_this_probe"].lower()
+
+    # The trap that 404s a naive install must stay recorded next to the claim.
+    assert "promotercalculator" in claim["install_name_differs_from_import_name"]
 
 
 def test_absent_substrate_yields_INPUTS_ABSENT(tmp_path):

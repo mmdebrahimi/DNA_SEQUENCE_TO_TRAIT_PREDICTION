@@ -30,9 +30,10 @@
       "actually_at": null,
       "probe_verdict": "ENV_ABSENT_DEPS_SATISFIABLE_HERE",
       "probe_artifact": "wiki/promcalc_toolchain_probe_2026-10-21.json",
-      "isolation_required": true,
+      "isolation_required": false,
       "isolation_reason": "promoter_calculator pulls sklearn 1.9.1; this project resolves 1.8.0, and stage B's own docstring says installing it in the project venv would move sklearn under the whole test suite. SATISFIABLE means a SEPARATE environment, never this one.",
-      "needed_from_whom": "a user decision to install an isolated interpreter plus promoter_calculator, then a ~44k-tile stage-B sweep -- OR the host that already holds the decomposition"
+      "needed_from_whom": "a user decision to install an isolated interpreter plus promoter_calculator, then a ~44k-tile stage-B sweep -- OR the host that already holds the decomposition",
+      "isolation_superseded_2026_10_22": "see amendment_2; the sklearn-1.9.1 premise was refuted"
     }
   ],
   "frozen_bar_execution_notes_audit": {
@@ -83,5 +84,14 @@
       "volumes_measured entry: D: resolves False"
     ],
     "why_left_in_place": "they were true when measured and are what justified the code change; rewriting them would erase the evidence rather than date it"
+  },
+  "amendment_2": {
+    "date": "2026-10-22",
+    "what_changed": "the ISOLATION PREMISE, which I relayed from a docstring without checking",
+    "claim_refuted": "promoter_calculator pulls sklearn 1.9.1 so it needs a separate environment",
+    "evidence": "PyPI dist is `promotercalculator` 1.2.4, a py3-none-any pure-python wheel, requires_python=None, deps UNPINNED (biopython, numpy, scikit-learn, scipy). `uv pip install --dry-run promotercalculator` resolves 7 packages and would install exactly 1, leaving sklearn 1.8.0 / numpy 2.4.4 / scipy 1.17.1 untouched.",
+    "consequence": "isolation_required is FALSE here; the authority fork was mis-framed as an install that would move sklearn under the test suite. It would not.",
+    "trap_recorded": "import name `promoter_calculator` vs distribution name `promotercalculator` -- `pip install promoter_calculator` 404s",
+    "wall_reclassified": "still data-absent, but a COMPUTE + anchor-reproduction wall rather than an environment/authority one: the ~44k-tile stage-B sweep must still run and must reproduce committed per-seed numbers within 0.01 on 9 of 10 seeds or the bar returns REFUSED_ANCHOR_MISMATCH."
   }
 }

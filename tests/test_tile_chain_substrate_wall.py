@@ -98,12 +98,28 @@ def test_the_satisfiable_verdict_is_not_presented_as_a_reproduction():
     assert "REFUSED_ANCHOR_MISMATCH" in joined
 
 
-def test_the_isolation_caveat_travels_with_the_satisfiable_verdict():
-    """A SATISFIABLE verdict read without this would license the install the arm forbids."""
+def test_the_isolation_question_is_RESOLVED_and_its_resolution_travels():
+    """Pin that the question is ANSWERED with evidence, not that the answer is a given value.
+
+    This asserted `isolation_required is True` until 2026-10-22, on the strength of stage B's
+    docstring ("promoter_calculator pulls sklearn 1.9.1"). That was measured FALSE: the distribution
+    is a py3-none-any pure-Python wheel with unpinned deps, and a dry-run resolution would install
+    exactly one package while leaving sklearn alone. The old test was pinning a relayed premise.
+
+    The durable guard is therefore: the flag is a BOOL (so the question is settled rather than open),
+    and the amendment carries the refuted claim plus its evidence. A sidecar that quietly dropped
+    either would let the next reader re-adopt the premise that just cost an authority fork.
+    """
     rec = json.loads(SIDECAR.read_text(encoding="utf-8"))
     dep = next(d for d in rec["dependencies"] if d["wall_class"] == "data-absent")
-    assert dep["isolation_required"] is True
-    assert "SEPARATE environment" in dep["isolation_reason"]
+    assert isinstance(dep["isolation_required"], bool)
+
+    am = rec["amendment_2"]
+    assert "sklearn 1.9.1" in am["claim_refuted"]
+    assert "dry-run" in am["evidence"]
+    assert "promotercalculator" in am["trap_recorded"]
+    # the wall must still be recorded as real, just reclassified -- not quietly dissolved
+    assert "REFUSED_ANCHOR_MISMATCH" in am["wall_reclassified"]
 
 
 def test_the_stale_and_sound_halves_of_the_bars_note_are_BOTH_recorded():
