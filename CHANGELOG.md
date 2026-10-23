@@ -5,6 +5,85 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### Measured — the promcalc decomposition arm's pre-registered question is ANSWERED: `NO_GAIN` (2026-10-23)
+
+The frozen comparison ran unattended overnight and discharged its verdict at 03:48 without
+supervision. **Research-arm only** — no decoder change, no CLI trait, no console entry point, no
+`cell_registry` contract; the five sha256-pinned frozen files are byte-unchanged and the prospective
+lock still verifies at 2026-08-31.
+
+**Verdict `NO_GAIN`** (`wiki/promcalc_decomposition_arm_2026-10-23.json`), on 44,106 × 150 bp
+GSE144621 peak tiles, leave-peak-out, 10 registered seeds, ~11,000 test tiles/seed, replicate ceiling
+0.941: the 55-feature decomposition built from promoter_calculator's **9 dG components** scores
+Spearman **0.3925** median against **0.3968** for the single `max_tx` scalar reduced from the very same
+table — paired **−0.0043**, winning **2 of 10** seeds against a registered bar of margin 0.02 and ≥8
+seeds.
+
+**It is a VALID negative, not `INDETERMINATE_RECONCILE_FAILED`,** and that distinction is the arm's own
+validity anchor rather than a reading of it: both reconcile anchors passed — `gc_seed0` 0.3000 within
+0.01 and `max_tx_median` at **exactly** 0.3968 within 0.02 — and the feature-permuted control came back
+clean at **0.0342** against a 0.05 ceiling.
+
+**READ IT NARROWLY — the loose reading is wrong in the direction this repo has already paid three
+months for.** Decomposition beats the GC baseline by **+0.0802** and `max_tx` beats it by **+0.0865**,
+both 10/10 seeds with a paired CI excluding zero, so **promoter thermodynamics IS informative over
+composition**. What carries nothing is the nine-part breakdown *over one number*: roughly **730 numbers
+per tile** (73 sites × the 9 `DG_FIELDS` + `Tx_rate`) are discardable without loss. **Do not compress this to
+"thermodynamics doesn't help"** — that is orientation error #0's shape pointed at a different arm, and
+it would foreclose a mechanism the same artifact shows to be live.
+
+**The install authority fork is DISCHARGED, and the probe's prediction held.** `promoter_calculator`
+lives in an isolated interpreter at `C:/Users/Laptop Portable/tools/promcalc_env` carrying **sklearn
+1.9.1** while the project env resolves **1.8.0** (both verified by import) — exactly the
+`isolation_required: true` that `scripts/promcalc_toolchain_probe.py` attached to its
+`ENV_ABSENT_DEPS_SATISFIABLE_HERE` verdict on 2026-10-21. The documented target
+`D:/tools/promcalc_env` was never the path; the env is on `C:`. Stage B took **770 minutes** across 7
+workers to full coverage (44,106 / 44,106 tiles, 0 errors).
+
+**New: `scripts/promcalc_chain_stage_c.py` + `run_promcalc_chain_detached.bat` — the gate ORDER is the
+feature.** Stage B finishes in the middle of the night, so without a chain the morning state is a
+finished TABLE; with it, the morning state is a VERDICT. The chain waits for stage B's sentinel or full
+coverage, waits for no live worker, **validates, and only then scores** — `promcalc_validate_output.py`
+with no `--expect-partial`, exit 0 or the chain stops and stage C is never invoked. Validate-then-score
+is not interchangeable: `_site_field` defaults on `KeyError`/`AttributeError`/`TypeError`, so a future
+field rename yields a full-coverage **all-nan** table with 0 errors and `sites_per_tile_mean`
+still 73.0 — every count reporting success. Scoring that unattended produces
+`INDETERMINATE_RECONCILE_FAILED`, which is indistinguishable from genuine model drift, and the morning
+reader gets a plausible wrong diagnosis instead of a defect report. The chain never kills anything,
+never retries stage B (the watchdog owns that), never edits the frozen bar and never scores a partial
+table; it is stdlib-only so it runs under either interpreter, invoking stage C through `uv run`.
+
+**New guard: `tests/test_sota_scan_scope_guard.py` (8 tests) — it guards a prose RELATIONSHIP, not a
+number.** A ZERO-SHOT log-likelihood result must never be presented as replicating this project's
+SUPERVISED encoder-gate negative. A value-only check cannot catch that class, because every figure
+involved is correctly transcribed and only the verb connecting them is wrong — the same shape as
+`tests/test_essentiality_overclaim.py`. Motivated by a measured case where the two readouts give
+OPPOSITE verdicts on the same data (supervised 0.8142 vs zero-shot 0.4750).
+
+**Five claims corrected in `wiki/ai_genomics_sota_scan_2026-10-22.{md,json}`, all marked `[AMENDED]` in
+place** rather than rewritten, including a **withdrawn decision** that had named
+`GENERator-prokaryote-1.2b-base` when the code pins `GenerTeam/GENERator-v2-prokaryote-1.2b-base` at
+five sites (local snapshot `8b2f768b…` equals upstream HEAD). `CLAUDE.md` carried a **third** spelling
+of the same model — `GENERator-1.2B-prokaryote` — and is corrected to the pinned id; the edit is
+deliberately **word-neutral**, because that file sits at one word of headroom against
+`tests/test_claude_md_growth_ceiling.py`. A ~50-word pointer recording this verdict in `CLAUDE.md` was
+therefore **declined for the fourth consecutive `/documentation` pass** and the refusal is recorded in
+that guard's comment block and in `TODOS.md`; the content lives here, in `LESSONS_LEARNED.md` and in
+the artifact.
+
+**Host measurements worth keeping, both about reading numbers rather than about the result.** The full
+suite takes **10:07 with the CPU free** against **40:22 while the sweep held 7 of 8 cores** — a ~4×
+contention cost, the same trap as the chain's own "do not decompress the table during a live run" gate
+(which once turned a ~1 h job into a 5.0 h projection that was then quoted as the job's rate). And the
+suite's **collected count is DATA-DEPENDENT** here, since many files parametrize over *discovered*
+artifacts. That is now measured, not argued: **two runs of this commit on this host four hours apart
+gave 6,974 and 7,000 passed with an IDENTICAL 14-failure set.** (The recorded progression is 6,759 →
+6,814 → 6,834 → 6,905 → 6,920, and a plan's verification bar cited a baseline of **6,943 that no
+artifact records** — which is how an exact-delta bar became uncheckable at the moment it was checked.)
+**The regression check that actually holds is the failure SET**, which buckets exactly as documented —
+7 cyp4f2/GeT-RM, 5 essentiality-ladder, 1 pneumo cps DB, 1 README quickstart, all absent-data or
+host-dependent, none a code defect.
+
 ### Fixed/Added — the tile chain's substrate wall, split into one code defect and one install decision (2026-10-21)
 
 Plan `plans/Make_The_Tile_Chain_S_Substrate_Legible_And_Classify_Its_Wall_Plan/technical-plan.md`, all

@@ -72,7 +72,19 @@ holds a **24-byte disk-signature binding** for `D:`, so it survives reboots and 
 letter will not drift again for this disk. A junction `D:\dna_decode_cache ->
 D:\PythonProjects\dna_decode_cache` reconciles the nested layout.
 
-**Measured consequences, not inferred:**
+> **SCOPED 2026-10-23 — the binding holds, the ATTACHMENT does not, and the "measured consequences"
+> below are all conditional on it.** Measured today: `wmic logicaldisk` lists **only `C:` and `S:`** —
+> neither `D:` nor `E:` resolves, and `D:/` is not even enumerable. A disk-signature binding fixes
+> **which letter a disk gets when present**; it cannot keep a removable disk plugged in, so "will not
+> drift again" was the right claim about the wrong quantity. **Every `D:/…` bullet below should be read
+> as "when that disk is attached".** What made the overnight promcalc run possible instead was a
+> **repo-local mirror on `C:`**: `data/mpra` (96 MB) and `data/promcalc` (159 MB) are **real
+> directories, not junctions** (`dir /AL data` finds no reparse point), so the whole stage-A → B → C
+> chain ran with no removable volume at all. That is the FUTURE_FEATURES "mirror heavy artifacts off
+> removable media" proposal, realised in practice for this one substrate — and it is also why the 12th
+> expiry constraint, keyed `file-exists` to a `D:` path, can no longer fire.
+
+**Measured consequences, not inferred (all conditional on that disk being attached):**
 
 - `scripts/glm_tile_predictions.py` **with no arguments** prints `tiles 44106 | ceiling 0.9410`.
   The hardcoded default resolves; so does `scripts/promcalc_decomposition_arm.py`'s **bare**
@@ -110,24 +122,35 @@ consumes. Measured, there are **two** dependencies with **different** wall class
   `load_peak_tiles()` with no arguments, taking the hardcoded `D:` default and dying on an unhandled
   `WinError 21`. It now takes `--mpra-cache`; with the reachable copy the chain prints
   **`tiles 44106 | ceiling 0.9410`** — both the published anchors, exactly — and gets past the tile load.
-- **promcalc per-tile decomposition — `data-absent`.** No `promcalc` on any resolving volume. Probe
-  verdict **`ENV_ABSENT_DEPS_SATISFIABLE_HERE`** (`wiki/promcalc_toolchain_probe_2026-10-21.json`): an
-  isolated interpreter could be created here, but `promoter_calculator` pulls sklearn 1.9.1 against this
-  project's 1.8.0, so it must be a **separate** env — an install, i.e. a user decision. Registered as
-  the 12th expiry constraint `glm-tile-chain-promcalc-substrate-absent`.
+- **promcalc per-tile decomposition — was `data-absent`, now CLOSED (2026-10-23).** The install decision
+  was taken: an isolated env at `C:/Users/Laptop Portable/tools/promcalc_env` (sklearn 1.9.1, project env
+  still 1.8.0 — the probe's `isolation_required` held, though the env is on `C:`, not the documented
+  `D:/tools/promcalc_env`). Stage B ran 770 min / 7 workers to full 44,106-tile coverage, 0 errors.
 
-**The `orthogonal-modality-stack-promcalc-plus-N-channels` arm stays `planned` in
-`soraya_runs/arms-ledger.json` and that is CORRECT** — per R6 a declared arm cannot evaporate, and its
-blocker is substrate, not merit. The ledger was deliberately **not** edited: moving an arm's status to
-reflect a substrate problem would destroy the information that it is still owed.
+**RESOLVED 2026-10-23 — the decomposition question is ANSWERED and the remaining items are narrower.**
+
+- **Verdict `NO_GAIN`** (`wiki/promcalc_decomposition_arm_2026-10-23.json`): 9 dG components over 55
+  features score **0.3925** vs **0.3968** for the single `max_tx` scalar reduced from the same table
+  (paired −0.0043, 2/10 seeds, bar was margin 0.02 and ≥8). VALID not indeterminate — both reconcile
+  anchors passed and the permuted control is clean at 0.0342. **Read it narrowly: both beat GC 0.3112 by
+  ~+0.08 at 10/10 seeds, so promoter thermodynamics IS informative; only the nine-part breakdown over one
+  number adds nothing (~730 discardable numbers per tile).** Not "thermodynamics doesn't help".
+- **The hybrid-primary bar (2026-10-17) is STILL UNEXECUTED** — a different frozen artifact, now
+  substrate-unblocked. Running it needs its own pre-registered run, not a retrofit.
+- **The `orthogonal-modality-stack-promcalc-plus-N-channels` arm stays `planned`** in
+  `soraya_runs/arms-ledger.json` and that is still CORRECT per R6 — it is promcalc ⊕ N channels, which
+  `NO_GAIN` on the breakdown-vs-its-own-scalar does not settle. Ledger deliberately not edited.
+- **The 12th expiry constraint cannot fire and needs retiring by hand.** It is `file-exists` on
+  `D:/dna_decode_cache/promcalc/decomposition.csv.gz`; the data landed repo-local in `data/promcalc/`.
+  Its own rationale named this case (the R9 pattern) — the stated limitation was the one that bit.
 
 **The frozen bar was not edited either.** Its `not_runnable_on` note is half stale (`no uv` is false —
 uv ran the full suite here today) and half right (`no D: data tree`), but amending a frozen
 pre-registration is an authority call. Audited in the memo, not changed.
 
-**The one verified-runnable high-VOI item this leaves standing** is resuming Steps 4–6 of
+**Other verified-runnable high-VOI work** is resuming Steps 4–6 of
 `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/` — its substrate is byte-verified
-present (GLM weights on `E:/hf_cache`, MG1655 reference in `data/cache/refseq`), unlike the tile chain's.
+present (GLM weights on `E:/hf_cache`, MG1655 reference in `data/cache/refseq`).
 
 ## THE MISSION IS NOW DEFINED — `project_state/trait-to-edit/big-idea.md` (authored 2026-10-09)
 

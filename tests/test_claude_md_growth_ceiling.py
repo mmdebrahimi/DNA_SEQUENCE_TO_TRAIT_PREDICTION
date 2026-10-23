@@ -54,6 +54,21 @@ CLAUDE_MD = ROOT / "CLAUDE.md"
 # bullets is a scope decision, which is why it is still here rather than done"), so an executor cannot take
 # it. The pointer's content is NOT lost: it lives in `wiki/glm_pyramid_arm_2026-10-11.md`, in NEXT.md item 8,
 # in `project_state/glm-learned-representation-2026-10-07.md`, and in `tests/test_glm_encoder.py`.
+#
+# NOT RAISED 2026-10-23 either, and this is the FOURTH consecutive decline (2026-10-20, 10-21, 10-23).
+# The file arrived at **1 word of headroom**. What was declined is different in kind from the three
+# before it: the content is a RESULT, not a process note -- the promcalc decomposition arm closed
+# `NO_GAIN` (9 dG components 0.3925 vs the single `max_tx` scalar 0.3968, paired -0.0043, 2/10 seeds)
+# **while both beat the GC baseline by ~+0.08, 10/10 seeds, CI excluding zero**. That second clause is
+# precisely an anti-over-compression rail of the sort the orientation-error section exists to carry,
+# since "thermodynamics doesn't help" is the wrong reading and this repo has paid three months for
+# exactly that class of compression once already. It still does not justify moving this number: a
+# ceiling that moves whenever it binds is not a ceiling (see the 2026-10-12 entry, where the second
+# raise is where the mechanism broke). The pass instead made the only CLAUDE.md edit an executor can
+# still make -- a **word-neutral** factual correction, `GENERator-1.2B-prokaryote` ->
+# `GENERator-v2-prokaryote-1.2b-base`, reducing three live spellings of one pinned model id to the one
+# the code actually loads at five sites. The declined pointer's content is in `CHANGELOG.md`,
+# `LESSONS_LEARNED.md` (2026-10-23), `TODOS.md` and `wiki/promcalc_decomposition_arm_2026-10-23.json`.
 WORD_CEILING = 35_460
 MEASURED_AT_WRITE = 34_758
 

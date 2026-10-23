@@ -81,7 +81,7 @@ Design `wiki/glm_architecture_design_2026-10-06.md` · decomposition `wiki/glm_d
 prior art + the 4 forced design changes `wiki/glm_prior_art_synthesis_2026-10-06.md`. Keystone shipped:
 `dna_decode/glm/edit.py` (`GenomeEdit`/`EditSet`, one span-replacement primitive, 46 tests). **Mandatory
 baseline panel for ANY GLM number** — mutation-count, BLOSUM62, one-hot ridge, site-independent, shuffled
-null, biologically-motivated splits only (random splits inflate ~3x). Model: **GENERator-1.2B-prokaryote**
+null, biologically-motivated splits only (random splits inflate ~3x). Model: **GENERator-v2-prokaryote-1.2b-base**
 (MIT, fits a T4); Evo 2 is hosted-API-only here (FP8/Hopper + FlashAttention-vs-Turing).
 
 ## Architecture (one level of depth that matters)
