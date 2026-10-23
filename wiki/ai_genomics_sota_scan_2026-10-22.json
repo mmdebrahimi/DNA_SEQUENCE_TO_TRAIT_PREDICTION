@@ -17,18 +17,45 @@
    "why_user": "scope decision on a frozen pre-registered plan",
    "substrate_is_real": true,
    "not_a_drop_in_because": "29 bp = 6 (-35) + 17 (spacer) + 6 (-10) leaves no room for the UP element upstream of -35 nor the discriminator/ITR downstream of -10; our stage B runs c.run(seq, TSS_range=[0,len(seq)]) on 150 bp tiles yielding ~73 candidate TSSs",
-   "components_computable": ["dG_35", "dG_10", "dG_spacer", "dG_ext10"],
-   "components_structurally_absent": ["dG_UP", "dG_disc", "dG_ITR"],
+   "components_computable": [
+    "dG_35",
+    "dG_10",
+    "dG_spacer",
+    "dG_ext10"
+   ],
+   "components_structurally_absent": [
+    "dG_UP",
+    "dG_disc",
+    "dG_ITR"
+   ],
    "clean_construction_if_adopted": "embed every 29 bp core in ONE fixed flanking context so the context contribution is identical across all 112,955 sequences and cannot confound the comparison",
-   "supporting_reported_fact": "NAR authors tested 8 designs across 6 contexts, R=0.93 across them, so context effects are modest in their hands"
+   "supporting_reported_fact": "NAR authors tested 8 designs across 6 contexts, R=0.93 across them, so context effects are modest in their hands",
+   "components_composite_contaminated": [
+    "dG_total",
+    "dG_bind"
+   ],
+   "component_accounting": "9 = 4 clean + 3 structurally absent + 2 composites",
+   "component_accounting_note": "The superseded wording said 'roughly four computable and three absent', dropping two. dG_total and dG_bind SUM OVER the absent terms and dG_total is the headline feature. Under the fixed-context construction the absent terms are constant, so they are absorbed by the intercept and contribute nothing -- the arm would test 4 components plus 2 contaminated composites.",
+   "collinearity_unmeasured": "GC and the dG features are far more entangled at a fixed 6+17+6 architecture than across 150 bp tiles. 'GC varies (sd 0.095)' is necessary, not sufficient; separability was asserted, not measured."
   },
   {
    "id": "D2",
-   "question": "Re-download / re-pin the GENERator-prokaryote-1.2b weights?",
-   "why_user": "touches a reproducibility unit",
-   "trigger": "GENERator repo news lists a July 2026 update to GENERator-prokaryote-1.2b-base and -3b-base with an explicit re-download notice",
-   "tier": "reported",
-   "cheap_half_doable_without_authority": "record which local revision we actually hold"
+   "status": "WITHDRAWN",
+   "question": "(superseded) Re-download / re-pin the GENERator-prokaryote weights?",
+   "withdrawn_because": [
+    "it named GENERator-prokaryote-1.2b-base, but the code pins GENERator-v2-prokaryote-1.2b-base",
+    "the non-v2 id does not resolve publicly (model API: Invalid username or password)",
+    "the pinned id's local snapshot is byte-identical to upstream HEAD"
+   ],
+   "pinned_id": "GenerTeam/GENERator-v2-prokaryote-1.2b-base",
+   "pinned_at_n_code_sites": 5,
+   "local_snapshot_sha": "8b2f768b0d293953518ff91d34600f9322ef1f94",
+   "upstream_sha": "8b2f768b0d293953518ff91d34600f9322ef1f94",
+   "shas_identical": true,
+   "upstream_last_modified": "2026-07-05T16:42:55.000Z",
+   "non_v2_id_resolves": false,
+   "nothing_to_do": true,
+   "lesson": "one grep and one API call dissolved a decision that had been put to a reader"
   }
  ],
  "corrections": [
@@ -58,14 +85,28 @@
   "sheet_dimension": "A1:B112956",
   "n_data_rows": 112955,
   "rows_contiguous": true,
-  "columns": ["Promoter_x", "strength"],
+  "columns": [
+   "Promoter_x",
+   "strength"
+  ],
   "n_sequences_pure_ACGT": 112955,
   "sequence_length_bp": 29,
-  "length_histogram": {"29": 112955},
+  "length_histogram": {
+   "29": 112955
+  },
   "architecture": "6 bp (-35 hexamer) + 17 bp spacer + 6 bp (-10 hexamer)",
-  "minus10_box_distribution": {"TATAAT": 49870, "TATACT": 6255, "TATATT": 5001, "TATAGT": 4842, "TATAAA": 3087, "TATGAT": 2602},
+  "minus10_box_distribution": {
+   "TATAAT": 49870,
+   "TATACT": 6255,
+   "TATATT": 5001,
+   "TATAGT": 4842,
+   "TATAAA": 3087,
+   "TATGAT": 2602
+  },
   "minus10_TATAAT_fraction": 0.4415,
-  "minus35_modal_hexamer": {"TAGACT": 950},
+  "minus35_modal_hexamer": {
+   "TAGACT": 950
+  },
   "strength_min": 0.00449771,
   "strength_median": 1.3208,
   "strength_max": 72.9837,
@@ -89,27 +130,79 @@
    "conditional_diffusion_design_to_measurement_r": 0.95,
    "assay": "MBRS (mutation-barcoding-reverse sequencing); 12 bp barcode, mRNA/DNA ratio by amplicon sequencing, validated against sfGFP and qPCR"
   },
-  "open_gap_the_field_left": "the authors used an RNAP-binding-energy matrix (Phillips et al.) to DESIGN the -10/-35 boxes and report R=-0.75 between binding energy and measured strength, but NEVER benchmarked that biophysical model as a predictor against their Transformer. That is the promcalc arm's question, on their substrate, unasked."
+  "open_gap_the_field_left": "[inferred] the authors used an RNAP-binding-energy matrix (Phillips et al.) to DESIGN the -10/-35 boxes and report R=-0.75 between binding energy and measured strength, but NEVER benchmarked that biophysical model as a predictor against their Transformer. That is the promcalc arm's question, on their substrate, unasked. TIER CORRECTION: this rests on an incomplete read (see open_gap_page_chars_read). The first version asserted it as fact and the phrase reached a commit message.",
+  "open_gap_tier": "inferred",
+  "open_gap_page_chars_read": "0-200000 of 209274; the final 9274 were NOT read"
  },
  "findings": [
   {
    "id": "F1",
-   "headline": "two independent 2026 results reproduce this project's encoder-gate negative",
-   "our_result": {"date": "2026-10-08", "comparison": "conv encoder over raw sequence vs ONE GC number", "median_delta": 0.0122, "paired_ci_includes_zero": true, "seeds_positive": "6/10"},
+   "headline": "two independent 2026 results point the same way as this project's encoder-gate negative, ON A DIFFERENT READOUT -- not a replication of it",
+   "our_result": {
+    "date": "2026-10-08",
+    "comparison": "conv encoder over raw sequence vs ONE GC number",
+    "median_delta": 0.0122,
+    "paired_ci_includes_zero": true,
+    "seeds_positive": "6/10",
+    "readout": "fitted conv encoder vs one GC feature, paired CI over 10 seeds",
+    "is_likelihood_probe": false,
+    "likelihood_mentions_in_source_artifact": 0
+   },
    "external_1": {
     "name": "Mechanistic Invariance Test",
     "ref": "arXiv 2604.06549, Cheng & Zhang, 2026-04-08, ICLR 2026 workshop",
     "tier": "reported",
     "benchmark": "650 sequences, 8 classes, E. coli sigma70 promoters, scrambled controls holding composition fixed while moving element position",
     "results": [
-     {"model": "HyenaDNA", "params": "6.6M", "CSS": 0.63, "SCR": 0.48, "AT_LL_r": 0.784},
-     {"model": "Evo2-1B", "params": "1B", "CSS": 0.60, "SCR": 0.46, "AT_LL_r": 0.961},
-     {"model": "NT-500M", "params": "500M", "CSS": 0.54, "SCR": 0.40},
-     {"model": "GROVER", "params": "117M", "CSS": 0.52, "SCR": 0.52},
-     {"model": "Caduceus", "params": "256M", "CSS": 0.49, "SCR": 0.42, "AT_LL_r": 0.874},
-     {"model": "random baseline", "CSS": 0.50, "SCR": 0.46},
-     {"model": "position-aware PWM", "params": "~100", "CSS": 1.00, "SCR": 0.98},
-     {"model": "position-FREE PWM variant (non-vacuity check)", "CSS": 1.00, "SCR": 0.92}
+     {
+      "model": "HyenaDNA",
+      "params": "6.6M",
+      "CSS": 0.63,
+      "SCR": 0.48,
+      "AT_LL_r": 0.784
+     },
+     {
+      "model": "Evo2-1B",
+      "params": "1B",
+      "CSS": 0.6,
+      "SCR": 0.46,
+      "AT_LL_r": 0.961
+     },
+     {
+      "model": "NT-500M",
+      "params": "500M",
+      "CSS": 0.54,
+      "SCR": 0.4
+     },
+     {
+      "model": "GROVER",
+      "params": "117M",
+      "CSS": 0.52,
+      "SCR": 0.52
+     },
+     {
+      "model": "Caduceus",
+      "params": "256M",
+      "CSS": 0.49,
+      "SCR": 0.42,
+      "AT_LL_r": 0.874
+     },
+     {
+      "model": "random baseline",
+      "CSS": 0.5,
+      "SCR": 0.46
+     },
+     {
+      "model": "position-aware PWM",
+      "params": "~100",
+      "CSS": 1.0,
+      "SCR": 0.98
+     },
+     {
+      "model": "position-FREE PWM variant (non-vacuity check)",
+      "CSS": 1.0,
+      "SCR": 0.92
+     }
     ],
     "authors_reading": "misaligned inductive bias, not insufficient capacity; larger models showed STRONGER compositional bias",
     "caveats_from_the_paper_itself": [
@@ -117,7 +210,8 @@
      "strand-blindness is weaker than it reads: HyenaDNA 44% forward-vs-revcomp has the authors' own binomial p=0.24, supporting 'no better than chance', not 'prefers the wrong strand'",
      "single regulatory system (E. coli sigma70), 100 bp sequences, 5 models, possible training contamination unverifiable"
     ],
-    "third_party_flag": "a review noted the scrambled controls may not isolate cleanly"
+    "third_party_flag": "a review noted the scrambled controls may not isolate cleanly",
+    "readout": "zero-shot log-likelihood (CSS/SCR are LL-derived; reports an AT-LL r column)"
    },
    "external_2": {
     "name": "Nullsettes",
@@ -126,29 +220,71 @@
     "design": "synthetic expression cassettes with control elements translocated so no flanking sequence can rescue expression; 11 eukaryotic / 19 prokaryotic mutant types; 5 MPRA datasets across E. coli, yeast, human",
     "models": 12,
     "variants": 28,
-    "includes": ["Evo2-7B", "GENERator-3B", "GENERanno-0.5B", "NT variants", "DNABERT-2", "Caduceus", "GPN", "gLM2", "METAGENE-1", "PDLLM"],
+    "includes": [
+     "Evo2-7B",
+     "GENERator-3B",
+     "GENERanno-0.5B",
+     "NT variants",
+     "DNABERT-2",
+     "Caduceus",
+     "GPN",
+     "gLM2",
+     "METAGENE-1",
+     "PDLLM"
+    ],
     "headline": "9 of 12 below 50% detection on at least one dataset; only Evo2-7B and GENERanno-0.5B strong and consistent",
     "generanno_efficiency": "matched Evo2-7B at 14x fewer parameters and 12x less pretraining data",
     "quote": "Current gLMs recognize what natural expression cassettes look like, but not how they work.",
     "mechanism": "detection depends strongly on the UNMUTATED sequence's likelihood; required threshold scales linearly with length",
-    "scale": "no consistent improvement with size within families"
+    "scale": "no consistent improvement with size within families",
+    "readout": "zero-shot log-likelihood (a detection is mutant LL significantly below nonmutant)"
    },
-   "why_they_agree": "all three say the signal these representations carry on regulatory sequence is COMPOSITIONAL (GC/AT) and that position/mechanism is largely absent; ours via 'a conv encoder does not beat one GC number', the MIT via 'apparent sensitivity is AT-content correlation', Nullsettes via 'detection tracks likelihood, not function'",
-   "scale_agreement": "ESM2 peaks at 650M and regresses at 3B/15B here; MIT reports stronger compositional bias at larger size; Nullsettes reports no consistent gain with size"
+   "why_they_agree": "The SHARED finding is about what the pretrained representation CARRIES: on regulatory sequence the signal is compositional (GC/AT) and position/mechanism is largely absent. The MIT measured that from a frozen model's likelihood, Nullsettes likewise, and ours from a TRAINED representation -- consistent in direction, not the same experiment. The superseded wording ('three teams, three benchmarks, one mechanism') compressed that away. What the agreement does explain is why a GC baseline is hard to beat here.",
+   "scale_agreement": "ESM2 peaks at 650M and regresses at 3B/15B here; MIT reports stronger compositional bias at larger size; Nullsettes reports no consistent gain with size",
+   "superseded_headline": "two independent 2026 results reproduce this project's encoder-gate negative",
+   "not_a_replication_of_supervised_gate": true,
+   "scope_rail": "Both external results are ZERO-SHOT LOG-LIKELIHOOD probes; the encoder gate is a FITTED model. CLAUDE.md prices this exact conflation at three months, and the repo holds a measured case where the two readouts give OPPOSITE verdicts on the same data (supervised 0.8142 vs zero-shot 0.4750, PASS vs FAIL). A zero-shot result bounds what the pretrained representation CARRIES, never what a supervised head can EXTRACT from it.",
+   "superseded_why_they_agree": "all three say the signal these representations carry on regulatory sequence is COMPOSITIONAL ... Three teams, three benchmarks, one mechanism"
   },
   {
    "id": "F2",
    "headline": "the one asymmetry where this project is AHEAD of the published work",
-   "paper": {"name": "Frozen but Not Always Accessible", "ref": "arXiv 2608.05329", "tier": "reported"},
-   "backbones": ["DNABERT-2 117M", "NT 500M", "HyenaDNA", "GENERATOR-v2 1.2B", "Omni-DNA 116M"],
-   "probes": ["logistic regression", "RBF-SVM", "shallow MLP (512,256)"],
+   "paper": {
+    "name": "Frozen but Not Always Accessible",
+    "ref": "arXiv 2608.05329",
+    "tier": "reported"
+   },
+   "backbones": [
+    "DNABERT-2 117M",
+    "NT 500M",
+    "HyenaDNA",
+    "GENERATOR-v2 1.2B",
+    "Omni-DNA 116M"
+   ],
+   "probes": [
+    "logistic regression",
+    "RBF-SVM",
+    "shallow MLP (512,256)"
+   ],
    "result_relevant_to_us": "on PROMOTER tasks frozen embeddings recover 95-100% of fine-tuned performance; splice sites far worse at 60-88%",
-   "consequence": "freezing is NOT the bottleneck for promoter-shaped tasks, which retires 'we should have fine-tuned' as an explanation for our encoder-gate result",
+   "consequence": "On promoter-shaped CLASSIFICATION, frozen embeddings lose little to fine-tuning. It does NOT retire 'we should have fine-tuned' for our gate: the cited paper's evaluation is classification-only by its own limitations, our gate is expression REGRESSION, and our encoder was TRAINED FROM SCRATCH rather than frozen -- so frozen-vs-finetuned is not our gate's axis.",
    "the_gap": "the paper states it does NOT compare against simple baselines such as GC content or k-mer features, and therefore cannot say whether frozen embeddings outperform hand-built features",
    "our_position": "that is precisely the comparison this project ran, paired, multi-seed, CI-reported. Our negative is not a lagging result; it is a measurement the published benchmark is missing.",
    "corroborating": [
-    {"name": "Specialized Foundation Models Struggle to Beat Supervised Baselines", "ref": "arXiv 2411.02796", "claim": "DASHA, 10.5M params, no pretraining, beats all FMs on aggregate across the 18 NT tasks", "caveats": ["FM numbers copied from the NT paper's tables, not re-run", "margin driven largely by histone-modification tasks", "2024 preprint"]},
-    {"name": "Nature Methods 2025", "claim": "deep-learning gene-perturbation prediction does not yet outperform simple linear baselines"}
+    {
+     "name": "Specialized Foundation Models Struggle to Beat Supervised Baselines",
+     "ref": "arXiv 2411.02796",
+     "claim": "DASHA, 10.5M params, no pretraining, beats all FMs on aggregate across the 18 NT tasks",
+     "caveats": [
+      "FM numbers copied from the NT paper's tables, not re-run",
+      "margin driven largely by histone-modification tasks",
+      "2024 preprint"
+     ]
+    },
+    {
+     "name": "Nature Methods 2025",
+     "claim": "deep-learning gene-perturbation prediction does not yet outperform simple linear baselines"
+    }
    ],
    "counter_example_recorded": {
     "name": "organism-level-holdout virulence-factor benchmark",
@@ -156,23 +292,68 @@
     "fetch_blocked": "ScienceDirect 403",
     "numbers": "LoRA-fine-tuned DNABERT-2 mean F1 0.18 / AUC 0.54, statistically indistinguishable from k-mer logistic regression AUC 0.51",
     "but": "protein-level representations OUTPERFORMED nucleotide models on the same task, so the failure is specific to the NUCLEOTIDE modality, not to learned representations as such"
-   }
+   },
+   "superseded_consequence": "freezing is NOT the bottleneck for promoter-shaped tasks, which retires 'we should have fine-tuned' as an explanation for our encoder-gate result",
+   "cited_paper_evaluation": "classification only (the paper's own stated limitation)",
+   "gate_task": "expression regression",
+   "gate_encoder_was": "trained from scratch, not a frozen pretrained LM"
   },
   {
    "id": "F3",
    "headline": "generative DNA: nobody has published a generative foundation model that beats a task-specific designer on wet-lab-measured regulatory activity",
-   "sharpest_datum": {"model": "GENERator", "tier": "reported", "result": "designed enhancers validated by UMI-STARR-seq beat the strongest NATURAL sequence by >2x, and still came in 45% BELOW the top DREAM-challenge-designed sequence"},
+   "sharpest_datum": {
+    "model": "GENERator",
+    "tier": "reported",
+    "result": "designed enhancers validated by UMI-STARR-seq beat the strongest NATURAL sequence by >2x, and still came in 45% BELOW the top DREAM-challenge-designed sequence"
+   },
    "classes": [
-    {"approach": "small unconditional diffusion (DiPro, ~May 2026)", "detail": "50 bp E. coli promoters from noise, >90% called real by an independent recognizer, wet-lab validated driving a lysis protein with phase-specific tunable lysis, no auxiliary discriminator", "status": "works, small", "relevance": "most T4/CPU-feasible generative route found"},
-    {"approach": "conditional diffusion + validated predictor (the NAR platform)", "detail": "design-to-measurement R=0.95", "status": "works, validated", "relevance": "pairs a generator with a validated oracle, which is our own design-scored-by-oracle shape"},
-    {"approach": "multinomial diffusion / PromoterDiff", "detail": "E. coli promoter design, in-vivo activity for a majority of designs", "status": "works"},
-    {"approach": "RL fine-tuning of an AR gLM (ICLR 2025, HyenaDNA + RL)", "detail": "yeast promoters / human enhancers; frames offline-MBO vs active learning", "status": "computational only, NO wet-lab validation"},
-    {"approach": "Dirichlet flow matching / GFlowNets / score-conditioned generators", "status": "method literature"},
-    {"approach": "scale leaders", "detail": "Evo 2 40B, 1 Mb context, 9.3T bp, Nature Mar 2026; a 20B variant Feb 2026 fits a single H100", "status": "unreachable here", "relevance": "still not a T4; CLAUDE.md's hosted-API-only note stands"},
-    {"approach": "AlphaGenome", "detail": "Nature 2026-01-28, SOTA on 22/24 track and 25/26 variant-effect tasks, API-available", "status": "scoring, human", "relevance": "confirms the standing read that the training method transfers and the architecture does not"}
+    {
+     "approach": "small unconditional diffusion (DiPro, ~May 2026)",
+     "detail": "50 bp E. coli promoters from noise, >90% called real by an independent recognizer, wet-lab validated driving a lysis protein with phase-specific tunable lysis, no auxiliary discriminator",
+     "status": "works, small",
+     "relevance": "most T4/CPU-feasible generative route found"
+    },
+    {
+     "approach": "conditional diffusion + validated predictor (the NAR platform)",
+     "detail": "design-to-measurement R=0.95",
+     "status": "works, validated",
+     "relevance": "pairs a generator with a validated oracle, which is our own design-scored-by-oracle shape"
+    },
+    {
+     "approach": "multinomial diffusion / PromoterDiff",
+     "detail": "E. coli promoter design, in-vivo activity for a majority of designs",
+     "status": "works"
+    },
+    {
+     "approach": "RL fine-tuning of an AR gLM (ICLR 2025, HyenaDNA + RL)",
+     "detail": "yeast promoters / human enhancers; frames offline-MBO vs active learning",
+     "status": "computational only, NO wet-lab validation"
+    },
+    {
+     "approach": "Dirichlet flow matching / GFlowNets / score-conditioned generators",
+     "status": "method literature"
+    },
+    {
+     "approach": "scale leaders",
+     "detail": "Evo 2 40B, 1 Mb context, 9.3T bp, Nature Mar 2026; a 20B variant Feb 2026 fits a single H100",
+     "status": "unreachable here",
+     "relevance": "still not a T4; CLAUDE.md's hosted-API-only note stands"
+    },
+    {
+     "approach": "AlphaGenome",
+     "detail": "Nature 2026-01-28, SOTA on 22/24 track and 25/26 variant-effect tasks, API-available",
+     "status": "scoring, human",
+     "relevance": "confirms the standing read that the training method transfers and the architecture does not"
+    }
    ],
    "actionable_shape": "every generative success above is SMALL, TASK-SPECIFIC and PAIRED WITH A VALIDATED ORACLE: diffusion over a short window, scored by a predictor fit on real measurements. That is the architecture this project already argued for from the oracle-selection result. The un-pulled lever is not a bigger pretrained model.",
-   "cheaper_model_note": {"model": "GENERanno-prokaryote-0.5b-base", "where": "https://huggingface.co/GenerTeam/GENERanno-prokaryote-0.5b-base", "context_bp": 8000, "resolution": "single-nucleotide", "why": "matched Evo2-7B on Nullsettes at 14x fewer params and 12x less data; materially cheaper than the 1.2B pin if a learned representation is ever revisited"}
+   "cheaper_model_note": {
+    "model": "GENERanno-prokaryote-0.5b-base",
+    "where": "https://huggingface.co/GenerTeam/GENERanno-prokaryote-0.5b-base",
+    "context_bp": 8000,
+    "resolution": "single-nucleotide",
+    "why": "matched Evo2-7B on Nullsettes at 14x fewer params and 12x less data; materially cheaper than the 1.2B pin if a learned representation is ever revisited"
+   }
   }
  ],
  "does_not_support": [
@@ -188,5 +369,16 @@
   "tiles_total_this_run": 43611,
   "rate_tiles_per_min": 55.1,
   "eta_min_remaining": 464.5
+ },
+ "amended": {
+  "date": "2026-10-22",
+  "reason": "adversarial review of this scan",
+  "items": [
+   "F1 re-scoped: zero-shot likelihood is not evidence about supervised representations",
+   "D2 WITHDRAWN: named a model id the code does not pin; the pinned id is already at upstream HEAD",
+   "the NAR open-gap claim downgraded to tier=inferred (page tail unread)",
+   "component split corrected from 'roughly 4 of 9' to an enumerated 4/3/2",
+   "F2 'freezing is not the bottleneck' narrowed to classification-only"
+  ]
  }
 }

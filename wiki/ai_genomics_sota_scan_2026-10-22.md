@@ -5,6 +5,12 @@ writing). **Read-only.** Nothing in the frozen surface, the running job, or the 
 promcalc bar was touched. Scope: the state of the art in **generative** and **representation-learning**
 genomics, pointed at this project's own open levers rather than surveyed for its own sake.
 
+> **AMENDED 2026-10-22 after an adversarial review of this memo.** Five claims below were
+> wrong or overstated and are corrected in place, each marked **[AMENDED]**: the zero-shot vs
+> supervised scope of F1; decision D2 (withdrawn -- it named a model this repo does not pin);
+> the tier on the NAR "unasked question"; the nine-component split; and the "freezing is not
+> the bottleneck" reading. The corrections are kept visible rather than silently rewritten.
+
 Two tiers throughout, and they are not interchangeable:
 
 - **MEASURED HERE** — I reproduced the number myself in this session. One item qualifies.
@@ -29,22 +35,42 @@ variable is the 17 bp spacer and the two hexamers* — exactly the inputs to `dG
 **It is NOT a drop-in replacement, and the reason is structural.** 29 bp = 6 (−35) + 17 (spacer) +
 6 (−10), measured. There is no room upstream of −35 for the **UP element** and none downstream of −10
 for the **discriminator** or **ITR**. Our stage B calls `c.run(seq, TSS_range=[0, len(seq)])` on 150 bp
-tiles and gets ~73 candidate TSSs each; a 29 bp input cannot host the full motif architecture. So of
-the nine `dG_*` components, roughly four are computable there and three are structurally absent.
+tiles and gets ~73 candidate TSSs each; a 29 bp input cannot host the full motif architecture.
+
+**[AMENDED]** The nine `dG_*` components split **4 / 3 / 2**, and the first version of this memo
+said "roughly four computable and three absent", which silently dropped two:
+
+- **4 clean:** `dG_10`, `dG_35`, `dG_ext10`, `dG_spacer`
+- **3 structurally absent:** `dG_UP`, `dG_disc`, `dG_ITR`
+- **2 composites that become partially-defined:** `dG_total`, `dG_bind` -- they *sum over* the
+  absent terms, and `dG_total` is the headline feature. Under the fixed-context construction
+  below the absent terms are constant, so they are absorbed by the intercept and contribute
+  nothing; the arm would test four components plus two contaminated composites.
 
 If you want it, the clean construction is: **embed every core in one fixed flanking context**, then run
 the calculator. The context contribution is then identical across all 112,955 sequences and cannot
 confound the comparison. The NAR authors themselves tested 8 designs across 6 contexts and report
 R = 0.93 across them (REPORTED), so context effects are modest in their hands.
 
-### D2. Re-download the pinned GENERator-prokaryote weights?
+### D2. ~~Re-download the pinned GENERator weights?~~ **WITHDRAWN [AMENDED]**
 
-The GENERator repo's news feed lists a **July 2026 update to `GENERator-prokaryote-1.2b-base` and
-`-3b-base`, with an explicit note to re-download the weights** (REPORTED). CLAUDE.md pins
-GENERator-1.2B-prokaryote as the model. If the local copy predates July 2026 it is a *different model*
-from the one that name now resolves to on HuggingFace. Re-pinning touches a reproducibility unit, so
-it is yours to call. The cheap half — recording which revision we actually hold — I can do without
-changing anything.
+**There is nothing to re-download and nothing to decide.** This decision is kept visible rather
+than deleted, because the record should show the claim was made and retracted.
+
+It was wrong twice over. It named `GENERator-prokaryote-1.2b-base`, but the code pins
+`GENERator-**v2**-prokaryote-1.2b-base` at five sites (`dna_decode/glm/generate.py` ×2, both
+Kaggle sweep kernels, `tests/test_glm_generate.py`) — a different HuggingFace repo id, and the
+non-v2 id does not resolve publicly (`Invalid username or password` from the model API). And the
+pin is already current, measured rather than argued:
+
+| | revision |
+|---|---|
+| local snapshot | `8b2f768b0d293953518ff91d34600f9322ef1f94` |
+| upstream `GenerTeam/GENERator-v2-prokaryote-1.2b-base` HEAD | `8b2f768b0d293953518ff91d34600f9322ef1f94` |
+
+Identical, with upstream `lastModified 2026-07-05` — already inside the July window the original
+note worried about. The whole question dissolved on one grep and one API call, which is what
+should have happened before it was ever put to a reader.
 
 ---
 
@@ -65,8 +91,11 @@ are, not just how large they are.**
 ### C2. Nothing here corrects a project conclusion — it corroborates two
 
 Stated plainly because the opposite would matter more: this scan found **no external result that
-overturns** the GLM-arm negatives. It found two that independently reproduce them, which is a different
-and more useful thing (see F1).
+overturns** the GLM-arm negatives. **[AMENDED]** It found two that point the same way *on a
+different readout* — both are zero-shot likelihood probes, not supervised-representation tests,
+so they are corroboration of direction and **not** replications of our gate. The first version of
+this line said "independently reproduce them", which overstates it in exactly the way this repo
+has already paid for once (see F1).
 
 ---
 
@@ -107,15 +136,39 @@ model paired with the predictor reaches design-to-measurement **R = 0.95**.
 
 **The gap the field left open, and it is ours:** the authors used an RNAP-binding-energy matrix
 (Phillips et al.) to *design* the −10/−35 boxes and report **R = −0.75** between binding energy and
-measured strength — but they **never benchmarked that biophysical model as a predictor against their
-Transformer.** That is the promcalc arm's question, on their substrate, unasked.
+measured strength — but, so far as the parts of the paper I read show, they **never benchmarked
+that biophysical model as a predictor against their Transformer.** That would make it the promcalc
+arm's question, on their substrate, unasked.
+
+**[AMENDED] Tier: `[inferred]`, not a finding.** I read characters 0–200,000 of a 209,274-character
+page; **the final 9,274 were never read**, and a data-availability or comparison note is exactly the
+kind of thing that lives in a tail. The first version of this memo asserted it as fact and the
+phrase reached a commit message. Reading the tail would settle it; this memo does not.
 
 ---
 
-## F1 — Two independent 2026 results reproduce this project's encoder-gate negative
+## F1 — Two independent 2026 results point the same way as our encoder-gate negative, on a
+different readout **[AMENDED]**
 
-This is the highest-value finding of the scan, because it converts an internal measurement into a
-corroborated one.
+**The scope rail first, because the original heading got it wrong.** This section was titled
+"…results *reproduce* this project's encoder-gate negative". They do not, and the distinction is
+one this repo has already paid three months for. **Both external results are ZERO-SHOT
+LOG-LIKELIHOOD probes:** the Mechanistic Invariance Test's CSS/SCR are LL-derived (it reports its
+effects in "LL units" and an `AT-LL r` column), and Nullsettes defines a detection as *"mutant
+log-likelihood significantly lower than its nonmutant original."* **Our encoder gate is not a
+likelihood probe at all** — `wiki/glm_encoder_gate_result_2026-10-08.md` contains the word
+"likelihood" **zero times** (measured), and the comparison is a *fitted* conv encoder against one
+GC feature, judged by per-seed deltas and a paired CI.
+
+CLAUDE.md names this exact conflation and its price: *"the unscoped version cost three months… The
+body below is entirely about ZERO-SHOT likelihood."* And the repo holds a measured case where the
+two readouts give **opposite verdicts** — on the same data, supervised **0.8142** vs zero-shot
+**0.4750**, a PASS where zero-shot FAILED. So a zero-shot result is evidence about *what the
+pretrained representation carries*, never about what a supervised head can extract from it.
+
+What survives, and it is still worth having: two independent 2026 benchmarks find that gLM
+regulatory signal is compositional, which is **consistent in direction** with our supervised
+negative and is **not a replication** of it.
 
 **Our result (2026-10-08):** a conv encoder over raw sequence vs **one GC number** — median +0.0122,
 paired CI includes zero, 6/10 seeds. Recorded as a valid negative; the learned representation did not
@@ -156,12 +209,15 @@ dataset.** Detection depends strongly on the *unmutated* sequence's likelihood, 
 threshold scales linearly with length. Their conclusion: *"Current gLMs recognize what natural
 expression cassettes look like, but not how they work."* Scale did not reliably help within families.
 
-**Why these three agree.** All three say the same thing by different routes: **the signal these
-representations carry on regulatory sequence is compositional (GC/AT), and position/mechanism is
-largely absent.** Ours measured it as "a conv encoder does not beat one GC number"; the MIT measured it
-as "apparent sensitivity is AT-content correlation"; Nullsettes measured it as "detection tracks
-likelihood, not function." Three teams, three benchmarks, one mechanism — and it is the mechanism that
-makes a GC baseline so hard to beat.
+**What the three share, stated at the width the evidence supports [AMENDED].** The shared finding
+is about **what the pretrained representation carries**: on regulatory sequence the signal is
+compositional (GC/AT), and position/mechanism is largely absent. The MIT measured that as
+"apparent sensitivity is AT-content correlation"; Nullsettes as "detection tracks likelihood, not
+function"; ours as "a *fitted* conv encoder does not beat one GC number". The first two are
+statements about a **frozen model's likelihood**; ours is a statement about a **trained
+representation**. They are consistent, and they are not the same experiment — the original
+"three teams, three benchmarks, one mechanism" compressed that away. What the agreement does
+explain is why a GC baseline is hard to beat here.
 
 **It also matches the project's scale findings.** ESM2 peaks at 650M and regresses at 3B/15B here; the
 MIT reports larger models with stronger compositional bias; Nullsettes reports no consistent gain with
@@ -174,8 +230,15 @@ size. Three more agreements.
 **Frozen but Not Always Accessible** (arXiv 2608.05329; REPORTED) probes frozen gLM embeddings —
 DNABERT-2 117M, NT 500M, HyenaDNA, **GENERATOR-v2 1.2B**, Omni-DNA — with LR / RBF-SVM / shallow MLP.
 Result relevant to us: on **promoter tasks, frozen embeddings recover 95–100% of fine-tuned
-performance** (splice sites much worse, 60–88%). So for promoter-shaped tasks, *freezing is not the
-bottleneck* — which retires "we should have fine-tuned" as an explanation for our encoder-gate result.
+performance** (splice sites much worse, 60–88%).
+
+**[AMENDED] What that does and does not license.** The first version concluded it "retires 'we
+should have fine-tuned' as an explanation for our encoder-gate result". That over-reads on two
+axes. The paper's promoter tasks are **classification** — its own limitations say evaluation is
+classification-only — while our gate is **expression regression**. And our conv encoder was
+**trained from scratch, not a frozen pretrained LM**, so frozen-vs-finetuned is not the axis our
+gate sits on at all. The honest reading is narrower: on promoter-shaped *classification*, frozen
+embeddings lose little to fine-tuning.
 
 But the paper states plainly that it **does not compare against simple baselines such as GC content or
 k-mer features**, and therefore "cannot say whether frozen embeddings outperform hand-built features."
