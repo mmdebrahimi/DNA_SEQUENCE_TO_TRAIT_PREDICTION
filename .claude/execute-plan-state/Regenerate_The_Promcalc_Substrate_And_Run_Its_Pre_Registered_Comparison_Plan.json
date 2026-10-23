@@ -1,147 +1,137 @@
 {
-  "plan": "plans/Regenerate_The_Promcalc_Substrate_And_Run_Its_Pre_Registered_Comparison_Plan/technical-plan.md",
-  "started": "2026-10-22",
-  "mode": "sequential",
-  "mode_reason": "The toolkit reported waves [[1,2],[3],[4],[5],[6],[7]] with zero errors, a 2-step wave 0 and a configured remote, which satisfies the parallel trigger mechanically. Overridden for four reasons: (1) the plan's own Execution Preview explicitly recommends SEQUENTIAL; (2) the user's save-plan amendment 4 ratified that; (3) /data/* is gitignored with force-added files, so a worktree checkout lacks the ~4 GB of untracked data and its absent-data failure set diverges from the parent, making per-step baseline reconciliation meaningless (third consecutive override on this same ground); (4) Step 2 of wave 0 was already complete, so wave 0 held exactly ONE remaining step and the 2-way parallelism was moot. A live 11 h job also occupied 7 of 8 cores, so worktree agents would have competed with it.",
-  "wave_grouping_NOT_waves": [
-    [
-      1,
-      2
-    ],
-    [
-      3
-    ],
-    [
-      4
-    ],
-    [
-      5
-    ],
-    [
-      6
-    ],
-    [
-      7
-    ]
+ "plan": "plans/Regenerate_The_Promcalc_Substrate_And_Run_Its_Pre_Registered_Comparison_Plan/technical-plan.md",
+ "started": "2026-10-22",
+ "mode": "sequential",
+ "mode_reason": "The toolkit reported waves [[1,2],[3],[4],[5],[6],[7]] with zero errors, a 2-step wave 0 and a configured remote, which satisfies the parallel trigger mechanically. Overridden for four reasons: (1) the plan's own Execution Preview explicitly recommends SEQUENTIAL; (2) the user's save-plan amendment 4 ratified that; (3) /data/* is gitignored with force-added files, so a worktree checkout lacks the ~4 GB of untracked data and its absent-data failure set diverges from the parent, making per-step baseline reconciliation meaningless (third consecutive override on this same ground); (4) Step 2 of wave 0 was already complete, so wave 0 held exactly ONE remaining step and the 2-way parallelism was moot. A live 11 h job also occupied 7 of 8 cores, so worktree agents would have competed with it.",
+ "wave_grouping_NOT_waves": [
+  [
+   1,
+   2
   ],
-  "wave_grouping_key_note": "Deliberately NOT stored under the key `waves`. /execute-plan treats a `waves` key as the v3.3 format and refuses to resume it, offering only start-fresh. This plan MUST stay resumable: Step 5 is a ~11 h detached job and Steps 6-7 cannot run until it lands, so a start-fresh-only state file would force re-running the completed steps and would collide with the live job.",
-  "critical_path": [
-    1,
-    3,
-    4,
-    5,
-    6,
-    7
+  [
+   3
   ],
-  "max_parallelism": 2,
-  "test_baseline": {
-    "command": "uv run pytest tests/ -q --tb=no",
-    "passed": 6943,
-    "failed": 14,
-    "skipped": 186,
-    "elapsed": "40:22",
-    "failed_names": [
-      "test_cyp4f2_getrm_concordance.py (7)",
-      "test_essentiality_label_sources.py (1)",
-      "test_essentiality_ladder_w0_probe.py (1)",
-      "test_essentiality_report_card_ladder.py (3)",
-      "test_pneumo_selection_probe.py (1)",
-      "test_readme_quickstart_output.py (1)"
-    ],
-    "note": "Exactly the recorded standing data-absent set (cyp4f2 7, essentiality 5, pneumo cps 1, README-quickstart 1). No regressions. Ran slowly because it shared the box with the 7-worker sweep; pytest has no xdist plugin here so it is single-threaded and took the one free core, which is why contention was acceptable."
+  [
+   4
+  ],
+  [
+   5
+  ],
+  [
+   6
+  ],
+  [
+   7
+  ]
+ ],
+ "wave_grouping_key_note": "Deliberately NOT stored under the key `waves`. /execute-plan treats a `waves` key as the v3.3 format and refuses to resume it, offering only start-fresh. This plan MUST stay resumable: Step 5 is a ~11 h detached job and Steps 6-7 cannot run until it lands, so a start-fresh-only state file would force re-running the completed steps and would collide with the live job.",
+ "critical_path": [
+  1,
+  3,
+  4,
+  5,
+  6,
+  7
+ ],
+ "max_parallelism": 2,
+ "test_baseline": {
+  "command": "uv run pytest tests/ -q --tb=no",
+  "passed": 6943,
+  "failed": 14,
+  "skipped": 186,
+  "elapsed": "40:22",
+  "failed_names": [
+   "test_cyp4f2_getrm_concordance.py (7)",
+   "test_essentiality_label_sources.py (1)",
+   "test_essentiality_ladder_w0_probe.py (1)",
+   "test_essentiality_report_card_ladder.py (3)",
+   "test_pneumo_selection_probe.py (1)",
+   "test_readme_quickstart_output.py (1)"
+  ],
+  "note": "Exactly the recorded standing data-absent set (cyp4f2 7, essentiality 5, pneumo cps 1, README-quickstart 1). No regressions. Ran slowly because it shared the box with the 7-worker sweep; pytest has no xdist plugin here so it is single-threaded and took the one free core, which is why contention was acceptable."
+ },
+ "steps": {
+  "1": {
+   "status": "complete",
+   "files": [
+    "scripts/promcalc_export_tiles.py",
+    "scripts/promcalc_decompose.py",
+    "scripts/promcalc_decomposition_arm.py",
+    "tests/test_promcalc_dir_resolution.py"
+   ],
+   "commit": "73d7979e",
+   "note": "Resolved at point of use in all three stages; D: default preserved everywhere (pinned by test). No shared helper extracted because the three directions differ -- A creates an OUTPUT dir (nearest existing ancestor must be reachable; resolve_external_root's is_dir semantics would refuse a legitimate first export), B may not import dna_decode so it got a stdlib twin, C reads an INPUT dir holding shards so the resolver fits exactly. Stage B now separates THREE walls that were one message. +13 tests."
   },
-  "steps": {
-    "1": {
-      "status": "complete",
-      "files": [
-        "scripts/promcalc_export_tiles.py",
-        "scripts/promcalc_decompose.py",
-        "scripts/promcalc_decomposition_arm.py",
-        "tests/test_promcalc_dir_resolution.py"
-      ],
-      "commit": "73d7979e",
-      "note": "Resolved at point of use in all three stages; D: default preserved everywhere (pinned by test). No shared helper extracted because the three directions differ -- A creates an OUTPUT dir (nearest existing ancestor must be reachable; resolve_external_root's is_dir semantics would refuse a legitimate first export), B may not import dna_decode so it got a stdlib twin, C reads an INPUT dir holding shards so the resolver fits exactly. Stage B now separates THREE walls that were one message. +13 tests."
-    },
-    "2": {
-      "status": "complete",
-      "files": [
-        "tests/test_promcalc_decompose.py"
-      ],
-      "commit": "15e081c2",
-      "note": "Completed BEFORE this /execute-plan run, during the user's going-out window. 12 tests, the first coverage this stage has ever had. Proven non-vacuous: all four version-break assertions fire against pre-fix HEAD."
-    },
-    "3": {
-      "status": "complete",
-      "files": [
-        "scripts/promcalc_decompose.py",
-        "scripts/promcalc_export_tiles.py",
-        "scripts/promcalc_toolchain_probe.py",
-        "wiki/promcalc_regeneration_runbook_2026-10-22.md",
-        "wiki/promcalc_toolchain_probe_2026-10-22.json"
-      ],
-      "commits": [
-        "15e081c2",
-        "b2e92186",
-        "73d7979e"
-      ],
-      "note": "Venv provisioned at C:/Users/Laptop Portable/tools/promcalc_env (the documented D:/tools path left with its volume). Runbook written. Docstring rationale corrected -- see deviations_from_plan, the plan's instruction here was wrong. Probe FIXED rather than merely re-emitted, because re-emitting would have shipped a known-false interpreter absence."
-    },
-    "4": {
-      "status": "complete",
-      "files": [
-        "wiki/promcalc_regeneration_runbook_2026-10-22.md"
-      ],
-      "note": "Stage A: 44,106 tiles / 46,713 rows / ceiling 0.941, both of its own pinned asserts passing. Stage B smoke after the version fix: 2,920 rows / 40 tiles = exactly 73.0 sites/tile, header == SITE_FIELDS, 0 NaN, 0 hex35 parse failures, spacer_len 15-19. THE GATE EARNED ITS KEEP: it caught both version breaks in 24 s rather than after ~11 h."
-    },
-    "5": {
-      "status": "in_flight",
-      "files": [
-        "data/promcalc/decomposition.csv.gz",
-        "data/promcalc/decomposition.part-01.csv.gz"
-      ],
-      "launched": "2026-10-22 14:49:58 (relaunched with --resume and thread pinning)",
-      "progress_at_write": "6,495 of 44,106 tiles (14.7%) at 16:55",
-      "rate": "51.7 tiles/min, measured from the job's OWN log counter",
-      "supervisor": "scripts/promcalc_watchdog.ps1, 1 instance, poll 300 s, 8 retries max, STALL DETECTION at 20 min of no output growth",
-      "note": "NOT complete. Resume-safe: --resume skips tile_ids present across the main file and every shard, and drops a truncated shard's last tile. Coverage probe: scripts/promcalc_coverage.py (idle-only -- decompressing during a live run is the recorded 5.0 h-projection trap).",
-      "rate_CORRECTED": "the earlier 65 tiles/min was inferred from gzip FILE SIZE against a bytes-per-tile constant from the 40-tile smoke; a 5-minute size window caught a write/flush burst as the pool spun up. Stage B prints exact counts every 2,000 tiles -- read those.",
-      "eta_SUPERSEDED": "~02:46 on 2026-10-23",
-      "eta": "~04:51 on 2026-10-23 (the job's own eta field, 725.8 min at the 6000-tile mark)"
-    },
-    "6": {
-      "status": "blocked",
-      "blocked_on": "Step 5",
-      "note": "Needs the finished 44,106-tile table. On resume: run stage C with --seeds 10 --mpra-cache data/mpra. The frozen reconcile gate fires FIRST (max_tx median 0.3968 +/-0.02, gc seed 0 0.3000 +/-0.01). IF IT FAILS, report INDETERMINATE_RECONCILE_FAILED -- do NOT re-size PREREGISTERED. That is a USER-AUTHORITY call, and re-sizing a frozen bar after seeing the result is a failure this project has twice had to undo."
-    },
-    "7": {
-      "status": "blocked",
-      "blocked_on": "Step 6",
-      "note": "Wall-memo amendment 5 + the arms-ledger ceiling note + one /project-state --append-action row. Amendment 5 must use the memo's own closed wall_class vocabulary (code-closable / data-absent / external-wall) -- a first draft of amendment 3 invented a fourth spelling."
-    }
+  "2": {
+   "status": "complete",
+   "files": [
+    "tests/test_promcalc_decompose.py"
+   ],
+   "commit": "15e081c2",
+   "note": "Completed BEFORE this /execute-plan run, during the user's going-out window. 12 tests, the first coverage this stage has ever had. Proven non-vacuous: all four version-break assertions fire against pre-fix HEAD."
   },
-  "deviations_from_plan": [
-    "STEP 3's INSTRUCTION WAS WRONG AND WAS CORRECTED BY MEASUREMENT. The plan said to rewrite the isolation rationale 'because the stated reason is measured FALSE'. The claim has two halves with different truth values: the antecedent HOLDS (a fresh unconstrained resolve really does take sklearn 1.9.1 -- a new venv got it) while the CONSEQUENCE is refuted (1.8.0 already satisfies the package, so a project-env install moves nothing). An earlier pass of mine called the whole premise REFUTED, over-correcting in the other direction. Both docstrings now carry the three-way decomposition instead of either blunt verdict.",
-    "STEP 3 FIXED THE PROBE rather than only re-emitting its record, which is more than the plan asked. Re-emitting would have shipped an artifact already known wrong in two ways: it reported the environment ABSENT while a working interpreter existed on C: (a FALSE absence -- the same defect fixed in find_inputs the same day, which searched only drive roots while the substrate sat repo-local), and its isolation_claim.status asserted a bare REFUTED. Verdict vocabulary untouched: ENV_ABSENT is scoped to the DOCUMENTED path and is correct about it.",
-    "STEP 1 DID NOT REUSE require_external_dir LITERALLY, because the plan's Reusable-Code Survey item 1 does not fit stage A. resolve_external_root reports `configured` only when the path ALREADY is a directory, which is right for an INPUT root and wrong for stage A's OUTPUT dir -- on a first export the leaf legitimately does not exist, so the resolver would refuse a good run. Stage A checks the nearest existing ANCESTOR instead. Stages A and C therefore do NOT share a helper; that is a finding, not laziness.",
-    "STEP 1 FOR STAGE B WAS DEFERRED WITHIN THE RUN and done under a paused supervisor. Stage B's module was live under the running Pool. Pool() carries no maxtasksperchild so the 7 children never re-import, making the edit safe for the running job -- but a watchdog relaunch WOULD pick up new code, so the watchdog was stopped for the ~6 minute edit window and restored only after the edit was verified (parses, stdlib-only, no dna_decode at any depth, reachable path returns, a real 3-tile decomposition with 0 errors, 25 tests green). Both pause and resume are logged in data/promcalc/watchdog.log.",
-    "STEPS 1-5 WERE PARTLY EXECUTED BEFORE THIS /execute-plan RUN, during the user's going-out window, and were NOT re-run. Re-running Steps 3-5 would have collided with the live job and discarded ~4,600 tiles of progress. This was surfaced to the user before the run and they invoked /execute-plan anyway, which was read as 'do the remaining work', not 'redo the finished work'.",
-    "THE FULL SUITE WAS NOT RE-RUN AS A FINAL PASS. The baseline (40:22) is recorded above; the final pass belongs to the resumed run, after Step 6. In its place, all 9 test files that reference any of the four modified scripts were run: 160 passed. Running the full suite twice in one session while 7 of 8 cores are busy would have cost ~80 minutes of sweep throughput for a check the resume must repeat anyway.",
-    "SKILL STEP 7 (the three epilogue agents) WAS NOT LAUNCHED. Its stated precondition -- all sequential steps complete -- is unmet, and /test-epilogue plus /documentation would be premature with Step 6 pending. /retrospective was separately invoked by the user and has already written its entry."
-  ],
-  "state_file_preserved_because": "Steps 5 (in flight), 6 and 7 (blocked) are incomplete, so the plan was NOT archived to executed_plans/. Re-run /execute-plan on the same path after Step 5 lands to resume from Step 6.",
-  "resume_preconditions": [
-    "data/promcalc/decompose_run.sentinel reads EXIT=0, OR scripts/promcalc_coverage.py reports 44106",
-    "no python.exe process matching promcalc_decompose or multiprocessing spawn is alive",
-    "re-run the full suite as the final pass and compare against the 14 / 6943 / 186 baseline above"
-  ],
-  "out_of_plan_work_this_run": {
-    "what": "hardened the watchdog with stall detection (review issues 4 and 5)",
-    "why_not_a_plan_step": "the watchdog is instrumentation this session built around Step 5, not a step the plan defines. Recorded here because it changes how Step 5 behaves unattended.",
-    "issue_4_hang_detection": "liveness alone could not tell healthy from hung, so '7 processes alive, zero tiles completing' would have waited forever and lost the night. Now the total size across the main file and all shards must GROW between polls; 20 min flat while alive is treated as dead.",
-    "issue_5_subsumed_not_fixed_as_stated": "the review proposed tightening the over-broad liveness match to the run-lock's PID. That would have been WORSE: on 2026-10-22 killing the parent left six workers at 100% CPU with the lock PID already dead, so a PID-only check would have read 'dead', relaunched, and run a second job beside the orphans. The broad match is fail-safe toward 'alive' and is CORRECT provided progress is monitored -- which issue 4's fix now does. Kept broad, deliberately.",
-    "no_kill_on_stall": "because the liveness match is over-broad, an automated kill could take down an unrelated multiprocessing job. The relaunch is guarded by the run-lock's own PID-liveness check instead, so the safe outcome is reached without this script choosing what to kill.",
-    "verified": "parse-clean; the progress signal GROWS on the live job (321,220 bytes in 75 s, so a healthy run cannot false-stall); the stall predicate exercised three ways including the positive case (flat and older than the threshold -> STALL).",
-    "still_open": "the all-NaN guard (review issue 3) is NOT done -- it needs an edit to stage B, which is the live module, and it guards against a FUTURE version change rather than this one. Deferred to the Step 6 work."
+  "3": {
+   "status": "complete",
+   "files": [
+    "scripts/promcalc_decompose.py",
+    "scripts/promcalc_export_tiles.py",
+    "scripts/promcalc_toolchain_probe.py",
+    "wiki/promcalc_regeneration_runbook_2026-10-22.md",
+    "wiki/promcalc_toolchain_probe_2026-10-22.json"
+   ],
+   "commits": [
+    "15e081c2",
+    "b2e92186",
+    "73d7979e"
+   ],
+   "note": "Venv provisioned at C:/Users/Laptop Portable/tools/promcalc_env (the documented D:/tools path left with its volume). Runbook written. Docstring rationale corrected -- see deviations_from_plan, the plan's instruction here was wrong. Probe FIXED rather than merely re-emitted, because re-emitting would have shipped a known-false interpreter absence."
   },
-  "second_execute_plan_invocation_2026-10-22_1655": "Ran Step 0, found this state file, confirmed resume is available (no `waves` key). The first incomplete step is Step 5, which was ACTIVELY RUNNING with ~12 h left, and Step 6 is hard-blocked on it -- so NOTHING in the plan was executable. Deliberately did NOT re-run the 40-minute baseline (no steps to execute, and it would steal CPU from the job blocking them) and did NOT touch Step 5 (a restart discards 6,495 tiles). No plan step advanced; the out-of-plan watchdog hardening above is what this invocation produced."
+  "4": {
+   "status": "complete",
+   "files": [
+    "wiki/promcalc_regeneration_runbook_2026-10-22.md"
+   ],
+   "note": "Stage A: 44,106 tiles / 46,713 rows / ceiling 0.941, both of its own pinned asserts passing. Stage B smoke after the version fix: 2,920 rows / 40 tiles = exactly 73.0 sites/tile, header == SITE_FIELDS, 0 NaN, 0 hex35 parse failures, spacer_len 15-19. THE GATE EARNED ITS KEEP: it caught both version breaks in 24 s rather than after ~11 h."
+  },
+  "5": {
+   "status": "complete",
+   "when": "2026-10-23T03:40:21",
+   "note": "stage B finished rc=0, 44106/44106 tiles"
+  },
+  "6": {
+   "status": "complete",
+   "when": "2026-10-23T03:48:58",
+   "note": "discharged UNATTENDED by scripts/promcalc_chain_stage_c.py (PID 8324): validator passed, then stage C scored. VERDICT NO_GAIN -- decomposition 0.3925 vs max_tx 0.3968, paired median -0.0043, 2/10 seeds. BOTH reconcile anchors PASSED (gc_seed0 0.3000 +-0.01; max_tx_median exactly 0.3968 +-0.02) and control clean at 0.0342 < 0.05, so a VALID negative, NOT INDETERMINATE_RECONCILE_FAILED. Artifact wiki/promcalc_decomposition_arm_2026-10-23.json"
+  },
+  "7": {
+   "status": "pending",
+   "note": "no longer blocked -- Step 6's verdict exists. Remaining: wall-memo amendment 5 in the closed vocabulary (code-closable / data-absent / external-wall), the arms-ledger note that orthogonal-modality-stack becomes RUNNABLE (not run), and a /project-state --append-action --class run-tests row"
+  }
+ },
+ "deviations_from_plan": [
+  "STEP 3's INSTRUCTION WAS WRONG AND WAS CORRECTED BY MEASUREMENT. The plan said to rewrite the isolation rationale 'because the stated reason is measured FALSE'. The claim has two halves with different truth values: the antecedent HOLDS (a fresh unconstrained resolve really does take sklearn 1.9.1 -- a new venv got it) while the CONSEQUENCE is refuted (1.8.0 already satisfies the package, so a project-env install moves nothing). An earlier pass of mine called the whole premise REFUTED, over-correcting in the other direction. Both docstrings now carry the three-way decomposition instead of either blunt verdict.",
+  "STEP 3 FIXED THE PROBE rather than only re-emitting its record, which is more than the plan asked. Re-emitting would have shipped an artifact already known wrong in two ways: it reported the environment ABSENT while a working interpreter existed on C: (a FALSE absence -- the same defect fixed in find_inputs the same day, which searched only drive roots while the substrate sat repo-local), and its isolation_claim.status asserted a bare REFUTED. Verdict vocabulary untouched: ENV_ABSENT is scoped to the DOCUMENTED path and is correct about it.",
+  "STEP 1 DID NOT REUSE require_external_dir LITERALLY, because the plan's Reusable-Code Survey item 1 does not fit stage A. resolve_external_root reports `configured` only when the path ALREADY is a directory, which is right for an INPUT root and wrong for stage A's OUTPUT dir -- on a first export the leaf legitimately does not exist, so the resolver would refuse a good run. Stage A checks the nearest existing ANCESTOR instead. Stages A and C therefore do NOT share a helper; that is a finding, not laziness.",
+  "STEP 1 FOR STAGE B WAS DEFERRED WITHIN THE RUN and done under a paused supervisor. Stage B's module was live under the running Pool. Pool() carries no maxtasksperchild so the 7 children never re-import, making the edit safe for the running job -- but a watchdog relaunch WOULD pick up new code, so the watchdog was stopped for the ~6 minute edit window and restored only after the edit was verified (parses, stdlib-only, no dna_decode at any depth, reachable path returns, a real 3-tile decomposition with 0 errors, 25 tests green). Both pause and resume are logged in data/promcalc/watchdog.log.",
+  "STEPS 1-5 WERE PARTLY EXECUTED BEFORE THIS /execute-plan RUN, during the user's going-out window, and were NOT re-run. Re-running Steps 3-5 would have collided with the live job and discarded ~4,600 tiles of progress. This was surfaced to the user before the run and they invoked /execute-plan anyway, which was read as 'do the remaining work', not 'redo the finished work'.",
+  "THE FULL SUITE WAS NOT RE-RUN AS A FINAL PASS. The baseline (40:22) is recorded above; the final pass belongs to the resumed run, after Step 6. In its place, all 9 test files that reference any of the four modified scripts were run: 160 passed. Running the full suite twice in one session while 7 of 8 cores are busy would have cost ~80 minutes of sweep throughput for a check the resume must repeat anyway.",
+  "SKILL STEP 7 (the three epilogue agents) WAS NOT LAUNCHED. Its stated precondition -- all sequential steps complete -- is unmet, and /test-epilogue plus /documentation would be premature with Step 6 pending. /retrospective was separately invoked by the user and has already written its entry."
+ ],
+ "state_file_preserved_because": "Steps 5 (in flight), 6 and 7 (blocked) are incomplete, so the plan was NOT archived to executed_plans/. Re-run /execute-plan on the same path after Step 5 lands to resume from Step 6.",
+ "resume_preconditions": [
+  "data/promcalc/decompose_run.sentinel reads EXIT=0, OR scripts/promcalc_coverage.py reports 44106",
+  "no python.exe process matching promcalc_decompose or multiprocessing spawn is alive",
+  "re-run the full suite as the final pass and compare against the 14 / 6943 / 186 baseline above"
+ ],
+ "out_of_plan_work_this_run": {
+  "what": "hardened the watchdog with stall detection (review issues 4 and 5)",
+  "why_not_a_plan_step": "the watchdog is instrumentation this session built around Step 5, not a step the plan defines. Recorded here because it changes how Step 5 behaves unattended.",
+  "issue_4_hang_detection": "liveness alone could not tell healthy from hung, so '7 processes alive, zero tiles completing' would have waited forever and lost the night. Now the total size across the main file and all shards must GROW between polls; 20 min flat while alive is treated as dead.",
+  "issue_5_subsumed_not_fixed_as_stated": "the review proposed tightening the over-broad liveness match to the run-lock's PID. That would have been WORSE: on 2026-10-22 killing the parent left six workers at 100% CPU with the lock PID already dead, so a PID-only check would have read 'dead', relaunched, and run a second job beside the orphans. The broad match is fail-safe toward 'alive' and is CORRECT provided progress is monitored -- which issue 4's fix now does. Kept broad, deliberately.",
+  "no_kill_on_stall": "because the liveness match is over-broad, an automated kill could take down an unrelated multiprocessing job. The relaunch is guarded by the run-lock's own PID-liveness check instead, so the safe outcome is reached without this script choosing what to kill.",
+  "verified": "parse-clean; the progress signal GROWS on the live job (321,220 bytes in 75 s, so a healthy run cannot false-stall); the stall predicate exercised three ways including the positive case (flat and older than the threshold -> STALL).",
+  "still_open": "the all-NaN guard (review issue 3) is NOT done -- it needs an edit to stage B, which is the live module, and it guards against a FUTURE version change rather than this one. Deferred to the Step 6 work.",
+  "2026-10-23_state_refresh_by_another_plans_run": "Refreshed from MEASURED reality by the Amend-SOTA-Scan /execute-plan run. This file still said Step 5 in_flight and Steps 6-7 blocked while stage B had finished at 03:40 and the chain had scored stage C at 03:48, so a resume would have redone Step 6 and mis-reported the plan as blocked. OUT OF PLAN: the plan being executed was the amendment plan, not this one."
+ },
+ "second_execute_plan_invocation_2026-10-22_1655": "Ran Step 0, found this state file, confirmed resume is available (no `waves` key). The first incomplete step is Step 5, which was ACTIVELY RUNNING with ~12 h left, and Step 6 is hard-blocked on it -- so NOTHING in the plan was executable. Deliberately did NOT re-run the 40-minute baseline (no steps to execute, and it would steal CPU from the job blocking them) and did NOT touch Step 5 (a restart discards 6,495 tiles). No plan step advanced; the out-of-plan watchdog hardening above is what this invocation produced."
 }

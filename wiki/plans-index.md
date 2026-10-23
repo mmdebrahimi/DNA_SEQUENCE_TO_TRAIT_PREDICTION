@@ -783,3 +783,15 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 - **Four decisions left as Open Questions rather than folded into scope:** where the regenerated output should live, whether the lost 88.4% shard set is recoverable, whether the `orthogonal-modality-stack` arm runs here or next (scoped OUT -- a new arm is a separate pre-registration), and whether `promotercalculator` should be version-pinned.
 
 ---
+
+## [plan_file: Amend_The_SOTA_Scan_Five_Wrong_Claims_And_Guard_The_Scope_Error_Plan/] 2026-10-23
+**Status:** executed
+**Summary:** Three wrong claims and one wrong accounting sit in two committed, pushed `wiki/` artifacts (`wiki/ai_genomics_sota_scan_2026-10-22.{md,json}`) and in a pushed commit-message body; an adversarial review of that scan found them, and this plan amends them and guards the one whose error class this project has already paid three months for.
+**Key decisions:**
+- C-1 is the load-bearing fix: both external benchmarks are ZERO-SHOT LOG-LIKELIHOOD probes while the encoder gate is a FITTED model whose artifact mentions likelihood zero times, so "reproduce" is withdrawn in favour of "consistent in direction".
+- C-2 is WITHDRAWN rather than answered: the code pins the v2 model id at five sites, the non-v2 id does not resolve publicly, and the local snapshot equals upstream HEAD.
+- M-1 corrects the component split to an enumerated 4 clean / 3 absent / 2 composites, since `dG_total` and `dG_bind` sum over the absent terms.
+- Sequential execution recommended over the computed 2-way parallelism; Step 3's guard is the only item beyond the review's literal scope, and dropping it is left open.
+
+---
+
