@@ -102,7 +102,8 @@
         "resolved_at": "",
         "rationale": "The incumbent best is a 2-channel rank-average (promcalc-plus-conv-rank-average-hybrid-150bp, rho 0.4254) that wins 10/10 seeds with a paired CI excluding zero, and whose SHUFFLED-CONV control HURTS (-0.1232, 0/10) -- so the gain is channel CONTENT, not the averaging. Whether that STACKS to 3+ orthogonal channels is untested here, and it is the exact shape of the published ESM2+GEMME+ProSST result (+0.056, 90.5% of proteins) that the 2-channel version already echoed once.",
         "kill_option_withdrawn": "An earlier draft of this plan offered killing one of the unrun arms to reach a verdict. WITHDRAWN as something I can do: kill_arm requires the arm's OWN executed evidence and refuses redundancy reasons, routing a no-evidence kill to explicit user authority. Recorded so the option is not silently re-offered.",
-        "verdict_consequence": "The ceiling stays blocked:untried-arm while ANY arm is 'planned'. Reaching 'plateau' by declining to DECLARE a known-promising arm would buy a verdict through scope reduction -- the 2026-07-09 defect in new clothes."
+        "verdict_consequence": "The ceiling stays blocked:untried-arm while ANY arm is 'planned'. Reaching 'plateau' by declining to DECLARE a known-promising arm would buy a verdict through scope reduction -- the 2026-07-09 defect in new clothes.",
+        "substrate_status_2026_10_23": "RUNNABLE, NOT RUN. The promcalc substrate this arm needs was regenerated and reconciled on 2026-10-23 (wall memo amendment 5), so the data blocker is gone -- but no stacked 3+-channel run has been executed and no metric exists. Status stays `planned` on purpose: the sibling pre-registered question returning NO_GAIN retires nothing here (R6 -- an arm dies only by its OWN executed evidence), and `blocking()` must keep naming this criterion so a later --advance cannot read the ceiling as settled."
       }
     }
   }

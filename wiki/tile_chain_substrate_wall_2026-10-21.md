@@ -320,3 +320,92 @@ isolation, sklearn untouched.**
   original copy: the original is on the detached volume and could not be compared.
 * The end-to-end run above is a REFUSAL path. It proves the tile load succeeds and the promcalc
   dependency is correctly diagnosed; it does **not** demonstrate that any arm scores anything.
+
+
+## AMENDMENT 5, 2026-10-23 -- the promcalc half is CLOSED; provenance is by REPRODUCTION, not a version pin
+
+Amendment 4 left promcalc as the single blocker and said the regeneration "is NOT done and was not
+started." It is now done. The dependency's wall class was `data-absent`; it is closed, and the route
+that closed it is compute on this host -- which is why it was never `external-wall`. The frozen
+`dependencies` array is unchanged, as in amendments 3 and 4.
+
+**Regeneration, measured from `data/promcalc/decompose.json` rather than relayed:** 43,611 tiles
+attempted on top of 495 already complete, `err 0`, `total_complete 44106` against `tiles_in_tsv
+44106` -- `substrate_coverage 1.0`. 3,183,603 site rows at a mean of 73.0 sites per tile, across
+the 15 recorded fields (`tss`, `dG_total`, `dG_10`, `dG_35`, `dG_ext10`, `dG_spacer`, `dG_disc`,
+`dG_ITR`, `dG_UP`, `dG_bind`, `Tx_rate`, `hex35_start`, `hex10_start`, `spacer_len`, `tile_id`),
+`strand: forward_only`, 7 workers, **770.37 minutes** (~12.8 h). Output
+`data/promcalc/decomposition.part-01.csv.gz`, 156,810,679 bytes; `data/promcalc` totals 159 MB.
+The unattended chain closed it at `CHAIN_EXIT=0 at Fri 10/23/2026 3:48:58.22`.
+
+### Risk Flag 1's mitigation is UNMET, and it is now worse than un-recorded -- it is unrecoverable
+
+The saved plan's first risk flag was `promoter_calculator` version drift, `[unverified]`, mitigated by
+"Step 6 records the version so this risk cannot recur." **It does not.** The arm artifact's non-arm
+keys are only `schema` / `measured_on` / `n_features` / `verdict` / `verdict_detail` / `smoke`, and
+`decompose.json` records workers, fields, timings and coverage but no version. Nor can it be read
+back off the host:
+
+* `uv pip show promotercalculator` -> `Package(s) not found`
+* `importlib.metadata.version` fails for BOTH the distribution name and the import name
+* `grep -c -i promotercalculator uv.lock` -> **0**
+* nothing matching `*promoter*` remains in `.venv/Lib/site-packages`
+
+**Leading mechanism, stated as such because I did not watch it happen:** the package was added with
+`uv pip install` (amendment 2 measured that as a one-package, sklearn-safe step) and is absent from
+`uv.lock`; `uv run` re-syncs the project environment to the lock, so any later `uv run` -- and this
+plan is driven entirely by `uv run` -- would have removed it. Consistent with the fourth check:
+sklearn is still **1.8.0**, exactly as amendment 2 predicted and the opposite of the refuted
+1.9.1 claim. The reusable shape is that **an environment mutated outside the lock file is not a
+provenance record**: it is reverted by the next tool invocation, silently, and the version goes with it.
+
+### What substitutes for the missing version: the reconcile gate reproduced the original EXACTLY
+
+This is why the number is still interpretable. Both pre-registered anchors matched, and matched
+exactly rather than within tolerance:
+
+| anchor | expected | measured | tolerance | source of the expectation |
+|---|---|---|---|---|
+| `gc_seed0` | 0.3000 | **0.3000** | 0.01 | `glm_encoder_gate.PREREGISTERED.reconcile_anchor` |
+| `max_tx_median` | 0.3968 | **0.3968** | 0.02 | `wiki/promcalc_vs_learned_2026-10-12.json` |
+
+The second anchor is the ORIGINAL 2026-10-12 run's own scalar, so the regenerated substrate
+reproduces the pre-existing number to four decimal places. That is **behavioural provenance** and it
+is what makes today's comparison a comparison rather than a confound. It is strictly weaker than a
+version pin for FUTURE drift -- it can only ever say "this run agreed with that run", never "the
+toolchain is pinned" -- so the version-recording gap stays open as a real debt, not a closed item.
+
+**The reconcile OUTCOME is not an explicit field; do not look for one.** It is established two ways
+from what IS recorded: by code structure, since `scripts/promcalc_decomposition_arm.py:248-262`
+returns `INDETERMINATE_RECONCILE_FAILED` before `NO_GAIN` is reachable, so the published `NO_GAIN`
+is unreachable unless both checks passed; and directly, since `arms.gc.per_seed[0]` and
+`arms.max_tx.median` are both in the artifact and can be compared to the table above by hand.
+
+### A naming defect found while checking the control, and deliberately NOT fixed
+
+`PREREGISTERED["control_max_abs"] = 0.05`, but line 261 tests it against
+`arms["control_feature_permuted"]["median"]` -- a **median**, not a max. The median is **+0.0342**,
+so the control passes and the verdict stands. But **two of ten seeds exceed the bar in absolute
+value** (seed 5 at **-0.1129**, seed 7 at **+0.0851**) and neither is tested. A reader comparing the
+artifact's recorded `control_feature_permuted.max = 0.0851` against a bar named `control_max_abs`
+would read FAIL where the gate reads PASS.
+
+The gate's behaviour is defensible and the name is not: a feature-permutation null SHOULD scatter
+across seeds, and the median is the right statistic for "is this null centred on zero". `control_median_abs`
+would say what the code does. **Not renamed**, because the constant lives in the frozen `PREREGISTERED`
+dict and this plan's own manual test requires `git diff` to show no change to it. Recorded instead,
+which is the whole point of having a memo.
+
+### The verdict, stated precisely enough that it cannot be over-read
+
+`NO_GAIN`. Decomposition **0.3925** against the `max_tx` scalar **0.3968**: paired median
+**-0.0043**, CI95 **[-0.0113, +0.0013]** (includes zero), winning **2 of 10** seeds against a bar of
+margin 0.02 AND at least 8 seeds.
+
+What that does NOT say is that promoter thermodynamics is uninformative. Against the GC comparator
+at **0.3112**, decomposition wins **10/10 at +0.0802** (CI excludes zero) and `max_tx` wins **10/10
+at +0.0865**.
+So the thermodynamic model carries real signal over composition; what adds nothing is the
+**nine-component breakdown over the single scalar reduced from it**. Roughly 730 numbers per tile are
+discardable. A negative answer to the pre-registered question is this plan working, not failing --
+Verification Signal 2 said so before the result landed.

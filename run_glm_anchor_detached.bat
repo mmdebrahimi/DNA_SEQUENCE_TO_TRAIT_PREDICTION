@@ -1,6 +1,60 @@
 @echo off
 REM Long-running runner for the GLM sweep anchor and its temperature grid points.
 REM
+REM =============================================================================
+REM AMENDMENT 2026-10-23 -- READ THIS BEFORE THE BLOCK BELOW. Four of its claims are
+REM measured WRONG and the scoreboard is stale. The old text is left in place on purpose
+REM (supersede, do not delete) so the record of what was believed when stays readable.
+REM
+REM SCOREBOARD IS NOW 6 DEATHS / 1 COMPLETED POINT, and the deaths split into TWO
+REM MECHANISTICALLY DIFFERENT CLASSES rather than the one this file describes.
+REM
+REM (A) DEATHS #1-#4 ARE CRASHES, exactly as block (1) below says. Unchanged, still right.
+REM
+REM (B) DEATHS #5 AND #6 ARE NOT CRASHES, and this is MEASURED with a positive control
+REM     rather than inferred from an absence. A python crash DOES write Application
+REM     id-1000 on this host -- proven by #3 and #4 on this very machine, at 10-21
+REM     22:23:24 and 10-22 09:57:48, both 'Faulting application name: python.exe'.
+REM     Deaths #5 (~11:29) and #6 (~14:42:19) wrote NO python id-1000 at all. A full
+REM     sweep of EVERY event log carrying records (118 of them) across the #6 window
+REM     returned only Microsoft-Windows-Store licensing noise about Dolby Access.
+REM     So #5/#6 are EXTERNAL TERMINATIONS, not faults. Consequence: a PYTHONFAULTHANDLER
+REM     or -u change buys nothing here -- there is no fault to dump and the log already
+REM     ends on a clean flushed newline mid-progress.
+REM
+REM (C) WRONG: 'THE USB DRIVE, and this is the one that actually bites.' It bit 4 of 6.
+REM     Deaths #5/#6 logged ZERO disk id-51/id-153 events in their windows (the disk
+REM     burst on 10-23 is at 10:35:54, over an hour before #5), and D: was attached.
+REM
+REM (D) WRONG, and it was MY correction that was wrong first: cause (2) below reads an
+REM     ABSENT sentinel as session teardown. Teardown is REFUTED twice over. Death #6 was
+REM     launched through Win32_Process.Create (scripts/launch_detached_wmi.ps1), verified
+REM     by parentage to sit under WmiPrvSE and outside this session's tree, and it died
+REM     the same way. And promcalc stage B ran ~12 h to 'rc=0' plus its chain ~6 h ACROSS
+REM     a session boundary, both via the same Start-Process form. So detached jobs DO
+REM     survive here and the launch METHOD is not the variable. An absent sentinel means
+REM     KILLED -- it does not tell you by what. THE CAUSE OF #5/#6 IS UNNAMED. Treat it as
+REM     an open hypothesis, not a diagnosis. The one un-eliminated candidate is that torch
+REM     mmaps 4.33 GB off the USB volume while promcalc's data sits on C:, and that is a
+REM     CANDIDATE: it does not explain the total absence of disk events.
+REM
+REM (E) WRONG REASON, right verdict: 'Checkpointing ... would NOT have saved this one,
+REM     which died before the first sequence.' True of #4 only; #5/#6 died MID-RUN at
+REM     25/120 and 45/120, exactly the case checkpointing addresses. The real blocker is
+REM     different and harder: dna_decode/glm/generate.py:208 generate_conditional calls
+REM     torch.manual_seed(self.seed) ONCE at entry and then loops, so it is a SINGLE RNG
+REM     STREAM -- sequence i's draws depend on every draw before it, and a naive resume
+REM     hands sequence 45 the draws sequence 0 got. Exact resume needs per-sequence derived
+REM     seeds, which CHANGES the generation procedure after two grid points are banked.
+REM     That is an authority call, not a technical one.
+REM
+REM (F) STALE: option (b) says server1's Claude sessions read 'offline ... so nothing can
+REM     be dispatched there yet'. They are reachable as of 2026-10-23 and the T=0.6 point
+REM     is dispatched. If you run it there, pass --device cpu: the anchor and T=0.8 were
+REM     both CPU-generated and CUDA floating-point yields different sampled sequences, so
+REM     a CUDA point would be procedurally inconsistent inside a pre-registered grid.
+REM =============================================================================
+REM
 REM TWO SEPARATE THINGS KILL THIS JOB. Both are diagnosed; neither is a defect in the job.
 REM
 REM (1) THE USB DRIVE, and this is the one that actually bites. MEASURED 2026-10-21, died at

@@ -68,19 +68,41 @@ def test_the_memo_records_the_correction():
     assert json.loads(SIDECAR.read_text(encoding="utf-8"))["correction"]["why_it_was_wrong"].strip()
 
 
-def test_the_memo_quotes_none_of_the_frozen_bars_headline_figures():
-    """A memo carrying the bar's numbers could be read as an arm having run. None has."""
+def test_the_memo_quotes_none_of_the_frozen_bars_UNMEASURED_figures():
+    """NARROWED 2026-10-23, because this guard's stated premise expired rather than held.
+
+    It read: "A memo carrying the bar's numbers could be read as an arm having run. None
+    has." An arm HAS now run -- the pre-registered decomposition-vs-scalar comparison,
+    verdict NO_GAIN, `wiki/promcalc_decomposition_arm_2026-10-23.json` -- so for the two
+    figures THAT arm measured, quoting them is reporting a result rather than pre-announcing
+    one. 0.3968 (max_tx median) and 0.3112 (GC median) are exactly those two, and 0.3968 is
+    also the reconcile anchor whose exact agreement is amendment 5's load-bearing evidence;
+    forbidding it would gut the amendment.
+
+    The other six stay forbidden on the ORIGINAL reasoning: no arm has produced them, so
+    they could still be misread as results. Narrowed, not dropped -- and the non-vacuity
+    companion below is strengthened in the same change so this cannot decay into a blanket
+    loosening."""
     text = MEMO.read_text(encoding="utf-8")
-    forbidden = ["0.4254", "0.4847", "0.4693", "0.4807", "0.4217", "0.3968", "0.3112", "0.5366"]
+    measured_2026_10_23 = {"0.3968", "0.3112"}
+    forbidden = ["0.4254", "0.4847", "0.4693", "0.4807", "0.4217", "0.5366"]
+    assert not (set(forbidden) & measured_2026_10_23), "a measured figure leaked back in"
     present = [f for f in forbidden if f in text]
-    assert not present, f"memo quotes the bar's figures: {present}"
+    assert not present, f"memo quotes figures from arms that have NOT run: {present}"
 
 
 def test_the_memo_DOES_carry_the_numbers_this_work_measured():
-    """NON-VACUITY for the test above: a memo that quoted nothing would also pass it."""
+    """NON-VACUITY for the test above: a memo that quoted nothing would also pass it.
+
+    STRENGTHENED 2026-10-23 alongside the narrowing: the two figures removed from the
+    forbidden list are now REQUIRED to be present. That is what makes the narrowing a
+    narrowing rather than a loosening -- if a future edit strips amendment 5's reconcile
+    table, this fails instead of silently passing."""
     text = MEMO.read_text(encoding="utf-8")
     assert "44106" in text, "the reproduced tile count is the code-closable half's evidence"
     assert "0.9410" in text, "the reproduced noise ceiling is the other half of that evidence"
+    assert "0.3968" in text, "amendment 5's reconcile anchor must be quoted, not merely claimed"
+    assert "0.3112" in text, "the GC comparator is what stops NO_GAIN being over-read"
 
 
 def test_the_memo_states_that_no_arm_was_run():

@@ -230,5 +230,99 @@
         "why": "the GENERator weights are on the detached volume; amendment 3 stands in full and nothing here moves the sweep"
       }
     ]
+  },
+  "amendment_5": {
+    "date": "2026-10-23",
+    "headline": "the promcalc half is CLOSED; provenance is by REPRODUCTION, not a version pin",
+    "wall_class_held": "data-absent",
+    "wall_class_vocabulary_checked": true,
+    "resolved": true,
+    "closure_route": "compute on this host (one-package install + a 770-minute stage-B sweep), which is why this dependency was never external-wall",
+    "frozen_dependencies_array_edited": false,
+    "regeneration": {
+      "source_of_record": "data/promcalc/decompose.json",
+      "attempted": 43611,
+      "already_done_before_this_run": 495,
+      "err": 0,
+      "total_complete": 44106,
+      "tiles_in_tsv": 44106,
+      "substrate_coverage": 1.0,
+      "n_site_rows": 3183603,
+      "sites_per_tile_mean": 73.0,
+      "n_fields": 15,
+      "strand": "forward_only",
+      "workers": 7,
+      "minutes": 770.37,
+      "output": "data/promcalc/decomposition.part-01.csv.gz",
+      "output_bytes": 156810679,
+      "dir_total_mb": 159,
+      "chain_sentinel": "CHAIN_EXIT=0 at Fri 10/23/2026  3:48:58.22"
+    },
+    "risk_flag_1_mitigation": {
+      "status": "UNMET",
+      "plan_claim": "Step 6 records the version so this risk cannot recur",
+      "actual": "no version in the arm artifact, none in decompose.json, and not recoverable from the host",
+      "checks_run": {
+        "uv_pip_show_promotercalculator": "Package(s) not found",
+        "importlib_metadata_both_names": "PackageNotFoundError for promotercalculator AND promoter_calculator",
+        "grep_count_in_uv_lock": 0,
+        "site_packages_leftovers": "none matching *promoter*",
+        "sklearn_version_now": "1.8.0"
+      },
+      "leading_mechanism": "installed with `uv pip install`, absent from uv.lock, and `uv run` re-syncs the project env to the lock -- so a later `uv run` removed it. NOT watched happening; inferred from the four checks plus sklearn being untouched.",
+      "reusable": "an environment mutated outside the lock file is not a provenance record -- the next tool invocation reverts it silently and the version goes with it"
+    },
+    "provenance_by_reproduction": {
+      "gc_seed0": {
+        "expected": 0.3,
+        "measured": 0.3,
+        "tolerance": 0.01,
+        "exact": true
+      },
+      "max_tx_median": {
+        "expected": 0.3968,
+        "measured": 0.3968,
+        "tolerance": 0.02,
+        "exact": true,
+        "expectation_source": "wiki/promcalc_vs_learned_2026-10-12.json (the ORIGINAL run's own scalar)"
+      },
+      "what_this_supports": "this run agreed with that run, to four decimal places",
+      "what_this_does_not_support": "that the toolchain is pinned. Strictly weaker than a version pin for FUTURE drift, so the version-recording debt stays OPEN.",
+      "reconcile_outcome_is_not_a_field": "established by code structure (promcalc_decomposition_arm.py:248-262 returns INDETERMINATE_RECONCILE_FAILED before NO_GAIN is reachable) and re-checkable from arms.gc.per_seed[0] + arms.max_tx.median"
+    },
+    "naming_defect_found_not_fixed": {
+      "constant": "PREREGISTERED['control_max_abs'] = 0.05",
+      "tested_against": "arms['control_feature_permuted']['median'] at scripts/promcalc_decomposition_arm.py:261",
+      "mismatch": "the name says max, the code tests a median",
+      "median_measured": 0.0342,
+      "seeds_exceeding_bar_in_abs_value": {
+        "seed_5": -0.1129,
+        "seed_7": 0.0851
+      },
+      "verdict_impact": "none -- the gate passes on the statistic it actually tests and the verdict stands",
+      "reader_hazard": "comparing the artifact's recorded control max 0.0851 to a bar named control_max_abs reads FAIL where the gate reads PASS",
+      "honest_name": "control_median_abs",
+      "why_not_renamed": "it lives in the frozen PREREGISTERED dict and this plan's manual test requires git diff to show no change to it"
+    },
+    "verdict": {
+      "value": "NO_GAIN",
+      "decomposition_median": 0.3925,
+      "max_tx_median": 0.3968,
+      "paired_median": -0.0043,
+      "paired_ci95": [
+        -0.0113,
+        0.0013
+      ],
+      "includes_zero": true,
+      "wins": 2,
+      "n": 10,
+      "bar": "margin 0.02 AND >=8 of 10 seeds",
+      "do_not_over_read": "this does NOT say promoter thermodynamics is uninformative. vs GC: decomposition +0.0802 10/10 (CI excludes zero), max_tx +0.0865 10/10. What adds nothing is the nine-component breakdown OVER the single scalar reduced from it -- roughly 730 numbers per tile are discardable.",
+      "a_negative_is_the_plan_working": "Verification Signal 2 pre-committed this before the result landed"
+    },
+    "statements_above_now_false_left_in_place": [
+      "the memo's `scope` and its 'No arm was run' / 'not a result' statements described 2026-10-21 and are now superseded: the pre-registered decomposition-vs-scalar arm RAN on 2026-10-23 and returned NO_GAIN. Left in place rather than rewritten, following amendment 1's own convention, so the record of what was believed when stays readable.",
+      "amendment 4's 'Regenerating the promcalc predictions is NOT done and was not started' is superseded by this amendment's regeneration block."
+    ]
   }
 }
