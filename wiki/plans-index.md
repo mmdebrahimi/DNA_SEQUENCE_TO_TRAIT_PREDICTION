@@ -795,3 +795,14 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+## [plan_file: Reconcile_The_Three_Disagreeing_Registries_And_Re_Scope_The_Stack_Arm_Plan/] 2026-10-23
+**Status:** candidate - 7 steps / 4 waves; no new measurement arm, no frozen-unit change. Amended at save time with three executor-ratified decisions, two of which went against the emitted draft.
+**Summary:** Three registries that record what has been measured contradict each other, and in one session that drift produced three successive recommendations to redo already-executed work; this reconciles them, closes the guard gap that let a wrong derived ratio through, and re-scopes the orthogonal-stack arm on its own executed evidence without killing it.
+**Key decisions:**
+- The two string-level registry guards originally specified were WITHDRAWN after being run against the historical state: one fired on NOTHING (rung key `fragments_LB` vs arm `fragment-rung-...`, a singular/plural mismatch) and the other on ALL FOUR planned arms. Replaced by one referential-integrity check over a new `measured_by` field, because a reference either resolves or it does not.
+- `largest_n_measured` records **150000**, the literal largest N any measurement used; 321,123 would be false, and the consumer renders this field verbatim beside a separate `verdict`, so the nuance belongs in `size_lever`.
+- The PromoterAtlas successor question is PREMATURE rather than expensive: a recorded, still-open circularity question (its `urtecho2018` head may have been fit on GSE108535) must be settled first, which is now Step 6. The arm stays `planned` either way (R6).
+- The existing `test_no_rung_INHERITS_another_rungs_ceiling` compares the ceiling FIELD across rungs and therefore cannot see a wrong derived RATIO -- which made a one-line arithmetic check the plan's primary verification signal, authored to FAIL before the fix.
+
+---
+
