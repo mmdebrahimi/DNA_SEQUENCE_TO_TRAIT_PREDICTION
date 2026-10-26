@@ -1,0 +1,182 @@
+{
+ "schema": "glm-tile-hybrid-arm-v1",
+ "date": "2026-10-26",
+ "substrate": "GEO GSE144621 peak tiles, leave_peak_out, ceiling 0.941",
+ "arm_name": "promcalc-plus-conv-rank-average-hybrid-150bp",
+ "n_seeds": 10,
+ "preregistered": {
+  "question": "does rank-averaging the learned conv encoder with the biophysical max_tx scalar beat the scalar alone on the tile rung?",
+  "primary_metric": "spearman",
+  "comparator": "max_tx",
+  "margin": 0.02,
+  "min_seeds_winning": 8,
+  "n_seeds_expected": 10,
+  "mirrors": "scripts/promcalc_decomposition_arm.py PREREGISTERED (margin 0.02, 8/10 seeds)",
+  "precondition": {
+   "name": "orthogonality",
+   "rule": "a naive rank-average lifts only when the modalities are ORTHOGONAL; a near-chance second modality REDUCES the signal (measured: ESM2+ProSST 0.204 vs ESM2 0.352 on CTX-M-14, because ProSST alone was at chance)",
+   "measured_first": true,
+   "not_a_gate": "the orthogonality number is REPORTED, not used to skip the run -- a prediction that a combine will fail is not a substitute for measuring it"
+  },
+  "control": "max_tx rank-averaged with a SHUFFLED conv vector; if this lifts, the gain is an artifact of rank-averaging rather than of the conv's content",
+  "verdicts": {
+   "HYBRID_ADDS": "paired median >= +0.02 over max_tx AND >= 8/10 seeds win AND control clean",
+   "WEAK": "gain > 0 but below the margin or the seed count",
+   "NO_GAIN": "no positive paired gain -- the learned encoder carries nothing orthogonal here",
+   "INDETERMINATE_CONTROL_ALSO_LIFTS": "the shuffled-conv control lifts too; the combine, not the conv, is producing the number",
+   "INDETERMINATE_RECONCILE_FAILED": "the prediction table's published anchors drift",
+   "INDETERMINATE_MISSING_SCORER": "conv or max_tx absent from the table"
+  }
+ },
+ "orthogonality": {
+  "per_seed": [
+   0.4065,
+   0.3865,
+   0.386,
+   0.4017,
+   0.3686,
+   0.3753,
+   0.3964,
+   0.3807,
+   0.359,
+   0.479
+  ],
+  "median": 0.3862,
+  "min": 0.359,
+  "max": 0.479
+ },
+ "arms": {
+  "hybrid_conv_maxtx": {
+   "median": 0.4254,
+   "n": 10,
+   "per_seed": [
+    0.4271,
+    0.4493,
+    0.4322,
+    0.4186,
+    0.416,
+    0.425,
+    0.4105,
+    0.4138,
+    0.4488,
+    0.4257
+   ]
+  },
+  "hybrid_conv_maxtx_gc": {
+   "median": 0.4217,
+   "n": 10,
+   "per_seed": [
+    0.4227,
+    0.4454,
+    0.4282,
+    0.4092,
+    0.4208,
+    0.4321,
+    0.4109,
+    0.42,
+    0.4441,
+    0.3991
+   ]
+  },
+  "max_tx": {
+   "median": 0.3968,
+   "n": 10,
+   "per_seed": [
+    0.3973,
+    0.3997,
+    0.3916,
+    0.379,
+    0.4047,
+    0.3963,
+    0.3989,
+    0.3897,
+    0.4107,
+    0.3759
+   ]
+  },
+  "conv": {
+   "median": 0.3234,
+   "n": 10,
+   "per_seed": [
+    0.3235,
+    0.3526,
+    0.3293,
+    0.3233,
+    0.2872,
+    0.3126,
+    0.2896,
+    0.2995,
+    0.3312,
+    0.36
+   ]
+  },
+  "control_shuffled_conv": {
+   "median": 0.2703,
+   "n": 10,
+   "per_seed": [
+    0.2787,
+    0.2695,
+    0.2679,
+    0.2562,
+    0.2799,
+    0.2712,
+    0.2825,
+    0.2528,
+    0.2896,
+    0.2644
+   ]
+  },
+  "_paired_hybrid_vs_comparator": {
+   "mean": 0.0323,
+   "median": 0.0339,
+   "ci95": [
+    0.0238,
+    0.0409
+   ],
+   "includes_zero": false,
+   "wins": 10,
+   "n": 10
+  },
+  "_paired_hybrid3_vs_comparator": {
+   "mean": 0.0289,
+   "median": 0.0302,
+   "ci95": [
+    0.0226,
+    0.0351
+   ],
+   "includes_zero": false,
+   "wins": 10,
+   "n": 10
+  },
+  "_paired_control_vs_comparator": {
+   "mean": -0.1231,
+   "median": -0.1232,
+   "ci95": [
+    -0.1275,
+    -0.1187
+   ],
+   "includes_zero": false,
+   "wins": 0,
+   "n": 10
+  },
+  "_paired_conv_vs_comparator": {
+   "mean": -0.0735,
+   "median": -0.0767,
+   "ci95": [
+    -0.0921,
+    -0.0549
+   ],
+   "includes_zero": false,
+   "wins": 0,
+   "n": 10
+  }
+ },
+ "verdict": "HYBRID_ADDS",
+ "verdict_detail": "hybrid +0.0339 over max_tx, 10/10 seeds, CI95 [0.0238, 0.0409]",
+ "honest_limits": [
+  "The combine is label-free and parameter-free (a rank-average), so it RANKS and does not dose -- the same deployability class as the inverse cell.",
+  "Both inputs are out-of-sample on each seed's held-out peaks, so no second-level leakage is introduced; but the pool is MEASURED peak tiles, not generator output.",
+  "One rung, one experiment, one combine rule. A negative does not show that no learned representation can add here -- only that THIS encoder, rank-averaged with THIS scalar, does not.",
+  "`max_tx` and `conv` are both fitted by ridge on the same split, so their errors may be correlated through the split rather than through the biology."
+ ]
+}
