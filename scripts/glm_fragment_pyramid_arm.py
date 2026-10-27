@@ -551,6 +551,42 @@ def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
             "|0.1169|. The seed-count bar (>= %d of %d, p = 0.055 under the null) is the primary "
             "noise control." % (PREREGISTERED["min_seeds_winning"], seeds)
         ),
+        "power_caveat": (
+            "UNDER-POWERED AT THE PRE-REGISTERED SEED COUNT, and recorded so no reader over-trusts "
+            "this gate. The null's across-seed spread is driven by random INITIALISATION, not by "
+            "sample size -- a random composition functional's correlation with expression does not "
+            "shrink as N grows -- so with sd ~0.10 the sem of the median over 10 seeds is ~0.032, "
+            "LARGER than the 0.02 bar it is compared against. Resolving 0.02 would need ~50 seeds. "
+            "Read `learned_contribution` below, which is paired within a seed and therefore does "
+            "not carry that variance."
+        ),
+    }
+
+    # ---- DIAGNOSTIC, not a bar. Nothing below can change a verdict.
+    # Real minus null, per seed, same init and same split: what did the LABELS buy? The random-init
+    # composition effect cancels within a seed, so this is far less noisy than the raw null.
+    learned = [round(r["pyramid_spearman"] - nl, 4)
+               for r, nl in zip(rows, null_rows)]
+    out["learned_contribution"] = {
+        "per_seed": learned,
+        "median": round(statistics.median(learned), 4),
+        "n_positive": sum(1 for v in learned if v > 0),
+        "n": len(learned),
+        "definition": "pyramid_spearman - null_spearman, per seed (same init, same split)",
+        "status": "DIAGNOSTIC -- reported, NEVER a bar; the pre-registered comparison is the "
+                  "kmer4 delta and is untouched",
+        "why": (
+            "The raw delta over kmer4 can be inflated by an architectural effect that owes nothing "
+            "to the labels: a conv net near initialisation is close to a random linear functional "
+            "of base composition, and composition predicts this rung at |0.1169|. This isolates "
+            "the part the labels bought."
+        ),
+        "interpretation_caveat": (
+            "SIZE-SENSITIVE -- do not read a small value at small N as a property of the arm. "
+            "Measured at N=4,000 (3,200 training rows, 1.2% of the rung) the kmer4 delta was "
+            "+0.1077 while this was +0.0346; at that N kmer4 itself scores 0.0244 against 0.1120 "
+            "at full N, so BOTH arms are under-trained there and neither number transfers."
+        ),
     }
 
     deltas = [r["delta"] for r in rows]
@@ -666,6 +702,12 @@ def main(argv=None) -> int:
         n = res["null"]
         print("  null (shuffled train) median %+.4f  sd %s  per-seed %s"
               % (n["median"], n.get("sd"), n.get("per_seed")))
+    if res.get("learned_contribution"):
+        lc = res["learned_contribution"]
+        print("  LEARNED (real-null, paired per seed) median %+.4f  %d/%d positive  per-seed %s"
+              % (lc["median"], lc["n_positive"], lc["n"], lc["per_seed"]))
+        print("    diagnostic only, never the bar; size-sensitive -- do not read a small value at "
+              "small N as a property of the arm")
     if res.get("verdict"):
         print("  VERDICT: %s" % res["verdict"])
         print("    %s" % res["verdict_detail"])

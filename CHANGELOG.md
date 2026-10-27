@@ -5,6 +5,31 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (h) — a learned-contribution DIAGNOSTIC, and a correction to my own over-read
+
+- **CORRECTION, mine.** I reported the smoke as showing "most of the pyramid's advantage is not
+  learned" (kmer4 delta +0.1077 vs a real-minus-null contribution of +0.0346). **That over-read a
+  smoke.** N=4,000 is **3,200 training rows for a conv net — 1.2% of the rung**, and kmer4 itself
+  goes **0.0244 -> 0.1120** between that N and full N, a 4.6x gain from data alone. Both arms are
+  under-trained there and neither number transfers. The honest claim is that the smoke CANNOT answer
+  whether the gap is learning or architecture, which makes the full run the only informative regime
+  rather than a formality. Re-run at N=900 drives it home: kmer4 median **-0.0280**, null sd
+  **0.1856**.
+- **`learned_contribution` added — a DIAGNOSTIC, and the primary bar is BYTE-UNCHANGED.** Per seed,
+  same init and same split: `pyramid_spearman - null_spearman`. That isolates what the labels bought,
+  because the random-init composition effect cancels WITHIN a seed. The patch asserts the frozen
+  values survive (`margin 0.02`, `min_seeds_winning 8`, `n_seeds 10`, `comparator kmer4`), so this is
+  additive information and not a fourth amendment — a quantity that cannot change a verdict is not a
+  bar. It is computed before the partial-range return, so even a partial run reports it, and it
+  carries its own size-sensitivity caveat in the field.
+- **The null gate now records that it is UNDER-POWERED at the pre-registered seed count.** The null's
+  spread is an INITIALISATION property, not a sampling one — a random composition functional's
+  correlation with expression does not shrink with N — so at sd ~0.10 the sem of the median over 10
+  seeds is ~0.032, larger than the 0.02 bar it is compared against; ~50 seeds would be needed. The
+  caveat ships in `null.power_caveat` rather than as a silent weakness.
+- **It also reaches the printed summary, not only the JSON** — this project's own rule that a block
+  carried only in JSON is not a disclosure.
+
 ### 2026-10-27 (g) — the Kaggle route needs NO credential, and a docstring claim is unsupported
 
 - **Correction to this session's own framing.** I reported that pushing the kernel needs the user to

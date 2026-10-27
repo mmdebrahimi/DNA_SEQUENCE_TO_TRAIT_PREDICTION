@@ -2,6 +2,20 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (h)
+
+- **Do not read a small effect at small N as a property of the method.** I called the arm "mostly
+  unlearned" off a smoke whose training set was 1.2% of the rung. The tell was available in the same
+  output: the COMPARATOR also collapsed at that N (0.0244 vs 0.1120). When both arms degrade
+  together, the regime is the finding, not the ratio between them.
+- **Add a diagnostic instead of amending a bar, when the question is "what does this number contain".**
+  Three amendments in a session is churn; a reported quantity that cannot change a verdict is not a
+  fourth. Assert the frozen values still hold as part of the patch, so "additive" is checked rather
+  than claimed.
+- **Record a gate's power, not just its threshold.** A bar of 0.02 compared against a statistic whose
+  sem is 0.032 fires essentially at random. Shipping that caveat beside the gate is cheaper than
+  discovering later that a clean-looking pass meant nothing.
+
 ## 2026-10-27 (g)
 
 - **"We have done this before" is a lead to verify, not a credential to assume.** The user was right
