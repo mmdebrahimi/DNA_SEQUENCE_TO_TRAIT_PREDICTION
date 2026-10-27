@@ -439,7 +439,8 @@ def _ridge_fit_predict(Xtr, ytr, Xte, alpha: float = 1.0):
 
 
 def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
-        allow_download=False, test_fraction=0.2, with_encoder=False, device="cpu") -> dict:
+        allow_download=False, test_fraction=0.2, with_encoder=False, device="cpu",
+        seed_start=0) -> dict:
     frags, st = load_fragments(cache_dir, which=which, limit=limit,
                                allow_download=allow_download)
     seqs = [f.seq for f in frags]
@@ -469,8 +470,9 @@ def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
         codes = encode_codes(padded, PAD_TO)
 
     long_set = set(long_mask)
+    seed_range = list(range(seed_start, seed_start + seeds))
     rows = []
-    for seed in range(seeds):
+    for seed in seed_range:
         # ONE split per seed, handed to BOTH arms. The pairing is constructed here, not assumed:
         # recomputing the split inside each arm would make the pairing a coincidence of the seed.
         tr, te = split_by_block(blocks, test_fraction=test_fraction, seed=seed)
@@ -530,7 +532,7 @@ def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
     # ---- validity null on EVERY seed: train side permuted, test labels untouched.
     # Multi-seed because the null's own sd is ~0.10 at small N (measured), so one draw says nothing.
     null_rows = []
-    for seed in range(seeds):
+    for seed in seed_range:   # the SAME seeds as the paired arm, not range(seeds)
         trn, ten = split_by_block(blocks, test_fraction=test_fraction, seed=seed)
         r, _ = fit_masked_pyramid(codes, lengths, ys, trn, ten, seed=seed,
                                   device=device, blocks=blocks, shuffle_labels=True)
@@ -554,6 +556,25 @@ def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
     deltas = [r["delta"] for r in rows]
     p = paired_stats(deltas, PREREGISTERED["margin"], PREREGISTERED["min_seeds_winning"])
     out["paired"] = p
+
+    out["seed_range"] = {"start": seed_start, "n": seeds,
+                         "seeds": seed_range,
+                         "preregistered_n_seeds": PREREGISTERED["n_seeds"]}
+
+    # A PARTIAL seed range emits rows and NO verdict. The bar is ">= 8 of 10 seeds"; scoring 5 of 10
+    # against it is a category error, not a weaker measurement. Combine the partial artifacts and
+    # judge once the full pre-registered range exists.
+    if seed_start != 0 or seeds != PREREGISTERED["n_seeds"]:
+        out["status"] = "PARTIAL_SEED_RANGE"
+        out["status_note"] = (
+            "ran seeds %s; the pre-registration specifies %d seeds starting at 0 with a "
+            ">= %d-of-%d winning bar. Rows and the null are emitted, NO verdict: judging a partial "
+            "range against a seed-count bar would redefine the acceptance criterion. Combine the "
+            "partial artifacts, then judge." % (seed_range, PREREGISTERED["n_seeds"],
+                                                PREREGISTERED["min_seeds_winning"],
+                                                PREREGISTERED["n_seeds"])
+        )
+        return out
 
     # Ordered so a broken null can never be reported as a result.
     if abs(null_median) >= PREREGISTERED["validity_controls"]["null_median_bar"]:
@@ -589,6 +610,9 @@ def main(argv=None) -> int:
     ap.add_argument("--cache-dir", default=str(DEFAULT_CACHE))
     ap.add_argument("--which", default="LB", choices=["LB", "M9"])
     ap.add_argument("--seeds", type=int, default=10)
+    ap.add_argument("--seed-start", type=int, default=0,
+                    help="first seed; lets a long run be SPLIT across sessions without reducing "
+                         "the pre-registered seed count. A partial range emits no verdict.")
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--allow-download", action="store_true")
     ap.add_argument("--out", default=None)
@@ -600,7 +624,7 @@ def main(argv=None) -> int:
     try:
         res = run(a.cache_dir, which=a.which, seeds=a.seeds, limit=a.limit,
                   allow_download=a.allow_download, with_encoder=a.with_encoder,
-                  device=a.device)
+                  device=a.device, seed_start=a.seed_start)
     except (ArmDataError, EncoderDataError) as exc:
         print("REFUSED: %s" % exc, file=sys.stderr)
         return 3

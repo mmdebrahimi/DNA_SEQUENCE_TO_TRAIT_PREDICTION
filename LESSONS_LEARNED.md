@@ -2,6 +2,29 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (f)
+
+- **When a local resource fails, check the CLOUD route before declaring the work blocked.** The
+  drive detached and the honest local answer was "no real-data run is possible". The substrate is
+  public GEO, so a Kaggle notebook needs nothing from that drive at all. R9 exists because this
+  project once recorded a compute pivot against a local GPU while free cloud GPUs were in use; the
+  same reflex recurred with a disk instead of a card.
+- **A dependency premise in a docstring decays like any other claim.** Two Kaggle helpers justify
+  their design on "the repo is private" and "auth already works on this host". Both were true when
+  written and both are now false — the repo is public and there is no credential on the machine. A
+  justification is a measurement with a date, and neither carried one.
+- **Do not buy a shorter run by cutting the seeds a bar is written in.** The pre-registration says
+  8 of 10. Splitting the seed RANGE across sessions preserves it exactly; running 5 seeds redefines
+  it silently. Where a partial run is unavoidable, emit rows and REFUSE the verdict — a partial
+  result judged against a count bar is a category error, not a weaker number.
+- **A new safety check can break a caller that predates it.** Adding `PARTIAL_SEED_RANGE` instantly
+  invalidated my own kernel's `status == "SCORED"` gate, which would then have stopped after every
+  smoke. When a refusal is added, re-read everything that branches on the old success value.
+- **Extrapolate cost from a regime that resembles the real one, or label the number a bound.**
+  Per-fit time at N=4,000 is overhead-dominated, so scaling it linearly to N=321,123 overestimates.
+  A projection built that way is usable as a ceiling and misleading as an estimate; the kernel prints
+  it as a bound and names the remedy.
+
 ## 2026-10-27 (e)
 
 - **A validity control can itself be invalid, and a single draw cannot test a wide null.** My

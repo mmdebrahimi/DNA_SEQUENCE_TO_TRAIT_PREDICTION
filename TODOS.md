@@ -365,8 +365,18 @@ Plan `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technic
   elements are unrecovered — OPEN; (c) Table S6 publishes per-fold incumbents on these exact folds
   (MPRALegNet 0.8333 / 0.8665) but **never states the metric**, so nothing may be compared against it
   until that is resolved. The arm stays `planned`: acquiring a substrate is not running an arm.
-- **[OPEN — BLOCKED ON D:] The fragment-pyramid encoder half is BUILT but has never completed a
-  scored run.** `scripts/glm_fragment_pyramid_arm.py --with-encoder` +
+- **[OPEN — NEEDS A KAGGLE PUSH] The encoder arm has a ready Kaggle kernel; the drive is no longer
+  the blocker.** `scripts/kaggle/fragment_pyramid_kernel.py` clones this repo at a pinned SHA,
+  downloads GSE144621 itself (public), asserts the `321123 / 48 / 499` substrate shape, then runs
+  SMOKE -> full with a >8 h projection gate. **It needs nothing from D: and nothing from server1.**
+  Two routes, both the user's: place `kaggle.json` and
+  `uv run python scripts/kaggle_push_poll.py push scripts/kaggle/fragment_pyramid_kernel.py fragment-pyramid --gpu`
+  (note: the `kaggle` module is NOT installed here and there is NO credential on this machine,
+  contrary to that script's docstring), or paste the kernel into a new Kaggle notebook with
+  **Accelerator GPU T4 x1 and Internet ON**. Bump `PINNED_SHA` to the newest commit first if the arm
+  has moved.
+- **[OPEN — BLOCKED ON D: for a LOCAL run only] The fragment-pyramid encoder half is BUILT but has
+  never completed a scored run.** `scripts/glm_fragment_pyramid_arm.py --with-encoder` +
   `dna_decode/glm/masked_pyramid.py` (30 tests, all synthetic so they pass without D:). The arm's
   own validity control caught TWO defects in itself (an inner-val label leak, then an invalid
   single-seed bar against a null whose sd is 0.1016) and both are fixed; the CORRECTED multi-seed

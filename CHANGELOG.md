@@ -5,6 +5,48 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (f) — Kaggle is the route the detached drive leaves open, and R9 fires again
+
+- **`scripts/kaggle/fragment_pyramid_kernel.py`** runs the fragment-pyramid arm on a Kaggle T4:
+  device report (incl. the P100-trap warning), `git clone` at a PINNED SHA, GEO download through the
+  project's own loader with a `321123 / 48 / 499` assertion, then SMOKE, then the full run.
+  **The decisive reason is DATA, not speed:** the substrate is public GEO, so the kernel needs
+  nothing uploaded and is wholly independent of the D: volume whose detachment blocks the local run
+  — and of any other machine replying.
+- **This is R9 firing a second time.** The project's compute pivot was recorded against LOCAL GPU
+  limits (GTX 860M, CC 5.0, 4 GiB) and R9's own write-up says the compute that actually arrived was
+  CLOUD. The local drive failing is a different constraint from the one that was recorded, and the
+  cloud route was again not the first thing reached for. A T4 is CC 7.5 / 16 GiB.
+- **TWO STALE CLAIMS CORRECTED, both measured.**
+  (1) `scripts/kaggle/build_glm_sampling_sweep_kernel.py` justifies its base64-payload design with
+  *"the repo is private, so the kernel cannot `git clone`"*. The GitHub API reports
+  **`private: False`** (22.7 MB, default branch `main`). That premise is dead. Its SECOND reason —
+  version-exactness against a tree newer than the published wheel — is real, and a clone at a
+  **pinned COMMIT** satisfies it with far less machinery, which is what the new kernel does.
+  (2) `scripts/kaggle_push_poll.py` says *"auth already works on this host as emanueleebrahimi"*.
+  **It does not:** no `kaggle.json` anywhere under the user profile, `KAGGLE_USERNAME` /
+  `KAGGLE_KEY` / `KAGGLE_CONFIG_DIR` all unset, and the `kaggle` module is not installed. So the
+  kernel can be BUILT here but not PUSHED; pushing is a user step (place `kaggle.json`, or paste the
+  kernel into the Kaggle UI). No credential was requested or handled.
+- **`--seed-start` added to the arm, so a long run SPLITS across sessions without weakening the
+  bar.** A Kaggle GPU session caps near 9 h. The tempting fix is fewer seeds — but the
+  pre-registration says **>= 8 of 10 seeds winning**, so dropping seeds would silently redefine the
+  acceptance criterion. Each seed is independent (`split_by_block(seed=s)` is a pure function of the
+  seed), so seeds 0-4 and 5-9 in separate sessions give bit-identical rows. **A partial range emits
+  ROWS and NO VERDICT** (`PARTIAL_SEED_RANGE`): scoring 3 of 10 against an 8-of-10 bar is a category
+  error, not a weaker measurement. The null loop was changed to the SAME `seed_range` as the paired
+  arm — a null over different seeds is not that arm's null.
+- **A bug in my own kernel, caught by the change above.** Its gate demanded
+  `status == "SCORED"`, but the smoke runs 3 seeds and therefore now correctly returns
+  `PARTIAL_SEED_RANGE` — so the gate would have stopped after **every** smoke by construction. The
+  success criterion is now "reached paired stats and a null", which is what actually exercises the
+  code paths.
+- **The kernel's run-length projection is an UPPER BOUND and says so.** It scales per-fit time
+  linearly in N from the smoke, but at N=4,000 a fit is only ~13 batches/epoch and is dominated by
+  fixed overhead, not compute, so GPU batching amortises far better at full N. The >8 h gate stops
+  and reports the projection rather than guessing; the remedy it names is splitting the seed range,
+  not cutting seeds.
+
 ### 2026-10-27 (e) — the encoder half is built, and its own validity control was the defect
 
 - **`dna_decode/glm/masked_pyramid.py` gains a batched codec.** One-hot for the whole rung is
