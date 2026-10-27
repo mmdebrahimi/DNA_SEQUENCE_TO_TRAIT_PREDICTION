@@ -44,7 +44,7 @@ from pathlib import Path
 
 REPO_URL = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION.git"
 #: Pinned so the artifact is traceable to a commit. Bump deliberately, never to "latest".
-PINNED_SHA = "13bc20f6b4103c1d53a349de2688c398a09336aa"
+PINNED_SHA = "74d8af7b4f6d4f9ba9d0d6931277a860f5f472bd"
 
 WORK = Path("/kaggle/working")
 SRC = WORK / "dna_decode_repo"
