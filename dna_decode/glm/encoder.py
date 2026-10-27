@@ -59,6 +59,21 @@ DEFAULT_WIDTHS = (6, 20, 75)
 #: neg_control/random exactly 150, pos_control 48-75), so the absolute ceiling is log10(150/1) = 2.18
 #: decades even with a degenerate 1 bp branch. A FOUR-decade pyramid needs 10,000 bp of context and is
 #: therefore not reachable on this substrate at any cost -- it is substrate-gated, not expensive.
+#:
+#: SCOPE CORRECTED 2026-10-27 -- the bound above is true of the PEAK-TILE FILE, not of GSE144621.
+#: That same accession also ships the FRAGMENT rung at 48-499 bp (321,123 rows LB / 318,457 M9), which
+#: this module never mentions: `grep -n '499\|fragment' encoder.py` returned nothing. So "every
+#: category in GSE144621 is <= 150 bp" is FALSE as written, and 2.18 decades describes ONE FILE rather
+#: than an absolute ceiling. On fragments the HONEST span -- every branch still a real biological
+#: scale, no degenerate 1 bp branch of the kind this comment rightly rejects -- is
+#: log10(499/3) = 2.22 decades, which EXCEEDS the 2.18 the comment called absolute.
+#:
+#: What survives unchanged, and why PYRAMID_WIDTHS is NOT touched here: a four-decade pyramid needs
+#: ~10,000 bp, fragments top out at 499 bp, so FOUR decades is substrate-gated at ~20x. The reachable
+#: re-scope is 2.22 decades on the fragment rung, and that is a separate PRE-REGISTERED arm, never an
+#: edit to this tuple. Third instance of the forgotten-substrate error -- see
+#: `wiki/mpra_substrate_census_2026-10-12.json` -> `the_forgotten_substrate`:
+#: "a substrate blocker is a claim about what you looked for".
 PYRAMID_WIDTHS = (3, 12, 48, 150)
 
 

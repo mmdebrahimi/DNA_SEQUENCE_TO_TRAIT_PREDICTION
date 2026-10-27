@@ -1,10 +1,16 @@
-"""`NEXT.md` records the tile chain's real blocker, and the arms ledger was NOT edited.
+"""`NEXT.md` records the tile chain's blocker, and HOW that blocker was discharged.
 
-The arms-ledger assertion is the load-bearing one. `soraya_runs/arms-ledger.json` keeps
-`orthogonal-modality-stack-promcalc-plus-N-channels` as `planned`, and that is CORRECT: per R6 a
-declared arm cannot evaporate, and this arm's blocker is substrate, not merit. Moving its status to
-reflect a substrate problem would destroy the information that it is still owed -- so the right record
-of a substrate blocker is a memo plus an expiry constraint, never a ledger edit.
+RE-PINNED 2026-10-27. This file was written while
+`orthogonal-modality-stack-promcalc-plus-N-channels` was `planned` and SUBSTRATE-BLOCKED, and it
+asserted the arm stays `planned` -- correctly, at the time: per R6 a declared arm cannot evaporate,
+its blocker was substrate rather than merit, and demoting it would have destroyed the information
+that it was still owed. **The substrate wall was then CLEARED (promcalc regenerated), the arm RAN,
+and it is now `measured` at 0.4404 on its OWN executed evidence.** So these two guards went red
+because the thing they guard legitimately moved -- the ONLY route off `planned` that R6 permits.
+
+The invariant is unchanged and is what these tests now assert: an arm leaves `planned` by being
+RUN, never by a memo, a sibling's result or a tidy-up. `tests/test_arms_ledger_stack_arm.py`
+carries the metric pin and the empty-`evidence` rule for the three arms still planned.
 """
 from __future__ import annotations
 
@@ -47,8 +53,12 @@ def test_next_md_says_the_frozen_bar_was_not_edited():
 
 
 @pytest.mark.skipif(not ARMS.is_file(), reason="arms ledger absent")
-def test_the_arm_is_still_planned_and_the_ledger_was_not_edited():
-    """R6: a declared arm cannot evaporate, and a substrate blocker is not a reason to demote one.
+def test_the_arm_left_planned_by_RUNNING_and_nothing_else():
+    """R6: the one legitimate route off `planned` is the arm's own executed evidence.
+
+    It is now `measured` at 0.4404, having been held `planned` through a sibling's `NO_GAIN`
+    rather than demoted on it. Both halves matter: it was NOT killed on someone else's result,
+    and it did NOT stay `planned` once it had a result of its own.
 
     The ledger's shape was READ, not guessed: each `criteria[<criterion text>]` maps arm NAME -> arm
     record. A first version of this test assumed `criteria[*]["arms"]` was a list and failed with the
@@ -60,14 +70,22 @@ def test_the_arm_is_still_planned_and_the_ledger_was_not_edited():
              for name, arm in crit.items()
              if isinstance(arm, dict) and name == ARM]
     assert found, f"{ARM} not found under any criterion"
-    assert all(a["status"] == "planned" for a in found)
+    assert all(a["status"] == "measured" for a in found)
+    assert all(a["metric"] == 0.4404 for a in found)
+    assert all(a["evidence"].strip() for a in found), \
+        "measured with no evidence would mean the status moved without a run"
     assert all(a["cost_tier"] == "cheap" for a in found), \
-        "the arm is still the cheap one; a substrate blocker does not change its cost"
+        "the arm is still the cheap one; running it did not change its cost"
 
 
 @pytest.mark.skipif(not ARMS.is_file(), reason="arms ledger absent")
-def test_next_md_states_that_planned_is_the_CORRECT_status():
-    """So a later reader does not 'tidy' the ledger by demoting a substrate-blocked arm."""
+def test_next_md_records_both_that_holding_it_was_right_and_that_it_then_RAN():
+    """So a later reader can tell a discharged blocker from a tidied-away arm.
+
+    Dropping the R6 half would leave the record saying only "it ran", losing why it was not
+    killed when its sibling measured `NO_GAIN` -- which is the reusable half.
+    """
     text = NEXT.read_text(encoding="utf-8")
-    assert "stays `planned`" in text
-    assert "R6" in text
+    assert "R6" in text, "the reason it was not demoted must survive the update"
+    assert "0.4404" in text, "the measured result must be in the record"
+    assert "measured" in text.lower()

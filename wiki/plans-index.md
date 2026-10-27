@@ -806,3 +806,29 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+## [plan_file: Measure_The_Stacking_Question_Instead_Of_Arguing_It_And_Correct_Two_Published_Over_Claims_Plan/] 2026-10-26
+**Status:** executed — archived to `executed_plans/` 2026-10-26 (all 7 steps; see its `execution-log.md`). Outcome: the pre-registered prediction was FALSIFIED — stacking verdict `WEAK_STACK`, a third channel adds +0.0145 on 10/10 seeds with a CI excluding zero.
+**Summary:** A run was declined on an orthogonality argument inside a script whose own frozen bar records that the orthogonality number is `not_a_gate` and that a prediction a combine will fail is not a substitute for measuring it; this pre-registers a stacking bar, makes the arm able to express the stacking question at all, adds the decomposition combos, runs it, and corrects two over-claims already published in commit e96b5591 and umbrella ledger row 17.
+**Key decisions:**
+- The stacking bar is an ADDITIVE `PREREGISTERED` key, never an edit: `test_frozen_bar_mirrors_the_decomposition_arm` pins margin 0.02 / min_seeds_winning 8 / comparator max_tx, and retro-fitting the answered question's bar is the failure being avoided.
+- `predicted_outcome` and `negative_scope` are written BEFORE the run, because a negative IS the prediction (decomposition<->max_tx +0.7812 against gc<->max_tx +0.5508, and gc-as-third already lost 0.4217 vs 0.4254).
+- Four things around the generic `COMBOS` loop are hardcoded to the 2-channel -- the paired statistics, `verdict()`, the missing-scorer guard and the orthogonality pair -- so a new combo would otherwise land as a median with no CI that no verdict judges.
+- `max_tx <-> decomposition` measures +0.7812, so the published 'redundant by construction' claim is false as stated; what survives is that gc<->conv at +0.4593 is comparably orthogonal to the working pair at +0.3862 and gc-as-third still lost.
+- The ceiling arm is narrowed, never killed, on a negative (R6: an arm dies only by its own executed evidence).
+
+---
+
+## [plan_file: Close_The_Verdict_Vocabulary_Defect_The_Review_Found_And_Scope_The_Positive_Finding_Plan/] 2026-10-26
+**Summary:** A post-ship review of the stacking measurement found one defect that matters -- `stacking_verdict_for` returns `WEAK_STACK` for any statistic with `median > 0`, so a gain that reproduced on 10 of 10 seeds and positive noise at 4 of 10 receive the same machine-readable verdict -- plus two claims that are scoped wrongly.
+**Key decisions:**
+- The defect is in the PRE-REGISTRATION, not only the code: `PREREGISTERED["stacking"]["verdicts"]["WEAK_STACK"]` reads 'gain > 0 but below the margin or the seed count', so the code implements the frozen definition faithfully and the fix edits a frozen bar after the result is known.
+- What makes that edit legitimate is a blocking NEUTRALITY GATE plus the reuse of the already-frozen `min_seeds_winning` (8) instead of a new threshold: Step 4 proves the changed field set is exactly `{stacking_verdict_detail, honest_limits, preregistered}` and that no measured verdict moved, and if one did the response is to revert Steps 1-3 rather than argue the result forward.
+- The new key `INDETERMINATE_GAIN_NOT_REPRODUCIBLE` joins the existing `INDETERMINATE_*` family and must also enter the aggregate precedence tuple -- otherwise an arm whose every combo is unreproducible-positive falls through to `NO_STACK`, re-creating the same defect at the aggregate level.
+- The aggregate detail string names only the combos that cleared (`hybrid_conv_maxtx_gc -> NO_STACK` is in `stacking_per_combo` but absent from the string), while `render_md`'s per-combo table already lists losers -- so the JSON path is fixed to do what the markdown path does, reusing `sorted(per)` from the fallback four lines below.
+- The published 'orthogonality argument got the direction backwards' claim is scoped, not withdrawn: `scripts/glm_tile_predictions.py:357-358` passes one `dec` dict to both `tile_features()` and `max_tx_scalar()`, so the counterexample is a reduction/superset pair rather than two modalities, and the caveat moves up beside the positive headline instead of sitting only in the negative's scope.
+- The CI estimand finding is RECORDED AND DELIBERATELY NOT FIXED: the interval is a normal approximation on the mean with z=1.96 while the point estimate is the median and t(9)=2.262 is correct at n=10, but re-derivation under t leaves all three conclusions intact and `promcalc_decomposition_arm.paired` is shared with the published parent arm, so a fix moves parent numbers and needs its own pre-registration.
+- Sequential execution over the computed 3-way parallelism in wave 4, because `data/promcalc/tile_predictions/` is gitignored so a worktree cannot see the tables and its Step-4 baseline would be unreconcilable.
+- Four decisions left as OPEN QUESTIONS rather than folded into scope: whether the untested new-modality-family direction becomes a `planned` arm, whether a bar inherited from a different question was ever right here, whether committing is authorized, and whether `verdict()`'s parent `WEAK_GAIN` branch -- which carries the identical conflation and produced the PUBLISHED `HYBRID_ADDS` -- should move too.
+
+---
+

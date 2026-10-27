@@ -118,13 +118,61 @@ def test_the_expected_outcome_is_a_real_verdict_not_a_failed_run():
 
 
 @pytest.mark.parametrize(
-    "gain,wins",
-    [(0.019, 10),   # clears the seed bar, misses the margin
-     (0.05, 7)],    # clears the margin, misses the seed bar
+    "gain,wins,expected",
+    [(0.019, 10, "WEAK"),                                # reproducible, misses the margin
+     (0.05, 7, "INDETERMINATE_GAIN_NOT_REPRODUCIBLE")],  # clears the margin, did NOT reproduce
 )
-def test_each_half_of_the_bar_bites_on_its_own(gain, wins):
-    """Non-vacuity: neither margin nor seed count is decorative."""
-    assert arm.verdict(_arms(gain, wins))[0] == "WEAK"
+def test_each_half_of_the_bar_bites_on_its_own(gain, wins, expected):
+    """Non-vacuity: neither margin nor seed count is decorative -- AND the two halves are not the
+    same failure. A reproducible gain short of the margin is a real-but-small effect; a large gain
+    on 7 of 10 seeds is unreproduced noise. Collapsing both to WEAK is the defect fixed 2026-10-26.
+    """
+    assert arm.verdict(_arms(gain, wins))[0] == expected
+
+
+def test_the_verdict_SEPARATES_a_reproducible_gain_from_positive_NOISE():
+    """The defect being closed: before the narrowing, ANY positive median returned WEAK, so
+    positive noise on 4 of 10 seeds and a reproducible gain on 10 of 10 were indistinguishable.
+    The sibling instance in glm_tile_hybrid_arm.py FIRED this on real data.
+    """
+    noise = arm.verdict(_arms(0.004, 4))[0]
+    reproducible = arm.verdict(_arms(0.019, 10))[0]
+    assert noise != reproducible, "positive noise and a reproducible gain must not share a verdict"
+    assert noise == "INDETERMINATE_GAIN_NOT_REPRODUCIBLE"
+    assert reproducible == "WEAK"
+
+
+def test_the_narrowed_condition_READS_the_frozen_seed_count_and_is_not_a_new_literal():
+    """Behavioural proof that the narrowing introduced NO new threshold: move min_seeds_winning in
+    a copy of the bar and the boundary moves with it. A hardcoded 8 would ignore the mutation.
+    """
+    import copy
+    relaxed = copy.deepcopy(arm.PREREGISTERED)
+    relaxed["min_seeds_winning"] = 3
+    # 7 seeds: NOT reproducible under the frozen bar (8), reproducible under the relaxed one (3)
+    assert arm.verdict(_arms(0.019, 7))[0] == "INDETERMINATE_GAIN_NOT_REPRODUCIBLE"
+    assert arm.verdict(_arms(0.019, 7), pre=relaxed)[0] == "WEAK"
+
+
+def test_the_new_key_is_DOCUMENTED_in_the_frozen_verdict_vocabulary():
+    """A verdict a run can emit but the pre-registration does not define is an undocumented
+    headline. Every reachable verdict string must have an entry.
+    """
+    v = arm.PREREGISTERED["verdicts"]
+    assert "INDETERMINATE_GAIN_NOT_REPRODUCIBLE" in v
+    assert "did NOT reproduce" in v["INDETERMINATE_GAIN_NOT_REPRODUCIBLE"]
+    assert "REPRODUCIBLE" in v["WEAK"], "WEAK must now state the seed condition it requires"
+
+
+def test_the_refusals_still_OUTRANK_the_new_verdict():
+    """Ordering is load-bearing: a reconcile failure or a lifting control must win over a
+    positive-but-unreproduced gain, not be shadowed by it.
+    """
+    a = _arms(0.05, 7)
+    a["_reconcile_problems"] = ["max_tx median drifted"]
+    assert arm.verdict(a)[0] == "INDETERMINATE_RECONCILE_FAILED"
+    b = _arms(0.05, 7, ctrl_gain=0.06, ctrl_wins=10)
+    assert arm.verdict(b)[0] == "INDETERMINATE_CONTROL_ALSO_LIFTS"
 
 
 def test_exactly_at_the_bar_passes():

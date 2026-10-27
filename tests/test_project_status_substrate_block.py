@@ -193,3 +193,54 @@ def test_the_renderer_reads_only_keys_that_audit_actually_emits(monkeypatch, cap
     for u in rep["utilization"]:
         assert {"rung", "verdict", "rows_available", "largest_n_measured"} <= set(u)
     assert "UNAVAILABLE" not in _render(monkeypatch, capsys, CENSUS)
+
+
+# ==================================================================================================
+# SIZE-LEVER DISAGREEMENT: the utilization cell alone reads as an invitation to pull an untried lever
+# ==================================================================================================
+#: A rung carrying a recorded, unresolved disagreement between the census and a later arm. Minimal
+#: on purpose -- the renderer must key off the DISAGREEMENT marker in `size_lever`, not off a rung
+#: name, so the guard keeps working when the next disputed rung is a different one.
+_DISPUTED = {
+    "rungs": {
+        "fragments_LB": {"n": 321123, "largest_n_measured": 30000,
+                         "ceiling_for_a_sequence_model": 0.7928,
+                         "size_lever": "UNDER-USED -- 30,000 of 321,123 rows. DISAGREEMENT, "
+                                       "unresolved: a later arm reports pulling it further with no "
+                                       "artifact on disk."},
+        "peak_tiles": {"n": 46713, "largest_n_measured": 44106,
+                       "ceiling_for_a_sequence_model": 0.941,
+                       "size_lever": "EXHAUSTED on this rung only."},
+    }
+}
+
+
+def test_a_disputed_size_lever_WARNS_in_the_block_a_session_actually_reads(
+        monkeypatch, capsys, tmp_path):
+    """MEASURED 2026-10-26: a session read `under-used:9.3%` here, concluded the fragment rung was
+    the highest-value untried lever, and drafted a plan before the arm's own ledger row refuted it.
+    The utilization cell cannot carry that correction, so the block must. Both halves have to be
+    stated -- 'not untried' AND 'the larger N is not measured' -- because each alone licenses one of
+    the two opposite errors."""
+    out = " ".join(_render(monkeypatch, capsys, _write(tmp_path, _DISPUTED)).split())
+    assert "DISAGREEMENT" in out
+    assert "fragments_LB" in out
+    assert "untried lever" in out, "must refuse the re-plan error"
+    assert "do NOT quote the larger N as measured" in out, "must refuse the over-quote error"
+    assert "corrections_2026_10_26" in out, "must point at the full record"
+    # The warning names only the disputed rung, never a rung whose statement is undisputed.
+    warn = [s for s in out.split("WARNING - ") if s.startswith("size-lever")][0]
+    assert "peak_tiles" not in warn.split("Full record")[0]
+
+
+def test_the_disagreement_warning_RETIRES_ITSELF_when_the_census_no_longer_disputes(
+        monkeypatch, capsys, tmp_path):
+    """Non-vacuity, and the design claim. The warning is data-driven: resolve the disagreement in the
+    census and the line disappears with no code change. A hardcoded rung list would keep asserting a
+    wall after it was gone -- the failure mode [[R9]] exists for."""
+    import copy
+    resolved = copy.deepcopy(_DISPUTED)
+    resolved["rungs"]["fragments_LB"]["size_lever"] = "UNDER-USED -- 30,000 of 321,123 rows."
+    out = _render(monkeypatch, capsys, _write(tmp_path, resolved))
+    assert "size-lever DISAGREEMENT" not in out
+    assert "fragments_LB" in out, "the rung must still render; only the warning retires"

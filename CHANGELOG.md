@@ -5,6 +5,215 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 — six R6 rails re-pinned; the encoder's substrate bound scope-corrected
+
+- **The six red R6 rails are green, re-pinned rather than rewritten away.**
+  `tests/test_arms_ledger_stack_arm.py` + `tests/test_tile_chain_next_md_record.py` pinned the stack
+  arm as `planned` with `metric is None`, seven measured and four planned. The arm RAN on 2026-10-26
+  and is `measured` at 0.4404 with 2,673 chars of its own evidence, so the guards were red because
+  their SUBJECT legitimately moved — by the only route R6 permits. Re-pinned to 8 measured / 3
+  planned (11 total, unchanged: the arm moved buckets, nothing was added). User-authorised.
+- **Two invariants came out STRONGER, not merely preserved.** `evidence == ""` was one assertion on
+  the stack arm; it is now asserted over EVERY planned arm, with a non-vacuity guard — which is what
+  keeps a wall classification out of a field reserved for EXECUTED evidence. And the NEXT.md rail now
+  requires BOTH halves of the record (held `planned` through a sibling's `NO_GAIN` per R6, AND later
+  measured 0.4404), so a discharged blocker cannot be confused with a tidied-away arm.
+- **Mutation-proven against the LIVE ledger, restored byte-identically after each mutation:** the
+  metric restated 0.4404 -> 0.9999 caught by 3 tests; `measured` demoted to `planned` caught by 7; a
+  wall classification parked in a planned arm's `evidence` caught by 1. Tests 17 -> 18.
+- **Regression gate run, not cited: 14 failed / 7074 passed / 183 skipped.** Against the documented
+  20/7067 baseline that is exactly the 6 rails going green plus the 1 added test, and the surviving
+  14-failure SET is the documented data-absent set with zero new entries.
+- **`dna_decode/glm/encoder.py`: the SUBSTRATE BOUND comment was scoped to the wrong thing.** It
+  asserted "every category in GSE144621 is <= 150 bp ... the absolute ceiling is log10(150/1) = 2.18
+  decades", flagged `(measured, not estimated)`. True of the PEAK-TILE FILE; false of the accession,
+  which also ships the fragment rung at 48-499 bp — `grep -n '499\|fragment' encoder.py` returned
+  nothing, so this module never knew. The honest fragment span is `log10(499/3) = 2.22` decades, which
+  EXCEEDS the figure the comment called absolute. Comment corrected in place; **`PYRAMID_WIDTHS`
+  untouched** and no behaviour changed. The four-decade claim survives: ~10,000 bp needed, 499 cached.
+- **The two "data-blocked" ceiling arms were analysed at the user's request and are NOT one wall**
+  (`wiki/ceiling_arm_decision_2026-10-27.md`). 4-decades is blocked by ASSAY PHYSICS — no pooled
+  reporter library carries 10 kb elements — so neither a dataset nor a second machine closes it; the
+  reachable move is a re-scope to 2.22 decades on 321,123 rows already on disk. The eukaryotic panel
+  is NOT data-blocked: Agarwal 2025 lentiMPRA is public (>680,000 sequences, Zenodo). Nothing was
+  killed, re-scoped or downloaded — both remain the user's call.
+
+### Fixed — the same verdict collapse in the one arm where fixing it is not a retro-fit (2026-10-26)
+
+- `scripts/glm_tile_maxtx_gc_arm.py` carried the stacking defect **verbatim**: `"WEAK": "gain > 0 but
+  below the margin or the seed count"` with a `p["median"] > 0` branch and no seed condition, so a
+  reproducible-but-small gain and unreproduced positive noise returned one string. Narrowed `WEAK` to
+  require the already-frozen `min_seeds_winning` and added `INDETERMINATE_GAIN_NOT_REPRODUCIBLE`.
+- **No new threshold** (proven behaviourally: mutate `min_seeds_winning` in a copy of the bar and the
+  boundary moves with it) and **no outcome to be neutral about** — the arm has never run and no
+  `wiki/*maxtx_gc*` artifact exists. The existing test asserting the conflation
+  (`test_each_half_of_the_bar_bites_on_its_own`, which expected `WEAK` for BOTH halves) was changed
+  in place to carry the now-different expected verdicts; none was deleted. 4 tests added, 25 pass.
+- **The defect class is closed and its denominator corrected.** Not 11 scripts: exactly **3** carry a
+  `min_seeds_winning` bar, with **4** call sites matching the signature. Two are published and
+  **latent-not-firing** — the hybrid parent returned `HYBRID_ADDS` (0.0339 at 10/10) and
+  `promcalc_decomposition_arm` returned `NO_GAIN` (−0.004 at 2/10), so neither ever reached the
+  defective branch, and both are post-result and left untouched.
+
+### Fixed — a registry contradiction that had already caused one wrong recommendation (2026-10-26)
+
+- `wiki/mpra_substrate_census_2026-10-12.json` asserted *"The size lever here has never been pulled"*
+  on both fragment rungs while the arm that pulled it resolved **2026-10-18**. Recorded as a
+  DISAGREEMENT rather than resolved either way: the arm's 20k/150k figures have no committed
+  artifact, and the one that exists (30,000 rows) agrees with the census.
+- `largest_n_measured` deliberately unchanged at **30,000** — the largest N a committed artifact
+  supports, and what `scripts/project_status.py` prints.
+- `scripts/project_status.py` now warns in the SUBSTRATE block, because the utilization cell alone
+  (`under-used:9.3%`) reads as an invitation to pull an untried lever and a session acted on exactly
+  that. **Data-driven, so it retires itself** when the census stops disputing — pinned by a test.
+
+### Added — a wall classification for the three untried ceiling arms (2026-10-26)
+
+- `wiki/ceiling_arm_wall_classification_2026-10-26.md`. `blocked:untried-arm` named three arms as one
+  undifferentiated wall; they are **one runnable today** (promoteratlas — substrate present, needs a
+  public weights fetch) and **two blocked on data acquisition** (4-decades needs ~10,000 bp against a
+  cached max of 499 bp; the eukaryotic panel is absent — the entire MPRA cache is one *E. coli*
+  accession). Includes a correction of this memo's own first classification of the 4-decade arm.
+
+
+### Fixed — the stacking verdict could not tell a reproducible gain from positive noise (2026-10-26)
+
+**Research-arm only** — no decoder change, no CLI trait, no console entry point, no `cell_registry`
+contract; the five sha256-pinned frozen files and `uv.lock` are byte-unchanged.
+
+A post-ship review of the stacking measurement found that `stacking_verdict_for` returned
+`WEAK_STACK` for **any** statistic with `median > 0` — no seed condition, no CI condition. Verified by
+direct call: positive noise on 4 of 10 seeds with a CI spanning zero and the measured gain on 10 of 10
+with a CI excluding zero received the **same machine-readable verdict**. That is the identical collapse
+`INDETERMINATE_STACKING_NOT_MEASURED` exists to prevent one key away — two materially different
+findings sharing one string — guarded there and not here, in the same function.
+
+**The defect was in the PRE-REGISTRATION, not the code.**
+`PREREGISTERED["stacking"]["verdicts"]["WEAK_STACK"]` read *"gain > 0 but below the margin or the seed
+count"*, so the implementation was faithful. Fixing it therefore meant editing a frozen bar **after**
+the result was known, which is the retro-fit this arm exists to prevent. Two mechanical bounds make it
+legitimate rather than argued:
+
+- **No new threshold.** The narrowed condition reuses the already-frozen `min_seeds_winning` (8),
+  which the `STACKS` branch has always used. A behavioural test proves the condition reads the key
+  rather than a literal, by moving the boundary with a mutated bar.
+- **Outcome-neutral, proven by diff.** The regenerated artifact was compared field-by-field against a
+  pre-change copy: every measured verdict unchanged (`decomposition` `WEAK_STACK`, `gc` `NO_STACK`,
+  `gc`+`decomposition` `WEAK_STACK`), the whole `arms` block byte-identical, and all nine published
+  2-channel values byte-identical to `git show HEAD:` with the top-level verdict still `HYBRID_ADDS`.
+  Had one moved, the edit was to be reverted rather than defended.
+
+A fourth verdict key `INDETERMINATE_GAIN_NOT_REPRODUCIBLE` now carries the positive-but-unreproducible
+case, and it was added to the aggregate precedence tuple — without that, an arm whose every combo is
+positive-but-unreproducible would fall through to `NO_STACK`, reporting a measured **negative** for a
+set of positive gains and re-creating the defect one level up.
+
+**Also fixed — the aggregate named only the winners.** `stacking_verdict_detail` listed just the combos
+that cleared, so `hybrid_conv_maxtx_gc -> NO_STACK` sat in `stacking_per_combo` and appeared nowhere in
+the field a programmatic reader consumes — while `honest_limits` instructed that reader to consult the
+per-combo block. `render_md`'s table already listed losers; the JSON path now does what the markdown
+path did, through one helper so the two cannot drift apart again.
+
+**Also scoped — a published claim was over-general.** The finding *"the orthogonality argument got the
+direction backwards"* is narrowed: `scripts/glm_tile_predictions.py` hands the **same** decomposition
+dict to `tile_features()` and `max_tx_scalar()`, so `max_tx` is a lossy scalar reduction of what the
+`decomposition` channel sees in full. Their `+0.7812` redundancy is mechanically expected and the
+counterexample is a **reduction/superset pair**, not two modalities — so prediction-vector Spearman is
+refuted *across that pair*, not between genuinely different modality families, none of which were
+tested. Read it as *"finer-grained access to a channel already present pays"*. The fact was already in
+the memo, attached to the **negative's** scope rather than the positive headline.
+
+**Recorded, deliberately NOT fixed.** `promcalc_decomposition_arm.paired` builds a normal-approximation
+CI on the **mean** with `z=1.96` while every headline figure is the **median**, and at n=10 the correct
+critical value is `t(9)=2.262` — published intervals are ~15% narrower than nominal. Re-derived under
+`t` the conclusion **survives** on all three combos (`[0.0103, 0.0177]`, `[0.0030, 0.0165]`, `gc` still
+including zero), with sign tests corroborating independently (p=0.00098 / 0.0107 / 0.828). Untouched
+because `paired()` is shared with the published parent arm, so a fix moves parent numbers.
+
+`honest_limits` 6 → 8 items (items 1-6 byte-identical). `tests/test_glm_tile_hybrid_arm.py` 63 → 70,
+with exactly **one** existing assertion changed — the boundary case that *is* the change — and none
+deleted.
+
+### Measured — the STACKING question is ANSWERED and the pre-registered prediction was FALSIFIED: `WEAK_STACK` (2026-10-26)
+
+**Research-arm only** — no decoder change, no CLI trait, no console entry point, no `cell_registry`
+contract; the five sha256-pinned frozen files are byte-unchanged.
+
+**A question the arm previously could not express.** `scripts/glm_tile_hybrid_arm.py` grew `COMBOS`
+from 2 to 4 (`hybrid_conv_maxtx_decomp` = conv+max_tx+decomposition, `hybrid_conv_maxtx_gc_decomp` =
++gc) and gained `_paired_<combo>_vs_hybrid2` statistics, so *"does a THIRD channel add over the
+MEASURED 2-channel hybrid?"* is now a statistic rather than an argument. The pre-existing
+`_paired_hybrid3_vs_comparator` (+0.0302) compares the 3-channel against **the scalar** and never
+against the hybrid — both numbers are correct and only the second is about stacking. A
+`PREREGISTERED["stacking"]` bar (comparator `hybrid_conv_maxtx`, margin 0.02, 8/10 seeds) was frozen
+**before** the run with its `predicted_outcome` and `negative_scope` recorded first. Two new
+refusals: `INDETERMINATE_SHORT_ARM` and `INDETERMINATE_STACKING_NOT_MEASURED` (an absent statistic is
+a MISSING measurement, never a negative one).
+
+**Verdict `WEAK_STACK`** (`wiki/glm_tile_hybrid_arm_2026-10-26.json`; memo
+`wiki/glm_tile_stack_arm_2026-10-26.md`) on GEO GSE144621 peak tiles, leave_peak_out, ceiling 0.941,
+10 registered seeds (the `substrate` field, verbatim) — every combo at n=10:
+
+| third channel added | median gain over the 2-channel hybrid | seeds winning | CI95 | zero |
+|---|---|---|---|---|
+| `decomposition` | **+0.0145** | **10/10** | [0.0108, 0.0172] | **excludes** |
+| `gc` + `decomposition` | +0.0103 | 9/10 | [0.0039, 0.0156] | **excludes** |
+| `gc` alone | -0.0039 | 4/10 | [-0.0095, 0.0026] | includes |
+
+**It reads `WEAK_STACK` on the MARGIN ALONE — do not compress it to "no third channel adds".** A
+third channel adds **+0.0145 on 10 of 10 seeds with a CI excluding zero**: it clears the seed bar
+outright and misses only the margin. **The margin is deliberately NOT revisited** — 0.02 was
+inherited verbatim from the parent bar and recorded AS an inheritance, so lowering it after a real
+signal just missed it is exactly the retro-fit the plan was written to avoid. Acting on +0.0145 needs
+a NEW bar for a NEW question (how large a gain is worth a channel's cost), not a relaxed old one.
+
+**THE ORTHOGONALITY ARGUMENT IS BACKWARDS, not merely insufficient.** New `orthogonality_matrix` key,
+all 6 channel pairs, 10-seed medians of pairwise Spearman between prediction vectors:
+`max_tx`<->`decomposition` **+0.7812** - `gc`<->`decomposition` +0.6041 - `gc`<->`max_tx` +0.5508 -
+`conv`<->`gc` +0.4593 - `conv`<->`decomposition` +0.4213 - `conv`<->`max_tx` +0.3862. **The channel
+MOST redundant with the comparator is the one that ADDS, and the markedly LESS redundant one
+SUBTRACTS** — so pairwise Spearman between prediction vectors is **not a valid screen for whether a
+channel stacks** on this rung. Four channels is also worse than three (+0.0103 against +0.0145).
+
+**Regression clean, which is what makes the new numbers readable.** Every published 2-channel value is
+byte-identical to `git show HEAD`'s artifact: `_paired_hybrid_vs_comparator` **+0.0339**, 10/10 seeds,
+CI95 [0.0238, 0.0409]; top-level verdict still `HYBRID_ADDS`; `orthogonality.median` 0.3862; every arm
+median and the shuffled-conv control unchanged. The generalisation added questions without perturbing
+the answered one.
+
+**New: `wiki/tile_reproduction_scope_correction_2026-10-26.md` — THREE corrections to the published
+record,** additive because commit `e96b5591` is pushed and cannot be amended (it and
+`project_state/glm-umbrella-2026-10-07.md` Action Log rows 17-18 are named in the memo). (1) *"a
+genuine independent reproduction"* over-claims: the conv is **deterministic given the substrate**
+(`dna_decode/glm/encoder.py:354` `torch.manual_seed`, `:361` a seeded `torch.Generator`, `:334` seeded
+`peak_blocked_val_split`, `scripts/glm_tile_predictions.py:390` threading the loop seed), so a
+4-decimal match was guaranteed the moment the substrates matched — it is a **substrate-integrity
+check**, which licenses every number computed off the rebuilt table and not the word *reproduction*.
+(2) *"max_tx and decomposition are redundant by construction"* is false as stated: measured +0.7812,
+not ~1.0. (3) The conclusion it was offered for — *"no viable third channel exists in these four
+scorers"* — is false too.
+
+**Ledger:** `soraya_runs/arms-ledger.json` moves `orthogonal-modality-stack-promcalc-plus-N-channels`
+`planned` -> `measured`, metric **0.4404**, evidence naming the Step-5 artifact. The ceiling criterion
+stays **`blocked:untried-arm`** via three remaining `planned` siblings
+(`multiresolution-pyramid-4-decades-UNRUN`,
+`substrate-change-constructed-eukaryotic-or-human-panel-UNRUN`,
+`promoteratlas-base-embeddings-frozen-150bp-padded-to-200`) — **verified by calling `blocking()`**,
+not assumed.
+
+**Tests:** `tests/test_glm_tile_hybrid_arm.py` 36 -> 63 module-level tests;
+`tests/test_tile_chain_substrate_wall_amendment5.py` 13 -> 14 (one rewritten against the now-`measured`
+arm).
+
+**Honest limits, from the artifact rather than restated:** `WEAK_STACK` is an aggregate over three
+superset combos against ONE bar — a multiple-comparison exposure, so read the per-combo block, not the
+aggregate; one rung, one substrate, one parameter-free combine rule (a fitted or weighted stack is a
+different question); the four channels span only TWO modality families (conv+gc composition,
+max_tx+decomposition two readings of one Promoter Calculator output), so a channel from a NEW family
+remains untested; +0.0145 is a RANK improvement and licenses no magnitude claim; `max_tx` and `conv`
+are both ridge-fitted on the same split, so their errors may correlate through the split rather than
+the biology.
+
 ### Measured — the promcalc decomposition arm's pre-registered question is ANSWERED: `NO_GAIN` (2026-10-23)
 
 The frozen comparison ran unattended overnight and discharged its verdict at 03:48 without

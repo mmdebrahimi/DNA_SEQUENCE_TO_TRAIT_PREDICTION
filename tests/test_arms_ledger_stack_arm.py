@@ -1,9 +1,14 @@
 """Guards for the declared orthogonal-modality stack arm.
 
-The declaration must ADD an arm and change nothing else. The seven measured arms are
-pinned by metric so a future edit cannot quietly restate a result, and the refusal
-`kill_arm` makes on a redundancy reason is pinned too -- because withdrawing the
-kill option is only safe while that refusal actually fires.
+RE-PINNED 2026-10-27: the declared arm RAN. It was `planned` when these guards were
+written and is now `measured` at 0.4404 on its own evidence, so four of them went red
+because their SUBJECT legitimately moved -- not because the ledger was tampered with.
+Re-pinning to the state that exists is the answer here; the invariants are UNCHANGED and
+two are now stronger, asserted over EVERY planned arm rather than over this one.
+
+The EIGHT measured arms are pinned by metric so a future edit cannot quietly restate a
+result, and the refusal `kill_arm` makes on a redundancy reason is pinned too -- because
+withdrawing the kill option is only safe while that refusal actually fires.
 
 Every mutating test runs against a COPY of the ledger in `tmp_path`. A test that
 killed an arm in the committed ledger would be a destructive test.
@@ -25,7 +30,7 @@ LEDGER = REPO / "soraya_runs" / "arms-ledger.json"
 CRITERION_PREFIX = "ceiling: best achievable prediction of bacterial promoter"
 NEW_ARM = "orthogonal-modality-stack-promcalc-plus-N-channels"
 
-# The seven measured arms, pinned by metric. Restating a measured number elsewhere
+# The eight measured arms, pinned by metric. Restating a measured number elsewhere
 # would now have to change this line too.
 MEASURED = {
     "gc-single-feature": 0.3112,
@@ -35,13 +40,15 @@ MEASURED = {
     "promcalc-full-decomposition-ridge-150bp": 0.3925,
     "fragment-rung-321k-rows-size-lever-LB-M9": 0.185,
     "promcalc-plus-conv-rank-average-hybrid-150bp": 0.4254,
+    # Ran 2026-10-26: WEAK_STACK, +0.0145 over the 2-channel hybrid at 10/10 seeds,
+    # CI95 [0.0108, 0.0172] excluding zero, short only of the INHERITED 0.02 margin.
+    NEW_ARM: 0.4404,
 }
 
 EXPECTED_PLANNED = {
     "multiresolution-pyramid-4-decades-UNRUN",
     "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
     "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
-    NEW_ARM,
 }
 
 
@@ -62,15 +69,39 @@ def sandbox(tmp_path: Path) -> Path:
     return tmp_path
 
 
-def test_the_stack_arm_is_declared_and_planned():
+def test_the_stack_arm_RAN_and_carries_its_own_evidence():
+    """Was `planned`; ran 2026-10-26. R6 is satisfied by its OWN executed evidence.
+
+    The arm could not be killed on a sibling's result (see the withdrawal guards below) and
+    it was not: it was RUN, and that is the only thing that legitimately moves an arm off
+    `planned`. The metric is pinned in MEASURED, so a restatement has to edit that line too.
+    """
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     assert NEW_ARM in arms
     arm = arms[NEW_ARM]
-    assert arm["status"] == al.STATUS_PLANNED
-    assert arm["metric"] is None
-    assert arm["cost_tier"] == "cheap"
-    assert arm["evidence"] == "", "a planned arm has no evidence yet"
+    assert arm["status"] == al.STATUS_MEASURED
+    assert arm["metric"] == 0.4404
+    assert arm["cost_tier"] == "cheap", "running it did not change what it cost"
+    assert arm["evidence"].strip(), "a measured arm must carry its evidence"
+
+
+def test_every_PLANNED_arm_still_has_an_empty_evidence_string():
+    """Generalised from the stack arm, which used to be the one carrying this invariant.
+
+    `evidence` means EXECUTED evidence (R6/R7). A substrate fact, a wall classification or a
+    rationale is NOT that, so none of them may be parked in this field -- which is why the
+    three untried arms' walls live in `wiki/ceiling_arm_wall_classification_2026-10-26.md`
+    and not in the ledger. Asserting it over every planned arm is strictly stronger than
+    asserting it over one.
+    """
+    ledger = _live_ledger()
+    arms = ledger._data["criteria"][_criterion(ledger)]
+    planned = {n: a for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
+    assert planned, "vacuous: no planned arms left to check"
+    for name, arm in planned.items():
+        assert arm["evidence"] == "", "%s: a planned arm has no executed evidence" % name
+        assert arm["metric"] is None, "%s: a planned arm has no metric" % name
 
 
 def test_the_stack_arm_records_why_it_is_worth_running():
@@ -92,7 +123,7 @@ def test_the_withdrawn_kill_option_is_recorded_not_merely_dropped():
     assert "scope reduction" in arm["verdict_consequence"].lower()
 
 
-def test_the_seven_measured_arms_are_unchanged():
+def test_the_eight_measured_arms_are_unchanged():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     measured = {n: a["metric"] for n, a in arms.items()
@@ -102,20 +133,22 @@ def test_the_seven_measured_arms_are_unchanged():
         assert arms[name]["evidence"].strip(), f"{name} lost its evidence string"
 
 
-def test_the_arm_set_is_exactly_seven_measured_and_four_planned():
+def test_the_arm_set_is_exactly_eight_measured_and_three_planned():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     planned = {n for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
     assert planned == EXPECTED_PLANNED
+    # 11 total, unchanged: the arm moved between buckets, nothing was added or removed.
     assert len(arms) == 11
+    assert len(EXPECTED_PLANNED) + len(MEASURED) == 11
 
 
-def test_ceiling_verdict_is_blocked_untried_arm_naming_four():
+def test_ceiling_verdict_is_blocked_untried_arm_naming_three():
     ledger = _live_ledger()
     verdict = ledger.ceiling_verdict(_criterion(ledger))
     assert verdict.verdict == "blocked:untried-arm"
     assert set(verdict.planned) == EXPECTED_PLANNED
-    assert len(verdict.planned) == 4
+    assert len(verdict.planned) == 3
     assert not verdict.met
 
 
@@ -146,7 +179,8 @@ def test_kill_arm_still_refuses_without_evidence(sandbox):
     ledger = al.ArmsLedger(cwd=str(sandbox))
     crit = _criterion(ledger)
     with pytest.raises(al.ArmsError, match="evidence"):
-        ledger.kill_arm(crit, NEW_ARM, reason="not worth it", evidence="")
+        ledger.kill_arm(crit, "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
+                        reason="not worth it", evidence="")
 
 
 def test_killing_every_unrun_arm_would_change_the_verdict(sandbox):

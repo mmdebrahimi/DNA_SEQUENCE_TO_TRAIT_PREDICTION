@@ -137,9 +137,15 @@ consumes. Measured, there are **two** dependencies with **different** wall class
   number adds nothing (~730 discardable numbers per tile).** Not "thermodynamics doesn't help".
 - **The hybrid-primary bar (2026-10-17) is STILL UNEXECUTED** — a different frozen artifact, now
   substrate-unblocked. Running it needs its own pre-registered run, not a retrofit.
-- **The `orthogonal-modality-stack-promcalc-plus-N-channels` arm stays `planned`** in
-  `soraya_runs/arms-ledger.json` and that is still CORRECT per R6 — it is promcalc ⊕ N channels, which
-  `NO_GAIN` on the breakdown-vs-its-own-scalar does not settle. Ledger deliberately not edited.
+- **MEASURED 2026-10-26 — the `orthogonal-modality-stack-promcalc-plus-N-channels` arm RAN** and is
+  now `measured` in `soraya_runs/arms-ledger.json` at **0.4404**. Holding it `planned` through the
+  decomposition's `NO_GAIN` was correct per R6; it now has its OWN evidence. **`WEAK_STACK`:**
+  `decomposition`-as-third gains **+0.0145** over the 2-channel hybrid on **10/10 seeds, CI95
+  [0.0108, 0.0172] excluding zero** — short only of the INHERITED 0.02 margin, which is not revisited.
+  My pre-registered prediction (`NO_STACK` for both new combos) was **FALSIFIED**, and the
+  orthogonality argument is **backwards**: `decomposition` is the MOST redundant with the comparator
+  (+0.7812) and ADDS, while the less-redundant `gc` (+0.5508) SUBTRACTS (−0.0039, 4/10).
+  `wiki/glm_tile_stack_arm_2026-10-26.md`; ceiling still blocked by 3 `planned` siblings.
 - **The 12th expiry constraint cannot fire and needs retiring by hand.** It is `file-exists` on
   `D:/dna_decode_cache/promcalc/decomposition.csv.gz`; the data landed repo-local in `data/promcalc/`.
   Its own rationale named this case (the R9 pattern) — the stated limitation was the one that bit.

@@ -113,7 +113,12 @@ PREREGISTERED = {
                                      "control clean -- a weak differently-sourced scorer lifts with "
                                      "no learned component, so component standalone score is the "
                                      "wrong selection criterion",
-        "WEAK": "gain > 0 but below the margin or the seed count",
+        "WEAK": "gain > 0 AND >= min_seeds_winning seeds win, but below the margin -- a "
+                "REPRODUCIBLE gain that fell short of the effect-size bar",
+        "INDETERMINATE_GAIN_NOT_REPRODUCIBLE": "gain > 0 but FEWER than min_seeds_winning seeds "
+                                               "win -- a positive gain that did NOT reproduce, "
+                                               "which is neither a measured lift nor a measured "
+                                               "negative and must not be read as either",
         "NO_GAIN": "no positive paired gain -- being weak and differently-sourced is NOT sufficient, "
                    "and the hybrid arm's lift is better explained by the conv's CONTENT",
         "INDETERMINATE_CONTROL_ALSO_LIFTS": "the shuffled-gc control lifts too; the combine, not gc, "
@@ -177,11 +182,22 @@ def verdict(arms: dict, pre: dict = PREREGISTERED) -> tuple[str, str]:
                 f"max_tx+gc {p['median']:+.4f} over {pre['comparator']}, {p['wins']}/{p['n']} seeds, "
                 f"CI95 {p['ci95']} -- a weak differently-sourced scorer lifts with no learned "
                 f"component")
-    if p["median"] > 0:
+    # NARROWED pre-result (2026-10-26): the bar is unchanged -- this reuses the already-frozen
+    # min_seeds_winning and introduces no new threshold. The arm has never run (no wiki artifact),
+    # so this cannot be a retro-fit to a result; the sibling instance in glm_tile_hybrid_arm.py
+    # FIRED this conflation on real data before it was caught.
+    if p["median"] > 0 and p["wins"] >= pre["min_seeds_winning"]:
         return ("WEAK",
                 f"max_tx+gc {p['median']:+.4f} over {pre['comparator']}, {p['wins']}/{p['n']} seeds, "
-                f"CI95 {p['ci95']} -- positive but short of the {pre['margin']:+.2f} margin or the "
-                f"{pre['min_seeds_winning']}-seed bar")
+                f"CI95 {p['ci95']} -- REPRODUCIBLE ({p['wins']}/{p['n']} clears the "
+                f"{pre['min_seeds_winning']}-seed bar) but short of the {pre['margin']:+.2f} margin")
+    if p["median"] > 0:
+        return ("INDETERMINATE_GAIN_NOT_REPRODUCIBLE",
+                f"max_tx+gc {p['median']:+.4f} over {pre['comparator']}, only {p['wins']}/{p['n']} "
+                f"seeds, CI95 {p['ci95']} -- the gain is positive but did NOT reproduce: "
+                f"{p['wins']} of {p['n']} seeds win, against the {pre['min_seeds_winning']} the bar "
+                f"requires; this is neither a measured lift nor a measured negative and must not be "
+                f"read as either")
     return ("NO_GAIN",
             f"max_tx+gc {p['median']:+.4f} over {pre['comparator']}, {p['wins']}/{p['n']} seeds, "
             f"CI95 {p['ci95']} -- being weak and differently-sourced is NOT sufficient; the hybrid "

@@ -47,7 +47,7 @@
       "ceiling_for_a_sequence_model": 0.7928,
       "ceiling_field_note": "ceiling_for_a_sequence_model is the Spearman-Brown step-up of single_replicate_agreement, square-rooted: the published readout is the MEAN of two replicates and is more reliable than either alone. The first version of this census reported single_replicate_agreement AS the ceiling for the fragment rungs and so understated their headroom by ~0.33.",
       "largest_n_measured": 30000,
-      "size_lever": "UNDER-USED on this rung -- 30,000 of 321,123 rows (9.3%) is the largest N any measurement has used. The size lever here has never been pulled.",
+      "size_lever": "UNDER-USED on this rung -- 30,000 of 321,123 rows (9.3%) is the largest N any measurement has used. DISAGREEMENT, unresolved as of 2026-10-26 -- do NOT plan work on an 'unpulled lever' premise. This field asserted \"The size lever here has never been pulled.\" and that assertion is known-FALSE: the arm `fragment-rung-321k-rows-size-lever-LB-M9` in soraya_runs/arms-ledger.json is `measured` (resolved 2026-10-18, six days after this census was written, metric 0.185) and reports a ladder at 20k/150k with verdict DOES_NOT_GENERALISE against the pre-registered 0.05 bar. BUT its 20k/150k numbers have NO committed artifact -- the only per-run artifact is wiki/glm_genomewide_oracle_2026-10-07.json at n_train 24006 + n_test 5994 = 30,000, and the arm records that 2 of 4 planned replication runs were lost to a mid-run drive disconnect. So: the lever WAS pulled (do not re-plan it as untried), and the 150k figures are UNVERIFIABLE here (do not quote them as measured). largest_n_measured stays 30,000 because that is the largest N a committed artifact supports.",
       "best_measured_arm": {
         "name": "kmer4",
         "spearman": 0.1313,
@@ -72,7 +72,7 @@
       "ceiling_for_a_sequence_model": 0.8014,
       "ceiling_field_note": "ceiling_for_a_sequence_model is the Spearman-Brown step-up of single_replicate_agreement, square-rooted: the published readout is the MEAN of two replicates and is more reliable than either alone. The first version of this census reported single_replicate_agreement AS the ceiling for the fragment rungs and so understated their headroom by ~0.33.",
       "largest_n_measured": 30000,
-      "size_lever": "UNDER-USED on this rung -- 30,000 of 318,457 rows (9.4%) is the largest N any measurement has used. The size lever here has never been pulled.",
+      "size_lever": "UNDER-USED on this rung -- 30,000 of 318,457 rows (9.4%) is the largest N any measurement has used. DISAGREEMENT, unresolved as of 2026-10-26 -- do NOT plan work on an 'unpulled lever' premise. This field asserted \"The size lever here has never been pulled.\" and that assertion is known-FALSE: the arm `fragment-rung-321k-rows-size-lever-LB-M9` in soraya_runs/arms-ledger.json is `measured` (resolved 2026-10-18, six days after this census was written, metric 0.185) and reports a ladder at 20k/150k with verdict DOES_NOT_GENERALISE against the pre-registered 0.05 bar. BUT its 20k/150k numbers have NO committed artifact -- the only per-run artifact is wiki/glm_genomewide_oracle_2026-10-07.json at n_train 24006 + n_test 5994 = 30,000, and the arm records that 2 of 4 planned replication runs were lost to a mid-run drive disconnect. So: the lever WAS pulled (do not re-plan it as untried), and the 150k figures are UNVERIFIABLE here (do not quote them as measured). largest_n_measured stays 30,000 because that is the largest N a committed artifact supports.",
       "best_measured_arm": {
         "name": "kmer4",
         "spearman": 0.1313,
@@ -176,6 +176,18 @@
       "enforced_by": "dna_decode/eval/substrate_symmetry.py (check_symmetry) + tests/test_substrate_symmetry.py",
       "baseline_refusal": "wiki/substrate_symmetry_2026-10-13.json",
       "self_correction": "the first pass of THIS amendment wrote sigma70_designed largest_n_measured=None and size_lever=NOT_COMPUTABLE claiming \"no usable denominator is recorded here\". That was FALSE: the rung records 10,898 rows under designed_rows, usable_joined AND n_distinct_sequences. The validator also under-reported it, because ROW_COUNT_KEYS omitted those keys -- so a missing key read as \"no data\" rather than \"the list is incomplete\". Both fixed; the error class this module targets was reproduced inside the fix for it, and is recorded rather than quietly repaired."
+    }
+  ],
+  "corrections_2026_10_26": [
+    {
+      "field": "rungs.fragments_{LB,M9}.size_lever",
+      "was": "The size lever here has never been pulled.",
+      "now": "a recorded DISAGREEMENT naming both sources; largest_n_measured unchanged at 30,000",
+      "cause": "this census was written 2026-10-12; the arm that pulled the lever resolved 2026-10-18 and nothing wrote back. A filename date says when a document was WRITTEN, never whether it is still TRUE. Measured consequence: a session read this field, concluded the fragment rung was the highest-value untried lever, and drafted a plan on that premise before the arm's own ledger row refuted it.",
+      "why_not_resolved": "the two sources cannot be reconciled from this repo. The arm's 20k/150k figures have no committed artifact (searched every wiki/*.json plus a grep for 150000/150,000/150k, 3 hits all unrelated), and the arm records 2 of 4 replication runs lost to a drive disconnect. Picking either side would assert something unverifiable.",
+      "what_does_cross_check": "the arm's DIRECTION, independently. This census's own best_measured_arm records kmer4 spearman 0.1313 at 30,000 rows; the arm reports kmer4 rho 0.1466 at 20,000. More rows, lower spearman -- the same direction the arm's DOES_NOT_GENERALISE verdict concluded. The verdict is corroborated; only the specific 150k numbers are not.",
+      "evidence": "soraya_runs/arms-ledger.json + wiki/glm_genomewide_oracle_2026-10-07.json",
+      "enforced_by": "tests/test_mpra_census_claims.py (reads this live file)"
     }
   ]
 }

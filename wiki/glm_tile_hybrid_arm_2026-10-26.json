@@ -25,7 +25,25 @@
    "NO_GAIN": "no positive paired gain -- the learned encoder carries nothing orthogonal here",
    "INDETERMINATE_CONTROL_ALSO_LIFTS": "the shuffled-conv control lifts too; the combine, not the conv, is producing the number",
    "INDETERMINATE_RECONCILE_FAILED": "the prediction table's published anchors drift",
-   "INDETERMINATE_MISSING_SCORER": "conv or max_tx absent from the table"
+   "INDETERMINATE_MISSING_SCORER": "conv or max_tx absent from the table",
+   "INDETERMINATE_SHORT_ARM": "an arm scored fewer seeds than were loaded, so its median is taken over a different seed set than its comparator's and the two are not comparable"
+  },
+  "stacking": {
+   "question": "does a THIRD channel add over the MEASURED 2-channel hybrid, rather than over the scalar alone?",
+   "primary_metric": "spearman",
+   "comparator": "hybrid_conv_maxtx",
+   "margin": 0.02,
+   "min_seeds_winning": 8,
+   "mirrors": "the parent bar above (margin 0.02, 8 of 10 seeds), itself mirroring scripts/promcalc_decomposition_arm.py PREREGISTERED. Reused VERBATIM rather than derived, so the two 'does more information help?' results stay directly comparable; the inheritance is recorded as an inheritance, not as a derivation.",
+   "predicted_outcome": "decomposition-as-third is predicted to LOSE, and to lose by MORE than gc did. Measured pairwise orthogonality (10-seed median) puts decomposition <-> max_tx at +0.7812, against gc <-> max_tx's +0.5508, so decomposition is the MORE redundant of the two available third channels -- and gc-as-third already lost (0.4217 against the 2-channel's 0.4254). The expected verdict is therefore NO_STACK for both new combos.",
+   "negative_scope": "a negative closes THESE FOUR SCORERS on THIS rung, not stacking in general. conv and gc are both composition-family; max_tx and decomposition are both readings of the same Promoter Calculator output, max_tx being a scalar reduction of it. So the four span only TWO modality families, and a channel from a NEW family is untested here. A negative is evidence about the available channels, never about the mechanism.",
+   "verdicts": {
+    "STACKS": "paired median >= +0.02 over hybrid_conv_maxtx AND >= 8/10 seeds win",
+    "WEAK_STACK": "gain > 0 AND >= min_seeds_winning seeds win, but below the margin -- a REPRODUCIBLE gain that fell short of the effect-size bar",
+    "INDETERMINATE_GAIN_NOT_REPRODUCIBLE": "gain > 0 but FEWER than min_seeds_winning seeds win -- a positive gain that did NOT reproduce, which is neither a measured stack nor a measured negative and must not be read as either",
+    "NO_STACK": "no positive paired gain -- the third channel carries nothing the measured 2-channel hybrid lacks",
+    "INDETERMINATE_STACKING_NOT_MEASURED": "no superset combo produced a paired statistic -- a MISSING measurement, which must not be read as a negative one"
+   }
   }
  },
  "orthogonality": {
@@ -44,6 +62,110 @@
   "median": 0.3862,
   "min": 0.359,
   "max": 0.479
+ },
+ "orthogonality_matrix": {
+  "max_tx__decomposition": {
+   "per_seed": [
+    0.7891,
+    0.7972,
+    0.7673,
+    0.7913,
+    0.786,
+    0.7764,
+    0.7696,
+    0.7451,
+    0.7709,
+    0.8146
+   ],
+   "median": 0.7812,
+   "min": 0.7451,
+   "max": 0.8146
+  },
+  "gc__decomposition": {
+   "per_seed": [
+    0.6277,
+    0.6079,
+    0.5954,
+    0.6061,
+    0.6263,
+    0.6278,
+    0.6002,
+    0.5828,
+    0.5957,
+    0.602
+   ],
+   "median": 0.6041,
+   "min": 0.5828,
+   "max": 0.6278
+  },
+  "max_tx__gc": {
+   "per_seed": [
+    0.5502,
+    0.5754,
+    0.5493,
+    0.5556,
+    0.565,
+    0.5708,
+    0.5515,
+    0.5491,
+    0.5496,
+    0.5478
+   ],
+   "median": 0.5508,
+   "min": 0.5478,
+   "max": 0.5754
+  },
+  "conv__gc": {
+   "per_seed": [
+    0.4567,
+    0.4111,
+    0.4415,
+    0.4935,
+    0.462,
+    0.4672,
+    0.4961,
+    0.4498,
+    0.41,
+    0.6557
+   ],
+   "median": 0.4593,
+   "min": 0.41,
+   "max": 0.6557
+  },
+  "conv__decomposition": {
+   "per_seed": [
+    0.444,
+    0.4075,
+    0.4186,
+    0.4443,
+    0.4132,
+    0.4239,
+    0.4495,
+    0.395,
+    0.389,
+    0.544
+   ],
+   "median": 0.4213,
+   "min": 0.389,
+   "max": 0.544
+  },
+  "conv__max_tx": {
+   "per_seed": [
+    0.4065,
+    0.3865,
+    0.386,
+    0.4017,
+    0.3686,
+    0.3753,
+    0.3964,
+    0.3807,
+    0.359,
+    0.479
+   ],
+   "median": 0.3862,
+   "min": 0.359,
+   "max": 0.479
+  }
  },
  "arms": {
   "hybrid_conv_maxtx": {
@@ -76,6 +198,38 @@
     0.42,
     0.4441,
     0.3991
+   ]
+  },
+  "hybrid_conv_maxtx_decomp": {
+   "median": 0.4404,
+   "n": 10,
+   "per_seed": [
+    0.4444,
+    0.4585,
+    0.447,
+    0.4265,
+    0.4394,
+    0.4413,
+    0.4293,
+    0.428,
+    0.4598,
+    0.433
+   ]
+  },
+  "hybrid_conv_maxtx_gc_decomp": {
+   "median": 0.4383,
+   "n": 10,
+   "per_seed": [
+    0.4382,
+    0.4543,
+    0.4417,
+    0.4197,
+    0.4385,
+    0.4434,
+    0.4272,
+    0.4303,
+    0.4548,
+    0.4164
    ]
   },
   "max_tx": {
@@ -148,6 +302,61 @@
    "wins": 10,
    "n": 10
   },
+  "_paired_hybrid_conv_maxtx_decomp_vs_comparator": {
+   "mean": 0.0463,
+   "median": 0.0472,
+   "ci95": [
+    0.0404,
+    0.0522
+   ],
+   "includes_zero": false,
+   "wins": 10,
+   "n": 10
+  },
+  "_paired_hybrid_conv_maxtx_gc_decomp_vs_comparator": {
+   "mean": 0.0421,
+   "median": 0.0408,
+   "ci95": [
+    0.0374,
+    0.0467
+   ],
+   "includes_zero": false,
+   "wins": 10,
+   "n": 10
+  },
+  "_paired_hybrid_conv_maxtx_gc_vs_hybrid2": {
+   "mean": -0.0034,
+   "median": -0.0039,
+   "ci95": [
+    -0.0095,
+    0.0026
+   ],
+   "includes_zero": true,
+   "wins": 4,
+   "n": 10
+  },
+  "_paired_hybrid_conv_maxtx_decomp_vs_hybrid2": {
+   "mean": 0.014,
+   "median": 0.0145,
+   "ci95": [
+    0.0108,
+    0.0172
+   ],
+   "includes_zero": false,
+   "wins": 10,
+   "n": 10
+  },
+  "_paired_hybrid_conv_maxtx_gc_decomp_vs_hybrid2": {
+   "mean": 0.0097,
+   "median": 0.0103,
+   "ci95": [
+    0.0039,
+    0.0156
+   ],
+   "includes_zero": false,
+   "wins": 9,
+   "n": 10
+  },
   "_paired_control_vs_comparator": {
    "mean": -0.1231,
    "median": -0.1232,
@@ -173,10 +382,30 @@
  },
  "verdict": "HYBRID_ADDS",
  "verdict_detail": "hybrid +0.0339 over max_tx, 10/10 seeds, CI95 [0.0238, 0.0409]",
+ "stacking_verdict": "WEAK_STACK",
+ "stacking_verdict_detail": "hybrid_conv_maxtx_decomp [WEAK_STACK]: +0.0145 over hybrid_conv_maxtx, 10/10 seeds, CI95 [0.0108, 0.0172] -- REPRODUCIBLE (10/10 clears the 8-seed bar) but short of the +0.02 margin; hybrid_conv_maxtx_gc [NO_STACK]: -0.0039 over hybrid_conv_maxtx, 4/10 seeds, CI95 [-0.0095, 0.0026] -- this third channel carries nothing the measured 2-channel lacks; hybrid_conv_maxtx_gc_decomp [WEAK_STACK]: +0.0103 over hybrid_conv_maxtx, 9/10 seeds, CI95 [0.0039, 0.0156] -- REPRODUCIBLE (9/10 clears the 8-seed bar) but short of the +0.02 margin",
+ "stacking_per_combo": {
+  "hybrid_conv_maxtx_gc": {
+   "verdict": "NO_STACK",
+   "detail": "-0.0039 over hybrid_conv_maxtx, 4/10 seeds, CI95 [-0.0095, 0.0026] -- this third channel carries nothing the measured 2-channel lacks"
+  },
+  "hybrid_conv_maxtx_decomp": {
+   "verdict": "WEAK_STACK",
+   "detail": "+0.0145 over hybrid_conv_maxtx, 10/10 seeds, CI95 [0.0108, 0.0172] -- REPRODUCIBLE (10/10 clears the 8-seed bar) but short of the +0.02 margin"
+  },
+  "hybrid_conv_maxtx_gc_decomp": {
+   "verdict": "WEAK_STACK",
+   "detail": "+0.0103 over hybrid_conv_maxtx, 9/10 seeds, CI95 [0.0039, 0.0156] -- REPRODUCIBLE (9/10 clears the 8-seed bar) but short of the +0.02 margin"
+  }
+ },
  "honest_limits": [
   "The combine is label-free and parameter-free (a rank-average), so it RANKS and does not dose -- the same deployability class as the inverse cell.",
   "Both inputs are out-of-sample on each seed's held-out peaks, so no second-level leakage is introduced; but the pool is MEASURED peak tiles, not generator output.",
   "One rung, one experiment, one combine rule. A negative does not show that no learned representation can add here -- only that THIS encoder, rank-averaged with THIS scalar, does not.",
-  "`max_tx` and `conv` are both fitted by ridge on the same split, so their errors may be correlated through the split rather than through the biology."
+  "`max_tx` and `conv` are both fitted by ridge on the same split, so their errors may be correlated through the split rather than through the biology.",
+  "The STACKING question puts more than one superset combo against ONE pre-registered bar and the aggregate stacking verdict is the best of them. That is a multiple-comparison exposure: with k combos the chance one clears the margin by noise exceeds the bar's nominal rate, so read the per-combo block, not only the aggregate.",
+  "Orthogonality here is Spearman between PREDICTION vectors. Two scorers can be rank-correlated and still carry complementary error structure; a rank-average is only sensitive to the rank relationship, which is why this is the measure the arm uses -- it is not a general claim that the channels share information.",
+  "SCOPE on the direction finding, and it bounds what this arm showed: `max_tx` and `decomposition` are NOT two modalities, they are two readings of ONE Promoter Calculator output -- scripts/glm_tile_predictions.py passes the same decomposition dict to both `tile_features()` and `max_tx_scalar()`, the latter being a scalar REDUCTION of it (`log1p(max Tx_rate)`). So their +0.7812 redundancy is mechanically expected, and the pair that is most redundant while still stacking is a REDUCTION/SUPERSET pair. Pairwise prediction-vector Spearman is refuted as a screen ACROSS THAT PAIR; it is NOT shown invalid between genuinely different modality families, which remain untested here. Read the result as 'finer-grained access to a channel already present pays', not as 'a new kind of information pays'.",
+  "The CI is a normal approximation on the MEAN with z=1.96, while every point estimate reported beside it is the MEDIAN -- two different estimands -- and at n=10 the correct critical value is t(9)=2.262, so these intervals are ~15% narrower than their nominal level. RE-DERIVED under t and the conclusion SURVIVES on all three combos (decomposition [0.0103, 0.0177] and gc+decomposition [0.0030, 0.0165] still exclude zero; gc still includes it), with sign tests corroborating independently (p=0.00098 / 0.0107 / 0.828). Nothing published here is wrong. It is NOT fixed because `paired()` lives in promcalc_decomposition_arm and is SHARED with the published parent arm, so correcting it moves parent numbers and needs its own pre-registration."
  ]
 }

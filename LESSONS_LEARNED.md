@@ -2,6 +2,92 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27
+
+- **A red rail is a question, and sometimes the answer IS to re-pin it.** The standing rule — a guard
+  red because its subject legitimately changed is record-and-escalate, never a rewrite — stopped two
+  runs from touching six rails, correctly, because an executor cannot ratify a change to the guard
+  structure. Once authorised, the test of a legitimate re-pin is not "does it go green": it is
+  **which invariant survives**. Here two got STRONGER (an `evidence == ""` assertion moved from one
+  arm to all planned arms; a prose rail went from one claim to both halves of the record). A re-pin
+  that only relaxes assertions is the rewrite-away the rule forbids.
+- **Mutation-prove a re-pinned guard, or it reads as protection and provides none.** Three mutations
+  over the LIVE ledger, each restored byte-identically: the metric restatement, the status demotion,
+  and a wall classification parked in a planned arm's `evidence`. The third is the one worth the
+  trouble — it is exactly what the previous run nearly did, so the new generalised assertion is not
+  hypothetical hygiene.
+- **"Measured, not estimated" labels the METHOD, not the SCOPE — and a wrong scope is invisible
+  underneath it.** `encoder.py` asserted a substrate ceiling flagged `(measured, not estimated)`. The
+  measurement was real and the scope was wrong: it had measured one FILE and written the ACCESSION.
+  Third instance of the forgotten-substrate error, and the loudest, because the confidence marker is
+  what makes a reader stop checking.
+- **Ask whether the wall is PHYSICS, DATA, or COMPUTE before asking who should run it.** Two arms sat
+  under one label, `blocked on data acquisition`. One is blocked by ASSAY PHYSICS (nothing measures
+  expression on 10 kb elements, so no download and no GPU helps); the other is not blocked at all —
+  its data is a public Zenodo deposit. A single "expensive/blocked" tier merged an impossibility with
+  a download, and that merge is why the ambitious lane stalled for two runs.
+- **A GPU cannot fix a missing dataset — that is the whole answer to "why not run it on the other
+  machine".** A second machine buys COMPUTE. It buys nothing where the binding constraint is which
+  sequences exist, but it IS the right home for the arms that are genuinely compute-bound, so the
+  question is worth re-asking per arm rather than answered once for all of them.
+
+## 2026-10-26
+
+- **Fix a defect in the instance where fixing it is free, and say which instance that is.** The same
+  verdict collapse existed in four call sites. One had FIRED on published data (fixed earlier, and
+  only legitimately because the narrowing added no threshold and was proven outcome-neutral); two
+  were published but latent-not-firing, so touching them is post-result risk for no measured gain;
+  one had never run. Only the fourth is free, and the window closes the moment it runs. Enumerate the
+  class and its PER-INSTANCE state before fixing any of it — the right action differed for all three
+  states, and "fix the pattern everywhere" would have been wrong in two of them.
+- **Check the denominator of your own scope claim.** The FUTURE_FEATURES entry sized the candidate set
+  with `grep -rl '"verdicts"'` → 11 scripts, and concluded "the remaining ten are unaudited". But this
+  defect needs a SEED-COUNT bar to conflate with a margin, and only **3** scripts have one. The grep
+  measured "modules with a frozen vocabulary", not "modules that can carry this defect" — a real
+  measurement answering a neighbouring question, which is the most convincing kind of wrong number.
+- **A filename date says when a document was written, never whether it is still true.** A census dated
+  2026-10-12 asserted a lever had never been pulled; the arm that pulled it resolved 2026-10-18. I
+  read the census, believed it, and recommended work on the unpulled-lever premise. The cheap habit:
+  when a registry makes a claim you are about to act on, diff its date against the ledger row for the
+  same subject.
+- **When two registries disagree and neither is adoptable, record the disagreement.** The arm's 150k
+  figures have no committed artifact; the only artifact agrees with the census. Writing either number
+  in would have converted a visible contradiction into an invisible unsourced number. What DID
+  survive is the direction: the census's own kmer4 at 30k (0.1313) is lower than the arm's at 20k
+  (0.1466), independently corroborating the arm's verdict while leaving its figures unverified.
+- **Put the correction on the surface that is already read, not only in the file that was wrong.** The
+  census now states the disagreement, but nothing would have changed for the next session: the block
+  it actually runs printed `under-used:9.3%` and nothing else. The fix had to land in
+  `project_status.py`. And make such a warning DATA-DRIVEN so it retires itself — a hardcoded list
+  keeps asserting a wall after the wall is gone, which is the failure R9 exists for.
+- **"I searched for the code" is not "I searched".** I wanted the definition behind a census field,
+  grepped for the computing code, found none, and wrote that the measurement was unreproducible. It
+  was recoverable two other ways: the arithmetic (`log10(499/3) = 2.22` reproduces the field exactly,
+  and `log10(150/3) = 1.70` reproduces a sibling arm's own name), and a neighbouring key in the same
+  file that stated the conclusion outright. That key also carries the generalisation *"a substrate
+  blocker is a claim about what you looked for"* — so I invoked the rail while not having looked.
+- **An arm with no recorded reason is a wall that gets re-derived every run.** Three `planned` arms
+  had empty `evidence` and no `rationale`, so `blocked:untried-arm` could name them but never say
+  why, and consecutive `--advance` runs each re-read one undifferentiated wall. Classifying them took
+  one session and turned "three expensive things" into one actionable arm plus two acquisition
+  decisions. Resist putting that reason in `evidence`: that field means EXECUTED evidence, and a
+  substrate fact is not executed evidence of the arm.
+
+
+- **A verdict vocabulary that cannot separate a REPRODUCIBLE gain from POSITIVE NOISE is the same defect class as one that cannot separate a MISSING measurement from a NEGATIVE one — and in `stacking_verdict_for` the second was guarded while the first was not, in the same function.** `INDETERMINATE_STACKING_NOT_MEASURED` exists precisely so an absent statistic cannot read as a refutation; four lines away, `WEAK_STACK` fired on `median > 0` alone, so a gain on 10 of 10 seeds with a CI excluding zero and noise on 4 of 10 with a CI spanning zero returned the same string. The prose detail carried the difference; the machine-readable field could not. **Reusable: when you add a refusal state for one kind of ambiguity, sweep the sibling branches of the same function for the same ambiguity — the author who saw it once is the person least likely to see it twice.**
+- **When the defect is in the PRE-REGISTRATION rather than the code, fixing it means editing a frozen bar after the result — and the only thing that separates that from a retro-fit is a CHECKABLE neutrality claim plus no new number.** Here: the narrowed condition reused the already-frozen `min_seeds_winning` (so no post-hoc threshold was invented), and neutrality was proven by diffing the regenerated artifact against a pre-change copy — every measured verdict unchanged, the whole `arms` block byte-identical — with the pre-commitment that a moved verdict meant reverting the edit, not defending it. **Reusable: "this change is outcome-neutral" is a measurement, not an argument; capture the artifact BEFORE the edit so the claim can be tested at all.**
+- **`grep -c $'\r'` under MSYS / Git Bash is NOT a CRLF detector: it reported 0 on a file carrying 407 CRLF endings.** On the strength of that reading I told the user a plan premise was wrong, then had to retract it — the plan was right and the measurement was the error. Byte-level counting (`read_bytes().count(b"\r\n")`) gave the true answer, and `core.autocrlf=true` here means git legitimately stores these artifacts LF and checks them out CRLF, so "no CRLF in the worktree" was never the right invariant either. The invariant that survives is *the style did not change and the diff is additive rather than a whole-file reformat*. **Reusable: every EOL check in this repo that rests on that grep is vacuous; verify line endings in bytes, and state the invariant as "unchanged + additive diff", not "no CRLF".**
+- **A baseline launched in the background and left running while the tree is edited is not a baseline.** The full-suite run started before step 1 and finished 9m33s later, after three source edits — so pytest may have imported either version and the result is a reference point for nothing. The recorded lesson [[feedback_wait_for_the_baseline_before_mutating_the_tree]] existed and was still walked into, because backgrounding felt like it bought parallelism for free. **Reusable: either wait for the baseline, or judge regressions on the failure SET rather than counts — a set comparison survives a straddled baseline, a count does not.**
+- **Two files edited in one step can disagree about line endings, and assuming a repo-wide convention is how a real edit gets buried under a whole-file EOL diff.** In one step `TODOS.md` was CRLF (275) and `project_state/glm-umbrella-2026-10-07.md` was LF (214). A first draft asserted both were LF and died on the first — the good outcome. **Reusable: measure EOL per file at the point of writing, and keep the assertion in the patch script so the failure is loud rather than a silent rewrite.**
+- **A test that pins "this must stay X" is a RAIL, and when the project legitimately moves to Y the rail's own existence is the signal to stop and get authority — not to rewrite it so the suite goes green.** Six tests (`tests/test_arms_ledger_stack_arm.py` ×4, `tests/test_tile_chain_next_md_record.py` ×2) are red in the working tree because an earlier step of this same arc moved the stack arm `planned` → `measured`; their docstrings say they exist so *"a later reader does not tidy the ledger by demoting a substrate-blocked arm"*. The transition is defensible under R6 (the arm left `planned` by naming its own executed evidence), and updating a guard on the project's own evidence structure is still not executor work. **Reusable: a red rail is a question addressed to you; answer it in the record and leave the rail alone.**
+- **A subset test run cannot support a "0 regressions" claim, and reporting one from 135 passing tests is how six failures stayed invisible for a day.** The prior run updated one of three guard files that pinned the arm as `planned`, ran the files it had touched, and reported no regressions; the full suite found the other two. **Reusable: scope every regression claim to what was actually run, in the same sentence as the number.**
+
+- **Pairwise correlation between two scorers' PREDICTION VECTORS does not order channels by whether they STACK — and the direction was backwards, not merely weak.** On the tile rung the channel *most* rank-correlated with the comparator (`decomposition` <-> `max_tx` **+0.7812**) is the one that ADDS (+0.0145 over the 2-channel hybrid, 10/10 seeds, CI95 [0.0108, 0.0172] excluding zero), while the markedly *less* correlated `gc` (+0.5508 with `max_tx`, +0.4593 with `conv`) SUBTRACTS (-0.0039, 4/10, CI includes zero). The published premise a rank-average needs ORTHOGONAL inputs survives only in its measured form — *a near-chance second modality reduces the signal* — and does **not** generalise to "pick the least-correlated channel". **Reusable: an orthogonality number is a description of a pair, not a screen for a combine; if a screen is to be used as a screen, it has to be validated against the outcome it is screening for.**
+- **I declined a run on exactly the reasoning the script's own rule forbids, and the rule was right.** `PREREGISTERED["precondition"]` carries `not_a_gate` — *"the orthogonality number is REPORTED, not used to skip the run -- a prediction that a combine will fail is not a substitute for measuring it"* — pinned by `test_the_precondition_is_reported_not_used_as_a_gate`. The decline would have left the record saying *no third channel exists in these four scorers*; the measurement says one does. **Reusable: when a rule you wrote forbids the shortcut you are about to take, the rule is the cheaper half of the argument — measure.**
+- **A deterministic re-run cannot corroborate the METHOD it re-runs; it verifies the SUBSTRATE.** The conv is seeded end to end (`encoder.py:354`/`:361`/`:334`, threaded from the per-seed loop at `glm_tile_predictions.py:390`), so once the rebuilt substrate matched, a 4-decimal agreement was guaranteed — an agreement true by construction cannot be evidence for the thing it is offered for, the same class as a filter that removes nothing presented as a control. **What the rebuild DOES license is every downstream number computed off the regenerated table (the original promcalc toolchain pin is unrecoverable), which is the non-trivial half. Reusable: before calling a re-run a reproduction, name what could have come out differently.**
+- **Freezing the PREDICTED OUTCOME beside the bar is what turns a wrong intuition into a result instead of a quiet correction.** The prediction (`NO_STACK` for both new combos, with its reasoning) was recorded in the artifact before the run, so its falsification is itself the finding and is legible to a later reader. The bar it was frozen against (margin 0.02, inherited verbatim) was **not** relaxed afterwards, which is the other half of the same discipline: a signal landing at +0.0145 against a 0.02 margin is a reason for a NEW bar on a NEW question, never a reason to move the old one.
+- **A statistic that answers a NEIGHBOURING question reads as answering yours.** The artifact already carried `_paired_hybrid3_vs_comparator` (+0.0302) — the 3-channel against the **scalar** — and nothing in it was wrong; it simply never asked whether the 3-channel beats the **2-channel hybrid**, which is the stacking question and comes out at -0.0039 for `gc`. **Reusable: write the comparator into the statistic's NAME, and when the incumbent moves, add the statistic against the incumbent rather than re-reading the old one.**
+
 ## 2026-10-23
 
 - **A decomposition losing to its own scalar reduction is a claim about the REPRESENTATION, not about the mechanism — and collapsing the two is the project's recorded cardinal error.** The promcalc arm returned `NO_GAIN`: 9 dG components over 55 features score 0.3925 against 0.3968 for the single `max_tx` scalar reduced from the same table (paired −0.0043, 2/10 seeds). But **both beat the GC baseline by ~+0.08 with a paired CI excluding zero, 10/10 seeds** — so promoter thermodynamics is *informative over composition*, and what adds nothing is the nine-part breakdown over one number (~730 discardable numbers per tile). Summarised as "thermodynamics doesn't help" it would foreclose a live mechanism, which is orientation error #0's shape on a new arm. **Reusable: when an elaborate representation ties its own reduction, report the comparison against the NAIVE baseline in the same breath, or the negative reads one level too broad.**

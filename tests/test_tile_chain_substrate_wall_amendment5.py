@@ -157,19 +157,45 @@ def test_the_verdict_carries_the_clause_that_stops_it_being_over_read():
     assert "+0.0802" in dn and "+0.0865" in dn, "carry both GC margins or the rebuttal is bare"
 
 
-def test_the_arm_is_RUNNABLE_but_still_blocks_the_ceiling_criterion():
-    """THE load-bearing test. Amendment 5 removes this arm's DATA blocker; R6 says only
-    the arm's own executed evidence can retire it. So after amendment 5 the arm must
-    still be `planned`, carry no metric, and `blocking()` must still name the criterion.
-    If this ever fails, a sibling question's negative verdict has been allowed to settle
-    a ceiling it never measured -- the exact 2026-07-09 defect the rail exists to prevent."""
+def test_the_arm_RESOLVED_BY_ITS_OWN_RUN_and_the_ceiling_is_STILL_blocked():
+    """THE load-bearing test, updated 2026-10-26 when the arm was actually run.
+
+    It previously pinned `status == "planned"` / `metric is None` / `evidence == ""`, which was the
+    correct guard while the arm was UNRUN: it stopped a SIBLING question's NO_GAIN verdict from
+    retiring an arm that had measured nothing (R6 -- an arm dies only by its OWN executed evidence,
+    the 2026-07-09 defect this rail exists to prevent).
+
+    The arm has now been run (`wiki/glm_tile_stack_arm_2026-10-26.md`), so those three assertions
+    would pin the OPPOSITE failure -- hiding executed evidence. The rail is kept in a stronger form:
+    the arm may only leave `planned` by naming its own artifact, and `blocking()` must STILL name the
+    criterion, now through the remaining `planned` siblings.
+    """
     arm = json.loads(ARMS.read_text(encoding="utf-8"))["criteria"][CEILING][ARM]
-    assert arm["status"] == "planned"
-    assert arm["metric"] is None
-    assert arm["evidence"] == ""
+
+    # R6, enforced at the seam that matters: it left `planned` only with its OWN evidence
+    assert arm["status"] == "measured"
+    assert arm["metric"] is not None
+    assert "glm_tile_stack_arm_2026-10-26" in arm["evidence"], (
+        "the arm resolved without naming the artifact that resolved it")
+    assert arm["resolved_at"], "a resolved arm with no resolved_at is not auditable"
+
+    # the verdict is recorded honestly -- it did NOT clear the bar
+    v = arm["verdict_2026_10_26"]
+    assert "WEAK_STACK" in v
+    assert "did not clear the bar" in v
+
+    # the 2026-10-23 note is SUPERSEDED, not rewritten -- the memo's own convention
     note = arm["substrate_status_2026_10_23"]
-    assert "RUNNABLE, NOT RUN" in note
-    assert "retires nothing" in note
+    assert "RUNNABLE, NOT RUN" in note, "the superseded note was edited rather than left in place"
+
+    # the untested form is recorded as a GAP, and deliberately not declared as a new arm
+    assert "NEW modality family" in arm["narrowed_successor_NOT_declared_as_an_arm"]
+
+    # and the ceiling is still blocked -- by siblings, verified rather than asserted
+    crit = json.loads(ARMS.read_text(encoding="utf-8"))["criteria"][CEILING]
+    planned = [k for k, a in crit.items() if a.get("status") == "planned"]
+    assert planned, "no `planned` arm remains, so the ceiling would read as settled"
+    assert ARM not in planned
 
     sys.path.insert(0, str(Path.home() / ".claude" / "skills" / "soraya" / "scripts"))
     try:
@@ -179,6 +205,20 @@ def test_the_arm_is_RUNNABLE_but_still_blocks_the_ceiling_criterion():
     blocked = arms_ledger.ArmsLedger(REPO).blocking()
     assert any(CEILING in str(b) for b in blocked), (
         f"blocking() no longer names the ceiling criterion; got {blocked!r}")
+
+
+def test_the_raw_JSON_edit_PRESERVED_every_unmodelled_key_on_the_arm():
+    """`Arm.to_dict()` models five fields; this arm carries eleven. A `ArmsLedger.save()`
+    round-trip would have silently dropped six, so the Step-7 edit was raw JSON -- and that
+    choice is only safe if the preservation is checked."""
+    arm = json.loads(ARMS.read_text(encoding="utf-8"))["criteria"][CEILING][ARM]
+    for key in ("name", "cost_tier", "status", "metric", "evidence", "declared_at", "resolved_at",
+                "rationale", "kill_option_withdrawn", "verdict_consequence",
+                "substrate_status_2026_10_23"):
+        assert key in arm, f"raw-JSON edit dropped {key}"
+    # the three fields a to_dict() round-trip would NOT model, still carrying their text
+    assert "WITHDRAWN" in arm["kill_option_withdrawn"]
+    assert "blocked:untried-arm" in arm["verdict_consequence"]
 
 
 def test_superseded_statements_are_RECORDED_not_rewritten():

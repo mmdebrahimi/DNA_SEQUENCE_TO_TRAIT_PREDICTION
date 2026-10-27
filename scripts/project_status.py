@@ -202,6 +202,24 @@ def _print_substrate_block() -> None:
             for i, line in enumerate(textwrap.wrap(head, 104)):
                 print(f"    {line}" if i == 0 else f"      {line}")
             print(f"    A field on SOME rungs reads as a statement about ALL of them.")
+        # A rung whose size_lever records an unresolved DISAGREEMENT must say so HERE, because this
+        # is the surface CLAUDE.md tells every session to run before making any scope claim, and the
+        # utilization cell alone ("under-used:9.3%") reads as an invitation to pull an untried lever.
+        # MEASURED 2026-10-26: a session read exactly that cell, concluded the fragment rung was the
+        # highest-value untried move, and drafted a plan before the arm's ledger row refuted it.
+        # DATA-DRIVEN on purpose -- resolve the disagreement in the census and this line retires
+        # itself, with no code change and nothing left asserting a wall that is gone.
+        disputed = [n for n in sorted(rungs)
+                    if "DISAGREEMENT" in str(census.get(n, {}).get("size_lever", ""))]
+        if disputed:
+            msg = (f"WARNING - size-lever DISAGREEMENT on {', '.join(disputed)}: the utilization "
+                   f"cell above is the largest N a COMMITTED ARTIFACT supports, and a later arm "
+                   f"reports pulling the lever further with no artifact on disk. So do NOT re-plan "
+                   f"this rung as an untried lever, and do NOT quote the larger N as measured. Full "
+                   f"record: the rung's own `size_lever` field + `corrections_2026_10_26` in "
+                   f"{_CENSUS.name}.")
+            for i, line in enumerate(textwrap.wrap(msg, 104)):
+                print(f"    {line}" if i == 0 else f"      {line}")
         for w in rep["ceiling_warnings"]:
             for i, line in enumerate(textwrap.wrap(f"WARNING - {w}", 104)):
                 print(f"    {line}" if i == 0 else f"      {line}")
