@@ -629,6 +629,13 @@ def main(argv=None) -> int:
         print("REFUSED: %s" % exc, file=sys.stderr)
         return 3
 
+    # WRITE BEFORE FORMATTING. A completed run must survive a summary bug: a ~11 minute run was
+    # lost on 2026-10-27 because the printer raised KeyError before this line was reached.
+    if a.out:
+        Path(a.out).write_text(json.dumps(res, indent=2) + "\n", encoding="utf-8")
+        print("wrote %s  (persisted BEFORE the summary, so a print bug cannot discard the run)"
+              % a.out)
+
     base = [r["kmer4_spearman"] for r in res["baseline_rows"]]
     print("arm: %s" % ARM)
     print("  substrate: n=%d, %d-%d bp, %d genomic blocks, %d in the length-matched subset"
@@ -644,19 +651,27 @@ def main(argv=None) -> int:
     print("  comparator kmer4 spearman over %d seeds: median %.4f  min %.4f  max %.4f"
           % (len(base), statistics.median(base), min(base), max(base)))
     if res.get("paired"):
-        h, p = res["headline"], res["paired"]
-        print("  pyramid median %.4f vs kmer4 %.4f -> delta %+.4f, %d/%d seeds, CI95 %s"
-              % (h["pyramid_median"], h["kmer4_median"], p["median"], p["wins"], p["n"],
-                 p["ci95"]))
-        print("  null (shuffled train): %+.4f"
-              % res["null"]["median"])
+        p = res["paired"]
+        # `headline` is absent on a PARTIAL_SEED_RANGE result, which carries paired + null and NO
+        # verdict on purpose. Reading it unconditionally is what crashed the first real smoke.
+        h = res.get("headline")
+        if h:
+            print("  pyramid median %.4f vs kmer4 %.4f -> delta %+.4f, %d/%d seeds, CI95 %s"
+                  % (h["pyramid_median"], h["kmer4_median"], p["median"], p["wins"], p["n"],
+                     p["ci95"]))
+        else:
+            print("  paired delta %+.4f, %d/%d seeds, CI95 %s"
+                  % (p["median"], p["wins"], p["n"], p["ci95"]))
+    if res.get("null"):
+        n = res["null"]
+        print("  null (shuffled train) median %+.4f  sd %s  per-seed %s"
+              % (n["median"], n.get("sd"), n.get("per_seed")))
+    if res.get("verdict"):
         print("  VERDICT: %s" % res["verdict"])
         print("    %s" % res["verdict_detail"])
     print("  STATUS: %s" % res["status"])
-
-    if a.out:
-        Path(a.out).write_text(json.dumps(res, indent=2) + "\n", encoding="utf-8")
-        print("  wrote %s" % a.out)
+    if res.get("status") == "PARTIAL_SEED_RANGE":
+        print("    (no verdict BY DESIGN -- %s)" % res["status_note"][:150])
     return 0
 
 

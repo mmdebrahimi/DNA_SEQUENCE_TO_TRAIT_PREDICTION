@@ -152,7 +152,40 @@ def run_arm(tag, extra, device):
     return d, dt
 
 
+def on_kaggle() -> bool:
+    """Is this actually a Kaggle notebook? Checked because the failure mode is SILENT.
+
+    `Path("/kaggle/working")` is an ABSOLUTE POSIX path, and on Windows an absolute path with no
+    drive resolves against the current drive -- so off-platform it becomes `C:\\kaggle\\working` and
+    every write SUCCEEDS. Measured 2026-10-27: run on the project laptop this kernel created
+    `C:\\kaggle\\working`, cloned the repo into it, downloaded 91 MB of GEO data and printed
+    `substrate verified`, looking exactly like a Kaggle run until the arm died on a missing `scipy`.
+
+    It must refuse rather than half-run: a kernel that appears to work off-platform invites the
+    conclusion that it HAS been tested on Kaggle when it has not. (The 91 MB download was in fact
+    useful that day, but usefulness by accident is not a reason to leave the trap open.)
+    """
+    return bool(os.environ.get("KAGGLE_KERNEL_RUN_TYPE")) or Path("/kaggle/input").exists()
+
+
 def main():
+    if not on_kaggle() and "--allow-non-kaggle" not in sys.argv:
+        print("REFUSING: this is a Kaggle kernel and this host is not Kaggle.\n"
+              "  `/kaggle/working` is an absolute POSIX path; off-platform on Windows it silently\n"
+              "  resolves against the current drive (C:\\kaggle\\working) and every write succeeds,\n"
+              "  so the kernel half-runs and LOOKS like a Kaggle job.\n"
+              "  Two further reasons a local run cannot be trusted even when it appears to work:\n"
+              "    * it shells out via sys.executable, which here is whatever python invoked it --\n"
+              "      not necessarily the project venv that holds torch/scipy;\n"
+              "    * there is no GPU contract off-platform, so a 'successful' run may be CPU-only\n"
+              "      and silently hours slower.\n"
+              "  Run it in a Kaggle notebook (Accelerator GPU T4 x1, Internet ON). To exercise the\n"
+              "  arm locally instead, call it directly with the project venv:\n"
+              "    uv run python scripts/glm_fragment_pyramid_arm.py --cache-dir <dir> \\\n"
+              "        --limit 4000 --seeds 3 --with-encoder\n"
+              "  Pass --allow-non-kaggle to override deliberately.", file=sys.stderr)
+        return 2
+
     print("=" * 90, flush=True)
     device = device_report()
     print("=" * 90, flush=True)
