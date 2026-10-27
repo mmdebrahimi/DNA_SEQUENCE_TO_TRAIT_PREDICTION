@@ -173,3 +173,86 @@ def test_the_model_refuses_a_duplicate_or_empty_width_set():
         build_masked_pyramid((3, 3, 12))
     with pytest.raises(EncoderDataError, match="no kernel widths"):
         build_masked_pyramid(())
+
+
+# ------------------------------------------------------------------ the batched codec
+
+def test_the_batched_codec_is_EQUIVALENT_to_the_whole_array_one_hot():
+    """THE codec contract. It exists only to avoid a 2.56 GB allocation, not to behave differently.
+
+    321,123 x 4 x 499 float32 is 2.56 GB, which does not fit a 4 GiB card. Codes are 160 MB and
+    expand per batch -- but only if the expansion matches. Ragged lengths on purpose.
+    """
+    import numpy as np
+
+    from dna_decode.glm.masked_pyramid import codes_to_onehot, encode_codes
+
+    seqs = ["ACGT" * 7, "TTTT", "GCGCGCGCGC", "ACGTN" * 3, "A"]
+    direct = one_hot_padded(seqs, 40)
+    batched = codes_to_onehot(encode_codes(seqs, 40))
+    assert direct.shape == batched.shape == (5, 4, 40)
+    assert np.array_equal(direct, batched), "the batched codec diverged from one_hot_padded"
+
+
+def test_an_N_and_a_PAD_both_encode_to_the_same_all_zero_column():
+    """The pad must carry no new semantics; all-zero already means 'no evidence' in this project."""
+    import numpy as np
+
+    from dna_decode.glm.masked_pyramid import PAD_CODE, codes_to_onehot, encode_codes
+
+    codes = encode_codes(["ACGTNN"], 8)
+    assert codes[0, 4] == PAD_CODE, "an N must take the pad code"
+    assert codes[0, 6] == PAD_CODE, "a padded position must take the pad code"
+    oh = codes_to_onehot(codes)
+    assert oh[0, :, 4].sum() == 0.0 and oh[0, :, 6].sum() == 0.0
+    assert np.array_equal(oh[0, :, 4], oh[0, :, 6])
+
+
+def test_encode_codes_refuses_to_truncate():
+    from dna_decode.glm.masked_pyramid import encode_codes
+
+    with pytest.raises(EncoderDataError, match="discard measured sequence"):
+        encode_codes(["A" * 600], 499)
+
+
+def test_encode_codes_refuses_an_empty_batch():
+    from dna_decode.glm.masked_pyramid import encode_codes
+
+    with pytest.raises(EncoderDataError):
+        encode_codes([], 10)
+
+
+def test_codes_to_onehot_refuses_a_wrong_rank_array():
+    import numpy as np
+
+    from dna_decode.glm.masked_pyramid import codes_to_onehot
+
+    with pytest.raises(EncoderDataError, match=r"\(B, L\) codes"):
+        codes_to_onehot(np.zeros(10, dtype="uint8"))
+
+
+def test_pad_invariance_SURVIVES_the_batched_path():
+    """The identity is re-checked THROUGH the codec, not inherited from the direct path."""
+    from dna_decode.glm.masked_pyramid import codes_to_onehot, encode_codes
+
+    torch.manual_seed(0)
+    model = build_masked_pyramid(PYRAMID_WIDTHS, channels=4)
+    model.eval()
+    seqs = ["ACGT" * 50, "ACGTT" * 40, "GGCCAA" * 30]
+    lens = [len(s) for s in seqs]
+    with torch.no_grad():
+        a = model(torch.from_numpy(codes_to_onehot(encode_codes(seqs, 499))), lens)
+        b = model(torch.from_numpy(codes_to_onehot(encode_codes(seqs, 620))), lens)
+    assert torch.allclose(a, b, atol=1e-6)
+
+
+def test_the_codes_representation_is_the_size_that_motivated_it():
+    """Arithmetic, so the 2.56 GB claim in the module docstring is checkable rather than asserted."""
+    from dna_decode.glm.masked_pyramid import encode_codes
+
+    n, L = 1000, 499
+    codes = encode_codes(["ACGT" * 60] * n, L)
+    assert codes.dtype.itemsize == 1, "codes must be one byte per base"
+    assert codes.nbytes == n * L
+    onehot_bytes = n * 4 * L * 4
+    assert onehot_bytes == codes.nbytes * 16, "one-hot is 16x the codes; that is the whole point"

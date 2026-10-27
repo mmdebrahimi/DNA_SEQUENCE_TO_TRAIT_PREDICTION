@@ -2,6 +2,36 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (e)
+
+- **A validity control can itself be invalid, and a single draw cannot test a wide null.** My
+  shuffled-label null used one seed against an asserted |rho| < 0.05. The null's own sd is 0.1016, so
+  that bar fails 3 of 5 times on a correct pipeline — it produced a FALSE "nothing may be graded".
+  Derive a null's bar from the null's measured spread, and put the bar on a median over the same
+  seeds the arm uses.
+- **Permute the whole TRAIN SIDE, not the train SUBSET.** An inner validation split is carved out of
+  train, so leaving its labels real lets early stopping select on true signal under a null that
+  claims to have destroyed it. "Train labels only" includes every row the fitting procedure sees.
+- **When a null scores, ask what an UNTRAINED model would carry.** Early stopping trips immediately
+  under a permuted null, so the model sits near initialisation — a random linear functional of base
+  composition. Composition predicts this rung at |0.1169|, the same magnitude as the comparator
+  itself, which fully explains a +/-0.13 null. The diagnosis came from measuring
+  spearman(GC, y) and spearman(length, y), not from reading the training loop again.
+- **Check the obvious confound before the interesting one.** Variable length was the suspect; it
+  measured +0.0117 and was exonerated in one command. Composition was the actual cause. Two cheap
+  correlations ordered the whole diagnosis.
+- **A smoke whose noise floor equals its effect is not a weak result, it is no result.** Null sd
+  0.1016 against a delta of +0.1109 at N=4,000 means the number is uninterpretable; quoting it would
+  have been the worst outcome of the run. Scale is what makes the test exist, not what makes it
+  stronger.
+- **Assert every anchored replacement.** A bare `.replace()` that misses writes nothing and raises
+  nothing, and the file still parses — so the edit is simply absent. Mine was `parse_args()` vs
+  `parse_args(argv)`, and the symptom appeared only as an "unrecognized arguments" error one step
+  later.
+- **Read a config key back rather than trusting where you put it.** A key added next to a nested
+  entry lands nested. Second instance in one file; both times the lookup was written top-level and
+  both times the failure surfaced as a KeyError at run time rather than at edit time.
+
 ## 2026-10-27 (d)
 
 - **"All N remaining failures are absent data" is a claim worth re-testing, not inheriting.** Two of

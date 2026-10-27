@@ -37,6 +37,9 @@ from __future__ import annotations
 from .encoder import BASES, PYRAMID_WIDTHS, EncoderDataError
 
 __all__ = [
+    "PAD_CODE",
+    "encode_codes",
+    "codes_to_onehot",
     "valid_positions",
     "pool_coverage",
     "masked_mean_pool",
@@ -122,6 +125,55 @@ def one_hot_padded(seqs: list[str], pad_to: int):
             i = idx.get(ch)
             if i is not None:
                 out[n, i, p] = 1.0
+    return out
+
+
+#: Sentinel code for a padded or unknown base. Expands to an ALL-ZERO one-hot column, which is the
+#: project's documented encoding of "no evidence of any base here" -- the same thing `one_hot` does
+#: for an N. It is therefore not a fifth base, and `masked_mean_pool` excludes those positions anyway.
+PAD_CODE = 4
+
+_BASE_CODE = {b: i for i, b in enumerate(BASES)}
+
+
+def encode_codes(seqs: list[str], pad_to: int):
+    """`(N, pad_to)` uint8 of base codes, PAD_CODE where padded. The memory-safe representation.
+
+    One-hot for a whole rung is N x 4 x pad_to floats -- 2.56 GB at N=321,123, pad_to=499. Codes are
+    N x pad_to bytes (160 MB), and `codes_to_onehot` expands one BATCH at a time.
+    """
+    import numpy as np
+
+    if not seqs:
+        raise EncoderDataError("no sequences")
+    out = np.full((len(seqs), pad_to), PAD_CODE, dtype=np.uint8)
+    for n, s in enumerate(seqs):
+        if len(s) > pad_to:
+            raise EncoderDataError(
+                "sequence of %d bp exceeds pad_to=%d; truncating would discard measured sequence"
+                % (len(s), pad_to))
+        for p, ch in enumerate(s.upper()):
+            c = _BASE_CODE.get(ch)
+            if c is not None:
+                out[n, p] = c
+    return out
+
+
+def codes_to_onehot(codes):
+    """`(B, L)` uint8 codes -> `(B, 4, L)` float32 one-hot. PAD_CODE becomes an all-zero column.
+
+    Verified equivalent to `one_hot_padded` on the same input by test, so the batched path cannot
+    drift from the whole-array path it replaces.
+    """
+    import numpy as np
+
+    codes = np.asarray(codes)
+    if codes.ndim != 2:
+        raise EncoderDataError("expected (B, L) codes, got shape %s" % (tuple(codes.shape),))
+    b, L = codes.shape
+    out = np.zeros((b, len(BASES), L), dtype=np.float32)
+    for i in range(len(BASES)):
+        out[:, i, :] = (codes == i)
     return out
 
 

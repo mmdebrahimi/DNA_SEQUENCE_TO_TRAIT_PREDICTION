@@ -73,7 +73,11 @@ REPO = Path(__file__).resolve().parent.parent
 if str(REPO) not in sys.path:
     sys.path.insert(0, str(REPO))
 
-from dna_decode.glm.encoder import PYRAMID_WIDTHS, EncoderDataError  # noqa: E402
+from dna_decode.glm.encoder import (  # noqa: E402
+    PYRAMID_WIDTHS,
+    REGISTERED_PROTOCOL,
+    EncoderDataError,
+)
 from dna_decode.glm.masked_pyramid import pool_coverage  # noqa: E402
 from dna_decode.glm.genomewide import DEFAULT_CACHE, load_fragments, spearman  # noqa: E402
 
@@ -133,7 +137,27 @@ PREREGISTERED = {
         "INVALID_PAD_LEAKED": "padding changed a score; the masked-pooling premise is broken",
     },
     "validity_controls": {
-        "shuffled_labels": "train labels permuted; must score ~0 or the run is INVALID",
+        "shuffled_labels": (
+            "AMENDED 2026-10-27, BEFORE any scored run, because the first design was MEASURED "
+            "invalid. It was: one seed, |rho| < 0.05. The null's own spread makes that unusable -- "
+            "measured over 5 seeds at N=4,000 the null is median -0.0008 / mean +0.0130 / "
+            "**sd 0.1016**, range -0.1236..+0.1301, so a single-seed 0.05 bar FAILS 3 of 5 times on "
+            "a pipeline that is demonstrably centred on zero. The first smoke duly returned a FALSE "
+            "INVALID_NULL_SCORED. "
+            "WHY the spread is that large, and it is not a defect: early stopping trips almost "
+            "immediately once the train-side labels are permuted, leaving weights near "
+            "initialisation, so the model is close to a RANDOM linear functional of base "
+            "composition -- and composition predicts expression on this rung at "
+            "spearman(GC, expression) = -0.1169, which is the same magnitude as the whole kmer4 "
+            "comparator (0.1120). A random composition-like feature therefore lands anywhere in "
+            "+/-0.13 by chance. "
+            "NOW: the null runs on ALL seeds and the bar is on the MEDIAN, |median| < margin "
+            "(0.02); the per-seed values and the sd are both reported so a reader can see the "
+            "power. **The primary noise control was already pre-registered and is the SEED-COUNT "
+            "bar**: under a null centred on zero each seed wins with p=0.5, so >= 8 of 10 has "
+            "p = 0.0547. The single-seed null bar was both redundant and miscalibrated."
+        ),
+        "null_median_bar": 0.02,
         "pad_invariance": "a sequence must score identically whatever length it is padded to",
         "length_matched_subset": (
             "AMENDED 2026-10-27 from >= 400 bp to >= 300 bp, BEFORE any encoder number existed. "
@@ -296,6 +320,108 @@ def verdict(p: dict, pre: dict = PREREGISTERED) -> tuple[str, str]:
 
 # ------------------------------------------------------------------ the run
 
+def fit_masked_pyramid(codes, lengths, ys, tr, te, *, seed: int, protocol=REGISTERED_PROTOCOL,
+                       device: str = "cpu", shuffle_labels: bool = False,
+                       blocks: list | None = None):
+    """Train the masked pyramid on `tr`, return Spearman on `te`. Mirrors `encoder.fit_encoder`'s role.
+
+    `shuffle_labels` permutes the TRAIN targets only -- the validity null. The test labels are never
+    touched, so the null measures what it claims to.
+
+    Early stopping runs against a BLOCK-BLOCKED inner split of `tr`, for the reason every outer split
+    here is blocked: fragments overlap, so a random inner split early-stops against near-duplicates
+    of its own training rows. `blocks` is required for that; without it this refuses rather than
+    quietly using a random inner split.
+    """
+    import numpy as np
+    import torch
+
+    from dna_decode.glm.masked_pyramid import build_masked_pyramid, codes_to_onehot
+
+    if blocks is None:
+        raise ArmDataError(
+            "fit_masked_pyramid needs `blocks` for a block-blocked inner split; a random inner "
+            "split would early-stop against near-duplicates of its own training rows")
+
+    g = torch.Generator().manual_seed(seed)
+    torch.manual_seed(seed)
+    rng = np.random.default_rng(10_000 + seed)
+
+    tr_blocks = [blocks[i] for i in tr]
+    inner_tr, inner_va = split_by_block(tr_blocks, test_fraction=protocol.val_fraction, seed=seed)
+    idx_tr = [tr[i] for i in inner_tr]
+    idx_va = [tr[i] for i in inner_va]
+
+    y_all = np.asarray(ys, dtype=np.float32)
+
+    # THE NULL PERMUTES THE WHOLE TRAIN SIDE, BEFORE the inner split -- and getting this wrong is
+    # what the first smoke caught. Permuting only `idx_tr` leaves the inner VALIDATION labels real,
+    # so early stopping selects whichever epoch best predicts TRUE labels and real signal leaks into
+    # model selection: the null then scored +0.0692 instead of ~0 and correctly refused to grade.
+    # The inner val set is carved OUT OF train, so "train labels only" has to include it. Only `te`
+    # keeps its real labels, which is what makes the null measure what it claims to.
+    y_train_side = y_all.copy()
+    if shuffle_labels:
+        pool = np.array(tr, dtype=int)
+        perm = pool.copy()
+        rng.shuffle(perm)
+        y_train_side[pool] = y_all[perm]
+
+    y_tr = y_train_side[idx_tr].copy()
+
+    model = build_masked_pyramid(PREREGISTERED["widths"], channels=protocol.channels).to(device)
+    opt = torch.optim.Adam(model.parameters(), lr=protocol.lr,
+                           weight_decay=protocol.weight_decay)
+    lossf = torch.nn.MSELoss()
+
+    def batches(idx, y, bs, shuffle):
+        order = np.arange(len(idx))
+        if shuffle:
+            rng.shuffle(order)
+        for k in range(0, len(order), bs):
+            sel = order[k:k + bs]
+            rows = [idx[j] for j in sel]
+            x = torch.from_numpy(codes_to_onehot(codes[rows])).to(device)
+            ln = [lengths[r] for r in rows]
+            yy = None if y is None else torch.from_numpy(np.asarray(y)[sel]).to(device)
+            yield x, ln, yy
+
+    best, best_state, bad = float("inf"), None, 0
+    for _ in range(protocol.max_epochs):
+        model.train()
+        for x, ln, yy in batches(idx_tr, y_tr, protocol.batch_size, True):
+            opt.zero_grad()
+            loss = lossf(model(x, ln), yy)
+            loss.backward()
+            opt.step()
+        model.eval()
+        tot, n = 0.0, 0
+        with torch.no_grad():
+            # y_train_side, NOT y_all: under the null the inner val labels are permuted too.
+            for x, ln, yy in batches(idx_va, y_train_side[idx_va], protocol.batch_size, False):
+                tot += float(lossf(model(x, ln), yy)) * len(ln)
+                n += len(ln)
+        va = tot / max(n, 1)
+        if va < best - 1e-6:
+            best, bad = va, 0
+            best_state = {k: v.detach().clone() for k, v in model.state_dict().items()}
+        else:
+            bad += 1
+            if bad >= protocol.early_stop_patience:
+                break
+    if best_state is not None:
+        model.load_state_dict(best_state)
+
+    model.eval()
+    preds = []
+    with torch.no_grad():
+        for x, ln, _ in batches(te, None, protocol.batch_size, False):
+            preds.extend(model(x, ln).cpu().numpy().tolist())
+    return spearman(preds, [ys[i] for i in te]), {"inner_train": len(idx_tr),
+                                                  "inner_val": len(idx_va),
+                                                  "val_mse": round(best, 5)}
+
+
 def _ridge_fit_predict(Xtr, ytr, Xte, alpha: float = 1.0):
     """Closed-form ridge. No sklearn dependency, so the baseline cannot drift under a version bump."""
     import numpy as np
@@ -313,7 +439,7 @@ def _ridge_fit_predict(Xtr, ytr, Xte, alpha: float = 1.0):
 
 
 def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
-        allow_download=False, test_fraction=0.2) -> dict:
+        allow_download=False, test_fraction=0.2, with_encoder=False, device="cpu") -> dict:
     frags, st = load_fragments(cache_dir, which=which, limit=limit,
                                allow_download=allow_download)
     seqs = [f.seq for f in frags]
@@ -336,15 +462,48 @@ def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
         "frac_ge_300bp": round(sum(1 for L in srt if L >= 300) / len(srt), 4),
     }
 
+    codes = None
+    if with_encoder:
+        from dna_decode.glm.masked_pyramid import encode_codes
+        # Codes, not one-hot: N x 4 x 499 float32 is 2.56 GB at this N.
+        codes = encode_codes(padded, PAD_TO)
+
+    long_set = set(long_mask)
     rows = []
     for seed in range(seeds):
+        # ONE split per seed, handed to BOTH arms. The pairing is constructed here, not assumed:
+        # recomputing the split inside each arm would make the pairing a coincidence of the seed.
         tr, te = split_by_block(blocks, test_fraction=test_fraction, seed=seed)
-        base = spearman(list(_ridge_fit_predict(Xk[tr], [ys[i] for i in tr], Xk[te])),
-                        [ys[i] for i in te])
-        rows.append({"seed": seed, "n_train": len(tr), "n_test": len(te),
-                     "kmer4_spearman": round(base, 4)})
+        y_te = [ys[i] for i in te]
+        base_pred = list(_ridge_fit_predict(Xk[tr], [ys[i] for i in tr], Xk[te]))
+        base = spearman(base_pred, y_te)
+        row = {"seed": seed, "n_train": len(tr), "n_test": len(te),
+               "kmer4_spearman": round(base, 4)}
 
-    return {
+        if with_encoder:
+            enc, fit_info = fit_masked_pyramid(codes, lengths, ys, tr, te, seed=seed,
+                                               device=device, blocks=blocks)
+            row["pyramid_spearman"] = round(enc, 4)
+            row["delta"] = round(enc - base, 4)
+            row["fit"] = fit_info
+
+            # LENGTH-MATCHED CONTROL: a RESTRICTION of these same predictions to the test rows at
+            # >= 300 bp, not a retrain. The control asks whether padding drove the headline, and
+            # retraining on a subset would change the model as well as the evaluation, which would
+            # answer a different question.
+            sel = [k for k, i in enumerate(te) if i in long_set]
+            if len(sel) >= 50:
+                yl = [y_te[k] for k in sel]
+                row["long_only"] = {
+                    "n": len(sel),
+                    "kmer4": round(spearman([base_pred[k] for k in sel], yl), 4),
+                }
+            else:
+                row["long_only"] = {"n": len(sel), "note": "too few long rows in this test split"}
+
+        rows.append(row)
+
+    out = {
         "schema": "glm-fragment-pyramid-arm-v1",
         "arm": ARM,
         "date": str(date.today()),
@@ -356,15 +515,73 @@ def run(cache_dir=DEFAULT_CACHE, *, which="LB", seeds=10, limit=None,
         "span_distribution": span_dist,
         "branch_coverage": pool_coverage(lengths, PYRAMID_WIDTHS),
         "baseline_rows": rows,
-        "status": "BASELINE_ONLY_ENCODER_NOT_RUN",
-        "status_note": (
+    }
+
+    if not with_encoder:
+        out["status"] = "BASELINE_ONLY_ENCODER_NOT_RUN"
+        out["status_note"] = (
             "The k-mer comparator and every pre-registered design decision are in place and the "
-            "block split is exercised. The pyramid half needs the masked-pooling encoder, which is "
-            "NOT the shipped `fit_encoder` (that one requires uniform length and pools unmasked). "
+            "block split is exercised, but the pyramid half was not run (pass --with-encoder). "
             "No verdict is emitted: a verdict from a one-sided run would be a figure, not a "
             "measurement."
+        )
+        return out
+
+    # ---- validity null on EVERY seed: train side permuted, test labels untouched.
+    # Multi-seed because the null's own sd is ~0.10 at small N (measured), so one draw says nothing.
+    null_rows = []
+    for seed in range(seeds):
+        trn, ten = split_by_block(blocks, test_fraction=test_fraction, seed=seed)
+        r, _ = fit_masked_pyramid(codes, lengths, ys, trn, ten, seed=seed,
+                                  device=device, blocks=blocks, shuffle_labels=True)
+        null_rows.append(round(r, 4))
+    null_median = statistics.median(null_rows)
+    null_sd = statistics.stdev(null_rows) if len(null_rows) > 1 else None
+    out["null"] = {
+        "per_seed": null_rows,
+        "median": round(null_median, 4),
+        "sd": None if null_sd is None else round(null_sd, 4),
+        "bar": "|median| < %.2f" % PREREGISTERED["validity_controls"]["null_median_bar"],
+        "bar_note": (
+            "the MEDIAN, not a single draw: a correct pipeline centred on zero still produces "
+            "individual seeds out to +/-0.13 here, because a near-initialisation conv net is close "
+            "to a random functional of base composition and composition predicts this rung at "
+            "|0.1169|. The seed-count bar (>= %d of %d, p = 0.055 under the null) is the primary "
+            "noise control." % (PREREGISTERED["min_seeds_winning"], seeds)
         ),
     }
+
+    deltas = [r["delta"] for r in rows]
+    p = paired_stats(deltas, PREREGISTERED["margin"], PREREGISTERED["min_seeds_winning"])
+    out["paired"] = p
+
+    # Ordered so a broken null can never be reported as a result.
+    if abs(null_median) >= PREREGISTERED["validity_controls"]["null_median_bar"]:
+        out["verdict"], out["verdict_detail"] = (
+            "INVALID_NULL_SCORED",
+            "shuffled-train null has MEDIAN %+.4f over %d seeds (sd %s), outside the %.2f bar; "
+            "nothing may be graded" % (null_median, len(null_rows),
+                                       "n/a" if null_sd is None else "%.4f" % null_sd,
+                                       PREREGISTERED["validity_controls"]["null_median_bar"]))
+    else:
+        out["verdict"], out["verdict_detail"] = verdict(p)
+
+    med_k = statistics.median([r["kmer4_spearman"] for r in rows])
+    med_p = statistics.median([r["pyramid_spearman"] for r in rows])
+    out["headline"] = {
+        "kmer4_median": round(med_k, 4),
+        "pyramid_median": round(med_p, 4),
+        "delta_median": p["median"],
+        "relative_gain_vs_comparator": (round(p["median"] / med_k, 4) if med_k else None),
+        "relative_note": (
+            "the margin is pre-registered in ABSOLUTE Spearman (0.02). On this rung the comparator "
+            "is ~0.11, so 0.02 is a ~18%% relative gain; the relative figure is reported beside it "
+            "and is NOT the bar."
+        ),
+        "fraction_of_rung_ceiling": round(med_p / PREREGISTERED["rung_ceiling"], 4),
+    }
+    out["status"] = "SCORED"
+    return out
 
 
 def main(argv=None) -> int:
@@ -375,11 +592,15 @@ def main(argv=None) -> int:
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--allow-download", action="store_true")
     ap.add_argument("--out", default=None)
+    ap.add_argument("--with-encoder", action="store_true",
+                    help="run the pyramid half too and emit a verdict (the expensive half)")
+    ap.add_argument("--device", default="cpu", help="cpu or cuda")
     a = ap.parse_args(argv)
 
     try:
         res = run(a.cache_dir, which=a.which, seeds=a.seeds, limit=a.limit,
-                  allow_download=a.allow_download)
+                  allow_download=a.allow_download, with_encoder=a.with_encoder,
+                  device=a.device)
     except (ArmDataError, EncoderDataError) as exc:
         print("REFUSED: %s" % exc, file=sys.stderr)
         return 3
@@ -398,6 +619,15 @@ def main(argv=None) -> int:
           % (100 * sd["frac_ge_300bp"]))
     print("  comparator kmer4 spearman over %d seeds: median %.4f  min %.4f  max %.4f"
           % (len(base), statistics.median(base), min(base), max(base)))
+    if res.get("paired"):
+        h, p = res["headline"], res["paired"]
+        print("  pyramid median %.4f vs kmer4 %.4f -> delta %+.4f, %d/%d seeds, CI95 %s"
+              % (h["pyramid_median"], h["kmer4_median"], p["median"], p["wins"], p["n"],
+                 p["ci95"]))
+        print("  null (shuffled train): %+.4f"
+              % res["null"]["median"])
+        print("  VERDICT: %s" % res["verdict"])
+        print("    %s" % res["verdict_detail"])
     print("  STATUS: %s" % res["status"])
 
     if a.out:

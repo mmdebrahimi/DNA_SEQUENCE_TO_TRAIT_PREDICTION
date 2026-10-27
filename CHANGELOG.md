@@ -5,6 +5,57 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (e) — the encoder half is built, and its own validity control was the defect
+
+- **`dna_decode/glm/masked_pyramid.py` gains a batched codec.** One-hot for the whole rung is
+  321,123 x 4 x 499 x 4 B = **2.56 GB**, which does not fit a 4 GiB card. Sequences are stored as
+  uint8 codes (160 MB) and expanded per batch. Equivalence to the whole-array `one_hot_padded` is the
+  codec's entire contract, so it is asserted directly on ragged input, and pad-invariance is
+  re-checked THROUGH the codec rather than inherited. 23 -> 30 tests.
+- **`scripts/glm_fragment_pyramid_arm.py` gains `fit_masked_pyramid`** under the frozen
+  `REGISTERED_PROTOCOL`, with a block-blocked inner split for early stopping and ONE split per seed
+  handed to both arms — the pairing is constructed at the call site, not a coincidence of the seed.
+  The length-matched control is a RESTRICTION of the same test predictions to rows >= 300 bp, not a
+  retrain: retraining on a subset would change the model as well as the evaluation.
+- **TWO DEFECTS IN MY OWN NULL, both found by running it, and the second one mattered more.**
+  (1) The null permuted only the inner-TRAIN labels, leaving the inner VALIDATION labels real — so
+  early stopping selected whichever epoch best predicted TRUE labels and real signal leaked into
+  model selection. The inner val set is carved OUT OF train, so "train labels only" has to include
+  it. Fixed: the whole train side is permuted BEFORE the inner split.
+  (2) **The bar itself was invalid.** It was one seed and |rho| < 0.05. Measured over 5 seeds at
+  N=4,000 the null is median **-0.0008**, mean +0.0130, **sd 0.1016**, range -0.1236..+0.1301 — so a
+  single-seed 0.05 bar **fails 3 of 5 times on a pipeline that is demonstrably centred on zero**, and
+  the first smoke duly returned a FALSE `INVALID_NULL_SCORED`. The pipeline was fine; the bar was
+  not. Amended pre-result: the null runs on ALL seeds, the bar is on the MEDIAN, and the per-seed
+  values plus the sd are reported so a reader can see the power.
+- **WHY the null's spread is that wide, measured — and it reframes the arm.**
+  `spearman(GC, expression) = -0.1169` on this rung, which is **the same magnitude as the whole kmer4
+  comparator (0.1120)**. Early stopping trips almost immediately once the train side is permuted, so
+  the model sits near initialisation and is close to a RANDOM linear functional of base composition;
+  a random composition-like feature therefore lands anywhere in +/-0.13 by chance. Corollary worth
+  carrying: the comparator is approximately a COMPOSITION detector, so the arm's real question is
+  whether multi-scale structure beats composition. **Length is NOT a confound** —
+  `spearman(length, expression) = +0.0117`, checked because variable length was the obvious suspect.
+- **The primary noise control was already pre-registered and is the SEED-COUNT bar.** Under a null
+  centred on zero each seed wins with p = 0.5, so >= 8 of 10 has p = 0.0547. The single-seed null bar
+  was both redundant and miscalibrated.
+- **The N=4,000 smoke is UNDER-POWERED BY CONSTRUCTION and its delta must not be quoted.** The null's
+  sd (0.1016) is the same size as the observed delta (+0.1109) at that N. At full N the test set goes
+  from ~800 to ~65,000 rows, so the null's spread should shrink roughly 9x — which is what makes the
+  full run, and only the full run, informative.
+- **D: DETACHED MID-SESSION**, after the whole lentiMPRA fetch had succeeded on it.
+  `external_root.probe()` returns `[]` and no letter but C: resolves. So no real-data run is possible
+  locally and **the corrected multi-seed null has never completed a scored run**; status is recorded
+  as such rather than implied. The 18 lentiMPRA data-dependent tests SKIP cleanly rather than fail —
+  the `needs_data` guard paying off at the moment it matters — and 71 tests still pass. Everything is
+  committed and the data is re-fetchable with one verified command.
+- **Two process defects of my own, both the same shape.** A bare `.replace()` with no assertion
+  silently no-opped when `parse_args()` turned out to be `parse_args(argv)`, leaving the CLI flag
+  missing while the file still parsed; and a new key landed inside `validity_controls` while three
+  code sites read it top-level — **the second time in this one file** (after
+  `length_matched_threshold_bp`). Assert every anchored replacement, and resolve a config key by
+  reading it back rather than by where you meant to put it.
+
 ### 2026-10-27 (d) — the suite baseline drops 14 -> 12, and 2 of those were never data
 
 - **CORRECTION to `CLAUDE.md` line 411, measured.** It records the suite baseline as *"All 14

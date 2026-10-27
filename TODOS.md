@@ -365,6 +365,16 @@ Plan `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technic
   elements are unrecovered — OPEN; (c) Table S6 publishes per-fold incumbents on these exact folds
   (MPRALegNet 0.8333 / 0.8665) but **never states the metric**, so nothing may be compared against it
   until that is resolved. The arm stays `planned`: acquiring a substrate is not running an arm.
+- **[OPEN — BLOCKED ON D:] The fragment-pyramid encoder half is BUILT but has never completed a
+  scored run.** `scripts/glm_fragment_pyramid_arm.py --with-encoder` +
+  `dna_decode/glm/masked_pyramid.py` (30 tests, all synthetic so they pass without D:). The arm's
+  own validity control caught TWO defects in itself (an inner-val label leak, then an invalid
+  single-seed bar against a null whose sd is 0.1016) and both are fixed; the CORRECTED multi-seed
+  null has not run end-to-end because **D: detached mid-session** and `external_root.probe()` now
+  returns `[]`. Re-fetchable: the loader downloads GSE144621 itself. **Do NOT quote the N=4,000
+  smoke's +0.1109 delta** — the null's sd at that N is 0.1016, so it is no result at all. Measured
+  cost on this CPU is ~3 min per real fit at N=4,000, which extrapolates to **tens of hours** for
+  321k x 10 seeds; a GPU is the right home. Dispatched to server1 (smoke first, then full).
 - **[OPEN] Recover WTC11's 23,064 measured elements.** Their sequences are not in Zenodo 10558183
   under the Ensembl-gene-id key its activity table uses. Would add 14% to the labelled set, and
   WTC11 is the one cell where MPRALegNet LOSES to Enformer (0.7946 vs 0.8335) — so it is the most
