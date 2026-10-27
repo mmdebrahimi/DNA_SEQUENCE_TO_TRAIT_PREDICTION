@@ -336,6 +336,24 @@ Plan `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technic
   tests the north star's step 4. It does NOT help (1): lentiMPRA elements are ~200-230 bp.
   **Still the user's call** — both items change what `blocking()` reports, and (2) spends disk and
   wall-clock. Nothing was killed, re-scoped or downloaded.
+  **EXECUTED 2026-10-27 on the user's "ok lets do it": (1) is DONE — the 4-decade arm is RETIRED and
+  its reachable successor is DECLARED.** The knot was mechanical: `arms_ledger` has no re-scope op
+  (only `declare_arm` / `measure_arm` / `kill_arm`), and R6 permits a kill only on the arm's OWN
+  executed evidence, which a substrate fact is not. Resolved by MAKING the wall executed evidence:
+  `scripts/pyramid_span_feasibility_probe.py` loads every rung through its canonical loader and
+  measures the maximum HONEST span (finest branch IMPORTED from `PYRAMID_WIDTHS[0]`, so a 1 bp floor
+  cannot be smuggled in to make an arm look reachable). Measured: fragments_LB/M9 max 499 bp =
+  2.2210 decades, peak_tiles 150 bp = 1.6990, against 30,000 bp required — **60.1x short, not the
+  20x I first said** (20x uses the 1 bp-floor figure the encoder explicitly rejects).
+  `wiki/pyramid_span_feasibility_2026-10-27.json`, verdict `INFEASIBLE_SUBSTRATE_GATED`. The kill
+  carries R7 scope + revival + an explicit NON-REFUTATION clause, because `killed` is the only status
+  the enum offers for "cannot be instantiated" and a later reader must not read it as tested-and-
+  failed. Successor `pyramid-4scale-2.22decades-499bp-fragments` declared, cost `medium`, and it is
+  **the first planned arm here to carry a `rationale`** — which partly closes the "planned arms carry
+  no reason" item below. Ledger: 12 arms, 8 measured / 3 planned / 1 killed; all 8 measured metrics
+  byte-identical. Three rails re-pinned again and two guards ADDED (the non-refutation clause and the
+  successor's rationale are now pinned).
+  **(2) is NOT done and remains the user's call** — nothing was downloaded.
 - **[OPEN] `promoteratlas-base-embeddings-frozen-150bp-padded-to-200` is the one untried arm runnable
   today, and it is the on-position one.** Substrate present (10 local seed tables); the only gap is a
   public weights fetch — `D:/hf_cache/hub` holds exactly one model and it is GENERator-v2. It is a

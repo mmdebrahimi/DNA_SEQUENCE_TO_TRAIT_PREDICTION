@@ -2,6 +2,38 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (b)
+
+- **When a guard blocks a legitimate move, make the move's evidence rather than the guard's
+  exception.** R6 forbids killing an arm except on its own executed evidence, and the 4-decade arm
+  could not run, so it looked like R6 had to be bypassed by authority. It did not: an un-runnable arm
+  CAN produce executed evidence — about its own FEASIBILITY. A probe that measures the substrate the
+  arm would need is that arm's result. The rule was satisfied, not waived, and the artifact is reusable.
+- **A status enum you cannot extend puts the whole burden on the reason string.** `killed` was the
+  only value available for "cannot be instantiated", and it invites exactly the wrong reading
+  (tested and failed). So the non-refutation clause is PINNED BY TEST, not merely written — a
+  disclaimer nothing checks is a disclaimer that will be edited away.
+- **A claim about a distribution taken from its maximum is the forgotten-substrate error again.**
+  `log10(499/3) = 2.22` was true and described 49 of 321,123 rows; the typical row carries 1.91.
+  Quoting the max overstated the gain 2.5x. Both instances this month share one shape: a real
+  measurement, reported at the wrong SCOPE. Measure the distribution before quoting any figure
+  derived from an extreme value.
+- **A control frozen before the distribution was measured can be unfalsifiable rather than strict.**
+  The >= 400 bp padding check looked conservative and selected 0.015% of the substrate, so it could
+  never have fired. An unpowered control is worse than none because it reads as protection — the same
+  defect class as a filter that removes nothing. Size a control against the measured data.
+- **An in-run comparator is not pedantry, and this run put a number on it.** The cited kmer4 figure
+  was 0.1313; recomputed in-run on the declared block split it is 0.1120, and at smoke N it was
+  0.0422. A paired delta against the citation would have been off by up to 3x. If a comparator cannot
+  be paired, it is context, not a comparator.
+- **Separate module, not a flag, when the existing module's job is to REFUSE the thing you need.**
+  `encoder.py` exists partly to refuse ragged input. A `lengths=` flag would have planted a silent
+  pad path inside it and every tile-rung caller would have inherited the risk. The new contract lives
+  beside the old one and the refusal stays intact.
+- **Test an invariance in both directions or it proves nothing.** "Padding cannot change a score"
+  stays green if masking is silently disabled, because an all-zero pad is nearly inert. The companion
+  test — an UNMASKED pool demonstrably IS changed by padding — is what makes the first one evidence.
+
 ## 2026-10-27
 
 - **A red rail is a question, and sometimes the answer IS to re-pin it.** The standing rule — a guard

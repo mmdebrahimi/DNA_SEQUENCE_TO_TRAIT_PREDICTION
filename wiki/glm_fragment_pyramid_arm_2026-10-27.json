@@ -1,0 +1,157 @@
+{
+  "schema": "glm-fragment-pyramid-arm-v1",
+  "arm": "pyramid-4scale-2.22decades-499bp-fragments",
+  "date": "2026-10-27",
+  "preregistered": {
+    "arm": "pyramid-4scale-2.22decades-499bp-fragments",
+    "rung": "fragments_LB",
+    "rung_ceiling": 0.7928,
+    "comparator": "kmer4",
+    "comparator_note": "4-mer counts + ridge, recomputed IN-RUN on identical splits/seeds. The census's 0.1313 is context, NOT the comparator: a cited number from a different split cannot be paired.",
+    "primary_metric": "spearman on the held-out genomic blocks",
+    "margin": 0.02,
+    "margin_note": "INHERITED from the tile-rung arms so the bars stay commensurable, and the inheritance is disclosed because it is NOT scale-free: 0.02 against this rung's incumbent (~0.13) is a ~15% relative gain, whereas against the tile rung's ~0.40 it is ~5%. The verdict keys on the ABSOLUTE 0.02; the relative figure is reported beside it so no reader is misled.",
+    "min_seeds_winning": 8,
+    "n_seeds": 10,
+    "widths": [
+      3,
+      12,
+      48,
+      150
+    ],
+    "span_decades_at_max": 2.221,
+    "span_decades_at_median": 1.9103,
+    "span_decades_note": "MEASURED over all 321,123 LB fragments: median 244 bp (1.9103 decades), p99 308 bp (2.011), max 499 bp (2.2210). Only 4.0% of rows reach 300 bp and 0.015% reach 400 bp. Against the measured tile sibling's 1.70 decades the honest gain is +0.21 at the MEDIAN (244/150 = 1.63x more length), NOT the +0.52 / 3.33x the maximum suggests. Quote the median figure; the max describes 49 fragments.",
+    "leakage_unit": "contiguous genomic block, start // 50000",
+    "length_rule": "zero-pad to 499 with MASKED pooling; padded positions excluded",
+    "verdicts": {
+      "PYRAMID_ADDS": "gain >= margin AND >= min_seeds_winning seeds win -- a reproducible lift",
+      "WEAK_PYRAMID": "gain > 0 AND >= min_seeds_winning seeds win, but below the margin -- a REPRODUCIBLE gain that fell short of the effect-size bar",
+      "INDETERMINATE_GAIN_NOT_REPRODUCIBLE": "gain > 0 but FEWER than min_seeds_winning seeds win -- a positive gain that did NOT reproduce, which is neither a measured lift nor a measured negative and must not be read as either",
+      "NO_GAIN": "gain <= 0 -- the pyramid does not beat the length-invariant default",
+      "INVALID_NULL_SCORED": "the shuffled-label control scored; nothing may be graded",
+      "INVALID_PAD_LEAKED": "padding changed a score; the masked-pooling premise is broken"
+    },
+    "validity_controls": {
+      "shuffled_labels": "train labels permuted; must score ~0 or the run is INVALID",
+      "pad_invariance": "a sequence must score identically whatever length it is padded to",
+      "length_matched_subset": "AMENDED 2026-10-27 from >= 400 bp to >= 300 bp, BEFORE any encoder number existed. The 400 bp threshold was frozen without measuring the distribution and selects 49 of 321,123 rows (0.015%) -- a control too small to falsify anything, which is worse than no control because it LOOKS like one. 300 bp selects 12,896 rows (4.0%) and is powered. Still the minority of the substrate, so it is a padding check, NOT a second headline. If the headline and this subset disagree in SIGN, padding is implicated and the headline is WITHDRAWN rather than explained.",
+      "length_matched_threshold_bp": 300
+    },
+    "predicted_outcome": "NO_GAIN or WEAK_PYRAMID",
+    "prediction_rationale": "Recorded BEFORE the run. Four reasons a negative is expected: (a) the conv encoder already failed to beat a SINGLE GC NUMBER on the easier tile rung (+0.0122, paired CI includes zero); (b) `load_fragments`' own docstring argues k-mer features are the honest default here precisely BECAUSE they are length-invariant, which is the property a fixed-window conv lacks; (c) this rung's best measured arm reaches only 0.1313 of a 0.7928 ceiling (16.6%), so the recoverable signal looks thin for every model class, not just this one; (d) more SPAN is only useful if regulatory signal actually lives above 150 bp, which is the hypothesis under test and not an assumption in its favour.",
+    "negative_scope": "A negative here means: a 4-scale conv pyramid over zero-padded, masked-pooled fragments, trained under the registered protocol on block-split LB fragments, did not beat 4-mer counts + ridge by 0.02 Spearman. It would NOT mean sequence context above 150 bp is uninformative, NOT that multi-resolution modelling fails in general, and NOT anything about the tile rung, which has a different ceiling and a different incumbent.",
+    "revival_condition": "a length-invariant architecture (dilated conv, attention with length masking) or a rung whose fragments are long enough that padding is negligible across the whole set."
+  },
+  "substrate": {
+    "path": "D:\\dna_decode_cache\\mpra\\GSE144621_U00096.2_frag-rLP5_LB_expression.txt.gz",
+    "delimiter": "whitespace",
+    "n_header_columns": 13,
+    "n_lines": 321123,
+    "n_parsed": 321123,
+    "n_field_count_mismatch": 0,
+    "n_non_acgt": 0,
+    "n_unparseable_value": 0,
+    "length_min": 48,
+    "length_median": 244,
+    "length_max": 499,
+    "n_distinct_lengths": 359
+  },
+  "n_sequences": 321123,
+  "n_genomic_blocks": 93,
+  "n_fragments_in_length_matched_subset": 12896,
+  "span_distribution": {
+    "length_median": 244,
+    "length_p99": 308,
+    "length_max": 499,
+    "span_at_median": 1.9103,
+    "span_at_max": 2.221,
+    "frac_ge_300bp": 0.0402
+  },
+  "branch_coverage": {
+    "3": {
+      "n_dead_rows": 0,
+      "fraction_dead": 0.0,
+      "min_true_len_needed": 3
+    },
+    "12": {
+      "n_dead_rows": 0,
+      "fraction_dead": 0.0,
+      "min_true_len_needed": 12
+    },
+    "48": {
+      "n_dead_rows": 0,
+      "fraction_dead": 0.0,
+      "min_true_len_needed": 48
+    },
+    "150": {
+      "n_dead_rows": 3624,
+      "fraction_dead": 0.0113,
+      "min_true_len_needed": 150
+    }
+  },
+  "baseline_rows": [
+    {
+      "seed": 0,
+      "n_train": 256100,
+      "n_test": 65023,
+      "kmer4_spearman": 0.1132
+    },
+    {
+      "seed": 1,
+      "n_train": 255304,
+      "n_test": 65819,
+      "kmer4_spearman": 0.1183
+    },
+    {
+      "seed": 2,
+      "n_train": 255459,
+      "n_test": 65664,
+      "kmer4_spearman": 0.1076
+    },
+    {
+      "seed": 3,
+      "n_train": 255885,
+      "n_test": 65238,
+      "kmer4_spearman": 0.11
+    },
+    {
+      "seed": 4,
+      "n_train": 255743,
+      "n_test": 65380,
+      "kmer4_spearman": 0.1009
+    },
+    {
+      "seed": 5,
+      "n_train": 254998,
+      "n_test": 66125,
+      "kmer4_spearman": 0.1136
+    },
+    {
+      "seed": 6,
+      "n_train": 255254,
+      "n_test": 65869,
+      "kmer4_spearman": 0.1081
+    },
+    {
+      "seed": 7,
+      "n_train": 256061,
+      "n_test": 65062,
+      "kmer4_spearman": 0.1241
+    },
+    {
+      "seed": 8,
+      "n_train": 255975,
+      "n_test": 65148,
+      "kmer4_spearman": 0.1226
+    },
+    {
+      "seed": 9,
+      "n_train": 254695,
+      "n_test": 66428,
+      "kmer4_spearman": 0.1108
+    }
+  ],
+  "status": "BASELINE_ONLY_ENCODER_NOT_RUN",
+  "status_note": "The k-mer comparator and every pre-registered design decision are in place and the block split is exercised. The pyramid half needs the masked-pooling encoder, which is NOT the shipped `fit_encoder` (that one requires uniform length and pools unmasked). No verdict is emitted: a verdict from a one-sided run would be a figure, not a measurement."
+}

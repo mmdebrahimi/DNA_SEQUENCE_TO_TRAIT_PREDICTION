@@ -1,6 +1,13 @@
 """Guards for the declared orthogonal-modality stack arm.
 
-RE-PINNED 2026-10-27: the declared arm RAN. It was `planned` when these guards were
+RE-PINNED TWICE ON 2026-10-27. Second time: the 4-decade arm was RETIRED on its own executed
+evidence (`scripts/pyramid_span_feasibility_probe.py` measured the maximum HONEST span at 2.2210
+decades against the 4.00 it declares -- 60.1x short at the encoder's 3 bp floor) and the reachable
+successor `pyramid-4scale-2.22decades-499bp-fragments` was declared in its place. So the set is now
+8 measured / 3 planned / 1 KILLED over 12 arms. That is a legitimate move under R6 -- an arm dying by
+its OWN result, not a sibling's -- and the rails follow the ledger rather than freezing a stale set.
+
+First time: the declared stack arm RAN. It was `planned` when these guards were
 written and is now `measured` at 0.4404 on its own evidence, so four of them went red
 because their SUBJECT legitimately moved -- not because the ledger was tampered with.
 Re-pinning to the state that exists is the answer here; the invariants are UNCHANGED and
@@ -46,10 +53,16 @@ MEASURED = {
 }
 
 EXPECTED_PLANNED = {
-    "multiresolution-pyramid-4-decades-UNRUN",
     "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
     "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
+    # The reachable re-scope that replaced multiresolution-pyramid-4-decades-UNRUN.
+    "pyramid-4scale-2.22decades-499bp-fragments",
 }
+
+#: Retired 2026-10-27 on its own executed evidence, NOT on a sibling's result.
+KILLED_ARM = "multiresolution-pyramid-4-decades-UNRUN"
+SUCCESSOR = "pyramid-4scale-2.22decades-499bp-fragments"
+SPAN_PROBE = "wiki/pyramid_span_feasibility_2026-10-27.json"
 
 
 def _live_ledger() -> al.ArmsLedger:
@@ -138,9 +151,11 @@ def test_the_arm_set_is_exactly_eight_measured_and_three_planned():
     arms = ledger._data["criteria"][_criterion(ledger)]
     planned = {n for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
     assert planned == EXPECTED_PLANNED
-    # 11 total, unchanged: the arm moved between buckets, nothing was added or removed.
-    assert len(arms) == 11
-    assert len(EXPECTED_PLANNED) + len(MEASURED) == 11
+    killed = {n for n, a in arms.items() if a["status"] == al.STATUS_KILLED}
+    assert killed == {KILLED_ARM}, "exactly one arm has ever been retired here"
+    # 12 total: 11 plus the declared successor. The arithmetic must reconcile with the whole.
+    assert len(arms) == 12
+    assert len(EXPECTED_PLANNED) + len(MEASURED) + len(killed) == len(arms)
 
 
 def test_ceiling_verdict_is_blocked_untried_arm_naming_three():
@@ -150,6 +165,54 @@ def test_ceiling_verdict_is_blocked_untried_arm_naming_three():
     assert set(verdict.planned) == EXPECTED_PLANNED
     assert len(verdict.planned) == 3
     assert not verdict.met
+
+
+def test_the_retired_arm_cannot_be_READ_as_tested_and_failed():
+    """`killed` is the only status the enum offers for "cannot be instantiated", so the REASON
+    carries the whole distinction. Without these clauses a later reader concludes the 4-decade
+    hypothesis was tested and lost, when the arm was never run at all.
+    """
+    ledger = _live_ledger()
+    arm = ledger._data["criteria"][_criterion(ledger)][KILLED_ARM]
+    assert arm["status"] == al.STATUS_KILLED
+    assert arm["evidence"] == SPAN_PROBE, "the kill must cite the probe that grounds it"
+    reason = arm["reason"]
+    low = reason.lower()
+    # R7: scope narrow enough that the evidence supports it.
+    assert "scope" in low and "this host" in low, "the kill must bound itself to this substrate"
+    assert "not a refutation" in low, "it must refuse the tested-and-failed reading outright"
+    assert "predictive merit" in low, "it must disclaim saying anything about the arm's merit"
+    # R7: the observation that re-opens it.
+    assert "revival" in low
+    assert "30000" in reason or "30,000" in reason
+    # It must name the successor, or the re-scope is lost with the arm.
+    assert SUCCESSOR in reason
+
+
+def test_the_retired_arm_was_NOT_killed_for_redundancy():
+    """The exact defect R6 exists to prevent: dying because a sibling cleared the floor."""
+    ledger = _live_ledger()
+    reason = ledger._data["criteria"][_criterion(ledger)][KILLED_ARM]["reason"]
+    assert not al._REDUNDANCY_REASON.search(reason), \
+        "the stored reason matches the redundancy pattern kill_arm refuses"
+    assert "substrate-gated" in reason.lower()
+
+
+def test_the_successor_arm_records_WHY_it_is_worth_running():
+    """Planned arms carried no reason at all, which is why `blocked:untried-arm` could only ever
+    name them. The successor sets `rationale` directly, since `declare_arm` takes no such argument.
+    """
+    ledger = _live_ledger()
+    arm = ledger._data["criteria"][_criterion(ledger)][SUCCESSOR]
+    r = arm["rationale"]
+    assert "2.22" in r and "1.70" in r, "it must state the span it buys over the measured sibling"
+    assert "0.7928" in r, "it must name the FRAGMENT rung's own ceiling"
+    assert "0.1313" in r, "it must name the fragment-rung incumbent it has to beat"
+    assert "never be read against" in r.lower(), \
+        "it must refuse the cross-rung comparison the census ceiling_rule forbids"
+    assert "pad/crop" in r, "the variable-length design point must be declared pre-run"
+    # And the rationale must NOT have leaked into the field reserved for executed evidence.
+    assert arm["evidence"] == ""
 
 
 def test_the_eukaryotic_arm_is_still_present():

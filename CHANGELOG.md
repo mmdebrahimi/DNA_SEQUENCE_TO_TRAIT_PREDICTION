@@ -5,6 +5,61 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (b) — the 4-decade arm retired on its own evidence; the reachable successor declared
+
+- **`scripts/pyramid_span_feasibility_probe.py` + `wiki/pyramid_span_feasibility_2026-10-27.json`.**
+  The 4-decade arm could not be retired by argument: R6 permits a kill only on the arm's own executed
+  evidence. So the wall was MADE executed evidence. The probe loads every rung through its canonical
+  loader and measures the maximum HONEST span, with the finest branch IMPORTED from
+  `PYRAMID_WIDTHS[0]` rather than restated, so a 1 bp floor cannot be introduced locally to make an
+  arm look reachable. Measured: fragments 499 bp = **2.2210** decades, tiles 150 bp = 1.6990, against
+  **30,000 bp** required — **60.1x short**. 15 tests, including the non-vacuity proof that a long
+  enough rung DOES return FEASIBLE, and that zero measurable rungs returns INDETERMINATE rather than
+  INFEASIBLE (the "did not look" case the prose version collapsed).
+- **A corrected figure: the shortfall is 60.1x, not the 20x stated earlier.** 20x comes from the
+  10,000 bp number, which assumes a 1 bp finest branch — the degenerate option `encoder.py` rejects
+  as inflating the span metric without testing the hypothesis it stands for. At the honest 3 bp floor
+  four decades needs 30,000 bp.
+- **Ledger re-scoped: 12 arms, 8 measured / 3 planned / 1 killed**, all eight measured metrics
+  byte-identical. The kill carries R7 scope + revival AND an explicit non-refutation clause, since
+  `killed` is the only status available for "cannot be instantiated" and must not read as
+  tested-and-failed. The successor is the first planned arm here to carry a `rationale`.
+- **`dna_decode/glm/masked_pyramid.py` — a pyramid that pools over REAL positions only.** A separate
+  module on purpose: `encoder.py` REFUSES ragged input because pad and truncate "both invent sequence
+  that was never measured", and adding a `lengths=` flag would have put a silent pad path inside the
+  module whose job is to refuse one. Under masked pooling no padded position can influence any
+  output, which is an arithmetic identity (`t - w + 1` valid outputs), so it is TESTED in both
+  directions: padding cannot change a score, AND an unmasked pool demonstrably WOULD be changed by
+  padding — without that second test a silently disabled mask would leave the first one green.
+  23 tests.
+- **`scripts/glm_fragment_pyramid_arm.py` — the bar frozen BEFORE the arm runs**, with
+  `predicted_outcome` (NO_GAIN or WEAK_PYRAMID) and `negative_scope` written pre-run, because on this
+  rung a negative is the honest prediction. Three substrate-forced design forks are settled in the
+  bar rather than silently: the ragged-input fork, the leakage unit (contiguous genomic block,
+  `start // 50_000`, 100x the longest fragment), and the comparator.
+- **The comparator decision was validated by measurement.** The census records kmer4 at 0.1313 on
+  this rung, but a cited number from a different split cannot be paired, so the bar requires an
+  in-run recomputation. Measured on all 321,123 fragments over 10 block-split seeds: **kmer4 median
+  0.1120** (sd 0.0071, 93 blocks, 256k train / 65k test). A smoke at N=5,000 scored 0.0422 — 3x off
+  the cited figure — so pairing against the citation would have been badly wrong.
+- **SELF-CORRECTION, measured and against our own interest: the span gain is +0.21 decades, not
+  +0.52.** `log10(499/3) = 2.2210` is the MAXIMUM and is realised on **49 of 321,123 fragments
+  (0.015%)**. Measured distribution: median **244 bp = 1.9103 decades**, p99 308 bp, only **4.0%** of
+  rows reach 300 bp. So against the tile sibling's 1.70 the honest figure is **1.70 -> 1.91, +0.21
+  decades (1.63x more length at the median)**, not +0.52 / 3.33x. The forgotten-substrate error in
+  another costume: a claim about a distribution taken from its extreme. Corrected on all three
+  surfaces that carried it — the frozen bar, the ledger rationale and the memo.
+- **One pre-registration AMENDED, with the outcome-neutrality argument stated.** The length-matched
+  padding control was frozen at >= 400 bp before the distribution was measured; that selects 49 rows
+  and cannot falsify anything, which is worse than no control because it looks like one. Moved to
+  >= 300 bp (12,896 rows, 4.0%). Legitimate because NO number exists for this arm — its artifact is
+  `BASELINE_ONLY_ENCODER_NOT_RUN` — and both edits move against the arm's interest: the span claim
+  shrinks and the control becomes powered. Margin, seed count, comparator and verdict vocabulary
+  untouched.
+- **Honest status: the encoder half has NOT run.** The artifact emits no verdict and says so
+  (`BASELINE_ONLY_ENCODER_NOT_RUN`) — a verdict from a one-sided run would be a figure, not a
+  measurement.
+
 ### 2026-10-27 — six R6 rails re-pinned; the encoder's substrate bound scope-corrected
 
 - **The six red R6 rails are green, re-pinned rather than rewritten away.**

@@ -1,0 +1,57 @@
+{
+  "schema": "pyramid-span-feasibility-v1",
+  "arm_under_test": "multiresolution-pyramid-4-decades-UNRUN",
+  "required_decades": 4.0,
+  "finest_honest_width_bp": 3,
+  "finest_width_source": "dna_decode.glm.encoder.PYRAMID_WIDTHS[0] (imported, not restated)",
+  "required_sequence_length_bp": 30000,
+  "verdict": "INFEASIBLE_SUBSTRATE_GATED",
+  "rungs_measured": [
+    {
+      "rung": "fragments_LB",
+      "n_sequences": 321123,
+      "length_min": 48,
+      "length_median": 244,
+      "length_max": 499,
+      "n_distinct_lengths": 359,
+      "source_file": "GSE144621_U00096.2_frag-rLP5_LB_expression.txt.gz",
+      "feasible_for_4_decades": false,
+      "shortfall_factor": 60.12,
+      "honest_span_decades": 2.221
+    },
+    {
+      "rung": "fragments_M9",
+      "n_sequences": 318457,
+      "length_min": 48,
+      "length_median": 244,
+      "length_max": 499,
+      "n_distinct_lengths": 361,
+      "source_file": "GSE144621_U00096.2_frag-rLP5_M9_expression.txt.gz",
+      "feasible_for_4_decades": false,
+      "shortfall_factor": 60.12,
+      "honest_span_decades": 2.221
+    },
+    {
+      "rung": "peak_tiles",
+      "n_sequences": 46713,
+      "length_min": 48,
+      "length_median": 150,
+      "length_max": 150,
+      "n_distinct_lengths": 96,
+      "source_file": "GSE144621_peak_tile_expression_formatted_std.txt.gz",
+      "feasible_for_4_decades": false,
+      "shortfall_factor": 200.0,
+      "honest_span_decades": 1.699
+    }
+  ],
+  "rungs_unreachable": [],
+  "best_achievable": {
+    "rung": "fragments_LB",
+    "honest_span_decades": 2.221,
+    "max_sequence_length_bp": 499,
+    "n_sequences": 321123
+  },
+  "what_was_searched": "every rung with a canonical loader in dna_decode.glm.genomewide: fragments LB, fragments M9, peak tiles. Reported so 'measured infeasible' is distinguishable from 'did not look'.",
+  "scope": "Bounds the SUBSTRATE CACHED ON THIS HOST only. It is NOT a claim that no such dataset exists in the world, and NOT a claim about the arm's predictive merit -- the arm was never run, and this says it cannot be instantiated here, not that it would have failed.",
+  "revival_condition": "any rung reaching >= 30000 bp becomes available -- a long-fragment or whole-locus expression assay, or a different label type (e.g. per-gene RNA-seq, where upstream context length is unbounded by the assay)."
+}

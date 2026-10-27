@@ -23,11 +23,12 @@
       "multiresolution-pyramid-4-decades-UNRUN": {
         "name": "multiresolution-pyramid-4-decades-UNRUN",
         "cost_tier": "expensive",
-        "status": "planned",
+        "status": "killed",
         "metric": null,
-        "evidence": "",
+        "evidence": "wiki/pyramid_span_feasibility_2026-10-27.json",
         "declared_at": "2026-10-09T14:42:29Z",
-        "resolved_at": ""
+        "resolved_at": "2026-10-27T12:47:23Z",
+        "reason": "SUBSTRATE-GATED, MEASURED -- the arm cannot be INSTANTIATED on any cached rung. Its own executed probe (wiki/pyramid_span_feasibility_2026-10-27.json) loaded every rung through its canonical loader and measured the maximum HONEST span at 2.2210 decades on the best one (fragments_LB, max 499 bp, n=321123), against the 4.00 decades this arm declares = 30000 bp at the encoder's own 3 bp finest-branch floor. Short by 60.1x. SCOPE: this bounds the substrate CACHED ON THIS HOST; it is NOT a claim that no such dataset exists anywhere, and it is NOT a refutation -- the arm was never run, so this says nothing about its predictive merit. Succeeded by pyramid-4scale-2.22decades-499bp-fragments, the reachable re-scope on the same criterion. REVIVAL: any rung reaching >= 30000 bp, e.g. a long-fragment or whole-locus expression assay, or a different label type such as per-gene RNA-seq where upstream context length is not bounded by the assay."
       },
       "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN": {
         "name": "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
@@ -43,7 +44,7 @@
         "cost_tier": "expensive",
         "status": "measured",
         "metric": 0.3167,
-        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json \u2014 median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
+        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json — median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
         "declared_at": "2026-10-12T00:48:51Z",
         "resolved_at": "2026-10-12T00:48:51Z"
       },
@@ -107,6 +108,16 @@
         "verdict_2026_10_26": "WEAK_STACK. Neither branch the plan pre-committed (narrow-and-keep-planned on a fail, measure on a success), so recorded as `measured` with the honest verdict: it ran, it has a metric, and it did not clear the bar. Per-combo: hybrid_conv_maxtx_decomp WEAK_STACK, hybrid_conv_maxtx_gc_decomp WEAK_STACK, hybrid_conv_maxtx_gc NO_STACK.",
         "narrowed_successor_NOT_declared_as_an_arm": "The form still untested is a channel from a NEW modality family -- the four channels here span only two (composition: conv, gc; promoter-thermodynamics: max_tx, decomposition, the latter the full decomposition the former reduces). That form is NOT declared as a new arm: doing so would re-block this criterion on a scope decision the plan deliberately left open (its open question 3 -- the only declared new-family candidate, promoteratlas, carries an unresolved circularity question and is already its own `planned` arm here). Recorded so the gap is not mistaken for a closed question, and so nobody re-proposes it as novel.",
         "ceiling_still_blocked_by": "This arm no longer blocks the criterion, but three siblings still do: multiresolution-pyramid-4-decades-UNRUN, substrate-change-constructed-eukaryotic-or-human-panel-UNRUN, and promoteratlas-base-embeddings-frozen-150bp-padded-to-200 are all `planned`. Verified by calling blocking(), not assumed -- see tests/test_tile_chain_substrate_wall_amendment5.py."
+      },
+      "pyramid-4scale-2.22decades-499bp-fragments": {
+        "name": "pyramid-4scale-2.22decades-499bp-fragments",
+        "cost_tier": "medium",
+        "status": "planned",
+        "metric": null,
+        "evidence": "",
+        "declared_at": "2026-10-27T12:47:23Z",
+        "resolved_at": "",
+        "rationale": "The reachable re-scope of multiresolution-pyramid-4-decades-UNRUN, which its own probe measured as substrate-gated at 60.1x. SPAN CORRECTED 2026-10-27 (measured, was overstated 2.5x): the arm's NAME carries the MAX span log10(499/3)=2.2210, but that is realised on 49 of 321,123 fragments. Median length is 244 bp = 1.9103 decades, p99 308 bp, and only 4.0% of rows reach 300 bp. So against the measured sibling pyramid-4scale-1.70decades-150bp the honest gain is +0.21 decades at the MEDIAN (244/150 = 1.63x more length), NOT +0.52 / 3.33x. Quote the median. Every branch is still a real biological scale (no degenerate 1 bp branch, which encoder.py rejects as inflating the metric without testing the hypothesis it stands for). Substrate is already local: 321,123 rows (LB) / 318,457 (M9) at 48-499 bp. COMPARATOR CARE -- this arm is on the FRAGMENT rung (ceiling 0.7928), NOT the tile rung (0.941), so its number must NEVER be read against the sibling's 0.3167 or against promcalc's 0.3968: the census ceiling_rule says each rung carries its own ceiling and none is inherited. The fragment-rung incumbent is kmer4 at spearman 0.1313 (30,000 rows). OPEN DESIGN POINT for the pre-registration: fragments are VARIABLE length (359 distinct), and load_fragments' own docstring states k-mer features are the length-invariant honest default here, so a fixed-window pyramid needs a pad/crop rule DECLARED BEFORE the run."
       }
     }
   }

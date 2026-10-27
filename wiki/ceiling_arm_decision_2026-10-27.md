@@ -74,7 +74,15 @@ because `(measured, not estimated)` is exactly the marker that makes a reader st
 
 ### Recommended: RE-SCOPE to 2.22 decades on the fragment rung
 
-- **+0.52 decades** over the measured sibling (1.70 → 2.22), i.e. **3.33× more span**, reaching a real
+- **CORRECTED 2026-10-27, measured after this memo was first written: the span gain is +0.21
+  decades, not +0.52.** `log10(499/3) = 2.2210` is the MAXIMUM, and it is realised on **49 of
+  321,123 fragments (0.015%)**. Measured distribution: median **244 bp = 1.9103 decades**, p99 308
+  bp, and only **4.0%** of rows reach 300 bp. Against the sibling's 1.70 the honest figure is
+  **1.70 → 1.91, +0.21 decades (244/150 = 1.63× more length at the median)**. The original +0.52 /
+  3.33× was computed from a single extreme value — the forgotten-substrate error in another
+  costume, a claim about a distribution taken from its maximum. The re-scope is still real and
+  still the reachable move; it is 2.5× smaller than first stated.
+- **superseded wording:** +0.52 decades over the measured sibling (1.70 → 2.22), i.e. 3.33× more span, reaching a real
   biological scale at the top end rather than buying span at the bottom. The encoder's own comment
   already rejects the cheap alternative — *"a width-1 kernel cannot see a motif at all, so buying span
   by shrinking the finest branch to 1 bp inflates the decade metric without testing the hypothesis the
