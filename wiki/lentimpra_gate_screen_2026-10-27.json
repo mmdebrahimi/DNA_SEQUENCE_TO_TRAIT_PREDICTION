@@ -1,0 +1,81 @@
+{
+  "candidate": "Agarwal 2025 human lentiMPRA (HepG2 + K562, Zenodo 10558183, CC-BY-4.0)",
+  "intended_layer": "L4_forward_continuous",
+  "verdict": "CLEARS",
+  "reason": "every applicable gate passes. This bounds the LABEL question only \u2014 not artifact reachability, regime fit, or whether the work is worth doing.",
+  "gates": [
+    {
+      "gate": "G1",
+      "verdict": "pass",
+      "reason": "label recorded as a measurement: Observed log2(RNA/DNA) per element, read out by barcode RNA and DNA sequencing of a lentivirally integrated reporter library in live HepG2 and K562 cells. It is a wet-lab transcriptional-activity measurement; no genomic tool, catalogue or interpretation system produced it. Verified by MD5 against the publisher's own manifest for all four supplementary tables.",
+      "evidence": {
+        "label_provenance_evidence": "Observed log2(RNA/DNA) per element, read out by barcode RNA and DNA sequencing of a lentivirally integrated reporter library in live HepG2 and K562 cells. It is a wet-lab transcriptional-activity measurement; no genomic tool, catalogue or interpretation system produced it. Verified by MD5 against the publisher's own manifest for all four supplementary tables."
+      }
+    },
+    {
+      "gate": "G2",
+      "verdict": "not_applicable",
+      "reason": "variation is constructed, so there is no source-vs-class confound to have",
+      "evidence": {}
+    },
+    {
+      "gate": "G3",
+      "verdict": "pass",
+      "reason": "label is an assay reading: log2(RNA/DNA) is the assay reading of the tested element's own transcriptional output, not a property of where or how the sample was collected. Each row is a designed 200 nt element, so there is no isolation-site or sampling-frame confound of the G3 kind.",
+      "evidence": {
+        "label_semantics_evidence": "log2(RNA/DNA) is the assay reading of the tested element's own transcriptional output, not a property of where or how the sample was collected. Each row is a designed 200 nt element, so there is no isolation-site or sampling-frame confound of the G3 kind."
+      }
+    },
+    {
+      "gate": "G4",
+      "verdict": "not_applicable",
+      "reason": "not a surveillance corpus; there is no ecosystem to exclude",
+      "evidence": {}
+    },
+    {
+      "gate": "G5",
+      "verdict": "not_applicable",
+      "reason": "genotypes are known by construction; no assembly needs fetching",
+      "evidence": {}
+    },
+    {
+      "gate": "G6",
+      "verdict": "pass",
+      "reason": "assay degeneracy: 0.1% of values at the mode over 5494 distinct levels (bars 25% / 20)",
+      "evidence": {
+        "mode_share": 0.000814,
+        "n_distinct_values": 5494.0
+      }
+    },
+    {
+      "gate": "G7",
+      "verdict": "not_applicable",
+      "reason": "no provenance-disjoint split is needed; the split is by position/variant",
+      "evidence": {}
+    },
+    {
+      "gate": "G8",
+      "verdict": "not_applicable",
+      "reason": "ancestry is randomised by construction, so there is no clonality to collapse",
+      "evidence": {}
+    },
+    {
+      "gate": "G9",
+      "verdict": "pass",
+      "reason": "0% of loci record no concrete causal variant (bar 50%)",
+      "evidence": {
+        "loci_without_recorded_variant_fraction": 0.0
+      }
+    },
+    {
+      "gate": "G10",
+      "verdict": "pass",
+      "reason": "0% of recorded causal variants are indel/structural (bar 50%)",
+      "evidence": {
+        "off_panel_variant_fraction": 0.0
+      }
+    }
+  ],
+  "contract": "A PASS bounds only whether a usable LABEL exists and whether the rule is scoreable. It is NOT a build recommendation: reachability of the artifact, regime fit (eval/regime.py) and worth-doing are separate questions.",
+  "memo": "wiki/lentimpra_acquisition_2026-10-27.md"
+}

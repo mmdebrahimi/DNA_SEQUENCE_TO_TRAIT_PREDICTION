@@ -57,7 +57,18 @@ ALLOWED_MENTIONS: dict[str, frozenset[str]] = {
     # 6 docstring mentions contrasting the two substrates' ceilings and traps; reads no GSE108535 file
     "GSE108535": frozenset({"glm/genomewide.py"}),
     # 1 comment recording the measured <=150 bp substrate bound; reads no GSE144621 file
-    "GSE144621": frozenset({"glm/encoder.py"}),
+    # glm/lentimpra.py: 1 comment (line 47) saying its human cache is namespace-separate "so a human
+    # table can never be mistaken for a GSE144621 one". VERIFIED BY READING THE HITS, per this file's
+    # own standard: exactly one `GSE144621` occurrence, inside a `#:` comment; zero `GSE\d+_<file>`
+    # patterns; no import of genomewide; no `.txt.gz`; it opens only
+    # `Table S3/S6 - ....xlsx` from `D:/dna_decode_cache/mpra_human/`.
+    # Worth keeping in the record: the comment that tripped this detector is the comment explaining
+    # why the two substrates CANNOT be confused -- the documented shape where a guard fires on the
+    # prose that prevents the thing it guards against.
+    # RESIDUAL, named rather than hidden: this exemption is per-MODULE, so if GSE144621-reading code
+    # is ever added to lentimpra.py the detector will no longer catch it. Same property as the
+    # encoder.py row above. The exemption buys legibility, not immunity.
+    "GSE144621": frozenset({"glm/encoder.py", "glm/lentimpra.py"}),
 }
 
 #: Accession -> (owning module relative to dna_decode/, the trap that owner's loader encodes).

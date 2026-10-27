@@ -2,6 +2,67 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (d)
+
+- **"All N remaining failures are absent data" is a claim worth re-testing, not inheriting.** Two of
+  this repo's 14 baseline failures turned out to need a free library, not the missing workbook,
+  because they test a PARSER against synthetic row shapes rather than real data. The recorded
+  reasoning had conflated the two kinds of test. A permanently-red baseline is exactly where this
+  hides: nobody re-examines a failure that has a standing explanation.
+- **A dependency declined on a data-absence argument deserves a second look whenever either side
+  changes.** `openpyxl` was refused because its workbook was absent; the parser-shape tests never
+  needed that workbook at all, so the refusal cost two green tests for months. Check what a
+  dependency is actually needed FOR, not just what it is nominally for.
+- **When a guard fires on your own work, verify the exemption before taking it.** The resource-
+  ownership detector flagged a new loader for naming an accession it does not read. The right move
+  was to confirm that by reading every hit (one comment, no filename pattern, no import of the
+  owner) and then take the VISIBLE exemption the guard itself offers — and to prove the exemption is
+  narrow by showing a third module still trips. An exemption you cannot show is narrow is a disabled
+  guard.
+- **Predict the gate's output, then explain every difference.** I predicted 14 failed / 7137 passed
+  and got 13 / 7141 / 180 skipped. Three discrepancies, each a real finding: one NEW failure (my own
+  regression against the ownership guard), two RESOLVED (the openpyxl correction above), and fewer
+  skips (previously-skipped tests now running). Had I only checked "no new failures", the net count
+  would have looked like an improvement and the regression would have shipped.
+
+## 2026-10-27 (c)
+
+- **Verify a download against the publisher's own hash, or you are storing error pages under data
+  filenames.** Zenodo was intermittently 502/503/504 and wrote a 20,899-byte "unavailable" page and a
+  150-byte nginx 502 page as `.xlsx` files. Fed to a parser they give an error indistinguishable from
+  "no usable rows". This is the GPS-cohort pattern a second time, so it is now a script with
+  whole-file MD5, retries and delete-on-fail — and it caught a real 504 on its first run.
+- **A HEAD request or an opening-bytes sniff is the wrong integrity guard.** A truncated gzip
+  decompresses its opening blocks perfectly and only raises at the END, so a 2 KB sniff passes
+  exactly the files that later fail. Hash the whole file or do not claim it is verified.
+- **Read a remote archive's index before downloading it.** Two HTTP range requests listed both 3.5 GB
+  zips' contents and showed they are ~99.7% model checkpoints with ~10 MB of the authors' own
+  predictions. That is a 7.5 GB download avoided by two small reads — and the first pass, sorted by
+  SIZE, returned 25 checkpoints and answered the wrong question; filtering for data extensions was
+  what actually located the payload.
+- **Quote the figure you measured, not the figure in the abstract.** ">680,000 sequences" became
+  159,795 joinable pairs once the tables were parsed — 4.3x. An abstract counts what serves the
+  paper; a loader counts what you can train on. Measure the join, then quote.
+- **An empty intersection is a KEY mismatch, not a small cohort, and the difference is the whole
+  decision.** WTC11 joined at exactly 0.0000 because one table keys by Ensembl gene id and the other
+  by element name. A loader that returned "what it could" would have handed back 699 of 23,064 rows
+  in a shape identical to a complete cohort. Enforce the join rate and REFUSE; then test that
+  relaxing the bar does not manufacture rows, which proves the bar reports the mismatch rather than
+  causing the emptiness.
+- **A published fold assignment is worth more than a clever split.** The deposit ships the authors'
+  own 10 folds AND per-fold scores for five methods, so the split is leakage-safe by publication and
+  any result is directly comparable — no split design to defend.
+- **A benchmark table without a stated metric is not yet a comparator.** Five methods, 30 numbers,
+  and nowhere does the sheet say Pearson or Spearman. The likely answer is not good enough: a
+  readout-type mismatch has already bitten this project. The field says `UNSPECIFIED_IN_SOURCE` and a
+  test pins it, so the gap cannot be closed by a guess.
+- **Fix a slow loader in the loader, not in the test.** A test file that re-parsed a 56 MB workbook
+  ~25 times blew a 600 s timeout. Caching it in the module gave 170x and fixes every future consumer;
+  caching it in the test would have left the next caller to rediscover the cost.
+- **A declined dependency can be declined for a reason that expires.** `openpyxl` was refused because
+  the workbook it parses was absent. The workbook arrived, so the refusal lapsed with it (R9). Install
+  it venv-only and verify the frozen lockfile is byte-identical.
+
 ## 2026-10-27 (b)
 
 - **When a guard blocks a legitimate move, make the move's evidence rather than the guard's

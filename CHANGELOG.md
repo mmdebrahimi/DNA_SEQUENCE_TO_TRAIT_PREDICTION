@@ -5,6 +5,87 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (d) — the suite baseline drops 14 -> 12, and 2 of those were never data
+
+- **CORRECTION to `CLAUDE.md` line 411, measured.** It records the suite baseline as *"All 14
+  remaining are absent DATA, NONE a code defect"* and says `openpyxl` is deliberately not installed
+  because *"the workbook it would parse is itself absent, so it would convert a misleading import
+  error into the honest data error without closing anything."* Installing it (free, venv-only,
+  `uv.lock` byte-identical) **closed 2 of the 14**:
+  `tests/test_essentiality_ladder_w0_probe.py` (now 22 passed) and
+  `tests/test_essentiality_label_sources.py` (now 25 passed).
+  **Mechanism:** the two failing tests exercise the PARSER against synthetic `iter_rows` shapes, not
+  the real workbook, so they never needed the absent data — only the library. The reasoning had
+  conflated real-data tests with parser-shape tests. So "all 14 are absent DATA" is wrong for 2 of
+  14, and "without closing anything" is refuted. **The new baseline is 12.** CLAUDE.md itself cannot
+  carry this (one word of headroom; additions are USER AUTHORITY), which is why it is here — and its
+  own lesson in that paragraph, *"a permanently-red suite trains readers to discount red"*, is
+  exactly the harm of having left 2 free-to-fix failures red.
+- **`tests/test_substrate_loader_ownership.py`: one visible exemption added.** The R21 resource
+  detector fired on `glm/lentimpra.py` for naming `GSE144621`. **Verified by reading the hits**, per
+  that file's own standard: exactly ONE occurrence, inside a `#:` comment; no `GSE\d+_<filename>`
+  pattern; no import of `genomewide`; no `.txt.gz`; it opens only the two `.xlsx` files from
+  `mpra_human/`. So it names the accession and reads none of it — the case `ALLOWED_MENTIONS` exists
+  for. **The comment that tripped the detector is the comment explaining why the two substrates
+  cannot be confused**, which is the documented shape where a guard fires on the prose that prevents
+  the thing it guards. **Proven NARROW, not a blanket disable:** a third module (`masked_pyramid.py`)
+  given the same string still trips and is named, then reverted byte-identically. Residual recorded
+  in the row: the exemption is per-MODULE, so it buys legibility, not immunity.
+
+### 2026-10-27 (c) — the human lentiMPRA panel is acquired, verified and screened
+
+- **`scripts/fetch_lentimpra.py`** fetches Zenodo 10558183 (Agarwal 2025, **CC-BY-4.0**, licence read
+  from the API and REFUSED if it ever differs) and verifies **every byte against the publisher's
+  MD5**. Four tables, 74.19 MB, 4/4 verified, on `D:/dna_decode_cache/mpra_human/` — namespace-
+  separate from the *E. coli* `mpra/` so a human table cannot be mistaken for a GSE144621 one.
+- **The verification was not hygiene — it fired on the first real run.** A hand-rolled `curl` had
+  already written **a 20,899-byte Zenodo "application-unavailable" page and a 150-byte nginx 502
+  page under genuine `.xlsx` filenames** (Zenodo was returning 502/503/504), which is the GPS-cohort
+  corruption pattern this repo has already paid for. Both deleted. On the verified run Table S3's
+  first attempt returned the 504 page, was caught, deleted, retried and verified on attempt 2. A
+  HEAD or opening-bytes check would be the WRONG guard: a truncated gzip decompresses its opening
+  blocks perfectly and raises only at the END.
+- **7.5 GB deliberately NOT downloaded, on measured grounds.** Both big zips' central directories
+  were read over HTTP **range requests**: `final_dump.zip` and `final_joint_dump.zip` are **270
+  model checkpoints each (3.83 / 4.33 GB)**, and their ~10 MB of TSVs are the authors' own model
+  PREDICTIONS. The dumps are LegNet weights, not the measurement library.
+- **`dna_decode/glm/lentimpra.py`** joins design (Table S3) to activity (Table S6): **159,795 usable
+  (sequence, activity, fold) pairs**, uniform **230 bp = 15nt adaptor + 200nt element + 15nt
+  adaptor** (verbatim from the column name, and NOT trimmed silently). 22 tests.
+- **CORRECTION: the usable set is 159,795, not the ">680,000 sequences" taken from the abstract** —
+  ~4.3x smaller. Measured: 483,627 designed, 182,859 with activity, 159,795 joinable. 680,000 is not
+  reproducible from these tables and is left unexplained rather than reinterpreted.
+- **WTC11 REFUSES at join rate 0.0000** — an EMPTY intersection, not a small one: its activity rows
+  are keyed by Ensembl gene id and its design rows by element name. Table S7 rescues **699 of
+  23,064 (3.03%)**; a prefix join gives 0. The loader refuses rather than returning a 3%-complete
+  cohort that has the same shape as a complete one, and relaxing the bar is TESTED not to
+  manufacture rows. HepG2 and K562 both join at **1.0000**.
+- **A published incumbent benchmark exists on the IDENTICAL folds** — Table S6 ships the authors'
+  10-fold assignment plus per-fold scores for five methods (MPRALegNet 0.8333 HepG2 / 0.8665 K562,
+  Enformer 0.8306 / 0.8497, Sei, MPRAnn, Biochemical). So the split is leakage-safe by publication
+  and results are directly comparable — **except the sheet never states the METRIC**, so
+  `published_incumbents()` returns `UNSPECIFIED_IN_SOURCE` and a test pins it. Noted: MPRALegNet
+  beats Enformer on HepG2 and K562 but LOSES on WTC11, the one cell we cannot load.
+- **Ten rejection gates: `CLEARS`** (5 pass / 5 n-a / 0 trip,
+  `wiki/lentimpra_gate_screen_2026-10-27.json`). G6 decisively — mode share **0.0008** over
+  5,494–7,192 distinct levels with exactly one value at each extreme, against the CcdB failure mode
+  of 79.3% at a ceiling. All four previously-committed hand verdicts still re-derive.
+- **Two substrate facts:** sequences are **uniformly 230 bp**, so this panel needs none of the masked
+  pooling the fragment rung required; and **`sd` is exactly 1.0000** in both cells, so the activity
+  is standardized rather than a raw ratio — which decides what an absolute margin would mean.
+- **Not a span lever** (`log10(200/3) = 1.82` decades, between the tile rung's 1.70 and the fragment
+  rung's 1.91 median). Its value is the SUBSTRATE CHANGE — human, constructed, with published
+  incumbents — i.e. the north star's step 4.
+- **A 170x loader speedup, from a defect found by running the tests.** The first `tests/test_lentimpra.py`
+  exceeded a 600 s timeout purely by re-parsing the 56 MB workbook ~25 times. Fixed in the MODULE
+  (a tuple-backed cache, so a cached payload cannot be mutated and observed changed) rather than
+  worked around in the tests: **41.54 s -> 0.24 s**, suite file now 2m12s.
+- **`openpyxl` installed venv-only**, leaving the frozen `uv.lock` byte-identical (md5
+  `892c08339f82bd1a23f898821adb9735` before and after). This expires CLAUDE.md's recorded reason for
+  declining it — *"the workbook it would parse is itself absent"* — now that the workbook is on disk.
+- **The arm stays `planned`.** Acquiring a substrate is not running an arm; it gained a `rationale`
+  recording the discharge, and `evidence` stays empty per R6/R7.
+
 ### 2026-10-27 (b) — the 4-decade arm retired on its own evidence; the reachable successor declared
 
 - **`scripts/pyramid_span_feasibility_probe.py` + `wiki/pyramid_span_feasibility_2026-10-27.json`.**

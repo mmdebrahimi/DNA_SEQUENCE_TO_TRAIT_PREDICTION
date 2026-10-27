@@ -353,7 +353,34 @@ Plan `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technic
   no reason" item below. Ledger: 12 arms, 8 measured / 3 planned / 1 killed; all 8 measured metrics
   byte-identical. Three rails re-pinned again and two guards ADDED (the non-refutation clause and the
   successor's rationale are now pinned).
-  **(2) is NOT done and remains the user's call** — nothing was downloaded.
+  **(2) IS NOW DONE — fetched on the user's "lets start by fetching the human lentiMPRA panel"
+  (2026-10-27).** `wiki/lentimpra_acquisition_2026-10-27.md`; fetcher `scripts/fetch_lentimpra.py`;
+  loader `dna_decode/glm/lentimpra.py` (22 tests). Zenodo 10558183, CC-BY-4.0, four tables 74 MB
+  **all MD5-verified**, on `D:/dna_decode_cache/mpra_human/`. **159,795 usable (sequence, activity,
+  fold) pairs** over HepG2 + K562, uniform 230 bp (15 + **200 nt element** + 15), with the authors'
+  **published 10-fold assignment** so the split is leakage-safe by publication. Gates: **CLEARS**.
+  **Three things a later session needs:** (a) the abstract's ">680,000 sequences" is NOT reproducible
+  from these tables — **quote 159,795**, ~4.3x smaller than first reported here; (b) **WTC11 joins at
+  0.0000** (Ensembl-gene-id keys vs element names; S7 rescues 699 of 23,064) so its 23,064 measured
+  elements are unrecovered — OPEN; (c) Table S6 publishes per-fold incumbents on these exact folds
+  (MPRALegNet 0.8333 / 0.8665) but **never states the metric**, so nothing may be compared against it
+  until that is resolved. The arm stays `planned`: acquiring a substrate is not running an arm.
+- **[OPEN] Recover WTC11's 23,064 measured elements.** Their sequences are not in Zenodo 10558183
+  under the Ensembl-gene-id key its activity table uses. Would add 14% to the labelled set, and
+  WTC11 is the one cell where MPRALegNet LOSES to Enformer (0.7946 vs 0.8335) — so it is the most
+  interesting cell, not a rounding error. Likely in GEO or a table outside this deposit.
+- **[DONE 2026-10-27] The suite baseline is 12, not 14, and CLAUDE.md's reason for 2 of them was
+  wrong.** Installing `openpyxl` (free, venv-only, `uv.lock` byte-identical) closed
+  `test_essentiality_ladder_w0_probe` and `test_essentiality_label_sources`, because those two tests
+  exercise the xlsx PARSER against synthetic row shapes rather than the absent workbook. CLAUDE.md
+  line 411 says all 14 are "absent DATA, NONE a code defect" and that openpyxl would close nothing;
+  both are refuted for those 2. **CLAUDE.md cannot carry the correction** (one word of headroom,
+  additions are USER AUTHORITY), so it lives in `CHANGELOG.md` + `LESSONS_LEARNED.md` 2026-10-27 (d).
+  **Quote 12 as the baseline**: cyp4f2 7 / essentiality-report-card-ladder 3 / pneumo 1 / README 1.
+- **[OPEN] Resolve the published benchmark's METRIC.** Table S6's `Benchmarking results` gives five
+  methods x 10 folds x 3 cells and no metric name. Pearson vs Spearman changes whether our numbers
+  are comparable at all; `published_incumbents()` returns `UNSPECIFIED_IN_SOURCE` and a test pins
+  that so the gap cannot be quietly closed by a guess. One read of the paper's methods settles it.
 - **[OPEN] `promoteratlas-base-embeddings-frozen-150bp-padded-to-200` is the one untried arm runnable
   today, and it is the on-position one.** Substrate present (10 local seed tables); the only gap is a
   public weights fetch — `D:/hf_cache/hub` holds exactly one model and it is GENERator-v2. It is a

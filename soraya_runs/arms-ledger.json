@@ -37,7 +37,8 @@
         "metric": null,
         "evidence": "",
         "declared_at": "2026-10-09T14:42:29Z",
-        "resolved_at": ""
+        "resolved_at": "",
+        "rationale": "SUBSTRATE ACQUIRED 2026-10-27 -- the acquisition wall is DISCHARGED; the arm is still PLANNED because it has not RUN. wiki/lentimpra_acquisition_2026-10-27.md. Agarwal 2025 human lentiMPRA (Zenodo 10558183, CC-BY-4.0, four tables MD5-verified) at D:/dna_decode_cache/mpra_human/, loader dna_decode/glm/lentimpra.py. USABLE: 159,795 (sequence, activity, fold) pairs over HepG2 (61,463) + K562 (98,332), uniform 230 bp = 15nt adaptor + 200nt element + 15nt adaptor, with the authors' own 10-fold assignment carried through so the split is leakage-safe BY PUBLICATION. WTC11 REFUSES at join rate 0.0000 (Ensembl-gene-id keys vs element names; Table S7 rescues 699 of 23,064 = 3.03%), so 23,064 measured elements remain unrecovered -- open, not closed. Ten rejection gates: CLEARS (5 pass / 5 n-a / 0 trip), G6 decisively (mode share 0.0008 over 5,494-7,192 distinct levels). COMPARATOR CARE -- Table S6 publishes per-fold incumbents on these EXACT folds (MPRALegNet 0.8333 HepG2 / 0.8665 K562; Enformer 0.8306 / 0.8497; Sei, MPRAnn, Biochemical below), but the sheet NEVER STATES THE METRIC, so published_incumbents() returns metric=UNSPECIFIED_IN_SOURCE and no number may be compared against it until that is resolved from the paper's methods. NOT A SPAN LEVER: log10(200/3) = 1.82 decades, between the tile rung's 1.70 and the fragment rung's measured 1.91 median. Its value is the SUBSTRATE CHANGE -- human, constructed, with published incumbents -- which is the north star's step 4, not more context length. CORRECTED: the '>680,000 sequences' figure taken from the abstract is NOT reproducible from these tables; quote 159,795."
       },
       "pyramid-4scale-1.70decades-150bp": {
         "name": "pyramid-4scale-1.70decades-150bp",
