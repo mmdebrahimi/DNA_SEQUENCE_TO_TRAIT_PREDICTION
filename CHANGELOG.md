@@ -5,6 +5,39 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (g) — the Kaggle route needs NO credential, and a docstring claim is unsupported
+
+- **Correction to this session's own framing.** I reported that pushing the kernel needs the user to
+  place `kaggle.json`. That is true only of the **CLI/API** route. Searched on the user's prompt that
+  Kaggle work had been done before, and the evidence says the route actually used on this machine was
+  the **notebook UI**, which needs no local credential from anyone. So the step I described as a
+  blocker was partly self-inflicted framing.
+- **What was measured.** `~/.kaggle` exists under FOUR user profiles (`Farshad`,
+  `Laptop Portable`, `Officina-de-mamma`, `b0652085`) and **every one is empty** — 0 entries. No
+  `kaggle.json` anywhere under `/c/Users` to depth 5, none on any other drive letter (D through H do
+  not resolve at all), `KAGGLE_USERNAME` / `KAGGLE_KEY` / `KAGGLE_CONFIG_DIR` all unset, no
+  `KAGGLE_*` in any project `.env` or config, and the `kaggle` module is installed in no python on
+  PATH and no venv under `pythonprojects`. The empty-but-present `.kaggle` directory is the
+  signature: something created the directory and the file is not there.
+- **Transcript forensics.** Across 114 recorded projects, `kaggle_push_poll` / `kernels push`
+  appears in exactly **one** older artifact (a subagent transcript) plus this session. Within
+  `dna_decode`, only one older session mentions Kaggle at all (`75ad650b`, 33 mentions): it is heavy
+  on `T4` (74), `upload` (50), `notebook` (25) and `machine_shape`/`enable_gpu` (3 each), and has
+  **zero** `kaggle.json`, `KAGGLE_CONFIG_DIR`, `api.authenticate`, `kaggle_push_poll` or
+  `pip install kaggle`. Its nine `credential` hits are all boilerplate — system-prompt text, memory
+  index lines, harness attachment metadata — and none is a Kaggle credential.
+- **So `scripts/kaggle_push_poll.py`'s *"auth already works on this host as emanueleebrahimi"* is
+  UNSUPPORTED on this machine**, and this is the stronger version of the correction recorded in
+  2026-10-27 (f): not merely "no credential today", but no evidence in the transcript record that
+  this host ever authenticated. The pushes behind the committed Kaggle artifacts were plausibly done
+  from another machine (CLAUDE.md references a Precision 7780 for Codex work) or through the UI.
+  **Stated as bounded:** absence of evidence here is not proof it never happened elsewhere.
+- **Operational consequence, and it is good:** `scripts/kaggle/fragment_pyramid_kernel.py` can be run
+  with **no credential at all** — new notebook, paste, Accelerator GPU T4 x1, Internet ON, Save &
+  Run All. The API route stays available for whoever has the token, and no credential was requested,
+  displayed or handled in either direction. The transcript search masked any 20+ character token
+  before printing, so a key could not surface even accidentally.
+
 ### 2026-10-27 (f) — Kaggle is the route the detached drive leaves open, and R9 fires again
 
 - **`scripts/kaggle/fragment_pyramid_kernel.py`** runs the fragment-pyramid arm on a Kaggle T4:

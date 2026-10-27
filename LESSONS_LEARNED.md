@@ -2,6 +2,27 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (g)
+
+- **"We have done this before" is a lead to verify, not a credential to assume.** The user was right
+  that Kaggle work had been done; the transcript record shows it went through the notebook UI, with
+  zero API-auth tokens anywhere. Both halves matter: the capability was real AND the mechanism I had
+  assumed was never used here.
+- **Check which ROUTE a past success used before declaring its precondition missing.** I reported
+  "you must place kaggle.json" as a blocker. That is the CLI route's precondition; the route actually
+  used needs nothing. Naming a blocker that belongs to a path nobody took is a self-inflicted stop.
+- **An empty-but-present config directory is evidence, not noise.** `~/.kaggle` existing with zero
+  entries under four separate profiles says something created it and the secret is not there — which
+  is different from "I looked in the wrong place", and it is what let the search terminate honestly.
+- **When searching a filesystem or transcripts for a secret's LOCATION, mask before printing.** The
+  transcript scan masked every 20+ character token before any output, so a key could not surface in
+  the session even by accident. Search for the mechanism (filenames, env-var names, call sites),
+  never for the value.
+- **Quote the path, always.** An unquoted `$F` holding `/c/Users/Laptop Portable/...` word-splits on
+  the space and hands grep a broken path, which returned all-zero counts that looked exactly like a
+  clean negative finding. Second shell-quoting trap of the day and the one most likely to be read as
+  a result.
+
 ## 2026-10-27 (f)
 
 - **When a local resource fails, check the CLOUD route before declaring the work blocked.** The

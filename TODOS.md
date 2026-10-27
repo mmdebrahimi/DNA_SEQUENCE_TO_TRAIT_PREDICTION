@@ -371,9 +371,11 @@ Plan `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technic
   SMOKE -> full with a >8 h projection gate. **It needs nothing from D: and nothing from server1.**
   Two routes, both the user's: place `kaggle.json` and
   `uv run python scripts/kaggle_push_poll.py push scripts/kaggle/fragment_pyramid_kernel.py fragment-pyramid --gpu`
-  (note: the `kaggle` module is NOT installed here and there is NO credential on this machine,
-  contrary to that script's docstring), or paste the kernel into a new Kaggle notebook with
-  **Accelerator GPU T4 x1 and Internet ON**. Bump `PINNED_SHA` to the newest commit first if the arm
+  (note: the `kaggle` module is NOT installed here and there is NO credential on this machine —
+  `~/.kaggle` is present but EMPTY under all four user profiles, and the transcript record shows no
+  evidence this host ever authenticated, contrary to that script's docstring), **or — the route the
+  record shows was actually used — paste the kernel into a new Kaggle notebook with Accelerator
+  GPU T4 x1 and Internet ON, which needs no credential at all.** Bump `PINNED_SHA` to the newest commit first if the arm
   has moved.
 - **[OPEN — BLOCKED ON D: for a LOCAL run only] The fragment-pyramid encoder half is BUILT but has
   never completed a scored run.** `scripts/glm_fragment_pyramid_arm.py --with-encoder` +
