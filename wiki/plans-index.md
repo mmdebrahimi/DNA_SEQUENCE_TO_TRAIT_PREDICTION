@@ -832,3 +832,24 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+## [plan_file: Correct_Two_Wrong_Claims_I_Committed_And_Make_The_Next_Check_Runnable_Plan/] 2026-10-28
+**Status:** candidate — amended 2026-10-28 after a pre-exec review: Step 3 gained the classifier-extraction detail plus a byte-identical equivalence proof, the self-contradicting read-only step split into 7 (report) + 8 (correct), and the plan renumbered to 8 steps. `/save-plan` ran BEFORE that review, so the fix is an in-place edit rather than a second save, per the save-once rule.
+**Summary:** Commit b28fa8dc recorded an honest refusal of the lentiMPRA published metric but wrapped it in two claims that are wrong, plus one inherited over-claim, all sitting in the surfaces a future session reads first.
+**Key decisions:**
+- Scope the docstring's claim to the rows the parser actually READS, rather than asserting what the sheet contains -- every row that is not a cell type, `test fold`, or numeric is skipped silently.
+- Replace the decisive-next-check (the header row carries no metric) with the rows the parser DISCARDS, and record the superseded wording verbatim rather than overwriting it.
+- Ship `unparsed_rows()` so the real check is runnable code, proven non-vacuous by a planted caption that `published_incumbents()` drops and it returns.
+- Separate cannot-COMPARE from cannot-RUN: the metric is not the eukaryotic arm's blocker, and correct the out-of-repo resume checkpoint, which the next session reads first.
+
+---
+
+## [plan_file: Amend_The_Saved_Correction_Plan_So_Its_Two_Defects_Cannot_Ship_Plan/] 2026-10-28
+**Status:** candidate
+**Summary:** The plan saved at `plans/Correct_Two_Wrong_Claims_I_Committed_And_Make_The_Next_Check_Runnable_Plan/technical-plan.md` is sound in intent and carries two defects that would bite during execution, plus five smaller ones.
+**Key decisions:**
+- Close the two execution-blocking defects: make the `unparsed_rows()` step's classifier extraction explicit (the parser's predicates are STATEFUL, so sharing them rewrites a test-pinned loop) and give it the missing byte-identical equivalence proof.
+- Split the step whose `Files:` declared read-only while its body authorised prose edits -- the toolkit requires a numeric `### Step N:`, so this renumbers that plan to 8 steps and the arms ledger never enters any `Files:` line.
+- Five medium corrections: drop `superseded_claim` from the runtime return value (a payload that grows a field per correction is unbounded -- history belongs in the memo), remove an unsourced numeric interval from a provenance-discipline memo, and move the shared-global-path constraint into the step that writes it.
+- Re-validate via the toolkit rather than hand-editing the wave table, and declare a `**Status:**` on the index entry -- 38 existing entries carry one and the prior entry did not.
+
+---

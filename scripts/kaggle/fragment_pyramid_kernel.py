@@ -57,6 +57,14 @@ SMOKE_LIMIT = 4000
 SMOKE_SEEDS = 3
 FULL_SEEDS = 10
 
+#: A SECOND, SMALLER timing point, added 2026-10-28. ONE timing point cannot separate fixed
+#: cost from marginal cost, and the projection multiplies whatever it is handed by ~268x
+#: (scale 80.3 x 20 fits / 6 fits) -- so ~30 s of one-off setup (import torch, build the model,
+#: parse the frames) was projected as +2.2 h of the full run, and the projection STOPPED a run
+#: on its own overhead. Two points give a slope, and the slope is the only part that scales.
+CAL_LIMIT = 1000
+CAL_SEEDS = 1
+
 
 def sh(cmd, cwd=None, check=True):
     print("$ %s" % (cmd if isinstance(cmd, str) else " ".join(cmd)), flush=True)
@@ -265,10 +273,17 @@ def main():
     verify_pinned_tree()   # seconds, and BEFORE the download -- a stale pin must not cost 5 minutes
     fetch_data()
 
+    print()
+    print("=" * 90, flush=True)
+    print("CALIBRATION: --limit %d --seeds %d (the second timing point, for the slope)"
+          % (CAL_LIMIT, CAL_SEEDS), flush=True)
+    print("=" * 90, flush=True)
+    cal, cal_sec = run_arm("cal", ["--limit", str(CAL_LIMIT), "--seeds", str(CAL_SEEDS)],
+                           device)
     print("\n" + "=" * 90, flush=True)
     print("SMOKE: --limit %d --seeds %d" % (SMOKE_LIMIT, SMOKE_SEEDS), flush=True)
     print("=" * 90, flush=True)
-    smoke, smoke_min = run_arm("smoke", ["--limit", str(SMOKE_LIMIT), "--seeds", str(SMOKE_SEEDS)],
+    smoke, smoke_sec = run_arm("smoke", ["--limit", str(SMOKE_LIMIT), "--seeds", str(SMOKE_SEEDS)],
                                device)
 
     # A HEALTHY SMOKE IS `PARTIAL_SEED_RANGE`, not `SCORED`. The smoke runs 3 of the 10
@@ -294,18 +309,46 @@ def main():
           "this rung at spearman(GC, expression) = -0.1169, and a near-initialisation conv net is "
           "close to a random functional of composition." % SMOKE_LIMIT, flush=True)
 
-    # Size the full run from the smoke rather than from an estimate.
-    per_fit = smoke_min / max(1, 2 * SMOKE_SEEDS)          # real fits + null fits
-    scale = 321123 / SMOKE_LIMIT
-    projected_h = per_fit * scale * (2 * FULL_SEEDS) / 3600.0
-    print("\nPROJECTED full run: ~%.1f h (from %.1f s per fit at N=%d, scaled %.0fx, %d fits). "
-          "Kaggle GPU sessions cap around 9 h." % (projected_h, per_fit, SMOKE_LIMIT, scale,
-                                                   2 * FULL_SEEDS), flush=True)
+    # Size the full run from TWO timing points, so fixed cost is not scaled up ~268x.
+    #   t(N, S) ~= fixed + rate * N * (2*S)        [real fits + null fits]
+    # Two measurements give both unknowns, and only `rate` multiplies up to the full run.
+    w_cal = CAL_LIMIT * (2 * CAL_SEEDS)
+    w_smoke = SMOKE_LIMIT * (2 * SMOKE_SEEDS)
+    w_full = 321123 * (2 * FULL_SEEDS)
+    rate = (smoke_sec - cal_sec) / float(w_smoke - w_cal)   # seconds per row-fit
+    fixed = cal_sec - rate * w_cal
+
+    naive_per_fit = smoke_sec / max(1, 2 * SMOKE_SEEDS)
+    naive_h = naive_per_fit * (321123 / SMOKE_LIMIT) * (2 * FULL_SEEDS) / 3600.0
+    inflation = (321123 / SMOKE_LIMIT) * (2 * FULL_SEEDS) / float(2 * SMOKE_SEEDS)
+
+    if rate <= 0:
+        # The smaller run came out no faster than the larger one, so the slope is below the
+        # timing noise and no marginal rate is recoverable. REPORT that and fall back to the
+        # (pessimistic) one-point number rather than projecting from a negative rate.
+        projected_h = naive_h
+        basis = ("DEGRADED one-point fallback: cal %.1f s was not faster than smoke %.1f s, so "
+                 "the slope is below timing noise and no marginal rate is recoverable."
+                 % (cal_sec, smoke_sec))
+    else:
+        projected_h = (fixed + rate * w_full) / 3600.0
+        basis = ("two-point: %.1f s one-off + %.4f ms per row-fit over %d row-fits"
+                 % (fixed, rate * 1000.0, w_full))
+
+    print()
+    print("PROJECTED full run: ~%.1f h  (%s)" % (projected_h, basis), flush=True)
+    print("   one-point projection for comparison: ~%.1f h -- it charges the full run %.0fx "
+          "for setup that is paid ONCE, which is the defect the second timing point removes."
+          % (naive_h, inflation), flush=True)
+    print("   Kaggle GPU sessions cap around 9 h.", flush=True)
     if projected_h > 8.0:
         print("!! Projected run does not comfortably fit one session. STOPPING after the smoke. "
               "Re-run with fewer seeds, or split the seed range across sessions, rather than "
               "losing a near-complete run to a timeout.", flush=True)
         json.dump({"head": head, "smoke": smoke, "projected_hours": projected_h,
+                   "projection_basis": basis,
+                   "projected_hours_one_point": naive_h,
+                   "cal_seconds": cal_sec, "smoke_seconds": smoke_sec,
                    "decision": "STOPPED_AFTER_SMOKE_PROJECTION_TOO_LONG"},
                   open(WORK / "fragment_pyramid_kaggle_summary.json", "w"), indent=2)
         return 0
@@ -313,10 +356,13 @@ def main():
     print("\n" + "=" * 90, flush=True)
     print("FULL: --seeds %d on all 321,123 fragments" % FULL_SEEDS, flush=True)
     print("=" * 90, flush=True)
-    full, full_min = run_arm("full", ["--seeds", str(FULL_SEEDS)], device)
+    full, full_sec = run_arm("full", ["--seeds", str(FULL_SEEDS)], device)
 
-    json.dump({"head": head, "device": device, "smoke_minutes": round(smoke_min / 60, 2),
-               "full_minutes": round(full_min / 60, 2),
+    json.dump({"head": head, "device": device, "smoke_minutes": round(smoke_sec / 60, 2),
+               "cal_minutes": round(cal_sec / 60, 2),
+               "projected_hours": projected_h, "projection_basis": basis,
+               "projected_hours_one_point": naive_h,
+               "full_minutes": round(full_sec / 60, 2),
                "smoke_status": smoke.get("status"),
                "full_status": None if full is None else full.get("status"),
                "full_verdict": None if full is None else full.get("verdict"),
