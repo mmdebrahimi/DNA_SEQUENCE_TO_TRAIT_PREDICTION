@@ -44,7 +44,10 @@ from pathlib import Path
 
 REPO_URL = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION.git"
 #: Pinned so the artifact is traceable to a commit. Bump deliberately, never to "latest".
-PINNED_SHA = "74d8af7b4f6d4f9ba9d0d6931277a860f5f472bd"
+#: Bumped 2026-10-27 off 74d8af7b, which predates the `learned_contribution` diagnostic -- a run at the
+#: old pin could not report how much of the margin over kmer4 the LABELS bought, and would also
+#: lose a completed run to a summary bug (the artifact was written AFTER the print).
+PINNED_SHA = "74b7a28df74d46974f36c5f55ed601b9cca3b156"
 
 WORK = Path("/kaggle/working")
 SRC = WORK / "dna_decode_repo"

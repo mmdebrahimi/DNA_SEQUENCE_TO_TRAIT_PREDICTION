@@ -5,6 +5,21 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (i) — bump the Kaggle pin so the run exercises the diagnostic
+
+- **The pin decides which code runs, not merely which commit is named.** The kernel clones the repo
+  at `PINNED_SHA` and runs the arm FROM THAT TREE, so a stale pin silently ships a stale arm.
+  Measured: at `74d8af7b` the arm has **0** occurrences of `learned_contribution`; at `74b7a28d` it
+  has **4**. A Kaggle run at the old pin would have spent hours and come back unable to say how much
+  of the margin over kmer4 the LABELS bought — the question the run exists to answer — and would
+  additionally have been one summary bug away from discarding itself, since the artifact write still
+  sat AFTER the print at that commit.
+- **Bumped `74d8af7b` → `74b7a28d`**, to an exact commit and not to "latest"; the comment records
+  what the old pin was missing so the next bump is a decision rather than a reflex. The off-platform
+  refusal was re-run after the edit and still exits **2**.
+- **Consequence for the user's copy:** a `kernel.py` fetched from the raw URL before this commit
+  carries the old pin. Re-fetch before pasting into a notebook.
+
 ### 2026-10-27 (h) — a learned-contribution DIAGNOSTIC, and a correction to my own over-read
 
 - **CORRECTION, mine.** I reported the smoke as showing "most of the pyramid's advantage is not
