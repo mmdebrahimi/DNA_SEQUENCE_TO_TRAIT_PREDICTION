@@ -58,6 +58,14 @@ EXPECTED_LEN = 230
 
 CELL_TYPES = ("HepG2", "K562", "WTC11")
 
+#: Row kinds of the `Benchmarking results` sheet, as the parser sees them. `ROW_SKIPPED` is the
+#: interesting one: those rows are invisible to `published_incumbents` and visible to a human, which
+#: is why a claim that "the sheet never states a metric" cannot be made from the parsed subset.
+ROW_CELL_TYPE = "cell-type"
+ROW_METHOD_HEADER = "method-header"
+ROW_FOLD = "fold"
+ROW_SKIPPED = "skipped"
+
 
 class LentiMpraDataError(ValueError):
     """Refuse rather than return a plausible-looking partial cohort."""
@@ -301,13 +309,83 @@ def usable_cells(data_dir: Path | str = DEFAULT_DIR) -> dict:
     return out
 
 
+def _walk_rows(ws):
+    """Yield `(index, kind, first, cells, cur, methods)` for EVERY row of a benchmarking sheet.
+
+    THE SINGLE DEFINITION OF THE CONSUMPTION RULE. A row's kind is not a function of the row alone:
+    `cur` and `methods` are carried across rows, the cell-type branch resets `methods`, and the fold
+    branch is reachable only once both are set. So the state transitions live here, once, and both
+    `published_incumbents` and `unparsed_rows` are pure consumers of this stream.
+
+    Extracting only a predicate would have left each caller carrying its own copy of those
+    transitions -- the same duplication one level down, and able to drift in exactly the way that
+    makes one consumer disagree with the other about which rows are discarded.
+
+    `index` is 1-based to match what a spreadsheet shows a human.
+    """
+    cur, methods = None, None
+    for index, row in enumerate(ws.iter_rows(values_only=True), start=1):
+        cells = list(row)
+        first = "" if cells[0] is None else str(cells[0]).strip()
+        if first in CELL_TYPES:
+            cur, methods = first, None
+            yield index, ROW_CELL_TYPE, first, cells, cur, methods
+            continue
+        if first.lower() == "test fold":
+            methods = ["" if c is None else str(c).strip() for c in cells[1:]]
+            yield index, ROW_METHOD_HEADER, first, cells, cur, methods
+            continue
+        if cur and methods and isinstance(cells[0], (int, float)):
+            yield index, ROW_FOLD, first, cells, cur, methods
+            continue
+        yield index, ROW_SKIPPED, first, cells, cur, methods
+
+
+def unparsed_rows(data_dir: Path | str = DEFAULT_DIR,
+                  sheet: str = "Benchmarking results") -> list[dict]:
+    """Every row `published_incumbents` does NOT consume, as `{"row": <1-based>, "cells": [...]}`.
+
+    This exists because the refusal's own next check was unrunnable as prose. The metric, if the
+    workbook states it anywhere, is in a caption or units row -- and those are the rows the parser
+    throws away without a record, so no amount of reading the parsed output can find them.
+
+    Raises `LentiMpraDataError` when the workbook is absent, matching `published_incumbents` rather
+    than returning `[]`: an empty list would read as "there are no unparsed rows" when the true
+    state is "could not look", and that is the confusion this whole correction is about.
+    """
+    import openpyxl
+
+    path = Path(data_dir) / S6_FILE
+    if not path.is_file():
+        raise LentiMpraDataError("%s is absent; see scripts/fetch_lentimpra.py" % path)
+    wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
+    try:
+        ws = wb[sheet]
+        out = []
+        for index, kind, _first, cells, _cur, _methods in _walk_rows(ws):
+            if kind != ROW_SKIPPED:
+                continue
+            values = [c for c in cells if c is not None and str(c).strip() != ""]
+            if values:
+                out.append({"row": index, "cells": values})
+        return out
+    finally:
+        wb.close()
+
+
 def published_incumbents(data_dir: Path | str = DEFAULT_DIR) -> dict:
     """Per-fold published figures for the five benchmarked methods, from Table S6.
 
-    `metric` is **UNSPECIFIED_IN_SOURCE**: the sheet gives numbers and method names and never says
-    whether they are Pearson, Spearman or something else. Comparing a Spearman of one's own against
-    an unknown readout is a readout-type mismatch, not a comparison, so the field says so instead of
-    guessing the likely answer.
+    `metric` is **UNSPECIFIED_IN_SOURCE**, and the reason is a READOUT-TYPE MISMATCH: comparing a
+    Spearman of one's own against an unknown readout is not a comparison, so the field refuses
+    instead of guessing the likely answer. That rationale is unaffected by everything below.
+
+    SCOPE OF THE SILENCE, stated precisely because the earlier wording over-claimed it. The rows
+    this function CONSUMES are three shapes only -- a cell-type marker, a `test fold` header
+    carrying method names, and numeric fold rows -- and no row it reads states a coefficient. Every
+    other row is skipped with no record, so the SHEET has not been shown to be silent; only the
+    parsed subset has. A caption or units row is exactly where such a statement would sit, and it
+    is exactly what this parser discards. Use `unparsed_rows()` to look at them.
     """
     import openpyxl
 
@@ -317,19 +395,13 @@ def published_incumbents(data_dir: Path | str = DEFAULT_DIR) -> dict:
     wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
     try:
         ws = wb["Benchmarking results"]
-        blocks, cur, methods = {}, None, None
-        for row in ws.iter_rows(values_only=True):
-            cells = [c for c in row]
-            first = "" if cells[0] is None else str(cells[0]).strip()
-            if first in CELL_TYPES:
-                cur = first
-                blocks[cur] = {}
-                methods = None
-                continue
-            if first.lower() == "test fold":
-                methods = ["" if c is None else str(c).strip() for c in cells[1:]]
-                continue
-            if cur and methods and isinstance(cells[0], (int, float)):
+        blocks = {}
+        # The consumption rule lives in `_walk_rows` and nowhere else; this is a pure consumer of
+        # it, which is what keeps `unparsed_rows` exactly complementary to this function.
+        for _index, kind, first, cells, cur, methods in _walk_rows(ws):
+            if kind == ROW_CELL_TYPE:
+                blocks[first] = {}
+            elif kind == ROW_FOLD:
                 fold = int(cells[0])
                 for m, v in zip(methods, cells[1:]):
                     if m and isinstance(v, (int, float)):
@@ -359,8 +431,13 @@ def published_incumbents(data_dir: Path | str = DEFAULT_DIR) -> dict:
                         "a different aggregation and says nothing about this sheet."
                     ),
                     "decisive_next_check": (
-                        "read this workbook's own header/units row for the 'Benchmarking results' "
-                        "sheet -- blocked today because the substrate volume (D:) is detached"
+                        "call unparsed_rows() and read the rows this parser DISCARDS. The header "
+                        "row cannot settle it: the header is 'test fold | <method names>' and "
+                        "carries no coefficient, so the earlier instruction to read it could never "
+                        "have worked. A caption or units row is where a metric statement would "
+                        "sit, and those are precisely the skipped rows. Running it needs the "
+                        "substrate volume attached; that is a prerequisite, not the reason the "
+                        "previous check was wrong."
                     ),
                 }}
     finally:

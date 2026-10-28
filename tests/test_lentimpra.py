@@ -33,6 +33,7 @@ from dna_decode.glm.lentimpra import (  # noqa: E402
     load_cell,
     load_design,
     published_incumbents,
+    unparsed_rows,
     usable_cells,
 )
 
@@ -209,3 +210,139 @@ def test_the_best_published_incumbent_is_named_per_cell():
 def test_an_absent_directory_refuses_with_the_fetch_command():
     with pytest.raises(LentiMpraDataError, match="fetch_lentimpra"):
         load_design("HepG2", data_dir=REPO / "no_such_dir_for_lentimpra")
+
+
+# ---------------------------------------------------------------------------------------------
+# The consumption rule, and the rows it discards.
+#
+# These run WITHOUT the D: volume: they build a synthetic Table S6 with openpyxl. That matters
+# beyond convenience. The metric refusal rested on "the sheet never states a coefficient", which
+# was a claim about the PARSED SUBSET being read as a claim about the sheet. Making the discarded
+# rows reachable is what turns that from prose into something checkable, so the check itself must
+# not depend on the volume being attached.
+# ---------------------------------------------------------------------------------------------
+
+#: A caption of exactly the shape that defeats the parser: it NAMES a coefficient, and it is
+#: discarded. Everything these tests assert turns on this row being invisible to one accessor and
+#: visible to the other.
+_SYNTH_CAPTION = ("Supplementary Table 6. Per-fold benchmarking performance "
+                  "(Pearson r) across methods.")
+
+
+@pytest.fixture
+def synth_s6(tmp_path):
+    """A minimal `Benchmarking results` workbook carrying every row shape the parser meets."""
+    import openpyxl
+
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Benchmarking results"
+    for row in [
+        [_SYNTH_CAPTION, None, None, None],
+        [None, None, None, None],
+        ["HepG2", None, None, None],
+        ["test fold", "MPRALegNet", "Enformer", "Legnet"],
+        [1, 0.8301, 0.7702, 0.8104],
+        [2, 0.8365, 0.7811, 0.8150],
+        ["Note: fold 3 withheld pending re-run.", None, None, None],
+        ["K562", None, None, None],
+        ["test fold", "MPRALegNet", "Enformer", "Legnet"],
+        [1, 0.7905, 0.7301, 0.7788],
+        [2, 0.7951, 0.7355, 0.7802],
+    ]:
+        ws.append(row)
+    wb.save(tmp_path / S6_FILE)
+    return tmp_path
+
+
+def test_the_consumption_rule_is_defined_in_exactly_one_place():
+    """Source-shape, because value equality cannot see a reintroduced duplicate.
+
+    Asserted on the AST rather than on substrings: the corrected `decisive_next_check` prose has to
+    QUOTE the header (`test fold | <method names>`) in order to explain why reading it cannot
+    settle the metric, so a substring check would fail on the correction itself. Only a literal in
+    an executable COMPARISON counts as a predicate; one inside a docstring or a returned dict is
+    prose and is exempt structurally.
+    """
+    import ast
+
+    from dna_decode.glm import lentimpra
+
+    src = Path(lentimpra.__file__).read_text(encoding="utf-8")
+    fns = {n.name: n for n in ast.parse(src).body if isinstance(n, ast.FunctionDef)}
+
+    def comparison_operands(fn):
+        out = []
+        for node in ast.walk(fn):
+            if not isinstance(node, ast.Compare):
+                continue
+            for part in [node.left] + list(node.comparators):
+                for sub in ast.walk(part):
+                    if isinstance(sub, ast.Constant) and isinstance(sub.value, str):
+                        out.append(sub.value)
+                    elif isinstance(sub, ast.Name):
+                        out.append("name:" + sub.id)
+        return out
+
+    walk = comparison_operands(fns["_walk_rows"])
+    assert "test fold" in walk and "name:CELL_TYPES" in walk, "_walk_rows must own both predicates"
+
+    for consumer in ("published_incumbents", "unparsed_rows"):
+        ops = comparison_operands(fns[consumer])
+        assert "test fold" not in ops, "%s re-tests the header string" % consumer
+        assert "name:CELL_TYPES" not in ops, "%s re-tests CELL_TYPES" % consumer
+
+    assert src.count('first.lower() == "test fold"') == 1
+    assert src.count("first in CELL_TYPES") == 1
+
+
+def test_extracting_the_walk_did_not_change_what_the_incumbents_are(synth_s6):
+    """Equivalence proof for a rewrite of the function that decides the published incumbents.
+
+    The expected payload is written out literally rather than snapshotted, so the test carries its
+    own reference instead of depending on a file some earlier run produced. Fold keys are INTS --
+    a JSON round-trip coerces them to strings, which makes a snapshot comparison fail for a reason
+    that has nothing to do with the refactor.
+    """
+    got = published_incumbents(data_dir=synth_s6)
+    assert got["by_cell"] == {
+        "HepG2": {"MPRALegNet": {1: 0.8301, 2: 0.8365},
+                  "Enformer": {1: 0.7702, 2: 0.7811},
+                  "Legnet": {1: 0.8104, 2: 0.8150}},
+        "K562": {"MPRALegNet": {1: 0.7905, 2: 0.7951},
+                 "Enformer": {1: 0.7301, 2: 0.7355},
+                 "Legnet": {1: 0.7788, 2: 0.7802}},
+    }
+    assert got["metric"] == "UNSPECIFIED_IN_SOURCE", "the refusal must survive the refactor"
+
+
+def test_unparsed_rows_returns_the_caption_the_parse_discards(synth_s6):
+    """The load-bearing pair. A reader that returns everything, or nothing, fails one half.
+
+    The caption names a coefficient. `published_incumbents` cannot see it, `unparsed_rows` must --
+    which is precisely why "the sheet never states a metric" could not be concluded from the parse.
+    """
+    skipped = unparsed_rows(data_dir=synth_s6)
+    first_cells = [str(r["cells"][0]) for r in skipped]
+
+    assert _SYNTH_CAPTION in first_cells, "the discarded caption must be recoverable"
+    assert "Pearson" not in str(published_incumbents(data_dir=synth_s6)["by_cell"]), (
+        "the parse must NOT see it -- if it did, the two accessors would not be complementary")
+
+    # Returns the skipped rows and ONLY the skipped rows: no cell-type marker, header or fold row.
+    assert not any(c in CELL_TYPES for c in first_cells), "a consumed cell-type row leaked through"
+    assert not any(c.lower() == "test fold" for c in first_cells), "a consumed header leaked through"
+    assert not any(c in ("1", "2") for c in first_cells), "a consumed fold row leaked through"
+
+    # Blank rows carry no information and are dropped; 1-based indices match what a human sees.
+    assert all(r["cells"] for r in skipped), "a wholly empty row is not a finding"
+    assert [r["row"] for r in skipped] == [1, 7], "1-based row indices, as a spreadsheet shows them"
+
+
+def test_unparsed_rows_refuses_an_absent_workbook_rather_than_reporting_none(tmp_path):
+    """An empty list would read as "there are no unparsed rows" when the truth is "could not look".
+
+    That conflation is the whole subject of this correction, so the accessor raises like its sibling.
+    """
+    with pytest.raises(LentiMpraDataError, match="fetch_lentimpra"):
+        unparsed_rows(data_dir=tmp_path / "no_such_dir")
