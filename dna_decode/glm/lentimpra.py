@@ -335,6 +335,33 @@ def published_incumbents(data_dir: Path | str = DEFAULT_DIR) -> dict:
                     if m and isinstance(v, (int, float)):
                         blocks[cur].setdefault(m, {})[fold] = float(v)
         return {"metric": "UNSPECIFIED_IN_SOURCE", "source": S6_FILE,
-                "sheet": "Benchmarking results", "by_cell": blocks}
+                "sheet": "Benchmarking results", "by_cell": blocks,
+                # Resolution ATTEMPTED 2026-10-28 against the paper's own text and REFUSED. Recorded
+                # here so the next session does not repeat the search and does not mistake the
+                # corroboration below for the answer. Memo: wiki/lentimpra_metric_resolution_2026-10-28.md
+                "metric_resolution_attempt": {
+                    "verdict": "UNRESOLVED_TABLE_IDENTITY_UNVERIFIED",
+                    "paper_reports_both": (
+                        "the publication's MPRALegNet panels carry 'corresponding Pearson (r) and "
+                        "Spearman (rho) correlation values', so the paper has no single global "
+                        "benchmarking metric to copy"
+                    ),
+                    "table_identity_mismatch": (
+                        "the paper's IN-TEXT 'Supplementary Table 6' is a biochemical-feature / "
+                        "bigWig manifest (it is cited for '1,506 bigWig files for HepG2 cells'), "
+                        "whereas this S6_FILE is 'Table S6 - folds and performance.xlsx' carrying a "
+                        "'Benchmarking results' sheet the paper never names. Do NOT cite 'the "
+                        "paper's Table S6' as the provenance of these numbers."
+                    ),
+                    "corroboration_NOT_the_answer": (
+                        "the paper states MPRALegNet reached 'Pearson r ~ 0.83' COMBINING folds, and "
+                        "the HepG2 MPRALegNet fold-mean here is 0.8333. Suggestive of Pearson; it is "
+                        "a different aggregation and says nothing about this sheet."
+                    ),
+                    "decisive_next_check": (
+                        "read this workbook's own header/units row for the 'Benchmarking results' "
+                        "sheet -- blocked today because the substrate volume (D:) is detached"
+                    ),
+                }}
     finally:
         wb.close()
