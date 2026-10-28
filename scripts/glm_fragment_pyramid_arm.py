@@ -271,6 +271,25 @@ def split_by_block(blocks: list[str], *, test_fraction: float, seed: int):
     return tr, te
 
 
+def median_ci95(values: list[float]) -> tuple:
+    """Distribution-free CI for the MEDIAN from order statistics. Exact and bootstrap-free.
+
+    For ranks k and n+1-k the coverage is exactly 1 - 2*P(Bin(n, 1/2) <= k-1), so this reports the
+    coverage it ACHIEVES rather than claiming 95%. Returns the tightest pair still covering >= 95%,
+    or (None, None, None) when no pair does -- true for n <= 5, which includes the 3-seed smoke.
+    Inventing an interval there would put a number on the one case that cannot support one.
+    """
+    n = len(values)
+    s = sorted(values)
+    best = (None, None, None)
+    for k in range(1, n // 2 + 1):
+        tail = sum(math.comb(n, i) for i in range(k)) / float(2 ** n)
+        coverage = 1.0 - 2.0 * tail
+        if coverage >= 0.95:
+            best = (s[k - 1], s[n - k], coverage)   # ascending k -> tightest qualifying pair wins
+    return best
+
+
 def paired_stats(deltas: list[float], margin: float, min_seeds: int) -> dict:
     """Median, win count and a bootstrap-free CI95 over seeds. Pure."""
     if not deltas:
@@ -285,8 +304,33 @@ def paired_stats(deltas: list[float], margin: float, min_seeds: int) -> dict:
         ci = [round(mean - half, 4), round(mean + half, 4)]
     else:
         ci = [None, None]
+    mlo, mhi, mcov = median_ci95(deltas)
     return {"median": round(med, 4), "wins": wins, "n": n, "ci95": ci,
+            # `ci95` is KEPT byte-identical: it is a normal-approximation interval around the MEAN,
+            # several committed artifacts carry it, and glm_tile_hybrid_arm.py reads it. But the
+            # headline and `clears_margin` are the MEDIAN, so an unlabelled interval beside them
+            # reads as the median's and is not. Both estimands are now named explicitly.
+            "ci95_estimand": "mean (normal approximation, 1.96*sd/sqrt(n))",
+            "ci95_median": [None if mlo is None else round(mlo, 4),
+                            None if mhi is None else round(mhi, 4)],
+            "ci95_median_estimand": ("order-statistic interval for the MEDIAN, exact coverage "
+                                     "%.4f" % mcov) if mcov is not None
+                                    else ("no rank pair reaches 95%% coverage at n=%d, so no "
+                                          "median interval is reported" % n),
+            "ci95_median_coverage": None if mcov is None else round(mcov, 4),
             "clears_margin": med >= margin, "reproducible": wins >= min_seeds}
+
+
+def _ci_label(p: dict) -> str:
+    """Render the interval WITH its estimand, so a median is never printed beside a bare interval.
+
+    Prefers the median interval, because the headline and `clears_margin` are the median. Falls back
+    to the mean interval -- labelled as such -- when the seed count cannot support a median one.
+    """
+    lo, hi = p.get("ci95_median", [None, None])
+    if lo is not None and hi is not None:
+        return "[%+.4f, %+.4f] (median, coverage %.3f)" % (lo, hi, p["ci95_median_coverage"])
+    return "%s (MEAN-centred; n=%d too small for a median interval)" % (p["ci95"], p["n"])
 
 
 def verdict(p: dict, pre: dict = PREREGISTERED) -> tuple[str, str]:
@@ -301,21 +345,21 @@ def verdict(p: dict, pre: dict = PREREGISTERED) -> tuple[str, str]:
     if m >= pre["margin"] and w >= need:
         return ("PYRAMID_ADDS",
                 "pyramid %+.4f over %s, %d/%d seeds, CI95 %s -- clears the %+.2f margin and the "
-                "%d-seed bar" % (m, pre["comparator"], w, n, p["ci95"], pre["margin"], need))
+                "%d-seed bar" % (m, pre["comparator"], w, n, _ci_label(p), pre["margin"], need))
     if m > 0 and w >= need:
         return ("WEAK_PYRAMID",
                 "pyramid %+.4f over %s, %d/%d seeds, CI95 %s -- REPRODUCIBLE (%d/%d clears the "
                 "%d-seed bar) but short of the %+.2f margin"
-                % (m, pre["comparator"], w, n, p["ci95"], w, n, need, pre["margin"]))
+                % (m, pre["comparator"], w, n, _ci_label(p), w, n, need, pre["margin"]))
     if m > 0:
         return ("INDETERMINATE_GAIN_NOT_REPRODUCIBLE",
                 "pyramid %+.4f over %s, only %d/%d seeds, CI95 %s -- the gain is positive but did "
                 "NOT reproduce: %d of %d seeds win, against the %d the bar requires; this is "
                 "neither a measured lift nor a measured negative and must not be read as either"
-                % (m, pre["comparator"], w, n, p["ci95"], w, n, need))
+                % (m, pre["comparator"], w, n, _ci_label(p), w, n, need))
     return ("NO_GAIN",
             "pyramid %+.4f over %s, %d/%d seeds, CI95 %s -- does not beat the length-invariant "
-            "default" % (m, pre["comparator"], w, n, p["ci95"]))
+            "default" % (m, pre["comparator"], w, n, _ci_label(p)))
 
 
 # ------------------------------------------------------------------ the run
