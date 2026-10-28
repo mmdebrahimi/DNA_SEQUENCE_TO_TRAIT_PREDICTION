@@ -163,3 +163,9 @@ soraya_runs/*
 # holder on this one and refuse every launch with exit 9 until someone deleted it by hand. The
 # stale-reclaim path only covers a pid that is gone HERE, not a pid that never existed here.
 .glm_run.lock
+
+# Scratch copies of the Kaggle kernel fetched from the raw URL to paste into a notebook.
+# The real file is scripts/kaggle/fragment_pyramid_kernel.py. A root-level duplicate was
+# committed by accident in 74b7a28d and had already DRIFTED (14,370 vs 18,512 bytes), which
+# is the whole hazard: two copies of a kernel whose PINNED_SHA decides which code runs.
+/kernel.py

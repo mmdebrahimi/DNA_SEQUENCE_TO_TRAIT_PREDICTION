@@ -106,6 +106,60 @@ def clone():
     return head
 
 
+def verify_pinned_tree():
+    """Check the tree just checked out carries the fixes this kernel assumes. Costs ~10 ms.
+
+    WHY, measured 2026-10-27: a run of this kernel pinned at 74d8af7b spent 5.1 minutes computing
+    real fits and then DISCARDED them -- that arm reads res["headline"] unconditionally, which
+    KeyErrors on the PARTIAL_SEED_RANGE result a 3-of-10-seed smoke returns BY DESIGN, and it wrote
+    its artifact AFTER the summary print, so the crash took the completed work with it. Nothing
+    noticed until the traceback. The pin decides which code runs, so a stale pin must fail in
+    seconds, not minutes, and must say WHY rather than surfacing as a KeyError.
+
+    HONEST LIMIT: this proves the fixes are PRESENT in the checked-out source, not that they are
+    correct. It is a staleness guard, not a test.
+    """
+    arm = SRC / "scripts" / "glm_fragment_pyramid_arm.py"
+    if not arm.is_file():
+        raise SystemExit("REFUSING: %s is absent from the pinned tree -- wrong PINNED_SHA?" % arm)
+    s = arm.read_text(encoding="utf-8")
+
+    missing = []
+    if "learned_contribution" not in s:
+        missing.append(
+            "the `learned_contribution` diagnostic (real minus null, paired per seed). Without it "
+            "the run cannot say how much of the margin over kmer4 the LABELS bought, which is the "
+            "question this run exists to answer.")
+    w, pr = s.find("Path(a.out).write_text"), s.find('print("arm: %s" % ARM)')
+    if w == -1 or pr == -1 or w > pr:
+        missing.append(
+            "the write-before-format ordering. At this pin the artifact is written AFTER the "
+            "summary print, so a formatting bug discards a completed run -- measured: 5.1 minutes "
+            "of fits lost on 2026-10-27.")
+    if 'h = res.get("headline")' not in s:
+        missing.append(
+            "the partial-aware printer. At this pin the summary reads res['headline'] "
+            "unconditionally and CRASHES on PARTIAL_SEED_RANGE, which is exactly what a 3-of-10 "
+            "seed smoke returns by design.")
+
+    if missing:
+        print("REFUSING: the pinned tree is STALE.\n"
+              "  PINNED_SHA = %s\n"
+              "  Missing from scripts/glm_fragment_pyramid_arm.py at that commit:" % PINNED_SHA,
+              flush=True)
+        for m in missing:
+            print("    * %s" % m, flush=True)
+        print("  This almost always means the NOTEBOOK holds an older copy of this kernel than the\n"
+              "  repo does. Re-fetch and re-paste the cell:\n"
+              "    https://raw.githubusercontent.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION"
+              "/main/scripts/kaggle/fragment_pyramid_kernel.py\n"
+              "  Refusing now rather than after the 91 MB download and ~5 minutes of fits.",
+              flush=True)
+        raise SystemExit(3)
+    print("pinned tree verified: diagnostic present, write-before-format, partial-aware printer",
+          flush=True)
+
+
 def fetch_data():
     """Download GSE144621 through the PROJECT'S loader, not curl.
 
@@ -192,7 +246,23 @@ def main():
     print("=" * 90, flush=True)
     device = device_report()
     print("=" * 90, flush=True)
+
+    # A WARNING THE CODE THEN OVERRIDES IS NOT A WARNING. device_report() says continuing on CPU
+    # "is not worth a session" -- so do not continue. Measured 2026-10-27: a CPU session got as far
+    # as a repo clone, a 91 MB download and 5.1 minutes of fits before dying, on a configuration
+    # that could never have finished the real run.
+    if device != "cuda" and "--allow-cpu" not in sys.argv:
+        print("REFUSING: no CUDA device, so this session cannot finish the real run.\n"
+              "  Fix it in the notebook: Settings -> Accelerator -> `GPU T4 x1`.\n"
+              "  Plain `GPU` is not enough -- it can provision a P100 (sm_60), which is slow but\n"
+              "  CORRECT here (this run is fp32 throughout); no accelerator at all is neither.\n"
+              "  Refusing BEFORE the clone and the 91 MB GEO download rather than after.\n"
+              "  Pass --allow-cpu to exercise the plumbing on CPU deliberately (the smoke runs in\n"
+              "  minutes; the full run does not fit a session).", file=sys.stderr)
+        return 3
+
     head = clone()
+    verify_pinned_tree()   # seconds, and BEFORE the download -- a stale pin must not cost 5 minutes
     fetch_data()
 
     print("\n" + "=" * 90, flush=True)

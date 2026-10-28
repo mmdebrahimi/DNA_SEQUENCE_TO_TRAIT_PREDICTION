@@ -5,6 +5,48 @@ this is a solo research-tool repo so the granularity is per-release-theme, not p
 
 ## [Unreleased]
 
+### 2026-10-27 (j) — the first REAL Kaggle run, and the two guards it earned
+
+- **THE RUN HAPPENED, on a misconfigured session, and it is informative rather than wasted.** First
+  execution of `scripts/kaggle/fragment_pyramid_kernel.py` on Kaggle. Two independent problems, and
+  **both are defects in the kernel, not in how it was invoked.**
+- **The substrate half WORKED end to end.** The repo cloned, the project loader downloaded both GEO
+  files (45.8 MB + 45.2 MB) and `LB parse: n=321123 len 48..499 distinct_lengths=359` cleared the
+  kernel's own assertion — `substrate verified`. The whole premise of routing this arm to Kaggle
+  (the data is public, nothing depends on the detached D: volume) is now **demonstrated**, not argued.
+- **CROSS-PLATFORM REPRODUCTION, worth more than it looks.** The comparator on Kaggle at N=4,000 over
+  3 seeds: `median 0.0244  min 0.0138  max 0.0424`. The host measured **0.0244** at the same N. An
+  identical median across a Windows/CPU stack and a Linux/CPU stack says the kmer4 path, the
+  block splitter and the Spearman reduction are not carrying a platform artifact — the same class of
+  evidence as the ESM2 5e-05 agreement recorded for the PEAR replication.
+- **PROBLEM 1 — `cuda_available=False`: the accelerator was never attached, and the kernel
+  CONTINUED ANYWAY.** `device_report()` printed *"Continuing on CPU would take tens of hours and is
+  not worth a session"* and then did exactly that. **A warning the code immediately overrides is not
+  a warning**, and the measured cost of the contradiction was a clone, a 91 MB download and 5.1
+  minutes of fits on a configuration that could never have finished the real run. **FIXED:** no CUDA
+  device now returns **3 BEFORE the clone**, with `--allow-cpu` to exercise the plumbing deliberately.
+- **PROBLEM 2 — the notebook held an OLDER COPY of the kernel than the repo, so it ran the OLD
+  PIN.** The log says `HEAD pinned at 74d8af7b`, the pre-bump commit, and that pin cost exactly what
+  2026-10-27 (i) predicted it would: the arm at that commit reads `res["headline"]` unconditionally,
+  which **KeyErrors on the `PARTIAL_SEED_RANGE` result a 3-of-10-seed smoke returns BY DESIGN**, and
+  it wrote its artifact **after** the summary print — so the crash **DISCARDED 5.1 minutes of
+  completed fits** (`[smoke] NO ARTIFACT written`). The second run lost to that ordering in one day.
+- **FIXED by `verify_pinned_tree()`**, which reads the arm source in the tree just checked out and
+  **refuses with exit 3 in ~10 ms, BEFORE the 91 MB download**, naming each missing fix: the
+  `learned_contribution` diagnostic, the write-before-format ordering, and the partial-aware printer.
+  A stale pin now fails in seconds with a cause instead of in minutes with a `KeyError`.
+- **BOTH GUARDS PROVEN NON-VACUOUS, not merely present.** Guard 2 was run against the CURRENT tree
+  (passes) **and against a real `git archive` export of 74d8af7b** (refuses, naming all three
+  defects) — a guard that cannot reject the thing it exists to reject is theatre. Guard 1 was driven
+  through `main()` with `clone` and `fetch_data` stubbed to RAISE, proving the refusal lands
+  **before** any network work rather than somewhere after it, plus an override case proving
+  `--allow-cpu` still reaches the CPU path.
+- **HONEST LIMIT on guard 2, printed in its own message:** it matches SOURCE STRINGS, so it proves
+  the fixes are PRESENT, not that they are CORRECT. It is a staleness guard, not a test. String
+  matching was chosen over importing and introspecting because it must run before the download and
+  because the failure it catches is textual — an older file.
+- **Still unmeasured:** no scored run exists yet. The arm has never completed a verdict anywhere.
+
 ### 2026-10-27 (i) — bump the Kaggle pin so the run exercises the diagnostic
 
 - **The pin decides which code runs, not merely which commit is named.** The kernel clones the repo

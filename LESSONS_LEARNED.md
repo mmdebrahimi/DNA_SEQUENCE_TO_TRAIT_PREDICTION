@@ -2,6 +2,33 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (j)
+
+- **A warning the code then overrides is not a warning — it is a comment with a cost.** The kernel
+  said continuing without a GPU "is not worth a session" and continued, spending a clone, a 91 MB
+  download and 5.1 minutes on a session that could not finish. When the code already knows the
+  configuration is wrong, REFUSE; `--allow-cpu` is what an override should look like.
+- **Order guards by cost, cheapest first.** The stale-pin check costs ~10 ms and the GPU check costs
+  nothing, yet both sat behind a 91 MB download and five minutes of fits. A guard placed after the
+  expensive step does not prevent the expense — it only reports it. Refuse before the clone, verify
+  before the download.
+- **A PIN IS NOT DOCUMENTATION — it selects the code that runs, so a stale pin is a stale program.**
+  The notebook held an older paste of the kernel, so it checked out the old commit and inherited two
+  already-fixed bugs. Nothing in the system noticed for five minutes. Anything that pins a commit and
+  then EXECUTES it should verify the tree carries what it assumes.
+- **THIRD instance in one day of "adding a refusal breaks callers written before it."**
+  `PARTIAL_SEED_RANGE` broke the kernel's `status == "SCORED"` smoke gate, then the arm's printer,
+  and now a stale copy of that same printer on Kaggle. The lesson had already been WRITTEN twice
+  before this third instance fired, which says writing it is not enough: when a new refusal state is
+  added, enumerate every reader of that field and fix them in the same change.
+- **Prove a guard non-vacuous against the REAL artifact it rejects, not a synthetic one.** Guard 2
+  was tested against a `git archive` export of the actual stale commit, so the three missing fixes it
+  names are the three that were actually missing. A hand-written "stale" fixture would have proved
+  only that the matcher matches what I typed into it.
+- **A failed run on a misconfigured session can still carry a real measurement.** The comparator
+  reproduced the host's median to four decimals (0.0244) across two platforms, and the GEO substrate
+  assertion cleared at full size. Read what a broken run DID establish before discarding it.
+
 ## 2026-10-27 (h)
 
 - **Do not read a small effect at small N as a property of the method.** I called the arm "mostly
