@@ -833,7 +833,7 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 ---
 
 ## [plan_file: Correct_Two_Wrong_Claims_I_Committed_And_Make_The_Next_Check_Runnable_Plan/] 2026-10-28
-**Status:** candidate — amended 2026-10-28 after a pre-exec review: Step 3 gained the classifier-extraction detail plus a byte-identical equivalence proof, the self-contradicting read-only step split into 7 (report) + 8 (correct), and the plan renumbered to 8 steps. `/save-plan` ran BEFORE that review, so the fix is an in-place edit rather than a second save, per the save-once rule.
+**Status:** executed — 2026-10-28 at FULL scope (all 8 steps); archived to `executed_plans/Correct_Two_Wrong_Claims_I_Committed_And_Make_The_Next_Check_Runnable_Plan/` with an execution log recording six deviations. Commit 1a9a0ef3 — amended 2026-10-28 after a pre-exec review: Step 3 gained the classifier-extraction detail plus a byte-identical equivalence proof, the self-contradicting read-only step split into 7 (report) + 8 (correct), and the plan renumbered to 8 steps. `/save-plan` ran BEFORE that review, so the fix is an in-place edit rather than a second save, per the save-once rule.
 **Summary:** Commit b28fa8dc recorded an honest refusal of the lentiMPRA published metric but wrapped it in two claims that are wrong, plus one inherited over-claim, all sitting in the surfaces a future session reads first.
 **Key decisions:**
 - Scope the docstring's claim to the rows the parser actually READS, rather than asserting what the sheet contains -- every row that is not a cell type, `test fold`, or numeric is skipped silently.
