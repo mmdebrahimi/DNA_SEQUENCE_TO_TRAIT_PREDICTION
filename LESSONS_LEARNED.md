@@ -2,6 +2,38 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-10-27 (k) — what the ten sections of today have in common
+
+A compression, not another list. Today produced ten changelog sections; re-read together they are
+largely **one** failure at different altitudes.
+
+- **PROSE IS NOT A CONTROL. Every defect today was already described correctly somewhere in the
+  repo, by me, while the code did something else.** The kernel's `device_report()` printed
+  *"continuing on CPU ... is not worth a session"* and continued. `kaggle_push_poll.py`'s docstring
+  asserted *"auth already works on this host"* with no credential anywhere on the machine. The arm's
+  own comment said a completed run must survive a summary bug while the artifact write sat after the
+  print. The `PINNED_SHA` comment said *"bump deliberately"* and nothing checked what the pin
+  pointed at. **In every case the knowledge was present and unenforced** — the same shape as this
+  project's long-running `--help` over-claim and stale-orientation-string problem, which CLAUDE.md
+  already names as its most expensive recurring error. The fixes that held were the ones with a
+  mechanism that can FAIL: an exit code, an assert, a refusal, a non-vacuity test.
+- **A guard must BIND, and it must sit BEFORE the cost it prevents.** Both halves failed in one
+  function. The device check bound not at all; the stale-pin check did not exist; and had either been
+  placed where the first version put its checks, it would have run after a clone and a 91 MB
+  download — reporting the expense rather than preventing it.
+- **I inflated a count inside the lesson about not inflating things**, calling two instances three by
+  counting a re-encounter as a discovery (corrected in (j) above). Worth keeping precisely because it
+  shows the failure is not carelessness about facts — it is prose drifting a notch past the evidence
+  while sounding more decisive. That is why the mechanism, not the sentence, is the deliverable.
+- **What actually worked today, as a method:** measure before asserting (the pin's 0-vs-4
+  `learned_contribution` occurrences; `uv.lock` md5 before and after; the committed blob's EOL
+  against HEAD's), and prove each guard against the REAL artifact it rejects — guard 2 was run
+  against a `git archive` export of the actual stale commit, so the three defects it names are the
+  three that were really missing.
+- **Read what a broken run established before discarding it.** The failed Kaggle run still proved
+  the substrate path end to end (321,123 fragments from GEO) and reproduced the comparator median to
+  four decimals across two platforms (0.0244). A misconfigured session is not an empty one.
+
 ## 2026-10-27 (j)
 
 - **A warning the code then overrides is not a warning — it is a comment with a cost.** The kernel
@@ -16,11 +48,16 @@ Concise practical lessons from building Phase 1. Append-only.
   The notebook held an older paste of the kernel, so it checked out the old commit and inherited two
   already-fixed bugs. Nothing in the system noticed for five minutes. Anything that pins a commit and
   then EXECUTES it should verify the tree carries what it assumes.
-- **THIRD instance in one day of "adding a refusal breaks callers written before it."**
-  `PARTIAL_SEED_RANGE` broke the kernel's `status == "SCORED"` smoke gate, then the arm's printer,
-  and now a stale copy of that same printer on Kaggle. The lesson had already been WRITTEN twice
-  before this third instance fired, which says writing it is not enough: when a new refusal state is
-  added, enumerate every reader of that field and fix them in the same change.
+- **TWO distinct readers broke on "adding a refusal breaks callers written before it" — and the
+  third event was a RECURRENCE, not a third instance. (Count corrected 2026-10-27; the original
+  bullet's own body refuted its own headline.)** `PARTIAL_SEED_RANGE` broke the kernel's
+  `status == "SCORED"` smoke gate and the arm's `res["headline"]` printer — two separate readers of
+  two separate fields. What happened on Kaggle was **that same printer running at a stale pin**,
+  which is a pin story, not a new-reader story. Calling it a third instance inflated a 2 into a 3 by
+  counting a re-encounter as a discovery — the same prose-overstates-evidence failure this day's
+  synthesis is about, committed inside the lesson meant to prevent it. **The actionable rule is
+  unchanged and still earned by two instances:** when a new refusal state is added to a field,
+  enumerate every reader of that field and fix them in the same change.
 - **Prove a guard non-vacuous against the REAL artifact it rejects, not a synthetic one.** Guard 2
   was tested against a `git archive` export of the actual stale commit, so the three missing fixes it
   names are the three that were actually missing. A hand-written "stale" fixture would have proved
