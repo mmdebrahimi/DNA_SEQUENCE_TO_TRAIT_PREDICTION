@@ -1,0 +1,118 @@
+{
+  "record": "glm-sampling-sweep-v1",
+  "recorded_baseline": {
+    "artifact": "wiki/glm_generator_falsifier_REAL_2026-10-07.json",
+    "n": 120,
+    "limit_natural": 1200,
+    "bins": 6,
+    "length": 150,
+    "context": 300,
+    "conditional": true,
+    "natural_set": "promoter",
+    "hf": {
+      "kmer": 0.7237,
+      "both": 0.7706
+    },
+    "markov_null": {
+      "kmer": 0.599,
+      "both": 0.6679
+    },
+    "uniform": {
+      "kmer": 0.9408,
+      "both": 0.9641
+    }
+  },
+  "device": "cuda",
+  "grid": [
+    {
+      "temperature": 1.0,
+      "top_k": 0,
+      "minutes": 3.2,
+      "status": "ok",
+      "sampling_stamp": {
+        "temperature": 1.0,
+        "top_k": 0,
+        "is_recorded_default": true,
+        "note": "stamped so a sweep row is attributable; an unstamped artifact cannot be distinguished from the default-sampling run already on record"
+      },
+      "modes": {
+        "kmer": {
+          "distinguishability": 0.7355,
+          "markov_null": 0.599,
+          "verdict": "WORSE_THAN_MARKOV_NULL",
+          "n_candidate": 120,
+          "gc_candidate": 0.4574,
+          "gc_natural": 0.4552
+        },
+        "both": {
+          "distinguishability": 0.7787,
+          "markov_null": 0.6679,
+          "verdict": "WORSE_THAN_MARKOV_NULL",
+          "n_candidate": 120,
+          "gc_candidate": 0.4574,
+          "gc_natural": 0.4552
+        }
+      }
+    },
+    {
+      "temperature": 0.8,
+      "top_k": 0,
+      "minutes": 2.4,
+      "status": "ok",
+      "sampling_stamp": {
+        "temperature": 0.8,
+        "top_k": 0,
+        "is_recorded_default": false,
+        "note": "stamped so a sweep row is attributable; an unstamped artifact cannot be distinguished from the default-sampling run already on record"
+      },
+      "modes": {
+        "kmer": {
+          "distinguishability": 0.6391,
+          "markov_null": 0.599,
+          "verdict": "NO_BETTER_THAN_MARKOV_NULL",
+          "n_candidate": 120,
+          "gc_candidate": 0.4501,
+          "gc_natural": 0.4552
+        },
+        "both": {
+          "distinguishability": 0.7097,
+          "markov_null": 0.6679,
+          "verdict": "NO_BETTER_THAN_MARKOV_NULL",
+          "n_candidate": 120,
+          "gc_candidate": 0.4501,
+          "gc_natural": 0.4552
+        }
+      }
+    },
+    {
+      "temperature": 0.6,
+      "top_k": 0,
+      "minutes": 2.4,
+      "status": "ok",
+      "sampling_stamp": {
+        "temperature": 0.6,
+        "top_k": 0,
+        "is_recorded_default": false,
+        "note": "stamped so a sweep row is attributable; an unstamped artifact cannot be distinguished from the default-sampling run already on record"
+      },
+      "modes": {
+        "kmer": {
+          "distinguishability": 0.6723,
+          "markov_null": 0.599,
+          "verdict": "WORSE_THAN_MARKOV_NULL",
+          "n_candidate": 120,
+          "gc_candidate": 0.4308,
+          "gc_natural": 0.4552
+        },
+        "both": {
+          "distinguishability": 0.7156,
+          "markov_null": 0.6679,
+          "verdict": "NO_BETTER_THAN_MARKOV_NULL",
+          "n_candidate": 120,
+          "gc_candidate": 0.4308,
+          "gc_natural": 0.4552
+        }
+      }
+    }
+  ]
+}
