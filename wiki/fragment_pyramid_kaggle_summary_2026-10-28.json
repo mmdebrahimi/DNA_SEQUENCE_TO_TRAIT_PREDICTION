@@ -1,0 +1,40 @@
+{
+  "head": "74b7a28df74d46974f36c5f55ed601b9cca3b156",
+  "device": "cuda",
+  "smoke_minutes": 0.28,
+  "cal_minutes": 0.23,
+  "projected_hours": 0.286311574395016,
+  "projection_basis": "two-point: 13.3 s one-off + 0.1584 ms per row-fit over 6422460 row-fits",
+  "projected_hours_one_point": 1.26936727158212,
+  "full_minutes": 54.08,
+  "smoke_status": "PARTIAL_SEED_RANGE",
+  "full_status": "SCORED",
+  "full_verdict": "INVALID_NULL_SCORED",
+  "full_headline": {
+    "kmer4_median": 0.112,
+    "pyramid_median": 0.1001,
+    "delta_median": -0.0127,
+    "relative_gain_vs_comparator": -0.1134,
+    "relative_note": "the margin is pre-registered in ABSOLUTE Spearman (0.02). On this rung the comparator is ~0.11, so 0.02 is a ~18%% relative gain; the relative figure is reported beside it and is NOT the bar.",
+    "fraction_of_rung_ceiling": 0.1263
+  },
+  "full_null": {
+    "per_seed": [
+      -0.0411,
+      0.0939,
+      -0.0984,
+      0.0788,
+      0.0493,
+      0.0949,
+      0.054,
+      0.1042,
+      -0.0001,
+      0.0202
+    ],
+    "median": 0.0517,
+    "sd": 0.0661,
+    "bar": "|median| < 0.02",
+    "bar_note": "the MEDIAN, not a single draw: a correct pipeline centred on zero still produces individual seeds out to +/-0.13 here, because a near-initialisation conv net is close to a random functional of base composition and composition predicts this rung at |0.1169|. The seed-count bar (>= 8 of 10, p = 0.055 under the null) is the primary noise control.",
+    "power_caveat": "UNDER-POWERED AT THE PRE-REGISTERED SEED COUNT, and recorded so no reader over-trusts this gate. The null's across-seed spread is driven by random INITIALISATION, not by sample size -- a random composition functional's correlation with expression does not shrink as N grows -- so with sd ~0.10 the sem of the median over 10 seeds is ~0.032, LARGER than the 0.02 bar it is compared against. Resolving 0.02 would need ~50 seeds. Read `learned_contribution` below, which is paired within a seed and therefore does not carry that variance."
+  }
+}

@@ -39,6 +39,14 @@ FILES = [
     "dna_decode/glm/edit.py",
     "dna_decode/glm/falsifier.py",
     "dna_decode/glm/generate.py",
+    # knob_contract is NOT optional: generate.py imports validate_sampling from it on every
+    # HFGenerator path, and the falsifier imports validate_comparison_mode /
+    # requested_non_default / verify_knob_live. Omitting it made this kernel die on import
+    # AFTER the 4.8 GB model download -- found 2026-10-29 before a push, not after a run.
+    "dna_decode/glm/knob_contract.py",
+    # sweep_gates carries verdict_eligibility / null_reproduced. Shipped so the gates can be
+    # applied from the same tree that produced the run rather than re-implemented here.
+    "dna_decode/glm/sweep_gates.py",
     "scripts/glm_generator_falsifier.py",
 ]
 
@@ -105,7 +113,21 @@ RECORDED = {
 }
 
 # The grid. (1.0, 0) is the recorded default and doubles as the self-check.
-GRID = [(1.0, 0), (0.8, 0), (1.2, 0), (1.0, 40), (0.8, 40), (1.2, 40)]
+#: THE FROZEN PLAN OWNS THIS GRID, not this file. Step 4 of
+#: plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technical-plan.md specifies
+#: temperature in {0.6, 0.8} PLUS the Step-3 default (1.0) as the third point, top_k UNSWEPT.
+#: Corrected 2026-10-29: this list previously read
+#:     [(1.0, 0), (0.8, 0), (1.2, 0), (1.0, 40), (0.8, 40), (1.2, 40)]
+#: which diverged from the plan in three ways, each of which would have cost a GPU session:
+#:   * it swept temperature UPWARD to 1.2. The plan restricts the sweep downward on a DERIVED
+#:     argument, not a hunch: the uniform control scores 0.9408, far WORSE than the GLM default
+#:     0.7237, so more entropy is the direction already known to hurt.
+#:   * it swept top_k, which the plan DEFERS deliberately to keep the two levers attributable
+#:     (TOP_K_KMER_FLOOR = 22 bounds it to k-mer-level truncation anyway).
+#:   * it OMITTED 0.6 -- the single most informative downward point in the plan.
+#: The default cell (1.0, 0) runs FIRST on purpose: it is the self-check against the recorded
+#: artifact, so a failure to reproduce stops the session before it pays for the new points.
+GRID = [(1.0, 0), (0.8, 0), (0.6, 0)]
 
 PAYLOAD = "__PAYLOAD__"
 
