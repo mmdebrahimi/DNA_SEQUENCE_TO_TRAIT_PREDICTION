@@ -488,3 +488,59 @@ the carried honest limits are in `TODOS.md`.
 - `wiki/project_distillation_2026-08-29.md` says 46 CLI traits. That was wrong when written (it was 44)
   and is now right again by coincidence, which is the cleanest possible illustration of why a written
   count is not evidence.
+
+- **`torch` IS NOT IN THE DEFAULT DEPS, and no doc said so until now.** It was deliberately moved to
+  the extras; `[forward]` carries `torch>=2.2` + `transformers>=5` and the pyproject records it as
+  verified on torch 2.7.1+cu118. A plain `uv sync` therefore breaks EVERY GPU path (GLM encoder,
+  generator, `dna-forward`) with a bare `ModuleNotFoundError`. Measured on a fresh clone 2026-10-29,
+  where it cost a cross-machine round-trip: `uv sync --extra forward`, and run with
+  `uv run --extra forward`. **Do NOT reach for `[ml]` just to get torch** — it pins `transformers<5`
+  for the closed-negative DNABERT-2/NT track and the two are mutually exclusive in
+  `[tool.uv].conflicts`, so uv refuses the pair rather than silently mixing them.
+- **CLAUDE.md says `openpyxl` is "deliberately NOT installed". It IS installed, at 3.1.5**
+  (measured 2026-10-28; it arrived transitively, `uv.lock` md5 `892c08339f82bd1a23f898821adb9735`
+  unchanged). The sentence also has the gate backwards: the 18 `test_lentimpra.py` skips are
+  DATA-gated, not import-gated — an import gate closes by installing, a data gate does not. Four of
+  that file's tests now build a synthetic workbook with it and pass with no `D:` attached.
+- **The fix for both of the above is blocked on a compression decision, not on knowing them.**
+  CLAUDE.md measured **35,459 words against its own 35,460-word ceiling** on 2026-10-29 — ONE word of
+  headroom — so any correction to it now has to pay for itself. `uv run python scripts/claude_md_weight.py`
+  certifies **43 bullets / 24,106 words** as long AND provably stored elsewhere in `wiki/`, so the
+  headroom exists; choosing which to reduce to a pointer changes what every future session reads first
+  and is a user call. `tests/test_claude_md_growth_ceiling.py` is the rail, and raising the number
+  rather than compressing is the thing it exists to prevent.
+
+## FOUR OPEN AUTHORITY CALLS (2026-10-30) — none is an executor task
+
+Recorded here because each is a USER decision that work is waiting on. None was taken.
+
+1. **Is the fragment arm's `|median| < 0.02` null bar satisfiable at all?** THE REAL FRONTIER. Pooled
+   over 50 seeds the null median is **+0.0242** (seeds 0-9 +0.0517, the never-drawn seeds 10-49 +0.0191),
+   so the gate FAILS, bootstrap P(clear)=0.317. The spread is INITIALISATION-driven and stable
+   (sd 0.0661/0.0649/0.0654), so SE(median) shrinks only as 1/sqrt(n) — SE~0.005 needs ~270 seeds —
+   while the point estimate sits ABOVE the bar. **More seeds would more likely CONFIRM a small real bias
+   than clear it.** Either re-specify the bar or accept the arm gets no valid verdict. Do NOT spend more
+   GPU expecting a clearance. Artifacts: `wiki/fragment_null_ext_summary_2026-10-29.json`, commit 87727f49.
+2. **G-B's `blocked_by` edge encodes the wrong predicate.** Self-distillation's only edge is G-A, so marking
+   G-A terminal-met would make it eligible — but the standing rule is *forbidden until a learned
+   representation LANDS* and G-A closed NEGATIVE. The edge means "wait for G-A to FINISH" where the rule
+   means "wait for G-A to SUCCEED". An umbrella flow-down change. First surfaced 2026-10-21, re-confirmed.
+3. **Is G-D's 8 GB hardware half discharged?** server1 is a GTX 1070 with exactly 8 GiB and the Kaggle T4
+   (16 GiB) ran the sweep, so the 2026-10-07 "server PC is mid-move" rationale is stale. Discharging it
+   opens a ~3-day LoRA fine-tune. NOTE the sweep itself is NOT plan-eligible: `--verify-knob` was never
+   passed, so 2 of 3 points are `excluded:requested-but-unverified`.
+4. **`mvp_criteria.py` cannot read table-format MVP bars**, and the failure is dangerous in one direction.
+   `_LIST_ITEM` matches markdown LIST items; G-A and G-C write their six criteria as TABLES, so both parse
+   to 0 of 6. G-A gets `unparseable-items` (the rail STOPS — safe), but G-C's section is TIDY so it gets
+   `empty-section`, which LICENSES proposing a NEW bar over a FROZEN one. **Do not run `--until-mvp` on
+   G-C** until constraint `mvp-bar-parser-blind-to-table-format` expires. The file is shared machine-wide
+   and decides what counts as a frozen bar, so fixing it is an acceptance-bar decision.
+
+**And a ROADMAP TENSION worth a decision, not a fix.** `plans/Trait_Decoding_Roadmap.md` orders its seven
+phases by ORGANISM COMPLEXITY (E. coli -> multi-organism -> ... -> eukaryotes), while
+`dna_decode/eval/regime.py` records the measured discriminator as **POPULATION DESIGN** (constructed vs
+natural), and the roadmap predates that correction. The evidence: the yeast segregant cross — a EUKARYOTE,
+with splicing and chromatin fully present — decoded **12/12 traits at r 0.46-0.80**, while zero-shot
+embeddings on natural populations are 0-for-5. So eukaryotic machinery is NOT what blocks the climb;
+natural-population confounding is. The rung after bacteria may therefore be a CONSTRUCTED EUKARYOTE rather
+than "animals". Not changed here — re-ordering a roadmap is a user call.
