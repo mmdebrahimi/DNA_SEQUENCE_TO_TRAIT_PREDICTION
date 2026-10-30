@@ -92,12 +92,12 @@
     "gd-finetune-gated-on-sampling-sweep-not-compute": {
       "cid": "gd-finetune-gated-on-sampling-sweep-not-compute",
       "blocked": "G-D glm-generator-finetune (LoRA fine-tune of GENERator-v2-prokaryote-1.2b on real E. coli promoter windows) is NOT running. Its own technical-plan names TWO blockers and the UNBLOCK TRIGGER is the conjunction: \"the sampling sweep artifact exists AND the 8 GB host is reachable\". THE COMPUTE HALF IS ALREADY SATISFIED -- free Kaggle T4s are 16 GB and this repo runs 12 kernels in scripts/kaggle/ with 19 scripts referencing Kaggle, so an 8 GB-class GPU has been reachable since 2026-07-09 regardless of where the local 1070 physically sits. What REMAINS binding is the EPISTEMIC half: the sampling sweep must report FIRST, because sampling and weights are two generator levers and running them together means neither can be attributed. RE-OPEN G-D when the sweep artifact lands.",
-      "rationale": "Superseding my own mis-specified constraint local-gpu-vram-blocks-dna-lm-finetune (registered and resolved 2026-10-17 the same hour). That one used a gpu-vram-gte test on the LOCAL card. R9 states the limit explicitly -- the compute that arrived was CLOUD, so a local-VRAM test would not have fired -- and I registered a local-VRAM test anyway, which would have read UNKNOWN forever on a laptop with no NVIDIA card while the compute was already in hand. The operator caught it. Corrected test: file-exists on the sweep artifact, which is self-checking and keyed to the blocker that is actually load-bearing.",
+      "rationale": "Superseding my own mis-specified constraint local-gpu-vram-blocks-dna-lm-finetune (registered and resolved 2026-10-17 the same hour). That one used a gpu-vram-gte test on the LOCAL card. R9 states the limit explicitly -- the compute that arrived was CLOUD, so a local-VRAM test would not have fired -- and I registered a local-VRAM test anyway, which would have read UNKNOWN forever on a laptop with no NVIDIA card while the compute was already in hand. The operator caught it. Corrected test: file-exists on the sweep artifact, which is self-checking and keyed to the blocker that is actually load-bearing. || STATUS 2026-10-29: THE SWEEP HAS RUN, AND THIS CONSTRAINT STILL BINDS ON PURPOSE -- do not read it as unstarted. Results are committed at wiki/glm_sampling_sweep_2026-10-29_*.json (commit 1733d8ae): Kaggle T4, the frozen Step-4 grid (temperature 1.0/0.8/0.6, top_k unswept), nulls reproducing the recorded 0.5990/0.6679 EXACTLY in both modes at all three points. Headline: temperature is a real lever (kmer gap over null 0.1365 -> 0.0401 -> 0.0733, best at T=0.8, a 3.4x reduction) and NO point beats the null -- every cell is WORSE_THAN or NO_BETTER_THAN_MARKOV_NULL and no `both` value clears 0.6679. So the family's own `:5` note does NOT trigger: the premise is not weakened and no re-rank is due. WHY THE TRIGGER IS NOT DISCHARGED: the kernel never passed --verify-knob (the string occurs ZERO times in scripts/kaggle/build_glm_sampling_sweep_kernel.py and the emitted kernel), so sweep_gates.verdict_eligibility returns excluded:requested-but-unverified for T=0.8 and T=0.6 and only eligible:default-sampling for T=1.0. Two of three points are not plan-eligible. The canonical artifact name this test watches, wiki/glm_generator_sampling_sweep.json, was DELIBERATELY NOT created: writing it would fire a LoRA fine-tune's unblock trigger on a sweep the project's own gate excludes, which is the same class of error as discharging a bar without spending the lever. TO DISCHARGE: re-run the sweep with --verify-knob at every non-default point, confirm knob_verified_end_to_end == true, then emit that canonical filename.",
       "expiry_kind": "file-exists",
       "expiry_arg": "wiki/glm_generator_sampling_sweep.json",
       "registered_at": "2026-10-18T01:11:19Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-10-29",
+      "last_verdict": "still-binding (sweep ran; 2 of 3 points not plan-eligible)",
       "resolved": false
     },
     "env-python-pinned-313-no-315-wheels": {
@@ -129,20 +129,20 @@
       "expiry_kind": "file-exists",
       "expiry_arg": "D:/dna_decode_cache/promcalc/decomposition.rebuilt.csv.gz",
       "registered_at": "2026-10-21T19:53:33Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-10-30T02:18:50Z",
+      "last_verdict": "EXPIRED",
       "resolved": false
     },
     "gd-sweep-weights-absent": {
       "cid": "gd-sweep-weights-absent",
       "blocked": "The G-D sampling sweep run that would discharge the generator-finetune unblock trigger. It is CPU inference and ONE run away (NEXT.md:451); what is missing is only the 4.33 GiB GENERator-v2-prokaryote-1.2b-base weight file. Candidate 1 (the disjoint train/eval window split) is already DELIVERED in wiki/glm_finetune_window_split.json, so the sweep is the sole remaining gate before candidates 3-4, the LoRA fine-tune -- the expensive arm R10/R12 exist to protect.",
-      "rationale": "Measured 2026-10-29: only C: and S: are attached (S: mirrors C:). E:/hf_cache is ABSENT, HF_HOME is unset, and the local C: HF hub cache is 958 MB holding only models--nlpconnect--vit-gpt2-image-captioning -- the single 500MB+ file in it is that unrelated 0.91 GB model, so the GENERator weights are definitively not on C:. NEXT.md:452 already warned that E: attachment is per-session and never inherited. This is NOT a compute wall: the sweep needs no GPU, and the 8 GB GPU blocker in G-D's blocked_by gates the FINE-TUNE, not this. Three ways out, and choosing is the user's: (a) attach the drive holding hf_cache; (b) re-download 4.33 GiB, which is free and fits C:'s 58.2 GB but violates the standing D:-rule that every heavy file for this project lives on D: never C:; (c) run it on server1, which has ~770 GB free, once its promcalc sweep finishes.",
+      "rationale": "Measured 2026-10-29: only C: and S: are attached (S: mirrors C:). E:/hf_cache is ABSENT, HF_HOME is unset, and the local C: HF hub cache is 958 MB holding only models--nlpconnect--vit-gpt2-image-captioning -- the single 500MB+ file in it is that unrelated 0.91 GB model, so the GENERator weights are definitively not on C:. NEXT.md:452 already warned that E: attachment is per-session and never inherited. This is NOT a compute wall: the sweep needs no GPU, and the 8 GB GPU blocker in G-D's blocked_by gates the FINE-TUNE, not this. Three ways out, and choosing is the user's: (a) attach the drive holding hf_cache; (b) re-download 4.33 GiB, which is free and fits C:'s 58.2 GB but violates the standing D:-rule that every heavy file for this project lives on D: never C:; (c) run it on server1, which has ~770 GB free, once its promcalc sweep finishes. || DISCHARGED 2026-10-29, AND ITS TEST COULD NEVER HAVE FIRED. The expiry test is `file-exists E:/hf_cache`, which is wrong twice over: E: was re-lettered to D: by the user, and the weights were never on this laptop at all -- they sit at D:/hf_cache/hub/models--GenerTeam--GENERator-v2-prokaryote-1.2b-base on SERVER2 (DESKTOP-SJG795O), which a local file-exists test cannot see. What actually discharged it is a THIRD route neither the blocker nor the test anticipated: the sweep ran on a free Kaggle T4, which fetched the weights itself. This is the documented R9 honest-limit shape -- the resource that arrived was CLOUD, so no local probe would have fired. Evidence: commit 1733d8ae, wiki/glm_sampling_sweep_2026-10-29_*.json, device cuda, 3 cells at 3.2/2.4/2.4 min.",
       "expiry_kind": "file-exists",
       "expiry_arg": "E:/hf_cache",
       "registered_at": "2026-10-29T19:48:29Z",
-      "last_checked": "",
-      "last_verdict": "",
-      "resolved": false
+      "last_checked": "2026-10-29",
+      "last_verdict": "RESOLVED_BY_CLOUD_ROUTE",
+      "resolved": true
     }
   }
 }
