@@ -853,3 +853,12 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 - Re-validate via the toolkit rather than hand-editing the wave table, and declare a `**Status:**` on the index entry -- 38 existing entries carry one and the prior entry did not.
 
 ---
+## [plan_file: Record_The_Fragment_Rung_Measurements_In_Its_Family_Ledger_And_Scope_Two_Negatives_Plan/] 2026-10-30
+**Summary:** The fragment-pyramid rung produced three measurements over 2026-10-28/29 -- a 10-seed Kaggle T4 run, an independent server1 replication, and a 40-seed null extension that pooled to 50 seeds -- and none of them is recorded in any family ledger; they exist only as wiki/ artifacts and commit messages, invisible to advance_ranker and to every fresh session.
+**Key decisions:**
+- Step 1 records the rung's measured history in G-A (`glm-learned-representation-2026-10-07`) as one Action-Log row, quoting the POOLED 50-seed null median +0.0242 (which FAILS the 0.02 bar) rather than the flattering fresh-seed 0.0191, and surfacing bar re-specification as an acceptance-bar decision rather than taking it.
+- Step 2 appends a boundary (not a revision) to G-C: `NO_GAIN` is evidence from a substrate where the eukaryotic mechanism that would make condition-conditioning pay is structurally absent.
+- Step 3 extends the existing sigma70 statement at `promcalc_decomposition_arm.py:14` in place with the eukaryotic non-transfer consequence, rather than starting a second copy elsewhere.
+- Sequential execution chosen over the computed 3-way parallelism: worktree isolation is the wrong shape for three minute-scale edits in a shared tree.
+
+---

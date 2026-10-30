@@ -13,6 +13,28 @@ is the REPRESENTATION, not the capacity or the row count -- and the 2026-10-12 f
 control established that the signal lives in the sequence-to-mechanism pairing specifically. This arm
 gives a learner the mechanism instead of asking it to rediscover sigma70 physics from 44k rows.
 
+**SCOPE OF THAT SIGMA70 WORD, AND IT BOUNDS WHERE THIS DECOMPOSITION CAN EVER BE REUSED (2026-10-30).**
+The Promoter Calculator models BACTERIAL sigma70 promoter architecture, and the field set says so:
+`dG_10, dG_35, dG_ext10, dG_spacer, dG_disc, dG_ITR, dG_UP` -- a -10 box, a -35 box, and the spacer
+between them. **So this decomposition does NOT transfer to eukaryotic promoters.** Eukaryotic
+initiation runs through a TATA box, roughly six general transcription factors assembling a
+pre-initiation complex, a Mediator complex integrating signals from enhancers that may sit far
+upstream, and chromatin accessibility gating the whole thing. That is a DIFFERENT OBJECT, not a
+scaled-up version of a sigma70 promoter, and no amount of extra tiles turns one into the other.
+
+The consequence a future session actually needs: **reusing promcalc for the north star's "climb to
+animals" step would be a category error.** It is the exact mirror of the finding already recorded in
+CLAUDE.md that AlphaGenome's ARCHITECTURE does not transfer DOWN (1 Mb context, U-Net, contact maps
+for enhancer-promoter interaction, against a bacterial promoter of 100-300 bp) while its TRAINING
+METHOD does. Downward and upward both fail; they fail for the same reason.
+
+**PROVENANCE, stated because it is weaker than it looks:** the organism attribution is INFERRED, not
+read off this repo. It rests on the Promoter Calculator being a sigma70 model plus the field names
+being sigma70 architecture. Grep measured 2026-10-30: `sigma70` occurs exactly ONCE across
+`scripts/promcalc_*.py` -- the line above -- and `eukaryot` occurred ZERO times before this note.
+Nothing in the promcalc chain states the organism scope beyond that one line, which is why the
+consequence is recorded HERE, beside the existing claim, rather than as a second copy elsewhere.
+
 ## Pre-registered, and the threshold is DERIVED
 
 Frozen before the fit. The bar is read off the substrate's own measured effect sizes, because a
