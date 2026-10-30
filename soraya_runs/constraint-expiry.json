@@ -143,6 +143,17 @@
       "last_checked": "2026-10-29",
       "last_verdict": "RESOLVED_BY_CLOUD_ROUTE",
       "resolved": true
+    },
+    "mvp-bar-parser-blind-to-table-format": {
+      "cid": "mvp-bar-parser-blind-to-table-format",
+      "blocked": "Running `/soraya --until-mvp` against ANY family ledger in this project whose `## MVP Criteria` bar is written as a MARKDOWN TABLE. Measured 2026-10-29: that is glm-learned-representation-2026-10-07 and glm-condition-conditioning-2026-10-07, each carrying SIX well-formed, machine-checkable predicates that the parser reads as ZERO.",
+      "rationale": "mvp_criteria._LIST_ITEM is ^\\s*[-*]\\s+(.*\\S)\\s*$ -- it matches markdown LIST items only, while these ledgers write the bar as a table (| # | Criterion | Kind | Predicate |). So parse_mvp_criteria returns 0 criteria on a fully populated 6-row bar. THE DANGEROUS HALF IS THE DIAGNOSIS, NOT THE PARSE. parse_diagnosis returns `unparseable-items:4` for glm-learned-representation -- which the R18 rail correctly treats as STOP -- but `empty-section` for glm-condition-conditioning, which the rail treats as an 'honest nothing' that LICENSES proposing a new bar. So --until-mvp on that family would propose and write a NEW acceptance bar over a FROZEN six-row one that carries a documented D1 authority decision and a 2026-10-08 path correction: silently redefining frozen acceptance criteria, the exact harm R18 was built to prevent. THE INVERSION IS THE POINT: glm-learned-representation is protected ONLY because its MVP section happens to contain four unrelated prose bullets (the GA-H1..H4 hypothesis lines), which trip the unparseable branch. glm-condition-conditioning is exposed because its section is TIDY. A cleaner ledger is more dangerous, which is the opposite of what a reader would assume. NOT FIXED HERE ON PURPOSE: mvp_criteria.py lives at C:/my_skills/skills/soraya/scripts/mvp_criteria.py, is shared by every project on this machine and synced cross-machine, and it is the surface that decides WHAT COUNTS AS THE FROZEN BAR -- i.e. an acceptance-bar surface, which the R20 ask-ladder puts at user:acceptance-bar, above mine:reversible-local. Surfaced for ratification, deliberately not applied.",
+      "expiry_kind": "test-exit-0",
+      "expiry_arg": "uv run python -c \"import sys;sys.path.insert(0,r'C:/my_skills/skills/soraya/scripts');import mvp_criteria as m,pathlib;t=pathlib.Path('project_state/glm-condition-conditioning-2026-10-07.md').read_text(encoding='utf-8',errors='replace');sys.exit(0 if len(m.parse_mvp_criteria(t))==6 else 1)\"",
+      "registered_at": "2026-10-30T02:30:56Z",
+      "last_checked": "2026-10-30T02:30:56Z",
+      "last_verdict": "needs-runner",
+      "resolved": false
     }
   }
 }
