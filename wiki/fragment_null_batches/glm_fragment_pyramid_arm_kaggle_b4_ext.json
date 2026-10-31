@@ -1,0 +1,1236 @@
+{
+  "schema": "glm-fragment-pyramid-arm-v1",
+  "arm": "pyramid-4scale-2.22decades-499bp-fragments",
+  "date": "2026-10-31",
+  "preregistered": {
+    "arm": "pyramid-4scale-2.22decades-499bp-fragments",
+    "rung": "fragments_LB",
+    "rung_ceiling": 0.7928,
+    "comparator": "kmer4",
+    "comparator_note": "4-mer counts + ridge, recomputed IN-RUN on identical splits/seeds. The census's 0.1313 is context, NOT the comparator: a cited number from a different split cannot be paired.",
+    "primary_metric": "spearman on the held-out genomic blocks",
+    "margin": 0.02,
+    "margin_note": "INHERITED from the tile-rung arms so the bars stay commensurable, and the inheritance is disclosed because it is NOT scale-free: 0.02 against this rung's incumbent (~0.13) is a ~15% relative gain, whereas against the tile rung's ~0.40 it is ~5%. The verdict keys on the ABSOLUTE 0.02; the relative figure is reported beside it so no reader is misled.",
+    "min_seeds_winning": 8,
+    "n_seeds": 10,
+    "widths": [
+      3,
+      12,
+      48,
+      150
+    ],
+    "span_decades_at_max": 2.221,
+    "span_decades_at_median": 1.9103,
+    "span_decades_note": "MEASURED over all 321,123 LB fragments: median 244 bp (1.9103 decades), p99 308 bp (2.011), max 499 bp (2.2210). Only 4.0% of rows reach 300 bp and 0.015% reach 400 bp. Against the measured tile sibling's 1.70 decades the honest gain is +0.21 at the MEDIAN (244/150 = 1.63x more length), NOT the +0.52 / 3.33x the maximum suggests. Quote the median figure; the max describes 49 fragments.",
+    "leakage_unit": "contiguous genomic block, start // 50000",
+    "length_rule": "zero-pad to 499 with MASKED pooling; padded positions excluded",
+    "verdicts": {
+      "PYRAMID_ADDS": "gain >= margin AND >= min_seeds_winning seeds win -- a reproducible lift",
+      "WEAK_PYRAMID": "gain > 0 AND >= min_seeds_winning seeds win, but below the margin -- a REPRODUCIBLE gain that fell short of the effect-size bar",
+      "INDETERMINATE_GAIN_NOT_REPRODUCIBLE": "gain > 0 but FEWER than min_seeds_winning seeds win -- a positive gain that did NOT reproduce, which is neither a measured lift nor a measured negative and must not be read as either",
+      "NO_GAIN": "gain <= 0 -- the pyramid does not beat the length-invariant default",
+      "INVALID_NULL_SCORED": "the shuffled-label control scored; nothing may be graded",
+      "INVALID_PAD_LEAKED": "padding changed a score; the masked-pooling premise is broken"
+    },
+    "validity_controls": {
+      "shuffled_labels": "AMENDED 2026-10-27, BEFORE any scored run, because the first design was MEASURED invalid. It was: one seed, |rho| < 0.05. The null's own spread makes that unusable -- measured over 5 seeds at N=4,000 the null is median -0.0008 / mean +0.0130 / **sd 0.1016**, range -0.1236..+0.1301, so a single-seed 0.05 bar FAILS 3 of 5 times on a pipeline that is demonstrably centred on zero. The first smoke duly returned a FALSE INVALID_NULL_SCORED. WHY the spread is that large, and it is not a defect: early stopping trips almost immediately once the train-side labels are permuted, leaving weights near initialisation, so the model is close to a RANDOM linear functional of base composition -- and composition predicts expression on this rung at spearman(GC, expression) = -0.1169, which is the same magnitude as the whole kmer4 comparator (0.1120). A random composition-like feature therefore lands anywhere in +/-0.13 by chance. NOW: the null runs on ALL seeds and the bar is on the MEDIAN, |median| < margin (0.02); the per-seed values and the sd are both reported so a reader can see the power. **The primary noise control was already pre-registered and is the SEED-COUNT bar**: under a null centred on zero each seed wins with p=0.5, so >= 8 of 10 has p = 0.0547. The single-seed null bar was both redundant and miscalibrated.",
+      "null_median_bar": 0.02,
+      "pad_invariance": "a sequence must score identically whatever length it is padded to",
+      "length_matched_subset": "AMENDED 2026-10-27 from >= 400 bp to >= 300 bp, BEFORE any encoder number existed. The 400 bp threshold was frozen without measuring the distribution and selects 49 of 321,123 rows (0.015%) -- a control too small to falsify anything, which is worse than no control because it LOOKS like one. 300 bp selects 12,896 rows (4.0%) and is powered. Still the minority of the substrate, so it is a padding check, NOT a second headline. If the headline and this subset disagree in SIGN, padding is implicated and the headline is WITHDRAWN rather than explained.",
+      "length_matched_threshold_bp": 300
+    },
+    "predicted_outcome": "NO_GAIN or WEAK_PYRAMID",
+    "prediction_rationale": "Recorded BEFORE the run. Four reasons a negative is expected: (a) the conv encoder already failed to beat a SINGLE GC NUMBER on the easier tile rung (+0.0122, paired CI includes zero); (b) `load_fragments`' own docstring argues k-mer features are the honest default here precisely BECAUSE they are length-invariant, which is the property a fixed-window conv lacks; (c) this rung's best measured arm reaches only 0.1313 of a 0.7928 ceiling (16.6%), so the recoverable signal looks thin for every model class, not just this one; (d) more SPAN is only useful if regulatory signal actually lives above 150 bp, which is the hypothesis under test and not an assumption in its favour.",
+    "negative_scope": "A negative here means: a 4-scale conv pyramid over zero-padded, masked-pooled fragments, trained under the registered protocol on block-split LB fragments, did not beat 4-mer counts + ridge by 0.02 Spearman. It would NOT mean sequence context above 150 bp is uninformative, NOT that multi-resolution modelling fails in general, and NOT anything about the tile rung, which has a different ceiling and a different incumbent.",
+    "revival_condition": "a length-invariant architecture (dilated conv, attention with length masking) or a rung whose fragments are long enough that padding is negligible across the whole set."
+  },
+  "substrate": {
+    "path": "/kaggle/working/mpra/GSE144621_U00096.2_frag-rLP5_LB_expression.txt.gz",
+    "delimiter": "whitespace",
+    "n_header_columns": 13,
+    "n_lines": 321123,
+    "n_parsed": 321123,
+    "n_field_count_mismatch": 0,
+    "n_non_acgt": 0,
+    "n_unparseable_value": 0,
+    "length_min": 48,
+    "length_median": 244,
+    "length_max": 499,
+    "n_distinct_lengths": 359
+  },
+  "n_sequences": 321123,
+  "n_genomic_blocks": 93,
+  "n_fragments_in_length_matched_subset": 12896,
+  "span_distribution": {
+    "length_median": 244,
+    "length_p99": 308,
+    "length_max": 499,
+    "span_at_median": 1.9103,
+    "span_at_max": 2.221,
+    "frac_ge_300bp": 0.0402
+  },
+  "branch_coverage": {
+    "3": {
+      "n_dead_rows": 0,
+      "fraction_dead": 0.0,
+      "min_true_len_needed": 3
+    },
+    "12": {
+      "n_dead_rows": 0,
+      "fraction_dead": 0.0,
+      "min_true_len_needed": 12
+    },
+    "48": {
+      "n_dead_rows": 0,
+      "fraction_dead": 0.0,
+      "min_true_len_needed": 48
+    },
+    "150": {
+      "n_dead_rows": 3624,
+      "fraction_dead": 0.0113,
+      "min_true_len_needed": 150
+    }
+  },
+  "baseline_rows": [
+    {
+      "seed": 215,
+      "n_train": 254980,
+      "n_test": 66143,
+      "kmer4_spearman": 0.1063,
+      "pyramid_spearman": 0.1114,
+      "delta": 0.0051,
+      "fit": {
+        "inner_train": 204049,
+        "inner_val": 50931,
+        "val_mse": 1.91964
+      },
+      "long_only": {
+        "n": 2623,
+        "kmer4": 0.1106
+      }
+    },
+    {
+      "seed": 216,
+      "n_train": 255967,
+      "n_test": 65156,
+      "kmer4_spearman": 0.1099,
+      "pyramid_spearman": 0.1058,
+      "delta": -0.0041,
+      "fit": {
+        "inner_train": 204133,
+        "inner_val": 51834,
+        "val_mse": 4.31071
+      },
+      "long_only": {
+        "n": 2569,
+        "kmer4": 0.1212
+      }
+    },
+    {
+      "seed": 217,
+      "n_train": 256063,
+      "n_test": 65060,
+      "kmer4_spearman": 0.116,
+      "pyramid_spearman": 0.1174,
+      "delta": 0.0014,
+      "fit": {
+        "inner_train": 204522,
+        "inner_val": 51541,
+        "val_mse": 4.57247
+      },
+      "long_only": {
+        "n": 2570,
+        "kmer4": 0.1205
+      }
+    },
+    {
+      "seed": 218,
+      "n_train": 255712,
+      "n_test": 65411,
+      "kmer4_spearman": 0.1105,
+      "pyramid_spearman": 0.1189,
+      "delta": 0.0085,
+      "fit": {
+        "inner_train": 204010,
+        "inner_val": 51702,
+        "val_mse": 3.81504
+      },
+      "long_only": {
+        "n": 2625,
+        "kmer4": 0.1534
+      }
+    },
+    {
+      "seed": 219,
+      "n_train": 255188,
+      "n_test": 65935,
+      "kmer4_spearman": 0.1073,
+      "pyramid_spearman": 0.1118,
+      "delta": 0.0046,
+      "fit": {
+        "inner_train": 202921,
+        "inner_val": 52267,
+        "val_mse": 6.19877
+      },
+      "long_only": {
+        "n": 2598,
+        "kmer4": 0.1573
+      }
+    },
+    {
+      "seed": 220,
+      "n_train": 255470,
+      "n_test": 65653,
+      "kmer4_spearman": 0.1109,
+      "pyramid_spearman": 0.0957,
+      "delta": -0.0152,
+      "fit": {
+        "inner_train": 202800,
+        "inner_val": 52670,
+        "val_mse": 3.52162
+      },
+      "long_only": {
+        "n": 2646,
+        "kmer4": 0.1479
+      }
+    },
+    {
+      "seed": 221,
+      "n_train": 256527,
+      "n_test": 64596,
+      "kmer4_spearman": 0.1198,
+      "pyramid_spearman": 0.0793,
+      "delta": -0.0405,
+      "fit": {
+        "inner_train": 204616,
+        "inner_val": 51911,
+        "val_mse": 3.9143
+      },
+      "long_only": {
+        "n": 2595,
+        "kmer4": 0.1699
+      }
+    },
+    {
+      "seed": 222,
+      "n_train": 254684,
+      "n_test": 66439,
+      "kmer4_spearman": 0.1111,
+      "pyramid_spearman": 0.1154,
+      "delta": 0.0043,
+      "fit": {
+        "inner_train": 202244,
+        "inner_val": 52440,
+        "val_mse": 5.80192
+      },
+      "long_only": {
+        "n": 2591,
+        "kmer4": 0.135
+      }
+    },
+    {
+      "seed": 223,
+      "n_train": 254590,
+      "n_test": 66533,
+      "kmer4_spearman": 0.111,
+      "pyramid_spearman": 0.0879,
+      "delta": -0.0231,
+      "fit": {
+        "inner_train": 202867,
+        "inner_val": 51723,
+        "val_mse": 4.67698
+      },
+      "long_only": {
+        "n": 2719,
+        "kmer4": 0.1269
+      }
+    },
+    {
+      "seed": 224,
+      "n_train": 256616,
+      "n_test": 64507,
+      "kmer4_spearman": 0.1073,
+      "pyramid_spearman": 0.0681,
+      "delta": -0.0391,
+      "fit": {
+        "inner_train": 205067,
+        "inner_val": 51549,
+        "val_mse": 6.95982
+      },
+      "long_only": {
+        "n": 2617,
+        "kmer4": 0.1629
+      }
+    },
+    {
+      "seed": 225,
+      "n_train": 254896,
+      "n_test": 66227,
+      "kmer4_spearman": 0.117,
+      "pyramid_spearman": 0.1091,
+      "delta": -0.0079,
+      "fit": {
+        "inner_train": 202925,
+        "inner_val": 51971,
+        "val_mse": 3.35157
+      },
+      "long_only": {
+        "n": 2654,
+        "kmer4": 0.1873
+      }
+    },
+    {
+      "seed": 226,
+      "n_train": 255435,
+      "n_test": 65688,
+      "kmer4_spearman": 0.1127,
+      "pyramid_spearman": 0.1229,
+      "delta": 0.0101,
+      "fit": {
+        "inner_train": 203857,
+        "inner_val": 51578,
+        "val_mse": 3.00853
+      },
+      "long_only": {
+        "n": 2627,
+        "kmer4": 0.118
+      }
+    },
+    {
+      "seed": 227,
+      "n_train": 254953,
+      "n_test": 66170,
+      "kmer4_spearman": 0.1228,
+      "pyramid_spearman": 0.0924,
+      "delta": -0.0304,
+      "fit": {
+        "inner_train": 202870,
+        "inner_val": 52083,
+        "val_mse": 2.27583
+      },
+      "long_only": {
+        "n": 2599,
+        "kmer4": 0.1861
+      }
+    },
+    {
+      "seed": 228,
+      "n_train": 255253,
+      "n_test": 65870,
+      "kmer4_spearman": 0.1033,
+      "pyramid_spearman": 0.0872,
+      "delta": -0.0161,
+      "fit": {
+        "inner_train": 202787,
+        "inner_val": 52466,
+        "val_mse": 7.41581
+      },
+      "long_only": {
+        "n": 2714,
+        "kmer4": 0.1522
+      }
+    },
+    {
+      "seed": 229,
+      "n_train": 256218,
+      "n_test": 64905,
+      "kmer4_spearman": 0.1138,
+      "pyramid_spearman": 0.0904,
+      "delta": -0.0234,
+      "fit": {
+        "inner_train": 203623,
+        "inner_val": 52595,
+        "val_mse": 3.19732
+      },
+      "long_only": {
+        "n": 2612,
+        "kmer4": 0.1328
+      }
+    },
+    {
+      "seed": 230,
+      "n_train": 255776,
+      "n_test": 65347,
+      "kmer4_spearman": 0.1107,
+      "pyramid_spearman": 0.0766,
+      "delta": -0.0341,
+      "fit": {
+        "inner_train": 203876,
+        "inner_val": 51900,
+        "val_mse": 6.26138
+      },
+      "long_only": {
+        "n": 2690,
+        "kmer4": 0.1754
+      }
+    },
+    {
+      "seed": 231,
+      "n_train": 255689,
+      "n_test": 65434,
+      "kmer4_spearman": 0.1267,
+      "pyramid_spearman": 0.1354,
+      "delta": 0.0087,
+      "fit": {
+        "inner_train": 203895,
+        "inner_val": 51794,
+        "val_mse": 4.01305
+      },
+      "long_only": {
+        "n": 2612,
+        "kmer4": 0.177
+      }
+    },
+    {
+      "seed": 232,
+      "n_train": 255522,
+      "n_test": 65601,
+      "kmer4_spearman": 0.114,
+      "pyramid_spearman": 0.1123,
+      "delta": -0.0017,
+      "fit": {
+        "inner_train": 203998,
+        "inner_val": 51524,
+        "val_mse": 3.14572
+      },
+      "long_only": {
+        "n": 2634,
+        "kmer4": 0.1632
+      }
+    },
+    {
+      "seed": 233,
+      "n_train": 254347,
+      "n_test": 66776,
+      "kmer4_spearman": 0.1094,
+      "pyramid_spearman": 0.0648,
+      "delta": -0.0446,
+      "fit": {
+        "inner_train": 202866,
+        "inner_val": 51481,
+        "val_mse": 5.66353
+      },
+      "long_only": {
+        "n": 2691,
+        "kmer4": 0.1607
+      }
+    },
+    {
+      "seed": 234,
+      "n_train": 255242,
+      "n_test": 65881,
+      "kmer4_spearman": 0.1103,
+      "pyramid_spearman": 0.0882,
+      "delta": -0.022,
+      "fit": {
+        "inner_train": 203606,
+        "inner_val": 51636,
+        "val_mse": 6.9856
+      },
+      "long_only": {
+        "n": 2628,
+        "kmer4": 0.14
+      }
+    },
+    {
+      "seed": 235,
+      "n_train": 256256,
+      "n_test": 64867,
+      "kmer4_spearman": 0.1114,
+      "pyramid_spearman": 0.1199,
+      "delta": 0.0085,
+      "fit": {
+        "inner_train": 205485,
+        "inner_val": 50771,
+        "val_mse": 2.5406
+      },
+      "long_only": {
+        "n": 2603,
+        "kmer4": 0.1565
+      }
+    },
+    {
+      "seed": 236,
+      "n_train": 255557,
+      "n_test": 65566,
+      "kmer4_spearman": 0.1138,
+      "pyramid_spearman": 0.1292,
+      "delta": 0.0154,
+      "fit": {
+        "inner_train": 203793,
+        "inner_val": 51764,
+        "val_mse": 1.7557
+      },
+      "long_only": {
+        "n": 2662,
+        "kmer4": 0.1601
+      }
+    },
+    {
+      "seed": 237,
+      "n_train": 255103,
+      "n_test": 66020,
+      "kmer4_spearman": 0.1166,
+      "pyramid_spearman": 0.1089,
+      "delta": -0.0077,
+      "fit": {
+        "inner_train": 203241,
+        "inner_val": 51862,
+        "val_mse": 3.54492
+      },
+      "long_only": {
+        "n": 2607,
+        "kmer4": 0.1345
+      }
+    },
+    {
+      "seed": 238,
+      "n_train": 255263,
+      "n_test": 65860,
+      "kmer4_spearman": 0.1109,
+      "pyramid_spearman": 0.0967,
+      "delta": -0.0142,
+      "fit": {
+        "inner_train": 203701,
+        "inner_val": 51562,
+        "val_mse": 7.12875
+      },
+      "long_only": {
+        "n": 2674,
+        "kmer4": 0.1549
+      }
+    },
+    {
+      "seed": 239,
+      "n_train": 256042,
+      "n_test": 65081,
+      "kmer4_spearman": 0.1196,
+      "pyramid_spearman": 0.1194,
+      "delta": -0.0001,
+      "fit": {
+        "inner_train": 203656,
+        "inner_val": 52386,
+        "val_mse": 3.15741
+      },
+      "long_only": {
+        "n": 2581,
+        "kmer4": 0.1691
+      }
+    },
+    {
+      "seed": 240,
+      "n_train": 255714,
+      "n_test": 65409,
+      "kmer4_spearman": 0.1046,
+      "pyramid_spearman": 0.1077,
+      "delta": 0.0031,
+      "fit": {
+        "inner_train": 204453,
+        "inner_val": 51261,
+        "val_mse": 4.7757
+      },
+      "long_only": {
+        "n": 2579,
+        "kmer4": 0.1354
+      }
+    },
+    {
+      "seed": 241,
+      "n_train": 255087,
+      "n_test": 66036,
+      "kmer4_spearman": 0.1218,
+      "pyramid_spearman": 0.0699,
+      "delta": -0.0519,
+      "fit": {
+        "inner_train": 203299,
+        "inner_val": 51788,
+        "val_mse": 4.75078
+      },
+      "long_only": {
+        "n": 2674,
+        "kmer4": 0.1616
+      }
+    },
+    {
+      "seed": 242,
+      "n_train": 254528,
+      "n_test": 66595,
+      "kmer4_spearman": 0.1112,
+      "pyramid_spearman": 0.1205,
+      "delta": 0.0093,
+      "fit": {
+        "inner_train": 203407,
+        "inner_val": 51121,
+        "val_mse": 3.64537
+      },
+      "long_only": {
+        "n": 2779,
+        "kmer4": 0.1859
+      }
+    },
+    {
+      "seed": 243,
+      "n_train": 255368,
+      "n_test": 65755,
+      "kmer4_spearman": 0.1076,
+      "pyramid_spearman": 0.0938,
+      "delta": -0.0138,
+      "fit": {
+        "inner_train": 204010,
+        "inner_val": 51358,
+        "val_mse": 5.48437
+      },
+      "long_only": {
+        "n": 2671,
+        "kmer4": 0.1315
+      }
+    },
+    {
+      "seed": 244,
+      "n_train": 255135,
+      "n_test": 65988,
+      "kmer4_spearman": 0.1203,
+      "pyramid_spearman": 0.1249,
+      "delta": 0.0046,
+      "fit": {
+        "inner_train": 203578,
+        "inner_val": 51557,
+        "val_mse": 2.51183
+      },
+      "long_only": {
+        "n": 2644,
+        "kmer4": 0.1811
+      }
+    },
+    {
+      "seed": 245,
+      "n_train": 256730,
+      "n_test": 64393,
+      "kmer4_spearman": 0.1075,
+      "pyramid_spearman": 0.1137,
+      "delta": 0.0062,
+      "fit": {
+        "inner_train": 204755,
+        "inner_val": 51975,
+        "val_mse": 2.95534
+      },
+      "long_only": {
+        "n": 2620,
+        "kmer4": 0.1703
+      }
+    },
+    {
+      "seed": 246,
+      "n_train": 256460,
+      "n_test": 64663,
+      "kmer4_spearman": 0.1092,
+      "pyramid_spearman": 0.0845,
+      "delta": -0.0247,
+      "fit": {
+        "inner_train": 205068,
+        "inner_val": 51392,
+        "val_mse": 6.49061
+      },
+      "long_only": {
+        "n": 2532,
+        "kmer4": 0.1553
+      }
+    },
+    {
+      "seed": 247,
+      "n_train": 255789,
+      "n_test": 65334,
+      "kmer4_spearman": 0.1053,
+      "pyramid_spearman": 0.1144,
+      "delta": 0.009,
+      "fit": {
+        "inner_train": 204033,
+        "inner_val": 51756,
+        "val_mse": 2.88574
+      },
+      "long_only": {
+        "n": 2631,
+        "kmer4": 0.1656
+      }
+    },
+    {
+      "seed": 248,
+      "n_train": 255983,
+      "n_test": 65140,
+      "kmer4_spearman": 0.1125,
+      "pyramid_spearman": 0.1027,
+      "delta": -0.0098,
+      "fit": {
+        "inner_train": 204524,
+        "inner_val": 51459,
+        "val_mse": 6.06237
+      },
+      "long_only": {
+        "n": 2552,
+        "kmer4": 0.1479
+      }
+    },
+    {
+      "seed": 249,
+      "n_train": 255316,
+      "n_test": 65807,
+      "kmer4_spearman": 0.1128,
+      "pyramid_spearman": 0.1032,
+      "delta": -0.0096,
+      "fit": {
+        "inner_train": 203497,
+        "inner_val": 51819,
+        "val_mse": 2.0031
+      },
+      "long_only": {
+        "n": 2684,
+        "kmer4": 0.1406
+      }
+    },
+    {
+      "seed": 250,
+      "n_train": 255583,
+      "n_test": 65540,
+      "kmer4_spearman": 0.119,
+      "pyramid_spearman": 0.1209,
+      "delta": 0.0019,
+      "fit": {
+        "inner_train": 204258,
+        "inner_val": 51325,
+        "val_mse": 1.63678
+      },
+      "long_only": {
+        "n": 2677,
+        "kmer4": 0.1575
+      }
+    },
+    {
+      "seed": 251,
+      "n_train": 256688,
+      "n_test": 64435,
+      "kmer4_spearman": 0.1263,
+      "pyramid_spearman": 0.13,
+      "delta": 0.0037,
+      "fit": {
+        "inner_train": 204981,
+        "inner_val": 51707,
+        "val_mse": 3.39389
+      },
+      "long_only": {
+        "n": 2593,
+        "kmer4": 0.1794
+      }
+    },
+    {
+      "seed": 252,
+      "n_train": 254783,
+      "n_test": 66340,
+      "kmer4_spearman": 0.1083,
+      "pyramid_spearman": 0.0997,
+      "delta": -0.0085,
+      "fit": {
+        "inner_train": 201937,
+        "inner_val": 52846,
+        "val_mse": 5.85658
+      },
+      "long_only": {
+        "n": 2593,
+        "kmer4": 0.1672
+      }
+    },
+    {
+      "seed": 253,
+      "n_train": 255555,
+      "n_test": 65568,
+      "kmer4_spearman": 0.1179,
+      "pyramid_spearman": 0.0699,
+      "delta": -0.048,
+      "fit": {
+        "inner_train": 205198,
+        "inner_val": 50357,
+        "val_mse": 7.4795
+      },
+      "long_only": {
+        "n": 2574,
+        "kmer4": 0.1421
+      }
+    },
+    {
+      "seed": 254,
+      "n_train": 255647,
+      "n_test": 65476,
+      "kmer4_spearman": 0.1225,
+      "pyramid_spearman": 0.1112,
+      "delta": -0.0113,
+      "fit": {
+        "inner_train": 203249,
+        "inner_val": 52398,
+        "val_mse": 9.91147
+      },
+      "long_only": {
+        "n": 2650,
+        "kmer4": 0.1877
+      }
+    },
+    {
+      "seed": 255,
+      "n_train": 255835,
+      "n_test": 65288,
+      "kmer4_spearman": 0.1118,
+      "pyramid_spearman": 0.1043,
+      "delta": -0.0075,
+      "fit": {
+        "inner_train": 204185,
+        "inner_val": 51650,
+        "val_mse": 4.13859
+      },
+      "long_only": {
+        "n": 2694,
+        "kmer4": 0.1718
+      }
+    },
+    {
+      "seed": 256,
+      "n_train": 256208,
+      "n_test": 64915,
+      "kmer4_spearman": 0.1114,
+      "pyramid_spearman": 0.121,
+      "delta": 0.0096,
+      "fit": {
+        "inner_train": 204286,
+        "inner_val": 51922,
+        "val_mse": 2.08052
+      },
+      "long_only": {
+        "n": 2514,
+        "kmer4": 0.1605
+      }
+    },
+    {
+      "seed": 257,
+      "n_train": 255187,
+      "n_test": 65936,
+      "kmer4_spearman": 0.122,
+      "pyramid_spearman": 0.1039,
+      "delta": -0.0181,
+      "fit": {
+        "inner_train": 203560,
+        "inner_val": 51627,
+        "val_mse": 3.49408
+      },
+      "long_only": {
+        "n": 2627,
+        "kmer4": 0.1977
+      }
+    },
+    {
+      "seed": 258,
+      "n_train": 255832,
+      "n_test": 65291,
+      "kmer4_spearman": 0.115,
+      "pyramid_spearman": 0.1267,
+      "delta": 0.0117,
+      "fit": {
+        "inner_train": 204709,
+        "inner_val": 51123,
+        "val_mse": 3.47948
+      },
+      "long_only": {
+        "n": 2647,
+        "kmer4": 0.1583
+      }
+    },
+    {
+      "seed": 259,
+      "n_train": 255376,
+      "n_test": 65747,
+      "kmer4_spearman": 0.1218,
+      "pyramid_spearman": 0.0816,
+      "delta": -0.0402,
+      "fit": {
+        "inner_train": 203266,
+        "inner_val": 52110,
+        "val_mse": 5.77109
+      },
+      "long_only": {
+        "n": 2567,
+        "kmer4": 0.156
+      }
+    },
+    {
+      "seed": 260,
+      "n_train": 255953,
+      "n_test": 65170,
+      "kmer4_spearman": 0.1188,
+      "pyramid_spearman": 0.0905,
+      "delta": -0.0283,
+      "fit": {
+        "inner_train": 203791,
+        "inner_val": 52162,
+        "val_mse": 5.75794
+      },
+      "long_only": {
+        "n": 2643,
+        "kmer4": 0.1727
+      }
+    },
+    {
+      "seed": 261,
+      "n_train": 254457,
+      "n_test": 66666,
+      "kmer4_spearman": 0.1259,
+      "pyramid_spearman": 0.0881,
+      "delta": -0.0378,
+      "fit": {
+        "inner_train": 203105,
+        "inner_val": 51352,
+        "val_mse": 7.63097
+      },
+      "long_only": {
+        "n": 2605,
+        "kmer4": 0.1883
+      }
+    },
+    {
+      "seed": 262,
+      "n_train": 255685,
+      "n_test": 65438,
+      "kmer4_spearman": 0.1173,
+      "pyramid_spearman": 0.1183,
+      "delta": 0.001,
+      "fit": {
+        "inner_train": 203483,
+        "inner_val": 52202,
+        "val_mse": 4.15207
+      },
+      "long_only": {
+        "n": 2640,
+        "kmer4": 0.1095
+      }
+    },
+    {
+      "seed": 263,
+      "n_train": 255086,
+      "n_test": 66037,
+      "kmer4_spearman": 0.1244,
+      "pyramid_spearman": 0.1076,
+      "delta": -0.0169,
+      "fit": {
+        "inner_train": 203357,
+        "inner_val": 51729,
+        "val_mse": 6.59907
+      },
+      "long_only": {
+        "n": 2650,
+        "kmer4": 0.1813
+      }
+    },
+    {
+      "seed": 264,
+      "n_train": 255309,
+      "n_test": 65814,
+      "kmer4_spearman": 0.1258,
+      "pyramid_spearman": 0.0846,
+      "delta": -0.0412,
+      "fit": {
+        "inner_train": 204178,
+        "inner_val": 51131,
+        "val_mse": 7.85885
+      },
+      "long_only": {
+        "n": 2650,
+        "kmer4": 0.1782
+      }
+    },
+    {
+      "seed": 265,
+      "n_train": 256414,
+      "n_test": 64709,
+      "kmer4_spearman": 0.1046,
+      "pyramid_spearman": 0.0819,
+      "delta": -0.0227,
+      "fit": {
+        "inner_train": 203415,
+        "inner_val": 52999,
+        "val_mse": 6.51466
+      },
+      "long_only": {
+        "n": 2569,
+        "kmer4": 0.1571
+      }
+    },
+    {
+      "seed": 266,
+      "n_train": 256344,
+      "n_test": 64779,
+      "kmer4_spearman": 0.1169,
+      "pyramid_spearman": 0.124,
+      "delta": 0.007,
+      "fit": {
+        "inner_train": 203988,
+        "inner_val": 52356,
+        "val_mse": 3.5474
+      },
+      "long_only": {
+        "n": 2575,
+        "kmer4": 0.1291
+      }
+    },
+    {
+      "seed": 267,
+      "n_train": 254356,
+      "n_test": 66767,
+      "kmer4_spearman": 0.1206,
+      "pyramid_spearman": 0.1096,
+      "delta": -0.011,
+      "fit": {
+        "inner_train": 203224,
+        "inner_val": 51132,
+        "val_mse": 2.71342
+      },
+      "long_only": {
+        "n": 2719,
+        "kmer4": 0.1892
+      }
+    },
+    {
+      "seed": 268,
+      "n_train": 256900,
+      "n_test": 64223,
+      "kmer4_spearman": 0.1081,
+      "pyramid_spearman": 0.1132,
+      "delta": 0.0051,
+      "fit": {
+        "inner_train": 205675,
+        "inner_val": 51225,
+        "val_mse": 2.9152
+      },
+      "long_only": {
+        "n": 2605,
+        "kmer4": 0.1435
+      }
+    },
+    {
+      "seed": 269,
+      "n_train": 255614,
+      "n_test": 65509,
+      "kmer4_spearman": 0.1074,
+      "pyramid_spearman": 0.1054,
+      "delta": -0.002,
+      "fit": {
+        "inner_train": 203217,
+        "inner_val": 52397,
+        "val_mse": 3.47227
+      },
+      "long_only": {
+        "n": 2507,
+        "kmer4": 0.1411
+      }
+    }
+  ],
+  "null": {
+    "per_seed": [
+      0.0189,
+      0.004,
+      -0.0216,
+      0.0142,
+      0.0667,
+      -0.0819,
+      -0.0507,
+      0.1132,
+      0.1118,
+      -0.0446,
+      -0.0523,
+      -0.0121,
+      -0.0955,
+      -0.0343,
+      -0.1106,
+      -0.0231,
+      0.0445,
+      0.016,
+      -0.0953,
+      -0.0503,
+      0.0415,
+      -0.0336,
+      -0.1066,
+      0.0242,
+      -0.072,
+      0.0935,
+      0.0896,
+      -0.0385,
+      0.0169,
+      -0.053,
+      0.0271,
+      -0.0479,
+      0.0779,
+      0.0762,
+      -0.0404,
+      -0.0922,
+      -0.0803,
+      0.0105,
+      -0.0326,
+      0.0013,
+      0.043,
+      0.0461,
+      -0.0931,
+      0.0085,
+      -0.0812,
+      0.0487,
+      -0.0663,
+      -0.0146,
+      0.0754,
+      -0.0762,
+      -0.0323,
+      0.0543,
+      -0.0007,
+      -0.0171,
+      -0.1118
+    ],
+    "median": -0.0171,
+    "sd": 0.0613,
+    "bar": "|median| < 0.02",
+    "bar_note": "the MEDIAN, not a single draw: a correct pipeline centred on zero still produces individual seeds out to +/-0.13 here, because a near-initialisation conv net is close to a random functional of base composition and composition predicts this rung at |0.1169|. The seed-count bar (>= 8 of 55, p = 0.055 under the null) is the primary noise control.",
+    "power_caveat": "UNDER-POWERED AT THE PRE-REGISTERED SEED COUNT, and recorded so no reader over-trusts this gate. The null's across-seed spread is driven by random INITIALISATION, not by sample size -- a random composition functional's correlation with expression does not shrink as N grows -- so with sd ~0.10 the sem of the median over 10 seeds is ~0.032, LARGER than the 0.02 bar it is compared against. Resolving 0.02 would need ~50 seeds. Read `learned_contribution` below, which is paired within a seed and therefore does not carry that variance."
+  },
+  "learned_contribution": {
+    "per_seed": [
+      0.0925,
+      0.1018,
+      0.139,
+      0.1047,
+      0.0451,
+      0.1776,
+      0.13,
+      0.0022,
+      -0.0239,
+      0.1127,
+      0.1614,
+      0.135,
+      0.1879,
+      0.1215,
+      0.201,
+      0.0997,
+      0.0909,
+      0.0963,
+      0.1601,
+      0.1385,
+      0.0784,
+      0.1628,
+      0.2155,
+      0.0725,
+      0.1914,
+      0.0142,
+      -0.0197,
+      0.159,
+      0.0769,
+      0.1779,
+      0.0866,
+      0.1324,
+      0.0365,
+      0.0265,
+      0.1436,
+      0.2131,
+      0.2103,
+      0.0892,
+      0.1025,
+      0.1099,
+      0.0613,
+      0.0749,
+      0.197,
+      0.1182,
+      0.1628,
+      0.0418,
+      0.1544,
+      0.1329,
+      0.0322,
+      0.1608,
+      0.1142,
+      0.0697,
+      0.1103,
+      0.1303,
+      0.2172
+    ],
+    "median": 0.1142,
+    "n_positive": 53,
+    "n": 55,
+    "definition": "pyramid_spearman - null_spearman, per seed (same init, same split)",
+    "status": "DIAGNOSTIC -- reported, NEVER a bar; the pre-registered comparison is the kmer4 delta and is untouched",
+    "why": "The raw delta over kmer4 can be inflated by an architectural effect that owes nothing to the labels: a conv net near initialisation is close to a random linear functional of base composition, and composition predicts this rung at |0.1169|. This isolates the part the labels bought.",
+    "interpretation_caveat": "SIZE-SENSITIVE -- do not read a small value at small N as a property of the arm. Measured at N=4,000 (3,200 training rows, 1.2% of the rung) the kmer4 delta was +0.1077 while this was +0.0346; at that N kmer4 itself scores 0.0244 against 0.1120 at full N, so BOTH arms are under-trained there and neither number transfers."
+  },
+  "paired": {
+    "median": -0.0079,
+    "wins": 21,
+    "n": 55,
+    "ci95": [
+      -0.0155,
+      -0.0059
+    ],
+    "clears_margin": false,
+    "reproducible": true
+  },
+  "seed_range": {
+    "start": 215,
+    "n": 55,
+    "seeds": [
+      215,
+      216,
+      217,
+      218,
+      219,
+      220,
+      221,
+      222,
+      223,
+      224,
+      225,
+      226,
+      227,
+      228,
+      229,
+      230,
+      231,
+      232,
+      233,
+      234,
+      235,
+      236,
+      237,
+      238,
+      239,
+      240,
+      241,
+      242,
+      243,
+      244,
+      245,
+      246,
+      247,
+      248,
+      249,
+      250,
+      251,
+      252,
+      253,
+      254,
+      255,
+      256,
+      257,
+      258,
+      259,
+      260,
+      261,
+      262,
+      263,
+      264,
+      265,
+      266,
+      267,
+      268,
+      269
+    ],
+    "preregistered_n_seeds": 10
+  },
+  "status": "PARTIAL_SEED_RANGE",
+  "status_note": "ran seeds [215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269]; the pre-registration specifies 10 seeds starting at 0 with a >= 8-of-10 winning bar. Rows and the null are emitted, NO verdict: judging a partial range against a seed-count bar would redefine the acceptance criterion. Combine the partial artifacts, then judge."
+}

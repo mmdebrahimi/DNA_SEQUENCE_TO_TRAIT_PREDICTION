@@ -1,0 +1,81 @@
+{
+  "record": "glm-generator-finetune-acceptance-bar-v1",
+  "frozen": "2026-10-31",
+  "frozen_before": "any fine-tuned number exists. No LoRA run has been executed at the time this file is written; the kernel had not been pushed. This is the pre-registration, not a post-hoc reading.",
+  "family": "glm-generator-finetune-2026-10-07",
+  "authorised_by": "user, 2026-10-31: re-open the fine-tune now",
+
+  "question": "Does LoRA fine-tuning GENERator-v2-prokaryote-1.2b-base on MG1655 upstream-of-CDS windows bring its distinguishability BELOW the 3-mer Markov null, on a comparison set it was never trained on?",
+
+  "primary_bar": {
+    "statistic": "distinguishability_auroc_LOWER_IS_BETTER, feature mode `both`, held-out AUROC of a discriminator separating generated from natural eval windows",
+    "threshold": 0.6679,
+    "direction": "fine-tuned value must be STRICTLY BELOW the threshold",
+    "threshold_provenance": "the 3-mer Markov null's own measured value at mode `both`, from wiki/glm_generator_falsifier_REAL_2026-10-07.json. NOT a chosen number -- it is what the dumb baseline scores, and it is the family's refined goal verbatim.",
+    "secondary_mode": {"mode": "kmer", "threshold": 0.5990, "role": "reported, NOT the bar"}
+  },
+
+  "why_the_baseline_is_re_measured_in_the_same_run": [
+    "The recorded 0.7706 was produced on CPU on a GTX 860M host at fp32. This run is a Kaggle T4. The project has already recorded that CUDA floating-point yields DIFFERENT sampled sequences than CPU for this generator (run_glm_anchor_detached.bat, amendment F), so a T4 number and a CPU number are not the same measurement.",
+    "The 2026-10-07 artifact does NOT stamp its shuffle seed or limit_natural. Those are recoverable from the LAUNCHER (no --seed passed, so argparse default 7; --limit-natural 1200 explicit) and scripts/glm_finetune_window_split.py already pins them on exactly that reasoning -- but recoverable-from-a-launcher is weaker than stamped-in-the-artifact.",
+    "So the comparison that carries the verdict is INTERNAL to this run: zero-shot and fine-tuned, same device, same dtype, same eval windows, same seed, same code path. The recorded 0.7706 becomes a cross-check, not the comparator."
+  ],
+
+  "outcomes": {
+    "A_BEATS_NULL": {
+      "condition": "fine-tuned mode-both distinguishability < 0.6679",
+      "reading": "GD-H1 CONFIRMED. Fine-tuning moves what zero-shot sampling could not. This is the family's terminal success.",
+      "note": "Necessary, not sufficient for a working generator -- a k-mer+positional discriminator measures LOCAL composition, and published audits name long-range organisation as the real failure mode. Clearing this bar does NOT establish that the generated promoters work."
+    },
+    "B_IMPROVES_BUT_BAR_UNMET": {
+      "condition": "fine-tuned >= 0.6679 AND fine-tuned < on-device zero-shot baseline",
+      "reading": "A real directional gain that does not reach the bar. GD-H1 NOT confirmed and NOT falsified. The honest report is the delta plus the fact that it fell short; whether to then spend whole-genome continued pre-training (ledger candidate 2) is the user's scope call, already recorded as a Pending Decision.",
+      "do_not": "Do NOT re-specify the threshold to make this a pass. The threshold is the null's own measured value."
+    },
+    "C_NO_IMPROVEMENT": {
+      "condition": "fine-tuned >= on-device zero-shot baseline",
+      "reading": "GD-H1 FALSIFIED on this corpus at this scale. Fine-tuning on 3,737 promoter windows does not move distinguishability. Strengthens GD-H5 (the tokenizer, not the weights, is the limiting factor) WITHOUT confirming it -- that needs its own test."
+    },
+    "D_INSTRUMENT_INVALID": {
+      "condition": "falsifier returns INSTRUMENT_INVALID_SELF_CONTROL_FAILED or INSTRUMENT_UNDERPOWERED_NO_SEPARATING_POWER, or the Markov null fails to reproduce against the anchor",
+      "reading": "NO VERDICT. The measuring instrument failed, so neither arm is interpretable. Diagnose; do not report a number."
+    }
+  },
+
+  "validity_conditions": [
+    "DISJOINTNESS. Training windows must be disjoint from the eval windows. Enforced by scripts/glm_finetune_window_split.py, which derives the train set BY EXCLUSION from the falsifier's eval half and asserts 0 overlap on sequence content (not index arithmetic). The kernel re-derives it and REFUSES unless it reproduces the committed manifest: 3737 train / 600 held-out / 0 overlap.",
+    "CORPUS FINGERPRINT. n_windows 4340, strand +2118/-2222, n_overlapping_cds 2708, matching the baseline artifact. NCBI re-annotates under the same accession, so two runs can look comparable and not be.",
+    "SAME EVAL SET BOTH ARMS. The zero-shot and fine-tuned arms must score against the identical 600 eval windows with the identical seed.",
+    "MARKOV NULL REPRODUCES. The null is fitted on the FIT half only and must land at the recorded 0.5990 / 0.6679; temperature and weights touch only the generator, never the null, so a moved null invalidates the point.",
+    "DEFAULT SAMPLING BOTH ARMS. temperature 1.0, top_k 0. The sampling lever was already measured separately (2026-10-31 sweep) and the whole point of the ordering is that the two levers stay attributable. Changing sampling here would reconfound them."
+  ],
+
+  "method_frozen": {
+    "adapter": "LoRA",
+    "r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": ["q_proj", "k_proj", "v_proj", "o_proj"],
+    "learning_rate": 0.0001,
+    "epochs": 3,
+    "per_device_batch_size": 8,
+    "dtype": "float32",
+    "dtype_rationale": "fp32 for BOTH arms. T4 is CC 7.5 so fp16 would be fast here, but fp16 sampling can change generated sequences, and the only thing that must not differ between the two arms is anything other than the weights.",
+    "objective": "causal LM next-token on the 3,737 train windows",
+    "train_corpus": "wiki/glm_finetune_window_split.json -> finetune_train (fit 600 + unused tail 3140)",
+    "note": "These are declared here so the run cannot be tuned toward the bar. If the first run misses the bar, changing r / lr / epochs and re-running is a NEW arm that must be declared as such in the arms ledger, not a re-read of this one."
+  },
+
+  "forecast": {
+    "P_bar_met": 0.2,
+    "reasoning": "Against: 3,737 windows of 150 bp is ~560 kb of sequence for a 1.2B-parameter model -- the ledger itself rates 'is 4,340 windows enough' as LOW confidence. The zero-shot gap is large (0.7706 vs 0.6679), two mechanism hypotheses are already refuted, and the sampling lever (a far cheaper knob) moved the kmer gap 3.4x and still did not cross. For: fine-tuning is the one lever the AlphaGenome author's own prescription names, it has never been attempted here, and LoRA on-distribution data is exactly the regime where small corpora can still shift a generator's local statistics -- which is what this discriminator measures.",
+    "note": "Recorded so it can be scored. My previous forecast in this project (~80% that the fragment null gate would still fail) was FALSIFIED by measurement, so treat this number as a prior to be beaten, not a prediction to defer to."
+  },
+
+  "cost_correction": {
+    "ledger_estimate": "+3 days",
+    "measured_basis_of_that_estimate": "a GTX 1070 at fp32, because consumer Pascal runs fp16 at ~1/64 of fp32",
+    "revised_estimate": "well under one Kaggle session. The train corpus is ~560 kb of sequence and LoRA touches only the attention projections; the expensive part is generating 120 sequences per arm, which on a T4 replaces the ~12.4 s/sequence CPU rate that produced the 3-day figure.",
+    "honest": "This revision is an ESTIMATE from the corpus size and the device, not a measurement. The run itself will report its own wall time."
+  }
+}

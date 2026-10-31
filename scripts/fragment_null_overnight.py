@@ -38,6 +38,15 @@ DRIVER = ROOT / "scripts" / "fragment_null_batch_driver.py"
 SWEEP_KERNEL = ROOT / "scripts" / "kaggle" / "glm_sampling_sweep_kernel.py"
 SWEEP_SLUG = "glm-sampling-sweep-vk"
 
+#: Family G-D's LoRA fine-tune, authorised by the user 2026-10-31. Queued here rather than pushed
+#: directly because both GPU sessions were occupied by the funded null campaign at authorisation
+#: time, and pre-empting that campaign to start this would spend the user's own decision against
+#: itself. It sits LAST in the queue so any legitimately-ABSENT batch always outranks it.
+FINETUNE_KERNEL = ROOT / "scripts" / "kaggle" / "glm_finetune_kernel.py"
+FINETUNE_SLUG = "glm-generator-finetune"
+FINETUNE_ARTIFACTS = ["glm_generator_finetune_verdict.json",
+                      "arm_a_zeroshot.json", "arm_b_finetuned.json"]
+
 POLL_SECONDS = 600
 MAX_HOURS = 11.5          # a stop, not a schedule: the campaign is ~9 h. This used to be
                           # justified by a ~12 h token lapse; it is not, because the client
@@ -107,7 +116,18 @@ def report(d, statuses: dict) -> None:
                        "yes" if d._pulled(b) else "no"))
     body.append("| `%s` | — (attested sampling sweep) | %s | — |"
                 % (SWEEP_SLUG, statuses.get(SWEEP_SLUG, "?")))
+    body.append("| `%s` | — (G-D LoRA fine-tune) | %s | %s |"
+                % (FINETUNE_SLUG, statuses.get(FINETUNE_SLUG, "?"),
+                   "yes" if (d.STAGE / FINETUNE_ARTIFACTS[0]).is_file() else "no"))
     body += ["", "## Pooled null", "", "```", (pool.stdout or "").rstrip() or "(no output)", "```",
+             "",
+             "## The fine-tune (G-D), queued 2026-10-31",
+             "",
+             "Authorised by the user. It sits LAST in the launch queue, so it takes the first slot",
+             "the null campaign frees rather than pre-empting it. Its bar is FROZEN in",
+             "`wiki/glm_generator_finetune_acceptance_bar.json` with all four outcomes named --",
+             "read that BEFORE reading the verdict, and do not re-specify the 0.6679 threshold,",
+             "which is the Markov null's own measured value.",
              "",
              "## If this stalled",
              "",
@@ -160,10 +180,18 @@ def main() -> int:
 
         statuses = {d.SLUG % b: d._status(api, d.SLUG % b, True) for b in sorted(batches)}
         statuses[SWEEP_SLUG] = d._status(api, SWEEP_SLUG, True)
+        statuses[FINETUNE_SLUG] = d._status(api, FINETUNE_SLUG, True)
         # QUEUED occupies a slot just as RUNNING does -- see driver.OCCUPYING.
         running = [k for k, v in statuses.items() if v in d.OCCUPYING]
         log("statuses: " + "  ".join("%s=%s" % (k.rsplit("-", 1)[-1], v)
                                      for k, v in statuses.items()))
+
+        # The fine-tune's verdict, when it lands. Pulled like a batch artifact so a human reads a
+        # file rather than a Kaggle log.
+        if statuses[FINETUNE_SLUG] == "COMPLETE" and not (d.STAGE / FINETUNE_ARTIFACTS[0]).is_file():
+            log("  pulling the fine-tune verdict ...")
+            got = d._pull(api, FINETUNE_SLUG, FINETUNE_ARTIFACTS, d.STAGE)
+            log("    %d file(s): %s" % (len(got), ", ".join(Path(g).name for g in got) or "NONE"))
 
         # Pull anything finished and not yet on disk.
         for b in sorted(batches):
@@ -180,6 +208,9 @@ def main() -> int:
         for b in sorted(batches):
             if statuses[d.SLUG % b] == d.LAUNCHABLE:
                 queue.append(("batch", d.KERNEL, d.SLUG % b, b))
+        # LAST on purpose: the null campaign is the funded work and outranks this.
+        if statuses[FINETUNE_SLUG] == d.LAUNCHABLE:
+            queue.append(("finetune", FINETUNE_KERNEL, FINETUNE_SLUG, None))
 
         slots = d.MAX_CONCURRENT_GPU - len(running)
         for kind, kernel, slug, b in queue[:max(0, slots)]:
