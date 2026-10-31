@@ -50,7 +50,25 @@ def push(code_py: str, slug: str, gpu: bool, internet: bool, dataset: str | None
         (tdp / "kernel-metadata.json").write_text(json.dumps(meta, indent=2))
         print(f"pushing {kid} (gpu={gpu} internet={internet}, code={code_name})...")
         res = api.kernels_push(str(tdp))
-        print("push result:", getattr(res, "ref", res), getattr(res, "url", ""))
+        # FAIL CLOSED. `kernels_push` does NOT raise on a refused push: it returns an
+        # ApiSaveKernelResponse with ref='', url='', versionNumber=0 and the reason in
+        # `.error`, and this function used to print the two empty fields and return 0.
+        # Measured 2026-10-30: a third concurrent GPU push came back
+        # "Maximum batch GPU session count of 2 reached." and reported SUCCESS, after which
+        # `status` 404s -- which reads like the recorded wrong-slug trap rather than a job
+        # that was never created. A launcher that cannot fail is one whose output cannot be
+        # trusted, and the 404 sent the diagnosis to the wrong place for several minutes.
+        err = (getattr(res, "error", "") or "").strip()
+        ref = (getattr(res, "ref", "") or "").strip()
+        if err or not ref:
+            print("PUSH REFUSED: " + (err or "empty ref with no error message"),
+                  file=sys.stderr)
+            if "session count" in err.lower():
+                print("  Kaggle allows 2 concurrent BATCH GPU sessions. Wait for one to "
+                      "finish (`status <slug>`), then re-push -- nothing was created, so a "
+                      "retry is safe and cannot duplicate a run.", file=sys.stderr)
+            return 1
+        print("push result:", ref, getattr(res, "url", ""))
         print(f"watch: https://www.kaggle.com/code/{kid}")
     return 0
 
