@@ -45,7 +45,7 @@
         "cost_tier": "expensive",
         "status": "measured",
         "metric": 0.3167,
-        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json — median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
+        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json \u2014 median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
         "declared_at": "2026-10-12T00:48:51Z",
         "resolved_at": "2026-10-12T00:48:51Z"
       },
@@ -56,7 +56,9 @@
         "metric": 0.3968,
         "evidence": "wiki/promcalc_vs_learned_2026-10-12.md -- median Spearman over 10 leave-peak-out seeds, 44,106/44,106 tiles, err=0. Paired +0.0686 over GC (5/5 seeds) and +0.0401 over the conv encoder (4/4); the learned arms paired CIs vs GC all include zero, this one does not. 346 params, NEVER trained on this substrate. Pre-committed retraction check PASSED (full-set move +0.0164 < 0.02 bar). Feature-permutation control collapses to -0.0002 (2/10), so the gain is the sequence-to-mechanism pairing, not an added column.",
         "declared_at": "2026-10-13T14:02:47Z",
-        "resolved_at": "2026-10-13T14:02:47Z"
+        "resolved_at": "2026-10-13T14:02:47Z",
+        "circularity": "cleared_vs_GSE108535",
+        "circularity_note": "CHECKED 2026-10-31 and CLEARED, the half of the open flag that mattered most. The Promoter Calculator (LaFleur, Hossain & Salis 2022, Nature Communications, PMC9440211) was fit on the Salis lab's OWN library of 14,206 designed sigma70 variants built by oligopool synthesis, validated on 17,396 promoters; its 346 parameters are dG terms for RNAP/sigma70 binding and bubble formation. GSE108535 (Urtecho, Tripp, Insigne, Kim & Kosuri, Biochemistry 2019) is a DIFFERENT library from a DIFFERENT lab and does not appear as a training source. This matters because these 346 params are the max_tx channel at 0.3968 -- the best single arm here -- and a component of the 0.4254 hybrid and the 0.4404 stack; had it been circular the three strongest numbers on this criterion would have needed retraction. RESIDUAL CAVEAT: both are DESIGNED sigma70 variant panels, so this is sequence-independence, not assay-type independence. Rests on the paper's PMC record and the authors' conference abstract, not a line-by-line read of its supplementary training tables. See wiki/promoteratlas_circularity_2026-10-31.md."
       },
       "promoteratlas-base-embeddings-frozen-150bp-padded-to-200": {
         "name": "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
@@ -65,7 +67,15 @@
         "metric": null,
         "evidence": "",
         "declared_at": "2026-10-13T14:02:47Z",
-        "resolved_at": ""
+        "resolved_at": "",
+        "circularity": "unresolved",
+        "circularity_checked": [
+          "web search for the model name plus its urtecho2018 head -- NO source uses the name PromoterAtlas",
+          "ecolipromoterdb.com (the atlas site named in the Urtecho reviews) -- FETCH FAILED, TLS cert covers only *.netlify.app, not the bare domain",
+          "the repo's own artifacts -- flag restated in mpra_substrate_census_2026-10-12.json and sigma70_loader_reconciliation_2026-10-13.json, never checked; the WEIGHTS SOURCE is never named anywhere, so the arm names a model whose identity is itself unpinned"
+        ],
+        "circularity_what_would_settle_it": "Identify the weights source FIRST -- the arm cannot be checked while the model it names is unpinned. Then read that model card's or paper's training-data section.",
+        "circularity_blocker_memo": "wiki/promoteratlas_circularity_2026-10-31.md"
       },
       "promcalc-full-decomposition-ridge-150bp": {
         "name": "promcalc-full-decomposition-ridge-150bp",
