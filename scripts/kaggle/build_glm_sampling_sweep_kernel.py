@@ -244,6 +244,16 @@ def run_cell(cli, temperature, top_k, device):
         "--cache-dir", HF,
         "--temperature", str(temperature),
         "--top-k", str(top_k),
+        # THE ATTESTATION, missing until 2026-10-30 and the reason the first sweep's
+        # non-default points were not plan-eligible. The falsifier only runs
+        # `verify_knob_live` when this flag is present AND the cell is non-default, so
+        # without it every T != 1.0 point scored `excluded:requested-but-unverified` --
+        # two of three grid points unusable, on a knob that demonstrably DID move the
+        # output. A missing attestation, not an inert knob. Passed UNCONDITIONALLY: the
+        # falsifier self-gates on `requested_non_default`, so the (1.0, 0) self-check
+        # cell skips the probe at no cost and a future grid point cannot be added
+        # un-attested by forgetting a condition here.
+        "--verify-knob",
         "--out", out,
     ]
     tag = "   <-- RECORDED DEFAULT (self-check)" if (temperature, top_k) == (1.0, 0) else ""
