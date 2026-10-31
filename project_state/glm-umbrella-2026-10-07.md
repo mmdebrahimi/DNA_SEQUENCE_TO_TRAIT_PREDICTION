@@ -13,7 +13,7 @@ Terminal Condition explicitly excludes a learned predictor and one umbrella carr
 | # | Family | Family slug | Status | blocked_by | Scope |
 |---|---|---|---|---|---|
 | G-A | Learned representation | glm-learned-representation-2026-10-07 | ACCEPTED | none | learned multi-resolution encoder + trivial head; does it transfer to genomic sequence |
-| G-B | Self-distillation | glm-self-distillation-2026-10-07 | ACCEPTED | glm-learned-representation-2026-10-07 | perturb-and-relabel; BLOCKED by a measured degeneracy, not a preference |
+| G-B | Self-distillation | glm-self-distillation-2026-10-07 | ACCEPTED | glm-learned-representation-2026-10-07, a learned representation LANDS (G-A terminal-met is NOT sufficient) | perturb-and-relabel; BLOCKED by a measured degeneracy, not a preference |
 | G-C | Condition conditioning | glm-condition-conditioning-2026-10-07 | ACCEPTED | none | one (sequence, medium) model vs two per-medium models |
 | G-D | Generator fine-tuning | glm-generator-finetune-2026-10-07 | ACCEPTED | sampling sweep + 8 GB GPU | the un-pulled lever on a measured ZERO-SHOT failure |
 | G-E | Distribution alignment | glm-distribution-alignment-2026-10-07 | ACCEPTED | glm-learned-representation-2026-10-07, glm-generator-finetune-2026-10-07 | do the loop's two halves share a distribution |
@@ -28,6 +28,16 @@ Terminal Condition explicitly excludes a learned predictor and one umbrella carr
   a linear student reproduces it at agreement **1.0000** (mutation rates 0.02/0.05/0.10; GC-only control
   collapses 0.5963 → 0.1736, proving the probe non-vacuous). There is nothing for perturbation to
   regularise until the student has capacity the teacher lacks. **Do not plan G-B work as startable early.**
+  **The `blocked_by` cell carries a FREE-TEXT predicate beside the slug, deliberately — do NOT
+  "tidy" it back to a bare slug.** The bare edge encoded the wrong predicate: `advance_ranker`
+  blocks on `terminal_met != "met"`, i.e. *wait for G-A to FINISH*, where this rule is *wait for a
+  learned representation to SUCCEED*. The two differ only in the case that actually occurred — G-A
+  closed a VALID NEGATIVE (median +0.0122 against a 0.05 bar, paired CI includes zero), so its
+  terminal reads `met` and the ranker duly marked forbidden work `eligible` (observed 2026-10-23,
+  re-confirmed 10-29, fixed 10-30). An unmatched predecessor is fail-closed in the ranker — the same
+  mechanism that holds G-D — so the block can now only be cleared by a human deleting the clause,
+  which is the authority the rule requires. The slug is RETAINED so the graph edge, cycle detection
+  and the critical path are unchanged.
 - **G-A → G-E.** G-E must score generated sequence with an oracle validated on the matching distribution.
   None exists for genome-like sequence today (GC 0.3000 beats every learned feature there), so G-E cannot
   produce a sound number until G-A succeeds or closes.
