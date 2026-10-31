@@ -44,8 +44,12 @@ SWEEP_SLUG = "glm-sampling-sweep-vk"
 #: itself. It sits LAST in the queue so any legitimately-ABSENT batch always outranks it.
 FINETUNE_KERNEL = ROOT / "scripts" / "kaggle" / "glm_finetune_kernel.py"
 FINETUNE_SLUG = "glm-generator-finetune"
+#: The FAILURE file is in this list on purpose. The real kernel exits 0 and writes it when the run
+#: dies, because Kaggle returns no output at all for an ERROR kernel -- so without it a failed
+#: fine-tune is unreadable. It is a DISTINCT filename from the verdict and is never a verdict.
 FINETUNE_ARTIFACTS = ["glm_generator_finetune_verdict.json",
-                      "arm_a_zeroshot.json", "arm_b_finetuned.json"]
+                      "arm_a_zeroshot.json", "arm_b_finetuned.json",
+                      "glm_finetune_failure.json"]
 
 POLL_SECONDS = 600
 MAX_HOURS = 11.5          # a stop, not a schedule: the campaign is ~9 h. This used to be
@@ -188,7 +192,9 @@ def main() -> int:
 
         # The fine-tune's verdict, when it lands. Pulled like a batch artifact so a human reads a
         # file rather than a Kaggle log.
-        if statuses[FINETUNE_SLUG] == "COMPLETE" and not (d.STAGE / FINETUNE_ARTIFACTS[0]).is_file():
+        _ft_done = any((d.STAGE / n).is_file() for n in (FINETUNE_ARTIFACTS[0],
+                                                          FINETUNE_ARTIFACTS[-1]))
+        if statuses[FINETUNE_SLUG] == "COMPLETE" and not _ft_done:
             log("  pulling the fine-tune verdict ...")
             got = d._pull(api, FINETUNE_SLUG, FINETUNE_ARTIFACTS, d.STAGE)
             log("    %d file(s): %s" % (len(got), ", ".join(Path(g).name for g in got) or "NONE"))

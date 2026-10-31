@@ -225,8 +225,14 @@ def step2_corpus(split):
     # Run the split script's OWN entry point and read its manifest back, rather than calling into
     # its internals. Its `main()` is what also runs `verify()` against the baseline fingerprint,
     # so invoking it gets the drift check for free instead of reimplementing it here.
+    # PYTHONPATH is NOT optional. `sys.path.insert` in THIS process does not reach a child, so the
+    # split script died on `ModuleNotFoundError: No module named 'dna_decode'` -- measured 2026-10-31
+    # from the diagnostic's own captured STDERR. The parent could import everything, which is
+    # exactly why the import check in step 1 passed and this still failed.
+    env = dict(os.environ)
+    env["PYTHONPATH"] = REPO + os.pathsep + REPO + "/scripts" + os.pathsep + env.get("PYTHONPATH", "")
     rc = subprocess.run([sys.executable, REPO + "/scripts/glm_finetune_window_split.py"],
-                        cwd=REPO, capture_output=True, text=True)
+                        cwd=REPO, capture_output=True, text=True, env=env)
     print(rc.stdout[-3000:], flush=True)
     if rc.returncode:
         print("STDERR:", rc.stderr[-3000:], flush=True)
@@ -510,14 +516,29 @@ if __name__ == "__main__":
             except BaseException:
                 pass
         raise SystemExit(0)
+    # THE REAL RUN ALSO ALWAYS COMPLETES, for the same reason the diagnostic does: Kaggle returns
+    # ZERO output files for a kernel whose status is ERROR, so a failure at the model download or
+    # in the training loop would be completely unreadable from the API. The failure report goes to
+    # a DISTINCT filename -- never the verdict file -- so a failed run can never be mistaken for a
+    # measured one by anything reading `glm_generator_finetune_verdict.json`.
     try:
         main()
-    except SystemExit as e:
-        print("REFUSED: %s" % e, flush=True)
-        raise
-    except Exception:
-        traceback.print_exc()
-        raise
+    except BaseException as e:
+        tb = traceback.format_exc()
+        print(tb, flush=True)
+        try:
+            json.dump({"record": "glm-generator-finetune-FAILURE-v1",
+                       "verdict": None,
+                       "failed": True,
+                       "reason": "%s: %s" % (type(e).__name__, e),
+                       "traceback": tb.splitlines()[-40:],
+                       "note": "NOT A VERDICT. The run did not complete. This file exists because "
+                               "Kaggle exposes no output for an ERROR kernel, so exiting 0 with a "
+                               "report is the only way the failure is readable at all."},
+                      open(OUT + "/glm_finetune_failure.json", "w"), indent=2)
+        except BaseException:
+            pass
+    raise SystemExit(0)
 '''
 
 
