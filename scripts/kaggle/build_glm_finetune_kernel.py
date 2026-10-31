@@ -66,6 +66,12 @@ FILES = [
     "dna_decode/glm/sweep_gates.py",
     "scripts/glm_generator_falsifier.py",
     "scripts/glm_finetune_window_split.py",
+    # NOT optional, and a .py-only payload is what broke the first two pushes. The split script
+    # verifies the rebuilt corpus fingerprint AGAINST this baseline and REFUSES (rc=3,
+    # "baseline ... absent; the fingerprint cannot be checked") when it is missing -- which is the
+    # correct behaviour: a fingerprint it cannot compare is not a fingerprint it has checked.
+    # Measured 2026-10-31 from the diagnostic's own traceback.
+    "wiki/glm_generator_falsifier_REAL_2026-10-07.json",
 ]
 
 KERNEL = r'''"""Kaggle T4 kernel: family G-D, LoRA fine-tune of GENERator-v2-prokaryote-1.2b-base.
