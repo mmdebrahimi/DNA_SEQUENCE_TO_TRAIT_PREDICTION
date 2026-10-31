@@ -517,7 +517,7 @@ evidence each decision rested on.**
 
 | # | call | decision | state |
 |---|---|---|---|
-| 1 | fragment-arm null bar | **spend the seeds (~270)** | RUNNING — `glm-fragment-null-b1..b4`; resume with `uv run python scripts/fragment_null_batch_driver.py step` |
+| 1 | fragment-arm null bar | **spend the seeds (~270)** | **GATE PASSES at 160 seeds (median +0.0112, exact CI `[-0.0126,+0.0354]`) = pre-registered branch A, a WEAK pass. The decision is VINDICATED and my ~80% fail forecast was WRONG.** b3/b4 to 270; `wiki/fragment_null_160seed_interim_2026-10-31.md` |
 | 2 | G-B dependency predicate | **fix it** | DONE `0750ec63` — G-B is `blocked:predecessor` again; do NOT tidy the free-text clause back to a bare slug |
 | 3 | G-D 8 GB hardware edge | **hold it** | HELD, edge untouched; its `--verify-knob` blocker half FIXED `c6a49923`, sweep queued as `glm-sampling-sweep-vk` (NOT launched — Kaggle caps at 2 concurrent GPU sessions) |
 | 4 | `mvp_criteria` table blindness | **STILL OPEN** | unchanged — do NOT run `/soraya --until-mvp glm-condition-conditioning` |

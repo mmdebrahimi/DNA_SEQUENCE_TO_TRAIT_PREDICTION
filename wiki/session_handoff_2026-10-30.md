@@ -13,7 +13,7 @@
 >
 > | call | decision | state |
 > |---|---|---|
-> | §2.1 null bar | **spend the seeds (~270)** | RUNNING — 4 Kaggle batches, see §2.1 |
+> | §2.1 null bar | **spend the seeds (~270)** | **GATE PASSES at 160 seeds — median +0.0112, branch A. See `wiki/fragment_null_160seed_interim_2026-10-31.md`.** b3/b4 in flight to 270 |
 > | §2.2 G-B edge | **fix the predicate** | DONE `0750ec63` — G-B is blocked again |
 > | §2.3 G-D hardware | **hold the edge** | HELD; its blocker half FIXED `c6a49923` |
 > | §2.4 MVP parser | *still open* | unchanged — do not run `--until-mvp glm-condition-conditioning` |
@@ -90,9 +90,10 @@ seeds would more likely **confirm a small real positive bias** than clear it.
 - Slugs `glm-fragment-null-b1..b4`. b1 (seeds 50..104) and b2 (105..159) launched 2026-10-30 and
   were RUNNING at handoff; b3 and b4 wait on the GPU cap. ~4.5 h per batch, two at a time, ~9 h all.
 
-**TWO THINGS THE PRE-REGISTRATION RECORDS — do not rediscover them.** (1) ~80% chance the gate
-still fails at 270; the forecast says that CONFIRMS a small real bias rather than clearing it, and
-it was written down before the data. (2) 270 seeds buys a **point estimate, not a confident
+**THE FIRST FORECAST IS NOW FALSIFIED BY MEASUREMENT — do not repeat it.** (1) It gave ~80%
+that the gate would still fail at 270. It PASSED at 160 (median +0.0112): the first fifty
+seeds were the high samples, and 110 fresh ones land at ~0. Quote the measurement, not the
+forecast. (2) 270 seeds buys a **point estimate, not a confident
 resolution** — the CI is forecast to straddle 0.02 even at 270, and excluding the bar from above
 would need ~1,463 seeds, about 121 h of T4. **Normal theory is NOT the decision statistic**: it and
 the measured bootstrap disagree about zero at n=50, so the verdict comes from a bootstrap recomputed
