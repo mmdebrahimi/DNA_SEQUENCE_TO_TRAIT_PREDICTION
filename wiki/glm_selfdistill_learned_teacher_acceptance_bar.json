@@ -1,0 +1,94 @@
+{
+  "schema": "glm-selfdistill-learned-teacher-bar-v2",
+  "frozen": "2026-10-31",
+
+  "superseded_v1": {
+    "what_changed": "ONE thing: the non-vacuity CONTROL arm. v1 required student_gc to drop at least 0.20 in rho below its teacher. That is UNACHIEVABLE ON THIS RUNG BY CONSTRUCTION and the v1 bar was therefore mis-specified.",
+    "the_measurement_that_showed_it": "A 1-seed/1-rate smoke run (seed 0, rate 0.05) returned student_gc rho = 0.3000 against conv teacher 0.3235 -- a drop of 0.0235, and against the ridge teacher a drop of -0.0309 (the GC student SCORED HIGHER than its teacher). v1's mechanical verdict was PROBE_VACUOUS_CONTROL_DID_NOT_COLLAPSE.",
+    "why_v1_was_wrong": "The control's premise is that a GC-only student is IMPOVERISHED. That premise holds on the 2026-10-07 element rung (teacher 0.5963, GC student 0.1736, drop 0.4227) and is FALSE on the peak-tile rung, where GC alone is a published strong scorer at 0.3000 against the conv's 0.3235. This is the G-A encoder-gate finding restated: the conv barely beats one GC number. Requiring a 0.20 collapse from an arm that is only 0.024 behind the teacher asks for something arithmetically impossible.",
+    "my_process_error_named": "I froze v1 BEFORE doing the mechanism analysis that says what a correct control can achieve on this substrate. That is the recorded repeat failure in this repo -- three mis-specified bars in the encoder-gate plan, two in the salmserovar arc -- and the recorded remedy is: do the analysis, THEN freeze.",
+    "outcome_neutrality_of_this_amendment": "THE THREE HEADLINE THRESHOLDS ARE BYTE-UNCHANGED: agreement_floor 0.99, delta_rho_tol 0.01, beat_margin 0.02. Outcomes 3, 4 and 5 are decided by those and ONLY those, so no measured verdict on the actual question can move as a result of this edit. What changes is which arm serves as the vacuity gate. This is a control-validity fix, not a bar relaxation, and it is NOT bar-shopping toward a favourable answer -- v1 produced no answer at all.",
+    "pre_commitment": "If the replacement control ALSO fails to collapse, the run is reported as vacuous and NO headline is read. The control is not weakened a second time.",
+    "v1_control_retained_as_diagnostic": "student_gc is still fitted and still reported at every cell, because 'GC is nearly as good as the learned teacher here' is itself informative. It is simply no longer the gate."
+  },
+  "frozen_before": "any distillation number on a learned teacher existed. The only number read before freezing is the RECONCILE ANCHOR (conv teacher seed-0 Spearman 0.3235 against the published 0.324), which is a faithfulness check on the substrate, not a result.",
+
+  "question": "The self-distillation ban's stated reason is MECHANICAL: a ridge teacher's predictions lie in the span of its own features, so a linear student with the same basis recovers the same function (measured agreement 1.0000, wiki/glm_selfdistill_probe_2026-10-07.json). Does that degeneracy PERSIST when the teacher carries a LEARNED component?",
+
+  "why_this_is_not_the_authority_call": "The open user-authority question is whether HYBRID_ADDS satisfies the phrase forbidden-until-a-learned-representation-LANDS. This run cannot settle that and does not try. It measures whether the ban's MECHANISM survives a learned teacher. A persist result makes the phrase moot (the ban stands on mechanism regardless of reading); a dissolve result is EVIDENCE FOR one reading, not a ratification of it. The blocked_by clause is untouched either way.",
+
+  "substrate": {
+    "source": "GSE144621 peak tiles (E. coli), category == tile and len(seq) == 150",
+    "n_tiles": 44106,
+    "split": "leave_peak_out(frac=0.25)",
+    "seeds": [0, 1, 2],
+    "targets": "teachers fit on log1p(expression); every arm scored against RAW expression on held-out peaks",
+    "why_this_rung_not_the_2026_10_07_rung": "The original probe ran on GSE108535 sigma70 element pairs. That cache is ABSENT (D:/dna_decode_cache/mpra holds only GSE144621), so the 2026-10-07 verdict cannot be reproduced on its own ground. The ridge-teacher arm below re-measures the degenerate anchor on THIS substrate instead, which makes the comparison internal rather than cross-rung."
+  },
+
+  "teachers": {
+    "ridge_positional_onehot": "the DEGENERATE ANCHOR re-measured here: ridge on 600 positional one-hot features. Its linear student MUST reproduce it, or outcome 2 fires and the conv arm is uninterpretable.",
+    "conv_encoder": "dna_decode/glm/encoder.py at REGISTERED_PROTOCOL, 13217 params, widths 6/20/75, device cpu. The learned teacher."
+  },
+
+  "students": {
+    "student_linear": "ridge on the same 600 positional one-hot basis, fitted on perturbed sequences labelled by ITS OWN teacher's outputs. The agreement arm.",
+    "student_mlp": "MLPRegressor(64), same basis, same distillation targets, max_iter 400 with early stopping. Capacity probe for the information bound. An under-trained student failing to beat its teacher would be evidence about the optimiser, not about the bound.",
+    "student_shuffled": "THE NON-VACUITY CONTROL (v2). Ridge on the same 600 positional one-hot basis, fitted on the same perturbed sequences, but with the TEACHER'S LABELS PERMUTED. It MUST collapse. Unlike a GC-only student this is substrate-independent: a permuted label carries no information about the teacher's function regardless of how predictive any feature basis happens to be on this rung.",
+    "student_gc": "ridge on gc_features (1 feature). DIAGNOSTIC ONLY in v2, no longer the gate -- see superseded_v1. Retained because 'GC alone is nearly as good as the learned teacher on this rung' is informative in its own right."
+  },
+
+  "control_threshold_derivation": {
+    "why_stated_before_freezing": "The v1 failure was freezing a control threshold without analysing what the control could achieve. This block is that analysis, written before the v2 run.",
+    "expectation_under_the_null": "A student trained on permuted teacher labels has no information about the teacher's function, so both its agreement with the teacher and its rho against measured expression are expected to be 0.",
+    "sampling_noise": "n_test is 11198 held-out tiles. The null standard error of a Spearman correlation is approximately 1/sqrt(n-1) = 0.0095, so 3 SE is about 0.03.",
+    "chosen_gate": "absolute agreement at most 0.20 AND absolute rho at most 0.20 -- roughly 21 SE from zero. Deliberately loose against a true null, and unreachable by any student that learned something real: the informative students in the smoke run landed at 0.4279 (conv) and 1.0000 (ridge).",
+    "what_it_would_catch": "a pipeline that fabricates agreement -- e.g. a feature-alignment bug that leaks the teacher's predictions into the student's inputs, which would lift even a label-permuted student."
+  },
+
+  "perturbation": {
+    "method": "uniform random point substitution, AlphaGenome phase 2's randomly-perturb-the-input",
+    "rates": [0.02, 0.05, 0.10],
+    "sample_tiles": 8000,
+    "copies": 1,
+    "note": "A fixed random sample of 8000 TRAINING tiles per seed, bounded for CPU memory in the forward pass. Perturbed sequences are never scored against measured expression; they carry no labels but the teacher's own."
+  },
+
+  "thresholds_mirrored_from_2026_10_07": {
+    "agreement_floor": 0.99,
+    "delta_rho_tol": 0.01,
+    "beat_margin": 0.02,
+    "control_must_drop_by": 0.20,
+    "control_must_drop_by_STATUS": "v1 GATE, RETIRED. Unachievable on this rung by construction -- see superseded_v1. student_gc is still measured against it and the result is still reported, but it no longer decides vacuity.",
+    "shuffled_control_max_abs_agreement": 0.20,
+    "shuffled_control_max_abs_rho": 0.20,
+    "reconcile_conv_seed0": 0.324,
+    "reconcile_tolerance": 0.02,
+    "why_mirrored": "Comparability with the verdict this run interrogates. Choosing new thresholds here would make the two results incommensurable, which is the retro-fit the original probe was written to avoid."
+  },
+
+  "outcomes_defined_before_running": {
+    "1_PROBE_VACUOUS_CONTROL_DID_NOT_COLLAPSE": "for ANY teacher the SHUFFLED-LABEL student failed to collapse (absolute agreement above 0.20, or absolute rho above 0.20). Nothing in the run is interpretable; no conclusion is licensed, and per the v2 pre-commitment the control is NOT weakened a second time.",
+    "2_ANCHOR_FAILED_RIDGE_TEACHER_NOT_DEGENERATE_HERE": "the RIDGE teacher's linear student does NOT reproduce it on this substrate (agreement below 0.99, or absolute delta rho above 0.01). Then this rung does not reproduce the 2026-10-07 condition at all, and a non-degenerate conv result would be a property of the SUBSTRATE rather than of the teacher. THE CONV ARM IS THEN UNINTERPRETABLE and must not be read. This is the guard that makes the headline mean anything.",
+    "3_DISTILLATION_HELPS_NOW": "some non-control student BEATS its own teacher on real measured expression by more than 0.02 rho. This would contradict the measured information bound and is the one result that would reopen the method outright.",
+    "4_MECHANISM_PERSISTS_BAN_STANDS": "ridge anchor holds AND the conv teacher's linear student ALSO reproduces it (agreement at least 0.99, absolute delta rho at most 0.01). The degeneracy is NOT a consequence of the teacher being linear, so adding a learned component does not create anything for the perturbation to regularise. The ban stands on mechanism and the authority question is moot.",
+    "5_MECHANISM_DISSOLVES_WITH_LEARNED_TEACHER": "ridge anchor holds AND the conv teacher's linear student does NOT reproduce it. The mechanical objection recorded in 2026-10-07 is measurably absent with a learned teacher. READ NARROWLY: this says the OBJECTION is gone, NOT that distillation works. The information bound still forbids exceeding the teacher, and outcome 3 is the separate arm that would test benefit."
+  },
+
+  "verdict_check_order": ["1", "2", "3", "4", "5"],
+
+  "forecast": {
+    "predicted_outcome": "5_MECHANISM_DISSOLVES_WITH_LEARNED_TEACHER",
+    "p": 0.6,
+    "reasoning": "a conv is not linear in the student's basis by construction, so exact recovery should fail. But agreement could still land at or above 0.99 if the conv's learned function is nearly linear in positional composition on this rung, which is what the G-A encoder gate's CI-includes-zero result hints at.",
+    "my_forecast_record_in_this_project": "1 of 3. The 80-percent-fail prediction on the fragment null was falsified, the 1190-seed prediction was falsified, the P(bar met)=0.2 on the G-D fine-tune hit. Do not defer to this number."
+  },
+
+  "honest_limits_fixed_in_advance": [
+    "3 seeds, not the 10 the published tile arms use. The degeneracy signal is a 1.0000-versus-not contrast, which 3 seeds can resolve; a SMALL difference in agreement could not be.",
+    "A different substrate from the verdict it interrogates. The internal ridge anchor is what licenses the comparison, not equivalence of rungs.",
+    "Perturbation is uniform random point substitution. A generator's candidates are not uniform, so this tests the METHOD'S MECHANICS and not the real off-distribution gap.",
+    "The conv is ONE learned teacher and is NOT the 3-channel stack that actually posted 0.4404. The stack cannot be used: 2 of its 3 channels come from Promoter Calculator, which is NOT INSTALLED here (ModuleNotFoundError: promotercalculator), and what exists on disk is a PRECOMPUTED prediction table over the 44106 fixed tiles, structurally incapable of scoring a perturbed sequence. So this bounds the conv case, which is the learned half of the stack.",
+    "A rank-average teacher may not be distillable at all in the required sense, because a rank depends on the candidate pool rather than on the sequence. This run does not test that and it remains open."
+  ]
+}

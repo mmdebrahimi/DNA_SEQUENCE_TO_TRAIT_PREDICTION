@@ -1,0 +1,644 @@
+{
+  "schema": "glm-selfdistill-learned-teacher-v1",
+  "date": "2026-10-31",
+  "bar": "wiki\\glm_selfdistill_learned_teacher_acceptance_bar.json",
+  "question": "The self-distillation ban's stated reason is MECHANICAL: a ridge teacher's predictions lie in the span of its own features, so a linear student with the same basis recovers the same function (measured agreement 1.0000, wiki/glm_selfdistill_probe_2026-10-07.json). Does that degeneracy PERSIST when the teacher carries a LEARNED component?",
+  "why_this_is_not_the_authority_call": "The open user-authority question is whether HYBRID_ADDS satisfies the phrase forbidden-until-a-learned-representation-LANDS. This run cannot settle that and does not try. It measures whether the ban's MECHANISM survives a learned teacher. A persist result makes the phrase moot (the ban stands on mechanism regardless of reading); a dissolve result is EVIDENCE FOR one reading, not a ratification of it. The blocked_by clause is untouched either way.",
+  "substrate": {
+    "source": "GSE144621 peak tiles (E. coli), category == tile and len(seq) == 150",
+    "n_tiles": 44106,
+    "split": "leave_peak_out(frac=0.25)",
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "targets": "teachers fit on log1p(expression); every arm scored against RAW expression on held-out peaks",
+    "why_this_rung_not_the_2026_10_07_rung": "The original probe ran on GSE108535 sigma70 element pairs. That cache is ABSENT (D:/dna_decode_cache/mpra holds only GSE144621), so the 2026-10-07 verdict cannot be reproduced on its own ground. The ridge-teacher arm below re-measures the degenerate anchor on THIS substrate instead, which makes the comparison internal rather than cross-rung.",
+    "n_tiles_loaded": 44106,
+    "path": "D:\\dna_decode_cache\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz"
+  },
+  "thresholds": {
+    "agreement_floor": 0.99,
+    "delta_rho_tol": 0.01,
+    "beat_margin": 0.02,
+    "control_must_drop_by": 0.2,
+    "control_must_drop_by_STATUS": "v1 GATE, RETIRED. Unachievable on this rung by construction -- see superseded_v1. student_gc is still measured against it and the result is still reported, but it no longer decides vacuity.",
+    "shuffled_control_max_abs_agreement": 0.2,
+    "shuffled_control_max_abs_rho": 0.2,
+    "reconcile_conv_seed0": 0.324,
+    "reconcile_tolerance": 0.02,
+    "why_mirrored": "Comparability with the verdict this run interrogates. Choosing new thresholds here would make the two results incommensurable, which is the retro-fit the original probe was written to avoid."
+  },
+  "outcomes_defined_before_running": {
+    "1_PROBE_VACUOUS_CONTROL_DID_NOT_COLLAPSE": "for ANY teacher the SHUFFLED-LABEL student failed to collapse (absolute agreement above 0.20, or absolute rho above 0.20). Nothing in the run is interpretable; no conclusion is licensed, and per the v2 pre-commitment the control is NOT weakened a second time.",
+    "2_ANCHOR_FAILED_RIDGE_TEACHER_NOT_DEGENERATE_HERE": "the RIDGE teacher's linear student does NOT reproduce it on this substrate (agreement below 0.99, or absolute delta rho above 0.01). Then this rung does not reproduce the 2026-10-07 condition at all, and a non-degenerate conv result would be a property of the SUBSTRATE rather than of the teacher. THE CONV ARM IS THEN UNINTERPRETABLE and must not be read. This is the guard that makes the headline mean anything.",
+    "3_DISTILLATION_HELPS_NOW": "some non-control student BEATS its own teacher on real measured expression by more than 0.02 rho. This would contradict the measured information bound and is the one result that would reopen the method outright.",
+    "4_MECHANISM_PERSISTS_BAN_STANDS": "ridge anchor holds AND the conv teacher's linear student ALSO reproduces it (agreement at least 0.99, absolute delta rho at most 0.01). The degeneracy is NOT a consequence of the teacher being linear, so adding a learned component does not create anything for the perturbation to regularise. The ban stands on mechanism and the authority question is moot.",
+    "5_MECHANISM_DISSOLVES_WITH_LEARNED_TEACHER": "ridge anchor holds AND the conv teacher's linear student does NOT reproduce it. The mechanical objection recorded in 2026-10-07 is measurably absent with a learned teacher. READ NARROWLY: this says the OBJECTION is gone, NOT that distillation works. The information bound still forbids exceeding the teacher, and outcome 3 is the separate arm that would test benefit."
+  },
+  "conv_protocol": {
+    "optimizer": "adam",
+    "lr": 0.001,
+    "weight_decay": 0.0,
+    "batch_size": 256,
+    "max_epochs": 40,
+    "early_stop_patience": 5,
+    "channels": 32,
+    "val_fraction": 0.2
+  },
+  "conv_n_parameters": 13217,
+  "reconcile": {
+    "conv_seed0": 0.3235,
+    "published": 0.324,
+    "ok": true
+  },
+  "seeds": [
+    {
+      "seed": 0,
+      "held_out_peaks": 608,
+      "n_train": 32908,
+      "n_test": 11198,
+      "n_sampled_for_perturbation": 8000,
+      "teacher_rho": {
+        "ridge_positional_onehot": 0.2691,
+        "conv_encoder": 0.3235
+      },
+      "conv_refit_drift_on_shared_rows": {
+        "0.02": "0.000e+00",
+        "0.05": "0.000e+00",
+        "0.1": "0.000e+00"
+      },
+      "conv_refit_drift_tolerance": 0.0001,
+      "conv_meta": {
+        "epochs_ran": 11,
+        "early_stopped": true,
+        "n_parameters": 13217,
+        "device": "cpu"
+      },
+      "rows": [
+        {
+          "mutation_rate": 0.02,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2691,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.2571,
+              "agreement_with_teacher": 0.9478,
+              "delta_rho_vs_teacher": -0.0119
+            },
+            "student_shuffled": {
+              "rho_vs_measured": -0.0187,
+              "agreement_with_teacher": -0.0128,
+              "delta_rho_vs_teacher": -0.2878
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3,
+              "agreement_with_teacher": 0.7502,
+              "delta_rho_vs_teacher": 0.0309
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.02,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.262,
+              "agreement_with_teacher": 0.4187,
+              "delta_rho_vs_teacher": -0.0615
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1414,
+              "agreement_with_teacher": 0.2245,
+              "delta_rho_vs_teacher": -0.1821
+            },
+            "student_shuffled": {
+              "rho_vs_measured": -0.0237,
+              "agreement_with_teacher": -0.0317,
+              "delta_rho_vs_teacher": -0.3472
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3,
+              "agreement_with_teacher": 0.4567,
+              "delta_rho_vs_teacher": -0.0235
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.05,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2691,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.0744,
+              "agreement_with_teacher": 0.2577,
+              "delta_rho_vs_teacher": -0.1946
+            },
+            "student_shuffled": {
+              "rho_vs_measured": -0.0051,
+              "agreement_with_teacher": 0.0128,
+              "delta_rho_vs_teacher": -0.2741
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3,
+              "agreement_with_teacher": 0.7502,
+              "delta_rho_vs_teacher": 0.0309
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.05,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2677,
+              "agreement_with_teacher": 0.4279,
+              "delta_rho_vs_teacher": -0.0558
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1369,
+              "agreement_with_teacher": 0.2197,
+              "delta_rho_vs_teacher": -0.1866
+            },
+            "student_shuffled": {
+              "rho_vs_measured": -0.0234,
+              "agreement_with_teacher": -0.0287,
+              "delta_rho_vs_teacher": -0.3469
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3,
+              "agreement_with_teacher": 0.4567,
+              "delta_rho_vs_teacher": -0.0235
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.1,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2691,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1625,
+              "agreement_with_teacher": 0.5952,
+              "delta_rho_vs_teacher": -0.1066
+            },
+            "student_shuffled": {
+              "rho_vs_measured": -0.0019,
+              "agreement_with_teacher": 0.0214,
+              "delta_rho_vs_teacher": -0.2709
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3,
+              "agreement_with_teacher": 0.7502,
+              "delta_rho_vs_teacher": 0.0309
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.1,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2762,
+              "agreement_with_teacher": 0.4475,
+              "delta_rho_vs_teacher": -0.0473
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1389,
+              "agreement_with_teacher": 0.2369,
+              "delta_rho_vs_teacher": -0.1846
+            },
+            "student_shuffled": {
+              "rho_vs_measured": -0.0231,
+              "agreement_with_teacher": -0.0306,
+              "delta_rho_vs_teacher": -0.3466
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3,
+              "agreement_with_teacher": 0.4567,
+              "delta_rho_vs_teacher": -0.0235
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "held_out_peaks": 608,
+      "n_train": 33088,
+      "n_test": 11018,
+      "n_sampled_for_perturbation": 8000,
+      "teacher_rho": {
+        "ridge_positional_onehot": 0.2739,
+        "conv_encoder": 0.3526
+      },
+      "conv_refit_drift_on_shared_rows": {
+        "0.02": "0.000e+00",
+        "0.05": "0.000e+00",
+        "0.1": "0.000e+00"
+      },
+      "conv_refit_drift_tolerance": 0.0001,
+      "conv_meta": {
+        "epochs_ran": 10,
+        "early_stopped": true,
+        "n_parameters": 13217,
+        "device": "cpu"
+      },
+      "rows": [
+        {
+          "mutation_rate": 0.02,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2739,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.2641,
+              "agreement_with_teacher": 0.949,
+              "delta_rho_vs_teacher": -0.0098
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.036,
+              "agreement_with_teacher": 0.0881,
+              "delta_rho_vs_teacher": -0.2379
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3151,
+              "agreement_with_teacher": 0.7412,
+              "delta_rho_vs_teacher": 0.0412
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.02,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2761,
+              "agreement_with_teacher": 0.3888,
+              "delta_rho_vs_teacher": -0.0765
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1369,
+              "agreement_with_teacher": 0.21,
+              "delta_rho_vs_teacher": -0.2156
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0038,
+              "agreement_with_teacher": 0.0112,
+              "delta_rho_vs_teacher": -0.3488
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3151,
+              "agreement_with_teacher": 0.4111,
+              "delta_rho_vs_teacher": -0.0374
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.05,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2739,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.2631,
+              "agreement_with_teacher": 0.9497,
+              "delta_rho_vs_teacher": -0.0108
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0242,
+              "agreement_with_teacher": 0.092,
+              "delta_rho_vs_teacher": -0.2497
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3151,
+              "agreement_with_teacher": 0.7412,
+              "delta_rho_vs_teacher": 0.0412
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.05,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2926,
+              "agreement_with_teacher": 0.4048,
+              "delta_rho_vs_teacher": -0.0599
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1485,
+              "agreement_with_teacher": 0.2209,
+              "delta_rho_vs_teacher": -0.204
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0161,
+              "agreement_with_teacher": 0.0223,
+              "delta_rho_vs_teacher": -0.3365
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3151,
+              "agreement_with_teacher": 0.4111,
+              "delta_rho_vs_teacher": -0.0374
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.1,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2739,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.0645,
+              "agreement_with_teacher": 0.2375,
+              "delta_rho_vs_teacher": -0.2094
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0308,
+              "agreement_with_teacher": 0.0939,
+              "delta_rho_vs_teacher": -0.2432
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3151,
+              "agreement_with_teacher": 0.7412,
+              "delta_rho_vs_teacher": 0.0412
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.1,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2847,
+              "agreement_with_teacher": 0.4023,
+              "delta_rho_vs_teacher": -0.0679
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1397,
+              "agreement_with_teacher": 0.2122,
+              "delta_rho_vs_teacher": -0.2129
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0344,
+              "agreement_with_teacher": 0.0379,
+              "delta_rho_vs_teacher": -0.3181
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3151,
+              "agreement_with_teacher": 0.4111,
+              "delta_rho_vs_teacher": -0.0374
+            }
+          }
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "held_out_peaks": 608,
+      "n_train": 32733,
+      "n_test": 11373,
+      "n_sampled_for_perturbation": 8000,
+      "teacher_rho": {
+        "ridge_positional_onehot": 0.2694,
+        "conv_encoder": 0.3293
+      },
+      "conv_refit_drift_on_shared_rows": {
+        "0.02": "0.000e+00",
+        "0.05": "0.000e+00",
+        "0.1": "0.000e+00"
+      },
+      "conv_refit_drift_tolerance": 0.0001,
+      "conv_meta": {
+        "epochs_ran": 10,
+        "early_stopped": true,
+        "n_parameters": 13217,
+        "device": "cpu"
+      },
+      "rows": [
+        {
+          "mutation_rate": 0.02,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2694,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.2611,
+              "agreement_with_teacher": 0.9468,
+              "delta_rho_vs_teacher": -0.0083
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0218,
+              "agreement_with_teacher": 0.0885,
+              "delta_rho_vs_teacher": -0.2476
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3073,
+              "agreement_with_teacher": 0.7339,
+              "delta_rho_vs_teacher": 0.0379
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.02,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2432,
+              "agreement_with_teacher": 0.3843,
+              "delta_rho_vs_teacher": -0.0861
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.125,
+              "agreement_with_teacher": 0.1862,
+              "delta_rho_vs_teacher": -0.2043
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0065,
+              "agreement_with_teacher": -0.0163,
+              "delta_rho_vs_teacher": -0.3228
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3073,
+              "agreement_with_teacher": 0.4415,
+              "delta_rho_vs_teacher": -0.022
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.05,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2694,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1359,
+              "agreement_with_teacher": 0.4758,
+              "delta_rho_vs_teacher": -0.1335
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0274,
+              "agreement_with_teacher": 0.0756,
+              "delta_rho_vs_teacher": -0.242
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3073,
+              "agreement_with_teacher": 0.7339,
+              "delta_rho_vs_teacher": 0.0379
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.05,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2483,
+              "agreement_with_teacher": 0.4005,
+              "delta_rho_vs_teacher": -0.081
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.12,
+              "agreement_with_teacher": 0.1919,
+              "delta_rho_vs_teacher": -0.2093
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0194,
+              "agreement_with_teacher": 0.0048,
+              "delta_rho_vs_teacher": -0.3099
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3073,
+              "agreement_with_teacher": 0.4415,
+              "delta_rho_vs_teacher": -0.022
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.1,
+          "teacher": "ridge_positional_onehot",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2694,
+              "agreement_with_teacher": 1.0,
+              "delta_rho_vs_teacher": 0.0
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.2602,
+              "agreement_with_teacher": 0.9501,
+              "delta_rho_vs_teacher": -0.0092
+            },
+            "student_shuffled": {
+              "rho_vs_measured": 0.0208,
+              "agreement_with_teacher": 0.0894,
+              "delta_rho_vs_teacher": -0.2486
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3073,
+              "agreement_with_teacher": 0.7339,
+              "delta_rho_vs_teacher": 0.0379
+            }
+          }
+        },
+        {
+          "mutation_rate": 0.1,
+          "teacher": "conv_encoder",
+          "n_perturbed": 8000,
+          "arms": {
+            "student_linear": {
+              "rho_vs_measured": 0.2534,
+              "agreement_with_teacher": 0.4065,
+              "delta_rho_vs_teacher": -0.0759
+            },
+            "student_mlp": {
+              "rho_vs_measured": 0.1246,
+              "agreement_with_teacher": 0.2054,
+              "delta_rho_vs_teacher": -0.2047
+            },
+            "student_shuffled": {
+              "rho_vs_measured": -0.0054,
+              "agreement_with_teacher": -0.0117,
+              "delta_rho_vs_teacher": -0.3346
+            },
+            "student_gc": {
+              "rho_vs_measured": 0.3073,
+              "agreement_with_teacher": 0.4415,
+              "delta_rho_vs_teacher": -0.022
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "verdict": "MECHANISM_DISSOLVES_WITH_LEARNED_TEACHER",
+  "verdict_detail": "the ridge anchor reproduced but the conv teacher's linear student did NOT (seed, rate, agreement, d_rho) = [(0, 0.02, 0.4187, -0.0615), (0, 0.05, 0.4279, -0.0558), (0, 0.1, 0.4475, -0.0473), (1, 0.02, 0.3888, -0.0765), (1, 0.05, 0.4048, -0.0599), (1, 0.1, 0.4023, -0.0679), (2, 0.02, 0.3843, -0.0861), (2, 0.05, 0.4005, -0.081), (2, 0.1, 0.4065, -0.0759)]; the mechanical objection is measurably absent with a learned teacher. READ NARROWLY -- the objection is gone, not the bound",
+  "forecast": {
+    "predicted_outcome": "5_MECHANISM_DISSOLVES_WITH_LEARNED_TEACHER",
+    "p": 0.6,
+    "reasoning": "a conv is not linear in the student's basis by construction, so exact recovery should fail. But agreement could still land at or above 0.99 if the conv's learned function is nearly linear in positional composition on this rung, which is what the G-A encoder gate's CI-includes-zero result hints at.",
+    "my_forecast_record_in_this_project": "1 of 3. The 80-percent-fail prediction on the fragment null was falsified, the 1190-seed prediction was falsified, the P(bar met)=0.2 on the G-D fine-tune hit. Do not defer to this number."
+  },
+  "honest_limits": [
+    "3 seeds, not the 10 the published tile arms use. The degeneracy signal is a 1.0000-versus-not contrast, which 3 seeds can resolve; a SMALL difference in agreement could not be.",
+    "A different substrate from the verdict it interrogates. The internal ridge anchor is what licenses the comparison, not equivalence of rungs.",
+    "Perturbation is uniform random point substitution. A generator's candidates are not uniform, so this tests the METHOD'S MECHANICS and not the real off-distribution gap.",
+    "The conv is ONE learned teacher and is NOT the 3-channel stack that actually posted 0.4404. The stack cannot be used: 2 of its 3 channels come from Promoter Calculator, which is NOT INSTALLED here (ModuleNotFoundError: promotercalculator), and what exists on disk is a PRECOMPUTED prediction table over the 44106 fixed tiles, structurally incapable of scoring a perturbed sequence. So this bounds the conv case, which is the learned half of the stack.",
+    "A rank-average teacher may not be distillable at all in the required sense, because a rank depends on the candidate pool rather than on the sequence. This run does not test that and it remains open."
+  ],
+  "headline_withdrawn": {
+    "withdrawn": "2026-10-31",
+    "verdict_field_left_UNEDITED": "The verdict field below still reads MECHANISM_DISSOLVES_WITH_LEARNED_TEACHER because that is what the frozen bar mechanically returned. Rewriting it would destroy the record. This block withdraws the READING of it.",
+    "why": "The conv arm measures an UNDER-CAPACITY student against a conv teacher, so its agreement number cannot support a recoverability claim. Demonstrated internally, not argued: in 9 of 9 conv cells the 1-FEATURE GC student agrees with the conv teacher BETTER than the 600-FEATURE linear student (0.4111-0.4567 vs 0.3843-0.4475). The ridge-teacher rows prove the comparison is meaningful, since there the richer student wins decisively (1.0000 vs 0.73-0.75). A strictly more expressive student doing strictly worse at matching the teacher is the signature of a sample-limited or overfitting fit, NOT of a teacher carrying irreducible nonlinear structure.",
+    "arms_were_mis_assigned": "In the 2026-10-07 probe student_linear was SAME-BASIS relative to its teacher by construction, which is why agreement 1.0000 meant something. Against a conv teacher the same student is the POORER student and occupies the control role. Mirroring agreement_floor 0.99 across both arms therefore does not make them commensurable.",
+    "what_still_stands": "The RIDGE ANCHOR. agreement 1.0000 at 9 of 9 cells independently replicates the 2026-10-07 degeneracy on a DIFFERENT substrate (peak tiles, not the absent GSE108535 element rung). That result does not depend on the conv arm and is not withdrawn.",
+    "what_is_now_untested": "Whether self-distillation has anything to gain with a learned teacher. The run does NOT establish it either way.",
+    "not_evidence_for_the_authority_call": "This run must NOT be cited on the open question of whether HYBRID_ADDS satisfies forbidden-until-a-learned-representation-LANDS. The blocked_by clause remains untouched.",
+    "superseded_by": "a re-run adding a CONV-CAPACITY student as the agreement arm; see the bar v3 capacity_analysis block."
+  }
+}
