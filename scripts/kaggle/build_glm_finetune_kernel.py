@@ -182,6 +182,15 @@ def unpack():
 def step1_imports():
     """STEP 1 -- every import, BEFORE the 4.8 GB download. The sweep kernel once died here, after."""
     print("\n=== STEP 1: imports (cheapest guard, runs first) ===", flush=True)
+    # TORCHAO IS REMOVED, NOT UPGRADED, and that is deliberate. Kaggle ships torchao
+    # 0.10.0; current peft requires > 0.16.0 and its LoRA dispatcher RAISES on a too-old
+    # version instead of skipping an optional backend (peft/tuners/lora/torchao.py:160 ->
+    # is_torchao_available). Measured 2026-10-31: that killed the first real run AFTER it had
+    # downloaded the model and measured the entire zero-shot arm. torchao is a QUANTIZATION
+    # library and this run is fp32, so nothing here needs it; with the package absent that
+    # helper returns False cleanly instead of raising. Upgrading it could drag torch along,
+    # and the one thing that must not change between the two arms is the numerics.
+    sh(sys.executable + " -m pip uninstall -y -q torchao")
     sh(sys.executable + " -m pip install -q peft")
     import peft
     import torch
@@ -192,6 +201,30 @@ def step1_imports():
     import glm_finetune_window_split as split      # noqa: F401
     from dna_decode.glm import falsifier, generate, knob_contract, sweep_gates  # noqa: F401
     print("every module imported OK", flush=True)
+
+    # BUILD A LORA ADAPTER ON A TINY DUMMY MODULE HERE, BEFORE THE 4.8 GB DOWNLOAD. This is the
+    # guard the torchao failure proved was missing: importing peft SUCCEEDED, and the break was
+    # inside get_peft_model's dispatcher, which only runs when an adapter is actually built. An
+    # import check could never have caught it, and finding out cost a full model download plus a
+    # complete generation arm.
+    import torch
+    import torch.nn as nn
+    from peft import LoraConfig, get_peft_model
+
+    class _Tiny(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.q_proj = nn.Linear(8, 8)
+
+        def forward(self, x):
+            return self.q_proj(x)
+
+    tiny = get_peft_model(_Tiny(), LoraConfig(target_modules=["q_proj"], r=2))
+    n_train = sum(1 for q in tiny.parameters() if q.requires_grad)
+    if not n_train:
+        raise SystemExit("LORA DISPATCH DEAD: adapter built but nothing is trainable")
+    tiny(torch.zeros(1, 8)).sum().backward()
+    print("LoRA dispatch works: %d trainable tensors on a dummy module" % n_train, flush=True)
     return cli, split
 
 
