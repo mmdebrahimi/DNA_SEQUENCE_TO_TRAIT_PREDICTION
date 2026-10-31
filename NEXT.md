@@ -510,16 +510,16 @@ the carried honest limits are in `TODOS.md`.
   and is a user call. `tests/test_claude_md_growth_ceiling.py` is the rail, and raising the number
   rather than compressing is the thing it exists to prevent.
 
-## FOUR AUTHORITY CALLS (2026-10-30) — THREE ANSWERED, ONE STILL OPEN
+## FOUR AUTHORITY CALLS (2026-10-30) — THREE ANSWERED, ONE STILL OPEN; call 3 was later REVERSED
 
 **ANSWERED later the same day. Read this before the four items below, which are kept verbatim as the
 evidence each decision rested on.**
 
 | # | call | decision | state |
 |---|---|---|---|
-| 1 | fragment-arm null bar | **spend the seeds (~270)** | **GATE PASSES at 160 seeds (median +0.0112, exact CI `[-0.0126,+0.0354]`) = pre-registered branch A, a WEAK pass. The decision is VINDICATED and my ~80% fail forecast was WRONG.** b3/b4 **both RUNNING** toward 270 — b3 had FAILED on Kaggle (status `ERROR`, empty failureMessage, zero output) and was retried 2026-10-31; `wiki/fragment_null_160seed_interim_2026-10-31.md` |
+| 1 | fragment-arm null bar | **spend the seeds (~270)** | **GATE PASSES, AND AT 215 SEEDS THE INTERVAL IS NOW CLEAR OF THE BAR: median +0.0021, exact CI `[-0.0149, +0.0189]`.** That is no longer a WEAK pass. **BOTH of my forecasts are falsified** — the ~80% fail prediction, and the P2 claim that clearing the interval would need ~1,190 seeds. b4 came in near zero, so the estimate re-centred rather than merely tightening. **Honest caveat: it clears by 0.0011, a hair, and b3's final 55 seeds can still move it — do not quote "interval clear of the bar" as settled until 270.** b3 RUNNING (it had FAILED once on Kaggle and was retried). `wiki/fragment_null_160seed_interim_2026-10-31.md` is now the 160-seed snapshot, not the current number |
 | 2 | G-B dependency predicate | **fix it** | DONE `0750ec63` — G-B is `blocked:predecessor` again; do NOT tidy the free-text clause back to a bare slug |
-| 3 | G-D 8 GB hardware edge | **hold it** | HELD, edge untouched. **Its sweep half is now DISCHARGED** — `glm-sampling-sweep-vk` RAN, 3 of 3 grid points plan-eligible (was 1 of 3), `knob_verified_end_to_end=true` at both non-default points, numbers IDENTICAL to 10-29, result still NEGATIVE. `wiki/glm_generator_sampling_sweep.json` emitted; `constraint_expiry` reports `gd-finetune-gated-on-sampling-sweep-not-compute` **EXPIRED -> RE-OPEN**. `f9c47d7e` / ledger row 3. **G-D is NOT unblocked:** the edge is held by THIS call, not by missing hardware — lifting it stays yours |
+| 3 | G-D 8 GB hardware edge | ~~hold it~~ → **RE-OPEN IT (user, 2026-10-31)** | **EDGE LIFTED and the LoRA fine-tune is RUNNING on a Kaggle T4.** The sweep half was discharged first (3 of 3 points plan-eligible, `f9c47d7e`) and its answer — no temperature setting beats the Markov null — **falsifies GD-H4**, so sampling had not already done the work. The "8 GB GPU" clause was never missing hardware (free T4s are 16 GB). Bar FROZEN before any number in `wiki/glm_generator_finetune_acceptance_bar.json`: mode-`both` below **0.6679**, four outcomes named, **do NOT re-specify it**. `blocked_by` is a bare `none` on purpose — prose in that cell makes `advance_ranker` fail closed, which is what keeps G-B blocked. Umbrella row 21 / G-D row 4 |
 | 4 | `mvp_criteria` table blindness | **STILL OPEN** | unchanged — do NOT run `/soraya --until-mvp glm-condition-conditioning` |
 
 **Call 1 came with a correction to its own framing.** It was recorded as "re-specify the bar, or
