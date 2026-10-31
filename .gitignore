@@ -169,3 +169,8 @@ soraya_runs/*
 # committed by accident in 74b7a28d and had already DRIFTED (14,370 vs 18,512 bytes), which
 # is the whole hazard: two copies of a kernel whose PINNED_SHA decides which code runs.
 /kernel.py
+
+# Overnight-runner views, not artifacts: rewritten on every poll, regenerable from Kaggle.
+wiki/fragment_null_batches/overnight_log.txt
+wiki/fragment_null_batches/overnight_stdout.txt
+wiki/fragment_null_batches/MORNING_REPORT.md

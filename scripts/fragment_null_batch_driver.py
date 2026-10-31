@@ -46,6 +46,17 @@ USER = "emanueleebrahimi"
 MAX_CONCURRENT_GPU = 2          # measured: a third push is refused outright
 SLUG = "glm-fragment-null-b%d"
 
+#: Statuses that OCCUPY one of the two GPU session slots. `QUEUED` counts: measured 2026-10-31, a
+#: kernel sits in QUEUED before it starts and Kaggle still refuses a third push -- so counting only
+#: RUNNING reads a full cap as having a free slot and burns a push attempt on every poll. It fails
+#: closed rather than duplicating anything, but a launcher that repeatedly attempts the impossible
+#: is reporting a free slot it does not have.
+OCCUPYING = ("RUNNING", "QUEUED")
+
+#: The ONLY launchable state. Anything else means the kernel exists, and re-pushing an existing slug
+#: destroys the output Kaggle keeps for it.
+LAUNCHABLE = "ABSENT"
+
 #: Seeds already measured BEFORE this campaign, and where they live. Not redrawn.
 PRIOR = {
     "wiki/glm_fragment_pyramid_arm_kaggle_full_2026-10-28.json": (0, 10),
@@ -176,11 +187,11 @@ def cmd_step() -> int:
     running, done, absent = [], [], []
     for b in sorted(batches):
         st = _status(api, SLUG % b, True)
-        if st == "RUNNING":
+        if st in OCCUPYING:
             running.append(b)
         elif st == "COMPLETE":
             done.append(b)
-        elif st == "ABSENT":
+        elif st == LAUNCHABLE:
             absent.append(b)
         else:
             print("  b%d: %s -- needs a human look" % (b, st))
@@ -246,9 +257,29 @@ def cmd_pool() -> int:
     med = stats.median(seeds)
     print("  median %+.4f   sd %.4f   bar |median| < 0.02 -> %s"
           % (med, stats.stdev(seeds), "WITHIN" if abs(med) < 0.02 else "OUTSIDE"))
-    print("  NOTE: the decision statistic is a BOOTSTRAP CI on these per-seed values, not this")
-    print("        point estimate and not a normal-theory interval -- the two disagreed about")
-    print("        zero at n=50. Read wiki/fragment_null_270seed_prereg_2026-10-30.md section 5.")
+
+    # THE DECISION STATISTIC, and it is the ARM'S OWN function -- not a bootstrap and not the arm's
+    # `ci95` key. `median_ci95` is exact, distribution-free and reports the coverage it ACHIEVES;
+    # `ci95` is a normal approximation around the MEAN, so quoting it beside a median headline
+    # reports an interval for a different estimand (the arm's source warns about this where it is
+    # defined). The handoff's "[-0.0126, +0.0466]" is NOT reproducible by either in-repo method --
+    # see section 3a of the pre-registration. All candidate intervals contained zero at n=50, so the
+    # reading does not hinge on the choice; the NAME does.
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from glm_fragment_pyramid_arm import median_ci95
+    lo, hi, cov = median_ci95(seeds)
+    if lo is None:
+        print("  median CI95: none -- no rank pair reaches 95%% coverage at n=%d" % len(seeds))
+        return 0
+    print("  median CI95 [%+.4f, %+.4f]  (exact order statistics, achieved coverage %.4f)"
+          % (lo, hi, cov))
+    print("  contains zero: %s     contains the 0.02 bar: %s"
+          % ("YES" if lo <= 0.0 <= hi else "NO", "YES" if lo <= 0.02 <= hi else "NO"))
+    branch = ("A (CLEAN NULL -> validity passes, arm closes NO_GAIN)" if abs(med) < 0.02
+              else "B (REAL POSITIVE BIAS -> mechanism question)" if not (lo <= 0.0 <= hi)
+              else "C (STILL UNRESOLVED -> seed lever retired by measurement)")
+    print("  pre-registered branch: %s" % branch)
+    print("  Read wiki/fragment_null_270seed_prereg_2026-10-30.md sections 3a and 5 before quoting.")
     return 0
 
 
