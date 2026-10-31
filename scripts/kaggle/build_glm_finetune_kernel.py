@@ -411,8 +411,8 @@ def main():
                            "split all work in the Kaggle environment, so a GPU run that ERRORs "
                            "with no log is environmental (allocation / quota), not a code fault."},
                   open(OUT + "/glm_finetune_diagnostic.json", "w"), indent=2)
-        print("
-=== DIAGNOSTIC COMPLETE: stopping before the model download ===", flush=True)
+        print("")
+        print("=== DIAGNOSTIC COMPLETE: stopping before the model download ===", flush=True)
         print("wrote " + OUT + "/glm_finetune_diagnostic.json", flush=True)
         return
 
@@ -481,6 +481,29 @@ def main():
 
 
 if __name__ == "__main__":
+    # WHY THE DIAGNOSTIC SWALLOWS ITS OWN FAILURE AND EXITS 0. Kaggle exposes a kernel's output
+    # files ONLY when its status is COMPLETE. A kernel that ERRORs returns zero files and an EMPTY
+    # failureMessage through the API, so its traceback is unreachable without a browser -- which is
+    # why the 2026-10-31 failures were indistinguishable from an infrastructure problem and cost a
+    # wrong diagnosis before a right one. So in DIAG mode the run always COMPLETES and reports what
+    # happened IN AN ARTIFACT. A diagnostic that cannot report its own failure is useless.
+    if DIAG:
+        try:
+            main()
+        except BaseException:
+            tb = traceback.format_exc()
+            print(tb, flush=True)
+            try:
+                json.dump({"record": "glm-finetune-diagnostic-v1",
+                           "reached": "FAILED",
+                           "traceback": tb.splitlines()[-40:],
+                           "note": "The diagnostic itself failed. Because it exits 0 anyway, this "
+                                   "artifact is retrievable -- an ERROR status would have hidden "
+                                   "the traceback entirely."},
+                          open(OUT + "/glm_finetune_diagnostic.json", "w"), indent=2)
+            except BaseException:
+                pass
+        raise SystemExit(0)
     try:
         main()
     except SystemExit as e:
@@ -508,6 +531,19 @@ def main(argv=None) -> int:
     payload = base64.b64encode(buf.getvalue()).decode()
     body = KERNEL.replace("__DIAG__", "True" if a.diagnostic else "False")
     body = body.replace("__PAYLOAD__", payload)
+    # THE EMITTED KERNEL MUST PARSE, and this guard exists because its absence cost two Kaggle
+    # sessions on 2026-10-31. The builder's OWN syntax says NOTHING about the kernel's: the body is
+    # a raw triple-quoted string, so a literal newline inside a `print("...")` is perfectly legal
+    # *in the builder* and produces an unterminated string literal *in the emitted file*. That is
+    # exactly what happened -- the builder parsed, the kernel did not, and Kaggle reported ERROR
+    # with an EMPTY failureMessage and ZERO output files, which is indistinguishable from an
+    # infrastructure failure. Checking the artifact rather than its generator is the lesson.
+    import ast
+    try:
+        ast.parse(body)
+    except SyntaxError as e:
+        raise SystemExit("REFUSING to write a kernel that does not parse: line %d: %s -- %s"
+                         % (e.lineno, e.msg, (e.text or "").rstrip()))
     name = "glm_finetune_diag_kernel.py" if a.diagnostic else "glm_finetune_kernel.py"
     out = ROOT / "scripts" / "kaggle" / name
     out.write_text(body, encoding="utf-8")
