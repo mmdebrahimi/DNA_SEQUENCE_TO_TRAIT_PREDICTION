@@ -63,7 +63,7 @@ FULL_SEEDS = 10
 
 #: WHICH SLICE THIS PUSH IS. Edit this one line per batch; everything else stays fixed so the
 #: batches are byte-comparable apart from the seed range.
-BATCH = 4
+BATCH = 3
 
 #: The full 220-seed plan, written out so the file records what it is a part of. Seeds 0..49 are
 #: already measured and are NOT redrawn: 0..9 in the two published full runs, 10..49 in

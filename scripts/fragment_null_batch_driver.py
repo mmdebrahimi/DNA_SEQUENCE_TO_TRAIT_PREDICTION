@@ -95,7 +95,15 @@ def _looks_absent(err: Exception) -> bool:
 
 
 def _api_healthy(api) -> bool:
-    """Is the API actually answering, or has the ~12 h OAuth lapsed?
+    """Is the API actually answering, or is the credential refusing?
+
+    NOTE ON WHAT A FALSE HERE MEANS (measured 2026-10-31, correcting this docstring's own
+    earlier claim). A False does NOT establish that "the ~12 h OAuth lapsed". A client that
+    was authenticated ONCE and held went permanently unhealthy ~20 min into an overnight run
+    while a FRESH process authenticated fine the whole time -- the Kaggle OAuth ACCESS token
+    is much shorter-lived than the refresh credential on disk. So the discriminator is to
+    rebuild the client and re-probe: unhealthy on a FRESH client implicates the on-disk
+    credential; unhealthy only on a held one implicates the held client.
 
     THIS IS NOT DEFENSIVE PADDING. An expired token raises the SAME not-found-shaped ValueError as a
     kernel that was never created, so without this probe `step` would read every unlaunched batch as

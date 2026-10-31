@@ -39,7 +39,9 @@ SWEEP_KERNEL = ROOT / "scripts" / "kaggle" / "glm_sampling_sweep_kernel.py"
 SWEEP_SLUG = "glm-sampling-sweep-vk"
 
 POLL_SECONDS = 600
-MAX_HOURS = 11.5          # a stop, not a schedule: the campaign is ~9 h and the token lapses ~12 h
+MAX_HOURS = 11.5          # a stop, not a schedule: the campaign is ~9 h. This used to be
+                          # justified by a ~12 h token lapse; it is not, because the client
+                          # is now rebuilt every pass. It is an ATTENTION bound only.
 
 
 def _driver():
@@ -119,8 +121,7 @@ def report(d, statuses: dict) -> None:
 
 def main() -> int:
     d = _d()
-    api = d._api()
-    if not d._healthy_or_explain(api):
+    if not d._healthy_or_explain(d._api()):
         return 2
 
     batches = d._batches()
@@ -132,9 +133,28 @@ def main() -> int:
         if (time.time() - t0) / 3600.0 > MAX_HOURS:
             log("STOP: %.1f h elapsed. Resume with `fragment_null_batch_driver.py step`." % MAX_HOURS)
             return 0
+        # A FRESH client EVERY PASS, and that is the fix for a measured 4-hour outage rather
+        # than defensive padding. 2026-10-31: this runner authenticated once at start, went
+        # permanently unhealthy ~20 min in, and then logged
+        # "API UNHEALTHY (token likely lapsed ~12 h)" on 22 consecutive polls while b3 sat
+        # failed and b4 ran -- pulling nothing and relaunching nothing. A FRESH process
+        # authenticated fine throughout that window, so the ON-DISK credential was valid the
+        # whole time and the HELD CLIENT was the fault: the Kaggle OAuth ACCESS token is far
+        # shorter-lived than the ~12 h refresh credential, and nothing here refreshed it. The
+        # old message named the wrong cause and sent the operator to re-auth a credential that
+        # was not broken. Re-authenticating costs one call per 10 min.
+        try:
+            api = d._api()
+        except Exception as e:
+            log("could not build a Kaggle client (%s: %s). Holding; retrying next poll."
+                % (type(e).__name__, e))
+            time.sleep(POLL_SECONDS)
+            continue
         if not d._api_healthy(api):
-            log("API UNHEALTHY (token likely lapsed ~12 h). Holding; will retry next poll. "
-                "Fix with `uv run kaggle auth login --force` in your own terminal.")
+            log("API UNHEALTHY with a FRESH client, so this is the ON-DISK credential and not a "
+                "stale in-process token. Holding; will retry next poll. Fix it in YOUR OWN "
+                "terminal (credentials must not route through a session): "
+                "`uv run kaggle auth login --force`.")
             time.sleep(POLL_SECONDS)
             continue
 
