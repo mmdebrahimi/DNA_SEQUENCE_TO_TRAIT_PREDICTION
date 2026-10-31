@@ -13,9 +13,9 @@
 >
 > | call | decision | state |
 > |---|---|---|
-> | §2.1 null bar | **spend the seeds (~270)** | **GATE PASSES at 160 seeds — median +0.0112, branch A. See `wiki/fragment_null_160seed_interim_2026-10-31.md`.** b3/b4 in flight to 270 |
+> | §2.1 null bar | **spend the seeds (~270)** | **GATE PASSES at 160 seeds — median +0.0112, branch A. See `wiki/fragment_null_160seed_interim_2026-10-31.md`.** b3/b4 both RUNNING to 270 (b3 FAILED on Kaggle once and was retried 2026-10-31) |
 > | §2.2 G-B edge | **fix the predicate** | DONE `0750ec63` — G-B is blocked again |
-> | §2.3 G-D hardware | **hold the edge** | HELD; its blocker half FIXED `c6a49923` |
+> | §2.3 G-D hardware | **hold the edge** | HELD. **Sweep half now DISCHARGED 2026-10-31** — 3 of 3 points plan-eligible, `wiki/glm_generator_sampling_sweep.json` emitted, constraint EXPIRED -> RE-OPEN, result still negative (`f9c47d7e`). **This supersedes §4's "do not create that file" trap** — see the note there. G-D is still blocked BY THIS CALL, not by hardware |
 > | §2.4 MVP parser | *still open* | unchanged — do not run `--until-mvp glm-condition-conditioning` |
 >
 > §2.1 carried a **correction**: this handoff framed it as "re-specify or accept no verdict, both
@@ -51,6 +51,16 @@ Prior durable state, all current as of this file:
 **Also do not create `wiki/glm_generator_sampling_sweep.json` by hand.** That exact filename is the
 expiry test for constraint `gd-finetune-gated-on-sampling-sweep-not-compute`. Writing it would fire a
 LoRA fine-tune's unblock trigger on a sweep the project's own gate excludes (see §4).
+
+> **RESOLVED 2026-10-31 — and the rule above is UNCHANGED, not lifted.** That file now EXISTS, and
+> legitimately: the sweep was re-run with `--verify-knob` (`glm-sampling-sweep-vk`), all 3 grid points
+> came back plan-eligible, and the artifact was emitted **BY CODE** from the real outputs via
+> `scripts/emit_glm_sweep_unblock_artifact.py` — which asserts the discharge condition and refuses
+> otherwise. "By hand" is still forbidden and is still exactly what that emitter exists to prevent;
+> two of its refusals are pinned by `tests/test_glm_sweep_unblock_emitter.py`. **Do not delete the
+> file thinking this trap was violated, and do not re-emit it by hand.** The gate no longer excludes
+> the sweep, so the premise of the trap ("a sweep the project's own gate excludes") no longer holds.
+> The RESULT is unchanged and still negative: no grid point beats the Markov null.
 
 ---
 

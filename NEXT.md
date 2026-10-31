@@ -517,9 +517,9 @@ evidence each decision rested on.**
 
 | # | call | decision | state |
 |---|---|---|---|
-| 1 | fragment-arm null bar | **spend the seeds (~270)** | **GATE PASSES at 160 seeds (median +0.0112, exact CI `[-0.0126,+0.0354]`) = pre-registered branch A, a WEAK pass. The decision is VINDICATED and my ~80% fail forecast was WRONG.** b3/b4 to 270; `wiki/fragment_null_160seed_interim_2026-10-31.md` |
+| 1 | fragment-arm null bar | **spend the seeds (~270)** | **GATE PASSES at 160 seeds (median +0.0112, exact CI `[-0.0126,+0.0354]`) = pre-registered branch A, a WEAK pass. The decision is VINDICATED and my ~80% fail forecast was WRONG.** b3/b4 **both RUNNING** toward 270 — b3 had FAILED on Kaggle (status `ERROR`, empty failureMessage, zero output) and was retried 2026-10-31; `wiki/fragment_null_160seed_interim_2026-10-31.md` |
 | 2 | G-B dependency predicate | **fix it** | DONE `0750ec63` — G-B is `blocked:predecessor` again; do NOT tidy the free-text clause back to a bare slug |
-| 3 | G-D 8 GB hardware edge | **hold it** | HELD, edge untouched; its `--verify-knob` blocker half FIXED `c6a49923`, sweep queued as `glm-sampling-sweep-vk` (NOT launched — Kaggle caps at 2 concurrent GPU sessions) |
+| 3 | G-D 8 GB hardware edge | **hold it** | HELD, edge untouched. **Its sweep half is now DISCHARGED** — `glm-sampling-sweep-vk` RAN, 3 of 3 grid points plan-eligible (was 1 of 3), `knob_verified_end_to_end=true` at both non-default points, numbers IDENTICAL to 10-29, result still NEGATIVE. `wiki/glm_generator_sampling_sweep.json` emitted; `constraint_expiry` reports `gd-finetune-gated-on-sampling-sweep-not-compute` **EXPIRED -> RE-OPEN**. `f9c47d7e` / ledger row 3. **G-D is NOT unblocked:** the edge is held by THIS call, not by missing hardware — lifting it stays yours |
 | 4 | `mvp_criteria` table blindness | **STILL OPEN** | unchanged — do NOT run `/soraya --until-mvp glm-condition-conditioning` |
 
 **Call 1 came with a correction to its own framing.** It was recorded as "re-specify the bar, or
