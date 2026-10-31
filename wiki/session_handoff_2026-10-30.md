@@ -1,10 +1,33 @@
 # Session handoff — 2026-10-30
 
-<!-- doc-status: LIVE as of 2026-10-30. This file is a HANDOFF, not a result record: it is accurate
-     only until the four authority calls below are answered. Re-derive every number from the cited
-     artifact before repeating it. No repo-wide doc-status convention exists in code (grep for
-     `doc-status` returns 0 hits in dna_decode/ and scripts/), so this header follows the global
-     first-30-lines rule rather than a local schema. -->
+<!-- doc-status: PARTLY SUPERSEDED as of 2026-10-30. Three of the four authority calls below
+     were answered later the same day; the banner immediately under this comment is the
+     current state and outranks any section text that still reads as open. The one open call
+     is 2.4 (the MVP-bar parser). Sections 1 and 4-7 remain LIVE. Re-derive every number
+     from the cited artifact before repeating it. No repo-wide doc-status convention exists
+     in code (`doc-status` returns 0 hits in dna_decode/ and scripts/), so this follows the
+     global first-30-lines rule rather than a local schema. -->
+
+> **SUPERSEDED IN PART — three of the four authority calls were ANSWERED on 2026-10-30 (later the
+> same day). Read this block before anything below it.**
+>
+> | call | decision | state |
+> |---|---|---|
+> | §2.1 null bar | **spend the seeds (~270)** | RUNNING — 4 Kaggle batches, see §2.1 |
+> | §2.2 G-B edge | **fix the predicate** | DONE `0750ec63` — G-B is blocked again |
+> | §2.3 G-D hardware | **hold the edge** | HELD; its blocker half FIXED `c6a49923` |
+> | §2.4 MVP parser | *still open* | unchanged — do not run `--until-mvp glm-condition-conditioning` |
+>
+> §2.1 carried a **correction**: this handoff framed it as "re-specify or accept no verdict, both
+> legitimate". The 50-seed bootstrap CI `[-0.0126, +0.0466]` **contains zero**, so the null is not
+> measurably dirty and the bar is failing on a point estimate narrower than its own SE. A third
+> option existed — re-specify it as a *leakage* bar, set where leakage actually lands — and
+> unblocking the verdict makes the arm **fail** (`NO_GAIN`), so that option was anti-flattering
+> rather than motivated. The user chose seeds anyway, a legitimate call on the same evidence.
+>
+> **The pyramid-vs-kmer4 science does not depend on any of this** and is unchanged: the paired CI
+> excludes zero on the negative side at both seed ranges. The gate decides what the LEDGER may
+> record, not what is true.
 
 **Read in this order:** (1) the DO-NOT-REDO list, because it protects ~7 hours of completed compute;
 (2) the four authority calls, because work is waiting on them and none is an executor task; (3) the
@@ -55,7 +78,25 @@ sample size, and is stable across all three samples (0.0661 / 0.0649 / 0.0654). 
 only as 1/√n — SE ≈ 0.005 needs ~270 seeds — while the point estimate sits **above** the bar. More
 seeds would more likely **confirm a small real positive bias** than clear it.
 
-So: re-specify the bar, or accept the arm gets no valid verdict. Either is legitimate; both are yours.
+**DECIDED 2026-10-30: spend the seeds.** Target n = 270, where SE(median) reaches 0.0050.
+
+- Pre-registration, written BEFORE any of these seeds existed and fixing all three outcome
+  readings: `C:/Users/Laptop Portable/pythonprojects/dna_decode/wiki/fragment_null_270seed_prereg_2026-10-30.md`
+- Kernel: `scripts/kaggle/fragment_null_batch_kernel.py` — four batches of 55 tiling seeds 50..269,
+  `PINNED_SHA` UNCHANGED so all 270 seeds come from byte-identical code.
+- **Resume with the driver. It is idempotent and safe to re-run from any session:**
+  `uv run python scripts/fragment_null_batch_driver.py step` — pulls whatever finished, launches the
+  next batch when a GPU slot frees. Also `status` and `pool`.
+- Slugs `glm-fragment-null-b1..b4`. b1 (seeds 50..104) and b2 (105..159) launched 2026-10-30 and
+  were RUNNING at handoff; b3 and b4 wait on the GPU cap. ~4.5 h per batch, two at a time, ~9 h all.
+
+**TWO THINGS THE PRE-REGISTRATION RECORDS — do not rediscover them.** (1) ~80% chance the gate
+still fails at 270; the forecast says that CONFIRMS a small real bias rather than clearing it, and
+it was written down before the data. (2) 270 seeds buys a **point estimate, not a confident
+resolution** — the CI is forecast to straddle 0.02 even at 270, and excluding the bar from above
+would need ~1,463 seeds, about 121 h of T4. **Normal theory is NOT the decision statistic**: it and
+the measured bootstrap disagree about zero at n=50, so the verdict comes from a bootstrap recomputed
+on the pooled per-seed values.
 
 ### 2.2 G-B's dependency edge encodes the wrong predicate
 
@@ -65,13 +106,31 @@ self-distillation eligible — but the standing rule is *forbidden until a learn
 FINISH" where the rule means "wait for G-A to SUCCEED" — identical except in the case that occurred.
 Fixing it is an umbrella flow-down change. First surfaced 2026-10-21; re-confirmed 2026-10-29.
 
+**FIXED 2026-10-30 (`0750ec63`).** The `blocked_by` cell now carries a free-text predicate beside
+the slug: `glm-learned-representation-2026-10-07, a learned representation LANDS (G-A terminal-met
+is NOT sufficient)`. An unmatched predecessor is fail-closed in `advance_ranker` — the same
+mechanism that holds G-D — so the block can only be cleared by a human deleting the clause, which is
+the authority the rule requires. The slug is RETAINED, so the graph edge, cycle detection and the
+critical path are unchanged. **Do not "tidy" the free text back to a bare slug;** the umbrella's
+Requirements Flow-down section now says why. Verified against a baseline taken before the edit:
+G-B moved from `+ eligible` to `x blocked:predecessor`, with G-A, G-C, G-D and G-E unchanged.
+
 ### 2.3 Is G-D's 8 GB hardware half discharged?
 
 server1 is a GTX 1070 with exactly 8 GiB; the Kaggle T4 (16 GiB) ran the sweep. The 2026-10-07
 *"server PC is mid-move"* rationale is three weeks stale. Discharging it opens a ~3-day LoRA
 fine-tune, which is why it is not an executor call. The frozen plan
 `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/` (still in `plans/`, not archived) Step 6 explicitly says
-**do NOT change G-D's `blocked_by` edge for the 8 GB GPU** — honour that until the user overrides it.
+**do NOT change G-D's `blocked_by` edge for the 8 GB GPU** — honour that until the user
+overrides it.
+
+**HELD 2026-10-30 — the edge is untouched, as the frozen plan requires.** Its *other* half, the
+`--verify-knob` attestation blocker named in §3, is FIXED (`c6a49923`): `run_cell`'s argv now passes
+the flag unconditionally, in the builder and in the tracked emitted kernel, with three guard tests
+(the builder had none at all, which is why it shipped). The sweep is re-pushed as
+**`glm-sampling-sweep-vk`** — a NEW slug, because `glm-sampling-sweep` still holds the retrieved
+10-29 results and Kaggle keeps one output per kernel. **It is NOT yet launched:** Kaggle refuses a
+third concurrent batch GPU session, so it waits for b1 or b2 to finish. Re-push it then; ~10-15 min.
 
 ### 2.4 `mvp_criteria.py` cannot read table-format MVP bars
 
@@ -186,7 +245,33 @@ Mechanics that cost real time: the remote shell is **cmd.exe**; pipe Python to s
    429s — that was always self-inflicted. Walk `kernels_list_files` at `page_size=200` (1000 → HTTP
    400), artifacts are on the **last** page, then one `kernels_output` call with that `page_token`.
    Matched files download from signed storage URLs, not the throttled API.
-8. **`python3` is the Windows Store stub here. Use `python`.** It silently prints an install nag
+8. **Kaggle allows exactly TWO concurrent batch GPU sessions, and a refused push used to report
+   SUCCESS.** Measured 2026-10-30: `kernels_push` does not raise on refusal -- it returns
+   `ref=''`, `url=''`, `versionNumber=0` and the reason in **`.error`**
+   (`"Maximum batch GPU session count of 2 reached."`). The helper printed the two empty fields and
+   returned 0, and the follow-up `status` then 404'd, which is the recorded signature of a *wrong
+   slug* -- so the diagnosis went to the wrong place until the response was dumped field by field.
+   **Fixed `1f63590e`:** a refusal now exits 1 and names the cause. Nothing is created on a
+   refusal, so a retry is always safe and cannot duplicate a run.
+9. **A kernel that does not exist raises a MISDIRECTING `ValueError`, identical in shape to expired
+   auth.** `kernels_status` on an absent kernel says *"Permission 'kernels.get' was denied ... the
+   most likely cause is a wrong kernel slug"* -- not an HTTP 404. An expired token produces the
+   same thing, so mapping it straight to "absent" makes an auth outage look like "nothing launched
+   yet". Discriminate by repeating the call on a **known-good slug** first; that is what
+   `fragment_null_batch_driver._api_healthy` does, and it refuses rather than guessing.
+10. **`kernels_output(file_pattern=...)` is a REGEX, not a glob, and it does NOT avoid the 429.**
+   It filters what is DOWNLOADED, not what is LISTED, so the call still pages the full ~3,600-file
+   listing server-side and throttles anyway; a loose pattern also matched a false positive *inside
+   the cloned repo*. Trap 7 above therefore stands, and is now encoded in
+   `scripts/fragment_null_batch_driver.py::_pull` rather than living in prose.
+11. **This harness collapses doubled backslashes inside Bash heredocs.** It bit THREE times in one
+   session, including once while writing this very entry: a doubled-backslash-n inside a patch
+   string became a REAL newline and wrote a file with an unterminated string literal, and
+   `C:\\Users` collapsed to `C:\Users` and died as a truncated-escape
+   error. Write Windows paths with forward slashes, as the rest of this repo does, or use the
+   dedicated file-write tool for anything containing a backslash. Recovery is
+   `git restore --source=HEAD -- <one file>`, which is targeted and not on the forbidden list.
+12. **`python3` is the Windows Store stub here. Use `python`.** It silently prints an install nag
    instead of running.
 
 ---

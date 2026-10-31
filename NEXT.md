@@ -510,9 +510,35 @@ the carried honest limits are in `TODOS.md`.
   and is a user call. `tests/test_claude_md_growth_ceiling.py` is the rail, and raising the number
   rather than compressing is the thing it exists to prevent.
 
-## FOUR OPEN AUTHORITY CALLS (2026-10-30) — none is an executor task
+## FOUR AUTHORITY CALLS (2026-10-30) — THREE ANSWERED, ONE STILL OPEN
 
-Recorded here because each is a USER decision that work is waiting on. None was taken.
+**ANSWERED later the same day. Read this before the four items below, which are kept verbatim as the
+evidence each decision rested on.**
+
+| # | call | decision | state |
+|---|---|---|---|
+| 1 | fragment-arm null bar | **spend the seeds (~270)** | RUNNING — `glm-fragment-null-b1..b4`; resume with `uv run python scripts/fragment_null_batch_driver.py step` |
+| 2 | G-B dependency predicate | **fix it** | DONE `0750ec63` — G-B is `blocked:predecessor` again; do NOT tidy the free-text clause back to a bare slug |
+| 3 | G-D 8 GB hardware edge | **hold it** | HELD, edge untouched; its `--verify-knob` blocker half FIXED `c6a49923`, sweep queued as `glm-sampling-sweep-vk` (NOT launched — Kaggle caps at 2 concurrent GPU sessions) |
+| 4 | `mvp_criteria` table blindness | **STILL OPEN** | unchanged — do NOT run `/soraya --until-mvp glm-condition-conditioning` |
+
+**Call 1 came with a correction to its own framing.** It was recorded as "re-specify the bar, or
+accept no verdict — both legitimate". A third option existed: the 50-seed bootstrap CI
+`[-0.0126, +0.0466]` **contains zero**, so the null is not measurably dirty and the bar is failing on
+a point estimate narrower than its own SE; re-specifying it as a *leakage* bar (set where leakage
+lands, not where noise lives) would have passed validity and let the arm close as **`NO_GAIN`** —
+i.e. anti-flattering, which is what made it safe to propose. The user chose seeds on the same
+evidence. Pre-registration, written before any of those seeds existed:
+`wiki/fragment_null_270seed_prereg_2026-10-30.md` — it forecasts ~80% that the gate STILL fails, and
+records that 270 seeds buys a point estimate rather than a confident resolution (the CI is forecast
+to straddle 0.02 even at 270; excluding it would need ~1,463 seeds ≈ 121 h of T4).
+
+**None of this moves the pyramid-vs-kmer4 result**, whose paired CI excludes zero on the negative
+side at both seed ranges. The gate decides what the ledger may record, not what is true.
+
+---
+
+Original record, kept verbatim as the evidence the decisions rested on. None was taken AT THE TIME.
 
 1. **Is the fragment arm's `|median| < 0.02` null bar satisfiable at all?** THE REAL FRONTIER. Pooled
    over 50 seeds the null median is **+0.0242** (seeds 0-9 +0.0517, the never-drawn seeds 10-49 +0.0191),
