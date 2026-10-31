@@ -1,0 +1,119 @@
+{
+  "record": "glm-generator-finetune-verdict-v1",
+  "date": "2026-10-31",
+  "acceptance_bar": "wiki/glm_generator_finetune_acceptance_bar.json",
+  "verdict": "C_NO_IMPROVEMENT",
+  "why": "fine-tuned 0.8058 >= baseline 0.7787",
+  "bar": {
+    "mode": "both",
+    "threshold": 0.6679,
+    "direction": "lower is better"
+  },
+  "arm_a_zeroshot_on_device": {
+    "_null": {
+      "kmer": 0.599,
+      "both": 0.6679
+    },
+    "kmer": 0.7355,
+    "both": 0.7787
+  },
+  "arm_b_finetuned": {
+    "_null": {
+      "kmer": 0.599,
+      "both": 0.6679
+    },
+    "kmer": 0.7559,
+    "both": 0.8058
+  },
+  "delta_both": 0.0271,
+  "markov_null_reproduced": true,
+  "recorded_cpu_crosscheck": {
+    "artifact": "wiki/glm_generator_falsifier_REAL_2026-10-07.json",
+    "n": 120,
+    "limit_natural": 1200,
+    "bins": 6,
+    "length": 150,
+    "context": 300,
+    "conditional": true,
+    "natural_set": "promoter",
+    "hf": {
+      "kmer": 0.7237,
+      "both": 0.7706
+    },
+    "markov_null": {
+      "kmer": 0.599,
+      "both": 0.6679
+    },
+    "uniform": {
+      "kmer": 0.9408,
+      "both": 0.9641
+    },
+    "device_note": "CPU / GTX 860M host at fp32. CUDA yields DIFFERENT sampled sequences for this generator, so this is NOT the comparator for a T4 run."
+  },
+  "lora": {
+    "r": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj"
+    ]
+  },
+  "lr": 0.0001,
+  "epochs": 3,
+  "batch": 8,
+  "dtype": "float32",
+  "loss_curve": [
+    {
+      "epoch": 0,
+      "mean_loss": 7.4361
+    },
+    {
+      "epoch": 1,
+      "mean_loss": 7.16551
+    },
+    {
+      "epoch": 2,
+      "mean_loss": 6.91478
+    }
+  ],
+  "split": {
+    "counts": {
+      "corpus_total": 4340,
+      "falsifier_fit": 600,
+      "falsifier_eval": 600,
+      "unused_tail": 3140,
+      "finetune_train": 3737
+    },
+    "fingerprint": {
+      "n_cds_total": 4340,
+      "n_windows": 4340,
+      "n_skipped_edge": 0,
+      "n_skipped_ambiguous": 0,
+      "n_overlapping_cds": 2708,
+      "strand_counts": {
+        "+": 2118,
+        "-": 2222
+      }
+    },
+    "train_vs_eval_overlap": 0
+  },
+  "device": {
+    "cuda": true,
+    "device_name": "Tesla T4",
+    "compute_capability": "7.5",
+    "vram_gib": 14.56,
+    "torch": "2.11.0+cu128",
+    "dtype_used": "float32",
+    "note": "fp32 for BOTH arms. CC>=7.5 would make fp16 fast, but fp16 sampling can change generated sequences and the weights must be the only difference between arms."
+  },
+  "wall_minutes": 15.7,
+  "honest_limits": [
+    "The comparator is the ON-DEVICE zero-shot arm measured in THIS run, not the recorded CPU 0.7706 -- CUDA and CPU yield different sampled sequences for this generator.",
+    "Clearing the bar would be NECESSARY, not sufficient: a k-mer + positional discriminator measures LOCAL composition, and published audits name long-range organisation as the real failure mode.",
+    "n=120 generated sequences per arm, one seed. This is the recorded geometry, not a powered comparison of two generators.",
+    "3,737 windows (~560 kb) is a small corpus for a 1.2B model; the ledger rates 'is that enough' at LOW confidence. A miss does not separate 'fine-tuning does not work' from 'not enough data'."
+  ]
+}
