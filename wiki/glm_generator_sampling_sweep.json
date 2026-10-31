@@ -1,0 +1,177 @@
+{
+  "record": "glm-generator-sampling-sweep-unblock-v1",
+  "emitted_by": "scripts/emit_glm_sweep_unblock_artifact.py",
+  "source_kernel": "glm-sampling-sweep-vk",
+  "source_summary": "wiki/glm_sampling_sweep_2026-10-31_vk_glm_sampling_sweep.json",
+  "discharges": {
+    "half": "sampling-sweep",
+    "constraint": "gd-finetune-gated-on-sampling-sweep-not-compute",
+    "family": "glm-generator-finetune-2026-10-07",
+    "trigger_state": "DISCHARGED ON EVIDENCE. The constraint record's own analysis is that the compute half was already satisfied (Kaggle T4 = 16 GB, reachable since 2026-07-09) and that the sweep was the binding half. Do NOT read the edge's '8 gb gpu' clause as unmet hardware.",
+    "still_blocked_because": "G-D's blocked_by edge is HELD by explicit user call 2026-10-31 and by the frozen plan's Step 6, NOT by missing hardware. Lifting it is an AUTHORITY call, not an executor task; this artifact does not unblock G-D."
+  },
+  "knob_attestation": {
+    "n_points": 3,
+    "n_eligible": 3,
+    "n_verified_non_default": 2,
+    "points": [
+      {
+        "artifact": "wiki/glm_sampling_sweep_2026-10-31_vk_cell_t1.0_k0.json",
+        "temperature": 1.0,
+        "top_k": 0,
+        "is_recorded_default": true,
+        "requested_non_default": false,
+        "knob_wired": false,
+        "knob_verified_end_to_end": false,
+        "verification_verdict": null,
+        "eligibility": "eligible:default-sampling"
+      },
+      {
+        "artifact": "wiki/glm_sampling_sweep_2026-10-31_vk_cell_t0.8_k0.json",
+        "temperature": 0.8,
+        "top_k": 0,
+        "is_recorded_default": false,
+        "requested_non_default": true,
+        "knob_wired": true,
+        "knob_verified_end_to_end": true,
+        "verification_verdict": "TEMPERATURE_IS_LIVE",
+        "eligibility": "eligible:verified"
+      },
+      {
+        "artifact": "wiki/glm_sampling_sweep_2026-10-31_vk_cell_t0.6_k0.json",
+        "temperature": 0.6,
+        "top_k": 0,
+        "is_recorded_default": false,
+        "requested_non_default": true,
+        "knob_wired": true,
+        "knob_verified_end_to_end": true,
+        "verification_verdict": "TEMPERATURE_IS_LIVE",
+        "eligibility": "eligible:verified"
+      }
+    ]
+  },
+  "grid_summary": {
+    "record": "glm-sampling-sweep-v1",
+    "recorded_baseline": {
+      "artifact": "wiki/glm_generator_falsifier_REAL_2026-10-07.json",
+      "n": 120,
+      "limit_natural": 1200,
+      "bins": 6,
+      "length": 150,
+      "context": 300,
+      "conditional": true,
+      "natural_set": "promoter",
+      "hf": {
+        "kmer": 0.7237,
+        "both": 0.7706
+      },
+      "markov_null": {
+        "kmer": 0.599,
+        "both": 0.6679
+      },
+      "uniform": {
+        "kmer": 0.9408,
+        "both": 0.9641
+      }
+    },
+    "device": "cuda",
+    "grid": [
+      {
+        "temperature": 1.0,
+        "top_k": 0,
+        "minutes": 3.2,
+        "status": "ok",
+        "sampling_stamp": {
+          "temperature": 1.0,
+          "top_k": 0,
+          "is_recorded_default": true,
+          "note": "stamped so a sweep row is attributable; an unstamped artifact cannot be distinguished from the default-sampling run already on record"
+        },
+        "modes": {
+          "kmer": {
+            "distinguishability": 0.7355,
+            "markov_null": 0.599,
+            "verdict": "WORSE_THAN_MARKOV_NULL",
+            "n_candidate": 120,
+            "gc_candidate": 0.4574,
+            "gc_natural": 0.4552
+          },
+          "both": {
+            "distinguishability": 0.7787,
+            "markov_null": 0.6679,
+            "verdict": "WORSE_THAN_MARKOV_NULL",
+            "n_candidate": 120,
+            "gc_candidate": 0.4574,
+            "gc_natural": 0.4552
+          }
+        }
+      },
+      {
+        "temperature": 0.8,
+        "top_k": 0,
+        "minutes": 2.3,
+        "status": "ok",
+        "sampling_stamp": {
+          "temperature": 0.8,
+          "top_k": 0,
+          "is_recorded_default": false,
+          "note": "stamped so a sweep row is attributable; an unstamped artifact cannot be distinguished from the default-sampling run already on record"
+        },
+        "modes": {
+          "kmer": {
+            "distinguishability": 0.6391,
+            "markov_null": 0.599,
+            "verdict": "NO_BETTER_THAN_MARKOV_NULL",
+            "n_candidate": 120,
+            "gc_candidate": 0.4501,
+            "gc_natural": 0.4552
+          },
+          "both": {
+            "distinguishability": 0.7097,
+            "markov_null": 0.6679,
+            "verdict": "NO_BETTER_THAN_MARKOV_NULL",
+            "n_candidate": 120,
+            "gc_candidate": 0.4501,
+            "gc_natural": 0.4552
+          }
+        }
+      },
+      {
+        "temperature": 0.6,
+        "top_k": 0,
+        "minutes": 2.2,
+        "status": "ok",
+        "sampling_stamp": {
+          "temperature": 0.6,
+          "top_k": 0,
+          "is_recorded_default": false,
+          "note": "stamped so a sweep row is attributable; an unstamped artifact cannot be distinguished from the default-sampling run already on record"
+        },
+        "modes": {
+          "kmer": {
+            "distinguishability": 0.6723,
+            "markov_null": 0.599,
+            "verdict": "WORSE_THAN_MARKOV_NULL",
+            "n_candidate": 120,
+            "gc_candidate": 0.4308,
+            "gc_natural": 0.4552
+          },
+          "both": {
+            "distinguishability": 0.7156,
+            "markov_null": 0.6679,
+            "verdict": "NO_BETTER_THAN_MARKOV_NULL",
+            "n_candidate": 120,
+            "gc_candidate": 0.4308,
+            "gc_natural": 0.4552
+          }
+        }
+      }
+    ]
+  },
+  "honest_limits": [
+    "The grid REPRODUCES the 2026-10-29 sweep exactly (all 6 falsifier rows per point, all three points) -- the attestation added a self-check without perturbing the measurement. It is NOT a byte-exact reproduction of the RECORDED 2026-10-07 baseline: the anchor reads kmer 0.7355 vs recorded 0.7237 (+0.0118) and both 0.7787 vs 0.7706 (+0.0081), because that run's seed is unknown.",
+    "NO grid point beats the Markov null in either feature mode. Every cell is WORSE_THAN or NO_BETTER_THAN_MARKOV_NULL. This artifact attests that the temperature knob is LIVE and that all three points are plan-eligible; it does NOT report a generator that works.",
+    "Temperature is a real lever on the kmer gap over the null (0.1365 -> 0.0401 -> 0.0733 across T=1.0 -> 0.8 -> 0.6, best at T=0.8) but no setting clears the null.",
+    "top_k was NOT swept; it is 0 at every point."
+  ]
+}
