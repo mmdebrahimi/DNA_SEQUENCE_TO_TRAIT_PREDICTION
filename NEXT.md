@@ -1,3 +1,43 @@
+## DECISION NEEDED 2026-11-01 — no ledger in this project has a machine-readable MVP bar, and on FOUR of them that reads as permission to write a new one
+
+**Do NOT run `/soraya --until-mvp` on `glm-condition-conditioning`, `glm-distribution-alignment`,
+`glm-generator-finetune`, or `glm-self-distillation`.** CLAUDE.md names only the first. The
+prohibition is four times wider than recorded, measured by sweeping every ledger:
+
+| ledger | shape | `parse_diagnosis` | hazard |
+|---|---|---|---|
+| glm-condition-conditioning | TABLE | `empty-section` | **invites a replacement bar** |
+| glm-distribution-alignment | TABLE | `empty-section` | **invites a replacement bar** |
+| glm-generator-finetune | TABLE | `empty-section` | **invites a replacement bar** |
+| glm-self-distillation | TABLE | `empty-section` | **invites a replacement bar** |
+| glm-learned-representation | TABLE | `unparseable-items:4` | refuses — safe BY ACCIDENT |
+| 6 non-GLM ledgers | list | `unparseable-items:N` | refuse — safe |
+
+**11 ledgers, 0 parseable criteria.** `mvp_criteria._LIST_ITEM` matches markdown LISTS; these bars
+are markdown TABLES. The four `empty-section` ledgers are the dangerous ones, because
+`empty-section` is one of the two diagnoses that **licenses proposing a bar** — so an `--until-mvp`
+run concludes there is no bar and offers to write one, silently replacing a frozen bar a human can
+read perfectly well. G-A is safe only because its table happens to trip the *refusing* diagnosis
+instead; that is luck, not design.
+
+**A second, nested problem on G-D specifically.** Its frozen bar's criteria 1 and 2 name
+`dna_decode/glm/finetune_corpus.py` and `tests/test_glm_finetune_corpus.py` — **both ABSENT**. The
+work shipped as `scripts/glm_finetune_window_split.py` + `tests/test_glm_finetune_window_split.py` +
+`tests/test_glm_finetune_kernel_builder.py`. The bar was written at project-init as a guess at the
+implementation shape and the implementation chose another. So the *substance* of 1 and 2 is
+satisfied (disjoint split, overlap 0, re-asserted in-kernel) while the *predicates* are false
+forever, and the only mechanical repair is to create files at those paths — bar-gaming. The two
+problems compound: fix the table-blindness and the newly-visible bar immediately fails on the path
+mismatch.
+
+**Why this is yours, not mine.** `mvp_criteria.py` lives at `C:/my_skills/skills/soraya/scripts/`,
+is shared across every project, and is an acceptance-bar surface — that is the standing §2.4
+authority call. Repointing G-D's criteria 1 and 2 at the real paths is an acceptance-bar edit after
+seeing the result, which is also yours. **Recorded here and not in CLAUDE.md** because CLAUDE.md is
+at 35,459 of its 35,460-word ceiling.
+
+---
+
 ## D2 AUTHORISED 2026-10-19 — sourmash is an admissible G8 distance source (user)
 
 The AUTHORITY gate is cleared; the EVIDENCE gate is not, and Step 6 must not fire on the

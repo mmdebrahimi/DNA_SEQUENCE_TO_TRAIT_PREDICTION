@@ -1,0 +1,86 @@
+{
+ "A_strict_load": {
+  "ok": true,
+  "missing": [],
+  "unexpected": [],
+  "n_params": 1847428,
+  "ckpt_extra_keys": [
+   "epoch",
+   "optimizer_state_dict",
+   "val_loss",
+   "config"
+  ]
+ },
+ "genome_bp": 4639221,
+ "BCE_by_length": {
+  "86": {
+   "latent_shape": [
+    24,
+    128,
+    86
+   ],
+   "logits_shape": [
+    24,
+    4,
+    86
+   ],
+   "recon_acc_real": 0.2785,
+   "recon_acc_shuffled": 0.2479,
+   "delta": 0.0306
+  },
+  "150": {
+   "latent_shape": [
+    24,
+    128,
+    150
+   ],
+   "logits_shape": [
+    24,
+    4,
+    150
+   ],
+   "recon_acc_real": 0.3514,
+   "recon_acc_shuffled": 0.2576,
+   "delta": 0.0938
+  },
+  "200": {
+   "latent_shape": [
+    24,
+    128,
+    200
+   ],
+   "logits_shape": [
+    24,
+    4,
+    200
+   ],
+   "recon_acc_real": 0.3882,
+   "recon_acc_shuffled": 0.2583,
+   "delta": 0.1299
+  },
+  "300": {
+   "latent_shape": [
+    24,
+    128,
+    300
+   ],
+   "logits_shape": [
+    24,
+    4,
+    300
+   ],
+   "recon_acc_real": 0.4299,
+   "recon_acc_shuffled": 0.2632,
+   "delta": 0.1667
+  }
+ },
+ "D_determinism_max_abs_latent_delta": 0.0,
+ "verdicts": {
+  "architecture_loads_exactly": true,
+  "length_agnostic": true,
+  "model_is_doing_something": true,
+  "best_length_by_reconstruction": 300,
+  "acc_at_150_minus_acc_at_86": 0.0729,
+  "acc_at_200_minus_acc_at_86": 0.1097
+ }
+}

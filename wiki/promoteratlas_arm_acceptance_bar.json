@@ -1,0 +1,123 @@
+{
+ "schema": "promoteratlas-ceiling-arm-bar-v1",
+ "frozen": "2026-11-01",
+ "arm": "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
+ "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+
+ "question": "Do FROZEN embeddings from the PromoterAtlas base model (a 1.8M-param DNATransformer pretrained by masked-nucleotide prediction on ~9M regulatory sequences from >3,000 gammaproteobacterial species) predict E. coli peak-tile promoter activity better than the incumbents on this rung?",
+
+ "why_this_is_not_an_authority_call": "The arm is already DECLARED `planned` in soraya_runs/arms-ledger.json and is one of two arms blocking `ceiling_verdict: blocked:untried-arm`. Under R6 an arm dies only by its OWN executed evidence, so running it is the only legitimate way to retire it. Its admissibility was cleared 2026-10-31 (wiki/promoteratlas_identity_resolved_2026-10-31.md). This bar does NOT decide whether the arm is worth funding in general and does NOT touch the frozen five.",
+
+ "freeze_discipline": "Every threshold and geometry choice below was DERIVED from the feasibility gate run BEFORE this file existed (wiki/promoteratlas_feasibility_gate_2026-11-01.md). This project amended four thresholds mid-run on 2026-10-31 because they were asserted before anyone asked what the arithmetic and substrate permitted. The gate is that question, asked first.",
+
+ "geometry": {
+  "primary": "NATIVE 150 bp, no padding",
+  "secondary": "150 bp zero-padded to 200 bp with masked mean-pooling (the geometry the arm's NAME declares)",
+  "why_the_name_is_superseded": "The arm was named `...-150bp-padded-to-200` before anyone had established that the base model is length-agnostic. It is (1x1-conv embedding, rotary positions, no learned positional table, no flattening in the base; latent shape measured exactly (B,128,L) at L=86..400). So padding is optional -- and MEASURED HARMFUL: an all-zero one-hot column is exactly how pretraining encoded a MASKED base, and self-attention lets those 50 masked columns influence every real position. Native-150 vs padded-200-masked-pool: max|delta| 1.232, mean|delta| 0.1001, median cosine 0.9473, MIN cosine 0.2820. Mean|delta| 0.100 against a between-tile variance of 0.029 (sd 0.17) is ~60% of the signal's own spread. Masked pooling excludes padded positions from the AVERAGE; it cannot undo their effect on the real positions.",
+  "both_cells_are_run": "The declared padded-200 geometry is run anyway, as the secondary cell, so the geometry change is auditable rather than asserted and the declared arm is still measured. Reporting only the primary would be silently running something other than what the ledger declares.",
+  "transferable": "The fragment-pyramid arm's length rule (`zero-pad to 499 with MASKED pooling; padded positions excluded`) is sound for a CONV encoder and unsound for an ATTENTION encoder. Convolutions are local; attention is not. Do not inherit that rule across architecture families."
+ },
+
+ "representation": {
+  "feature": "masked mean-pool of the base model's final latent over unpadded positions -> 128 features per tile",
+  "n_features": 128,
+  "why_mean_pool": "This is what `frozen embeddings` conventionally means, it is what the arm name declares, and 128 features against ~44k tiles is a well-conditioned ridge. The base latent is (B,128,L) and a ridge needs a fixed-width vector.",
+  "declared_NOT_run": "A positional / flattened variant (128 x 150 = 19,200 features) would be a SEPARATE ARM to declare under R6, never a re-read of this one. Mean-pooling discards the -35/-10 spacing that promoter biology turns on, so a negative here does NOT close the positional variant. This is stated BEFORE the result so it cannot be used as a post-hoc escape.",
+  "non_degeneracy_measured": "0 of 128 dims are constant across tiles (var 0.0106 to 0.3795, median 0.0290). Mean pairwise cosine BETWEEN tiles is 0.649 -- non-degenerate but not strongly discriminative, which is recorded here as a prior expectation, not as an excuse."
+ },
+
+ "substrate": {
+  "rung": "peak tiles, GSE144621",
+  "n_tiles": 44106,
+  "tile_bp": 150,
+  "rung_ceiling": 0.941,
+  "ceiling_note": "replicate-derived. NEVER read a tile-rung number against the fragment rung's 0.7928 ceiling -- the census ceiling_rule forbids the cross-rung comparison.",
+  "fetch": "downloaded from GEO inside the Kaggle kernel through the PROJECT'S loader, not curl. No local D:/ is needed; D:, E: and F: are all absent on this host.",
+  "split": "leave_peak_out",
+  "n_seeds": 10,
+  "seed_range": "0..9"
+ },
+
+ "comparators": {
+  "primary_metric": "spearman on the held-out peaks",
+  "must_be_recomputed_in_run": false,
+  "incumbents_read_from_the_arms_ledger": {
+   "gc-single-feature": 0.3112,
+   "pyramid-4scale-1.70decades-150bp": 0.3167,
+   "conv-3width-13k-params-150bp": 0.3234,
+   "promcalc-full-decomposition-ridge-150bp": 0.3925,
+   "promoter-calculator-biophysical-346params-fwd_max_tx": 0.3968,
+   "promcalc-plus-conv-rank-average-hybrid-150bp": 0.4254,
+   "orthogonal-modality-stack-promcalc-plus-N-channels": 0.4404
+  },
+  "headline_comparator": "conv-3width-13k-params-150bp at 0.3234 -- the other SEQUENCE-LEARNED channel on this rung, which is the like-for-like comparison",
+  "ceiling_comparator": "orthogonal-modality-stack at 0.4404 -- the incumbent `best`"
+ },
+
+ "margin": {
+  "value": 0.02,
+  "derivation": "INHERITED verbatim from the tile-rung arms so the bars stay commensurable. Not re-chosen for this arm. The inheritance is the reason it is defensible, and it is the same margin the 499bp fragment arm and the hybrid/stack arms were graded against."
+ },
+
+ "validity_controls": {
+  "shuffled_label_null": {
+   "spec": "refit the ridge on shuffled tile labels, same splits and seeds",
+   "bar": "|median gain over GC| < 0.02",
+   "on_failure": "verdict INVALID_NULL_SCORED, nothing may be graded",
+   "derivation": "same form and bar as the fragment-pyramid arm, whose own 10-seed null landed at +0.0517 and voided its verdict until a 270-seed pooled null cleared the gate. Ten seeds may well be too few here for the same reason; if the null median lands outside the bar, the honest move is to POOL MORE SEEDS, not to re-specify."
+  },
+  "embedding_sanity": {
+   "spec": "assert 0 constant dims and mean pairwise inter-tile cosine < 0.95 on the real run",
+   "why": "a collapsed encoder would produce a clean-looking near-zero result that reads as a negative finding rather than as broken plumbing. This project has a recorded instance of the GLM path scoring ZERO sequences while emitting a complete-looking artifact."
+  },
+  "determinism": {
+   "spec": "re-embed a held-out batch twice, assert bit-identical",
+   "measured_locally": "max |latent delta| 0.000e+00 on CPU. Restate on the Kaggle device -- fp16/fp32 and CUDA may differ from local CPU, and this project has already measured that CUDA yields different sampled sequences for a different generator."
+  }
+ },
+
+ "outcomes_defined_before_running": {
+  "1_ATLAS_ADDS_ALONE": "spearman >= conv 0.3234 + 0.02 AND >= 8 of 10 seeds beating conv. A learned general-purpose bacterial encoder beats this project's bespoke 13k-param conv on its own rung.",
+  "2_ATLAS_TIES_CONV": "within +/- 0.02 of conv 0.3234. The interesting read: a 1.8M-param cross-species transformer buys nothing over 13k task-specific params.",
+  "3_ATLAS_LOSES_ALONE": "below conv 0.3234 - 0.02. Consistent with the standing inferred merit-negative.",
+  "4_ATLAS_BEATS_THERMODYNAMIC": "spearman >= promcalc max_tx 0.3968 + 0.02. Would REFUTE the standing claim that the next channel must carry a different PRIOR rather than a different neural net.",
+  "5_INVALID_NULL_SCORED": "the shuffled-label control cleared the 0.02 bar; nothing is graded.",
+  "6_INVALID_DEGENERATE_EMBEDDING": "the embedding sanity check failed; the run is plumbing, not evidence."
+ },
+ "verdict_check_order": ["5", "6", "4", "1", "2", "3"],
+ "check_order_rationale": "Validity first, so a broken run can never be read as a finding. Then the strongest claim (4) before the weaker ones, so a result that would refute a standing project claim is surfaced rather than buried under a `loses alone` headline.",
+
+ "orthogonality_measurement": {
+  "spec": "emit per-tile predictions so Spearman correlation with the existing channels (gc, conv, promcalc max_tx) can be computed, and report rank-average of promcalc + atlas against the 0.4254 two-channel hybrid",
+  "why_it_matters_more_than_the_headline": "The standing merit-negative against this arm is an INFERENCE: that PromoterAtlas would be a third SEQUENCE-LEARNED channel beside the conv already in the stack, where the next channel should carry a different PRIOR. wiki/promoteratlas_circularity_2026-10-31.md records that the measurement which would settle it `needs per-tile vectors the arm has not produced`. This run produces them. So the arm settles its own merit question, which is the single strongest reason to run it.",
+  "prediction": "atlas-vs-conv per-tile Spearman HIGH (both sequence-learned), atlas-vs-promcalc LOWER (different prior). If atlas-vs-conv is high AND the rank-average adds nothing over 0.4254, the inferred merit-negative becomes MEASURED."
+ },
+
+ "forecast": {
+  "recorded_before_any_number_exists": true,
+  "predicted_outcome": "3_ATLAS_LOSES_ALONE",
+  "p_predicted": 0.55,
+  "p_ties_conv": 0.30,
+  "p_beats_conv_by_margin": 0.12,
+  "p_beats_thermodynamic": 0.08,
+  "rationale": "Every sequence-statistics arm on this rung clusters 0.2691-0.3234 while the one thermodynamic arm sits at 0.3968. Mean pairwise inter-tile cosine of 0.649 suggests the 128-d mean-pooled representation is not strongly discriminative, and mean-pooling discards the positional spacing promoter biology turns on. Against that: the encoder is genuinely pretrained on 9M regulatory sequences across the clade, which is far more prior knowledge than a 13k-param conv trained on this rung alone.",
+  "my_forecast_record_in_this_project": "2 of 4 -- the fragment-null P1 was falsified twice and P2 mislocated its interval; the G-D fine-tune's P(bar met)=0.2 hit. Do not defer to these priors."
+ },
+
+ "honest_limits_fixed_in_advance": [
+  "SEQUENCE EXPOSURE IS UNRESOLVED AT FREEZE TIME. The pretraining corpus is 3,371 gammaproteobacterial genome assemblies and the tile substrate is tiles OF the E. coli genome. K-12 MG1655 GCF_000005845 is measured ABSENT from the corpus, but whether another E. coli assembly is present is being resolved by a full accession->organism sweep. If one is present, the encoder saw these SEQUENCES during pretraining (never their LABELS) and the arm may NOT be described as evaluating on unseen sequence. This is a LIMIT on the reading, not a threshold, which is why the bar can be frozen before it lands.",
+  "An earlier inference of mine that K-12 was held out BECAUSE it is a benchmark genome is WITHDRAWN: 4 of 12 resolved benchmark assemblies are IN the pretraining corpus, so benchmark membership implies nothing about held-out status.",
+  "The in-distribution pretraining window is UNMEASURED. The config records no sequence length and the h5 that determines it is 2.3 GB and was not downloaded. Reconstruction accuracy was used as a proxy and is CONFOUNDED with mask density: at fixed mask COUNT the length ranking inverted between 20 and 60 masks. Holding density fixed, the stable signal is the curve's SHAPE (monotone rise from 86 to a shallow plateau at ~200-300, decline at 400, 86 worst at all densities), not its argmax (250/300/300).",
+  "Reconstruction accuracy measures the PRETRAINING objective. A length at which masked-nucleotide prediction does well is not guaranteed to be the length at which frozen embeddings serve a ridge best.",
+  "A mean-pooled 128-d representation is the weakest reasonable use of this encoder. A negative here bounds THAT representation on THIS rung, and explicitly does not bound the positional variant, a fine-tuned variant, or the published expression heads.",
+  "The urtecho2018 head is CIRCULAR on the sigma70 rung (it is fit on GSE108535) and must never be used as a comparator there. This arm uses the BASE model only.",
+  "10 seeds. The sibling fragment arm needed 270 pooled seeds before its null cleared the validity gate, so 10 may be too few and the pre-committed response is to pool more, never to re-specify the bar."
+ ],
+
+ "pre_commitments": [
+  "The margin 0.02 is inherited and will NOT be re-specified after seeing a number.",
+  "If the shuffled-label null fails, the response is MORE SEEDS, not a weaker control. The bar was weakened once on 2026-10-31 and the pre-commitment then was not to do it twice.",
+  "A miss does NOT kill the positional-embedding variant, the fine-tuned variant, or the expression heads. Each is a NEW ARM to declare under R6, never a re-read of this one, and never killable for redundancy.",
+  "The verdict field emitted by the run is whatever this bar mechanically returns. If a reading has to be withdrawn, that is done in a separate namespace-separate block, leaving the verdict field unedited -- the same discipline applied to the self-distillation probe and the 499bp fragment arm."
+ ]
+}

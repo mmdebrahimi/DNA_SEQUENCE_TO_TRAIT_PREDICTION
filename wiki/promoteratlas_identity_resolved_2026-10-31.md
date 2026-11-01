@@ -36,7 +36,7 @@ transformer model"* — bioRxiv `2025.07.11.664312` → *Nature Communications* 
 
 | | |
 |---|---|
-| weights | `github.com/LucasCoppens/PromoterAtlas`, `trained_model_weights/`, **MIT** |
+| weights | `github.com/LucasCoppens/PromoterAtlas`, **`trained_weights/{base_model,expression_prediction,segmentation}/`**, **MIT** |
 | base model | `promoteratlas-base.pt` — 1.8M-param custom **DNATransformer** (conv filters + rotary attention + residual feed-forward) |
 | base corpus | **~9M regulatory sequences from >3,000 gammaproteobacterial species** |
 | corpus artifact | HuggingFace `LCoppens/PromoterAtlas-data`, named in the repo README as *"the data used to train the base model"* |
@@ -86,8 +86,16 @@ evaluating on unseen sequence**, and that caveat would ship with its number.
 
 **Measured:** the K-12 MG1655 reference assembly **`GCF_000005845` is ABSENT** from the corpus,
 checked directly against the file list, as are `GCF_000008865` (O157:H7 Sakai) and `GCF_000019645`.
-That is consistent with the repo's own demo annotating `NC_000913.1` — K-12 MG1655 — as a *held-out*
-genome.
+
+**CORRECTION added 2026-11-01 — the supporting inference in this paragraph was WRONG and is struck.**
+It read: *"That is consistent with the repo's own demo annotating `NC_000913.1` — K-12 MG1655 — as a
+held-out genome."* `NC_000913.1` does ship as one of **13 benchmark genomes** (each with
+`_PA_precision` / `_PA_recall` variants), but **benchmark membership does not imply held out of
+pretraining.** Resolving the 12 benchmark BioSamples to assembly accessions and testing membership in
+the corpus gives **4 PRESENT / 8 absent** — `P. putida` KT2440, `A. hydrophila`, `Y. pestis` A1122 and
+`A. baylyi` ADP1 are all benchmarked *and* in the pretraining corpus. So the benchmark status of K-12
+is no evidence either way, and only the direct `GCF_000005845` absence stands.
+`wiki/promoteratlas_feasibility_gate_2026-11-01.md`.
 
 **Left OPEN deliberately, with the route recorded.** Whether some *other* E. coli assembly is among
 the 3,371 needs an accession→organism resolution of the full list. The working route is the NCBI

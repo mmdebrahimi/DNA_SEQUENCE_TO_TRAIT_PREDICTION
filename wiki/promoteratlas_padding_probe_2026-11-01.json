@@ -1,0 +1,24 @@
+{
+ "native150 vs padded200-MASKED-pool": {
+  "max_abs_delta": 1.232116,
+  "mean_abs_delta": 0.100086,
+  "median_cosine": 0.94733,
+  "min_cosine": 0.281952,
+  "median_pearson_over_dims": 0.943017
+ },
+ "native150 vs padded200-plain-pool": {
+  "max_abs_delta": 1.233701,
+  "mean_abs_delta": 0.129044,
+  "median_cosine": 0.887527,
+  "min_cosine": 0.238446,
+  "median_pearson_over_dims": 0.882416
+ },
+ "3_nondegeneracy": {
+  "n_dims": 128,
+  "dims_with_var_below_1e-8": 0,
+  "var_min": 0.0106102,
+  "var_median": 0.029028,
+  "var_max": 0.379544,
+  "mean_pairwise_cosine_between_tiles": 0.649487
+ }
+}

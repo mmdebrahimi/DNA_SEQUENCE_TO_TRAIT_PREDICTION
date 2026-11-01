@@ -1,0 +1,140 @@
+{
+ "density_0.10": {
+  "86": {
+   "n_mask": 9,
+   "real": 0.3576,
+   "shuffled": 0.2604,
+   "delta": 0.0972
+  },
+  "120": {
+   "n_mask": 12,
+   "real": 0.3776,
+   "shuffled": 0.2083,
+   "delta": 0.1693
+  },
+  "150": {
+   "n_mask": 15,
+   "real": 0.4104,
+   "shuffled": 0.2333,
+   "delta": 0.1771
+  },
+  "200": {
+   "n_mask": 20,
+   "real": 0.4391,
+   "shuffled": 0.3125,
+   "delta": 0.1266
+  },
+  "250": {
+   "n_mask": 25,
+   "real": 0.4562,
+   "shuffled": 0.2587,
+   "delta": 0.1975
+  },
+  "300": {
+   "n_mask": 30,
+   "real": 0.4146,
+   "shuffled": 0.2521,
+   "delta": 0.1625
+  },
+  "400": {
+   "n_mask": 40,
+   "real": 0.4117,
+   "shuffled": 0.2727,
+   "delta": 0.1391
+  },
+  "_best": 250,
+  "_spread": 0.0986
+ },
+ "density_0.20": {
+  "86": {
+   "n_mask": 17,
+   "real": 0.329,
+   "shuffled": 0.2518,
+   "delta": 0.0772
+  },
+  "120": {
+   "n_mask": 24,
+   "real": 0.3477,
+   "shuffled": 0.2656,
+   "delta": 0.082
+  },
+  "150": {
+   "n_mask": 30,
+   "real": 0.3708,
+   "shuffled": 0.2521,
+   "delta": 0.1188
+  },
+  "200": {
+   "n_mask": 40,
+   "real": 0.3906,
+   "shuffled": 0.2422,
+   "delta": 0.1484
+  },
+  "250": {
+   "n_mask": 50,
+   "real": 0.4031,
+   "shuffled": 0.2625,
+   "delta": 0.1406
+  },
+  "300": {
+   "n_mask": 60,
+   "real": 0.4302,
+   "shuffled": 0.2745,
+   "delta": 0.1557
+  },
+  "400": {
+   "n_mask": 80,
+   "real": 0.4074,
+   "shuffled": 0.2711,
+   "delta": 0.1363
+  },
+  "_best": 300,
+  "_spread": 0.1012
+ },
+ "density_0.30": {
+  "86": {
+   "n_mask": 26,
+   "real": 0.2933,
+   "shuffled": 0.2524,
+   "delta": 0.0409
+  },
+  "120": {
+   "n_mask": 36,
+   "real": 0.3472,
+   "shuffled": 0.2431,
+   "delta": 0.1042
+  },
+  "150": {
+   "n_mask": 45,
+   "real": 0.3597,
+   "shuffled": 0.2625,
+   "delta": 0.0972
+  },
+  "200": {
+   "n_mask": 60,
+   "real": 0.3708,
+   "shuffled": 0.2599,
+   "delta": 0.1109
+  },
+  "250": {
+   "n_mask": 75,
+   "real": 0.3871,
+   "shuffled": 0.2675,
+   "delta": 0.1196
+  },
+  "300": {
+   "n_mask": 90,
+   "real": 0.4076,
+   "shuffled": 0.2684,
+   "delta": 0.1392
+  },
+  "400": {
+   "n_mask": 120,
+   "real": 0.3841,
+   "shuffled": 0.2568,
+   "delta": 0.1273
+  },
+  "_best": 300,
+  "_spread": 0.1143
+ }
+}
