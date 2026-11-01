@@ -1,0 +1,130 @@
+{
+  "cds_file_order": {
+    "per_strand": {
+      "+": {
+        "file_order_ascending_by_start": false,
+        "n_rows": 2118
+      },
+      "-": {
+        "file_order_ascending_by_start": false,
+        "n_rows": 2222
+      }
+    },
+    "why_it_matters": "the upstream extractor threads a running `last_end` through features in FILE order. If that order is not coordinate-ascending, then 'replicate faithfully' and 'sort first' are DIFFERENT programs producing different window sets. The replica below sorts, which is a recorded DIVERGENCE, not a reproduction."
+  },
+  "contig": "NC_000913.3",
+  "corpus_windows": {
+    "bases_covered": 625255,
+    "genome_fraction": 0.1347,
+    "n_windows": 3496,
+    "ordering": "sorted-ascending (diverges from upstream file-order threading)"
+  },
+  "date": "2026-11-01",
+  "distinct_tile_sequences": 43417,
+  "genome_length": 4641652,
+  "locate": {
+    "ambiguous_multi_hit": 325,
+    "located_distinct": 43386,
+    "not_found": 31,
+    "unique_rate": 0.9918,
+    "uniquely_located": 43061
+  },
+  "min_intergenic_length": 5,
+  "overlap": {
+    "fraction_histogram_rounded_1dp": {
+      "0.0": 14915,
+      "0.1": 1162,
+      "0.2": 1378,
+      "0.3": 1637,
+      "0.4": 1821,
+      "0.5": 2086,
+      "0.6": 2339,
+      "0.7": 2472,
+      "0.8": 2747,
+      "0.9": 2840,
+      "1.0": 9664
+    },
+    "in_window_any_frac_gt_0": 28622,
+    "in_window_full": 8239,
+    "reading": "the distribution is bimodal-ish with substantial mass in between, so a BINARY indicator discards a genuinely graded variable. It is NOT dominated by trivial overlaps, which refutes that specific worry. Note also that `in_window_any` has no stated threshold: at `>0` it fires on the count above, and a small epsilon would lower it, so the threshold must be named.",
+    "trivial_overlap_le_0_2": 2359,
+    "trivial_share_of_any": 0.0824
+  },
+  "per_stratum_expression": {
+    "all": {
+      "iqr": 0.4015,
+      "max": 158.3,
+      "median": 0.4338,
+      "n": 43061,
+      "q1": 0.3297,
+      "q3": 0.7312,
+      "sd": 4.228
+    },
+    "in_window": {
+      "iqr": 0.4735,
+      "max": 158.3,
+      "median": 0.4594,
+      "n": 28622,
+      "q1": 0.3388,
+      "q3": 0.8123,
+      "sd": 3.38
+    },
+    "out_of_window": {
+      "iqr": 0.271,
+      "max": 92.1,
+      "median": 0.3962,
+      "n": 14439,
+      "q1": 0.3151,
+      "q3": 0.5861,
+      "sd": 5.535
+    },
+    "reading": "the two strata are NOT exchangeable in outcome distribution: the out-of-window IQR is materially narrower while its sd is LARGER (outlier-driven), so the shapes differ, not just the scales. A rank correlation on a compressed outcome attenuates for BOTH channels, so a smaller within-stratum margin is expected for reasons unrelated to frame absorption. A size-matched RANDOM stratification is the needed null, and each stratum's spread must be reported beside its margin."
+  },
+  "regulatory_region_length": 200,
+  "rows_from_owner": 46713,
+  "rows_sharing_a_sequence": 689,
+  "schema": "frame-plan-feasibility-v1",
+  "stated_coordinate_agreement": {
+    "agree": 1193,
+    "checked": 43061,
+    "rate": 0.0277,
+    "reading": "an agreement rate at this level is a COINCIDENCE rate, and the top offsets form FAMILIES rather than one constant, which is cumulative indel drift between assembly versions -- not a shift that could be corrected. Locate by sequence.",
+    "top_offsets": [
+      [
+        1977,
+        5415
+      ],
+      [
+        1978,
+        4930
+      ],
+      [
+        1976,
+        4398
+      ],
+      [
+        777,
+        4122
+      ],
+      [
+        776,
+        1390
+      ],
+      [
+        0,
+        1191
+      ],
+      [
+        1959,
+        59
+      ],
+      [
+        1939,
+        53
+      ]
+    ]
+  },
+  "substrate_owner_called": "dna_decode.glm.genomewide.load_peak_tiles",
+  "tiles_at_150bp": 44106,
+  "wall_seconds": 6.0
+}

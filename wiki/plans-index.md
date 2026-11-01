@@ -862,3 +862,13 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 - Sequential execution chosen over the computed 3-way parallelism: worktree isolation is the wrong shape for three minute-scale edits in a shared tree.
 
 ---
+## [plan_file: Frame_Conditioning_Does_Corpus_Window_Position_Explain_PromoterAtlas_0_5076_Plan/] 2026-11-01
+**Summary:** The linear experiments showed that removing the detection direction does not cost the atlas channel; this asks the same question from the other side — hand the baseline the exact positional rule that built the pretraining corpus, and see whether the gain survives.
+**Key decisions:**
+- Three cells in increasing strength: C1 asks whether the encoder KNOWS corpus membership, C2 whether handing the frame to the GC baseline absorbs the atlas margin, and C3 -- the strongest -- stratifies on in-window vs out-of-window tiles, which controls for frame membership BY CONSTRUCTION and so does not require the frame to be linearly modellable.
+- Step 1 replicates the authors' `extract_promoter_regions` exactly, INCLUDING two apparent defects (a gene skipped by the `start < 200` guard does not update the running `last_end`; the reverse branch compares against the previous gene's START), each pinned by a test that fails if a future edit tidies it -- because the question is what the corpus CONTAINED, not what it should have contained.
+- Every frame feature locates tiles by direct sequence search and never reads the substrate's `start`/`end`: measured agreement is 63/2000 = 3.15% with offsets in families (+1976/+1977/+1978, +776/+777), so the stated coordinates would yield a fully self-consistent and entirely wrong frame.
+- Step 4 (the grader) sits in Wave 0 rather than beside the bar, because it is a pure function over a dataclass -- so every outcome's reachability is proven BEFORE any measurement exists, and the reachable set must EQUAL the check order rather than merely be contained in it.
+- Sidecar extraction carved nothing: `Implementation Steps` is on the extract denylist since `waves` parses it.
+
+---
