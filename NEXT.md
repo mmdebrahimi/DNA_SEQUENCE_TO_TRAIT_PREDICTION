@@ -1,3 +1,26 @@
+## CORRECTION 2026-11-01 — CLAUDE.md's "14 failures, none a code defect" is wrong by one
+
+The baseline for `/execute-plan` measured **14 failed / 7227 passed / 180 skipped**. Thirteen are the
+recorded absent-data failures. The fourteenth is a **code regression introduced 2026-11-01**:
+
+`tests/test_substrate_loader_ownership.py::test_each_substrate_accession_is_read_by_exactly_ONE_module`
+→ *GSE144621 is named in `['glm/tile_controls.py']` as well as its owner `glm/genomewide.py`*.
+
+`tile_controls._rows` opens the peak-tile file itself with a hardcoded tab split. That is correct for
+this file and wrong by exactly the mechanism the guard names: the fragment siblings are
+SPACE-delimited, `sniff_delimiter` is what decides per file, and a second loader inherits none of the
+owner's guards.
+
+**The fix dissolves it rather than exempting it, and is measured:** `load_peak_tiles` already returns
+all 46,713 rows including the 936 `random` + 470 `neg_control` at 150 bp — identical counts to the
+second loader's — so `load_control_tiles` becomes a filter over the owner's output and the parser
+goes. Do **not** add an `ALLOWED_MENTIONS` entry; that list is for prose-only mentions.
+
+Recorded here because CLAUDE.md sits at 35,459 of its 35,460-word ceiling. Full review:
+`plans/Frame_Conditioning_Does_Corpus_Window_Position_Explain_PromoterAtlas_0_5076_Plan/brainstorm.md`.
+
+---
+
 ## DECISION NEEDED 2026-11-01 — no ledger in this project has a machine-readable MVP bar, and on FOUR of them that reads as permission to write a new one
 
 **Do NOT run `/soraya --until-mvp` on `glm-condition-conditioning`, `glm-distribution-alignment`,
