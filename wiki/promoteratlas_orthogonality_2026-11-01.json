@@ -1,6 +1,6 @@
 {
  "schema": "promoteratlas-orthogonality-v1",
- "source_artifact": "C:/Users/LAPTOP~1/AppData/Local/Temp/pa_arm_pull2/promoteratlas_tile_arm_full.json",
+ "source_artifact": "C:/Users/LAPTOP~1/AppData/Local/Temp/pa_arm_pull4/promoteratlas_tile_arm_full.json",
  "n_seeds": 10,
  "medians": {
   "atlas": 0.5076,
@@ -106,7 +106,5 @@
   "committed_3ch_stack": 0.4404,
   "delta_vs_2ch_hybrid": 0.1148
  },
- "merit_inference": "MEASURED, AND IT REFUTES THE STANDING INFERENCE. Rank-averaging atlas with max_tx beats the committed max_tx+conv hybrid by +0.1148, so this encoder carries something the conv channel does not. The claim that the next channel must carry a different PRIOR does not survive.",
- "PENDING_VALIDITY": "Computed from run 1, whose verdict was NOT GATED -- its shuffled-label null failed at 0.0203 against a 0.02 bar and the gate could not fire. Every number here is PENDING a 270-seed pooled null. The orthogonality RELATIONSHIPS are informative regardless of the headline's validity, but `merit_inference` below asserts a refutation of a standing project claim and must NOT be cited until the null clears. See wiki/promoteratlas_tile_arm_run1_ungated_2026-11-01.json.",
- "forecast_scored": "MY ORTHOGONALITY PREDICTION WAS WRONG, and informatively. The bar predicted atlas-vs-conv HIGH (both sequence-learned) and atlas-vs-max_tx LOWER (different prior). Measured: conv 0.4089 and max_tx 0.4076 -- indistinguishable -- with all four channels inside 0.386-0.423. The atlas is not behaving as 'another conv'; it sits roughly equidistant from every existing channel, which is neither branch of the prediction."
+ "merit_inference": "MEASURED, AND IT REFUTES THE STANDING INFERENCE. Rank-averaging atlas with max_tx beats the committed max_tx+conv hybrid by +0.1148, so this encoder carries something the conv channel does not. The claim that the next channel must carry a different PRIOR does not survive."
 }

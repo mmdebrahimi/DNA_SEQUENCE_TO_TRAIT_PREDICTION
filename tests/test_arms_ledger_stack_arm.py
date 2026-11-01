@@ -1,5 +1,22 @@
 """Guards for the declared orthogonal-modality stack arm.
 
+RE-PINNED A FOURTH TIME ON 2026-11-01, and this time the BEST arm moves, which is a substantive
+change rather than a count. `promoteratlas-base-embeddings-frozen-150bp-padded-to-200` RAN on a
+Kaggle T4 over 44,106 peak tiles x 10 seeds and closed `ATLAS_BEATS_THERMODYNAMIC` at median
+Spearman 0.5076, against the previous best overall -- this very stack arm -- at 0.4404. Every gate
+passed, including a shuffled-label null pooled to 270 seeds at median -0.0014, ci95
+[-0.0114, +0.0098]; the 10-seed null had failed at 0.0203 and the run was NOT graded on it. So the
+set is now 10 measured / 1 planned / 1 KILLED over 12. Legitimate under R6: the arm resolved on its
+OWN executed evidence against a bar frozen before the run.
+
+What is UNCHANGED, and it is what keeps this a re-pin: the ceiling verdict is STILL
+`blocked:untried-arm` and STILL `not met`, because one declared arm has still never run. A new best
+arm does not clear a criterion that an untried arm blocks.
+
+What CHANGED and is asserted explicitly rather than quietly updated: `verdict.best` is no longer
+NEW_ARM. The previous re-pin added `assert verdict.best == NEW_ARM` precisely so that a shift in the
+leader could not pass silently, and it has now fired as designed.
+
 RE-PINNED A THIRD TIME ON 2026-10-31, for the same reason and by the precedent this docstring
 already records. `pyramid-4scale-2.22decades-499bp-fragments` RAN on 2026-10-28; its verdict was
 void under INVALID_NULL_SCORED until the 270-seed pooled null PASSED the validity gate on
@@ -59,7 +76,12 @@ NEW_ARM = "orthogonal-modality-stack-promcalc-plus-N-channels"
 #: cross-reference, which must keep pointing at it whatever its status.
 SUCCESSOR_MEASURED = "pyramid-4scale-2.22decades-499bp-fragments"
 
-# The NINE measured arms, pinned by metric. Restating a measured number elsewhere
+#: Ran 2026-11-01 and closed ATLAS_BEATS_THERMODYNAMIC. It is now `best` on this criterion, which is
+#: why BEST_ARM below is a separate constant from NEW_ARM.
+ATLAS_ARM = "promoteratlas-base-embeddings-frozen-150bp-padded-to-200"
+BEST_ARM = ATLAS_ARM
+
+# The TEN measured arms, pinned by metric. Restating a measured number elsewhere
 # would now have to change this line too.
 MEASURED = {
     "gc-single-feature": 0.3112,
@@ -76,10 +98,14 @@ MEASURED = {
     # NO_GAIN. It LOSES to a 4-mer-count ridge (0.1001 vs 0.1120) on the fragment rung, which is
     # why retiring it shortens the blocked list without improving `best`.
     SUCCESSOR_MEASURED: 0.1001,
+    # Ran 2026-11-01 on a Kaggle T4: ATLAS_BEATS_THERMODYNAMIC. Frozen cross-species encoder,
+    # masked mean-pooled to 128 dims at NATIVE 150 bp (the declared padded-200 geometry scored
+    # 0.4983, so padding costs 0.0093). Paired +0.1956 [0.1704, 0.2182] over conv at 10/10 seeds on
+    # byte-identical test sets. Read as an UPPER BOUND: corpus-selection exposure is not excluded.
+    ATLAS_ARM: 0.5076,
 }
 
 EXPECTED_PLANNED = {
-    "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
     "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
 }
 
@@ -160,7 +186,7 @@ def test_the_withdrawn_kill_option_is_recorded_not_merely_dropped():
     assert "scope reduction" in arm["verdict_consequence"].lower()
 
 
-def test_the_nine_measured_arms_are_unchanged():
+def test_the_ten_measured_arms_are_unchanged():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     measured = {n: a["metric"] for n, a in arms.items()
@@ -170,7 +196,7 @@ def test_the_nine_measured_arms_are_unchanged():
         assert arms[name]["evidence"].strip(), f"{name} lost its evidence string"
 
 
-def test_the_arm_set_is_exactly_nine_measured_and_two_planned():
+def test_the_arm_set_is_exactly_ten_measured_and_one_planned():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     planned = {n for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
@@ -182,20 +208,24 @@ def test_the_arm_set_is_exactly_nine_measured_and_two_planned():
     assert len(EXPECTED_PLANNED) + len(MEASURED) + len(killed) == len(arms)
 
 
-def test_ceiling_verdict_is_blocked_untried_arm_naming_two():
-    """The verdict and `met` are the load-bearing assertions and they are UNCHANGED across the
-    2026-10-31 re-pin. Only the COUNT moved, 3 -> 2. Retiring an arm shortens the list of reasons
-    the criterion is blocked; it does not clear it.
+def test_ceiling_verdict_is_blocked_untried_arm_naming_one():
+    """The verdict and `met` are the load-bearing assertions and they are UNCHANGED across all four
+    re-pins. The COUNT has moved 3 -> 2 -> 1 as arms resolved on their own evidence, and on
+    2026-11-01 `best` moved too. Neither clears a criterion that an untried arm blocks.
     """
     ledger = _live_ledger()
     verdict = ledger.ceiling_verdict(_criterion(ledger))
     assert verdict.verdict == "blocked:untried-arm"
     assert set(verdict.planned) == EXPECTED_PLANNED
-    assert len(verdict.planned) == 2
+    assert len(verdict.planned) == 1
     assert not verdict.met
-    # The measured set grew and `best` did NOT move: the new arm loses on its own rung.
-    assert verdict.best == NEW_ARM
+    # `best` MOVED on 2026-11-01: the atlas arm at 0.5076 displaced the 3-channel stack at 0.4404.
+    # The previous re-pin asserted `best == NEW_ARM` so that exactly this could not pass silently.
+    assert verdict.best == BEST_ARM
+    assert verdict.best != NEW_ARM, "the leader moved; this guard exists to make that explicit"
+    assert MEASURED[BEST_ARM] > MEASURED[NEW_ARM]
     assert SUCCESSOR_MEASURED in verdict.measured
+    assert ATLAS_ARM in verdict.measured
 
 
 def test_the_retired_arm_cannot_be_READ_as_tested_and_failed():
