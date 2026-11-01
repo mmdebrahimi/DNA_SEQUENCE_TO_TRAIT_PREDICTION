@@ -6,6 +6,29 @@
      The plan says an unresolvable check is a RESULT, not a failure, and prescribes stamping
      circularity: "unresolved" onto the arm with the list of what was checked. Both are done. -->
 
+## SUPERSEDED IN PART, THE SAME DAY — read this first
+
+**Half two of this memo is OBSOLETE and its lead is WITHDRAWN.** See
+`wiki/promoteratlas_identity_resolved_2026-10-31.md`.
+
+- *"No source found uses the name PromoterAtlas"* (below) is **FALSE**. It is Coppens et al.,
+  bioRxiv `2025.07.11.664312` -> *Nat Commun* `s41467-026-72837-3`, with public MIT weights at
+  `github.com/LucasCoppens/PromoterAtlas`. The name alone plus "pretrained weights" returns it as
+  the first hit; I had searched the name paired with the repo's internal `urtecho2018` label.
+- The **flag's own question resolves YES**: the `promoteratlas-trspred-urtecho2018.pt` head IS fit
+  on the sigma70 library (= GSE108535) and must never be a comparator on that rung. **But the arm
+  declares the BASE model's frozen embeddings, not that head**, and the base corpus is genomic
+  sequence with no expression file — so the arm is `cleared_vs_GSE108535_for_the_BASE_model`.
+- **The "lead ... worse than the flag" in half two is WITHDRAWN as NOT SUPPORTED.** No genome-wide
+  Urtecho head exists in the complete weights manifest; 321,123 was a coincidence with that lab's
+  later study. It was recorded as a lead and not a finding, which is why withdrawing it costs
+  nothing.
+
+**Half one (the Promoter Calculator, CLEARED vs GSE108535) stands unchanged** and is still the
+load-bearing half — it de-risks `max_tx` 0.3968, the 0.4254 hybrid and the 0.4404 stack.
+
+Everything below is the record as written earlier on 2026-10-31 and is kept verbatim.
+
 ## The question, as the repo recorded it
 
 Two committed artifacts carry the same open flag, verbatim:

@@ -1,5 +1,22 @@
 """Guards for the declared orthogonal-modality stack arm.
 
+RE-PINNED A THIRD TIME ON 2026-10-31, for the same reason and by the precedent this docstring
+already records. `pyramid-4scale-2.22decades-499bp-fragments` RAN on 2026-10-28; its verdict was
+void under INVALID_NULL_SCORED until the 270-seed pooled null PASSED the validity gate on
+2026-10-31 under the pre-registered Branch A of `wiki/fragment_null_270seed_prereg_2026-10-30.md`,
+which made the arm's verdict computable as NO_GAIN (paired median -0.0127 [-0.0205,-0.0040] against
+a 4-mer ridge, 2 of 10 seeds winning against a pre-registered >=8). So the set is now 9 measured /
+2 planned / 1 KILLED over 12 arms. Legitimate under R6 -- the arm resolved on its OWN executed
+evidence, not a sibling's -- and the gate it passed was frozen before any batch ran.
+
+What is DELIBERATELY UNCHANGED, because that is what makes this a re-pin and not a rewrite: the
+ceiling verdict is STILL `blocked:untried-arm` and STILL `not met`. Retiring this arm did not clear
+the criterion; it only shortened the list of reasons it is blocked. If re-pinning had flipped the
+verdict, the correct action would have been to stop and escalate instead.
+`test_the_successor_arm_records_WHY_it_is_worth_running` is STRONGER than before: it still asserts
+the rationale is intact and that it has NOT leaked into the executed-evidence field, and now also
+asserts that field holds real executed evidence.
+
 RE-PINNED TWICE ON 2026-10-27. Second time: the 4-decade arm was RETIRED on its own executed
 evidence (`scripts/pyramid_span_feasibility_probe.py` measured the maximum HONEST span at 2.2210
 decades against the 4.00 it declares -- 60.1x short at the encoder's 3 bp floor) and the reachable
@@ -37,7 +54,12 @@ LEDGER = REPO / "soraya_runs" / "arms-ledger.json"
 CRITERION_PREFIX = "ceiling: best achievable prediction of bacterial promoter"
 NEW_ARM = "orthogonal-modality-stack-promcalc-plus-N-channels"
 
-# The eight measured arms, pinned by metric. Restating a measured number elsewhere
+#: The reachable re-scope that replaced multiresolution-pyramid-4-decades-UNRUN. PLANNED until
+#: 2026-10-31, now MEASURED -- so it is pinned in MEASURED and named here for the kill-reason
+#: cross-reference, which must keep pointing at it whatever its status.
+SUCCESSOR_MEASURED = "pyramid-4scale-2.22decades-499bp-fragments"
+
+# The NINE measured arms, pinned by metric. Restating a measured number elsewhere
 # would now have to change this line too.
 MEASURED = {
     "gc-single-feature": 0.3112,
@@ -50,13 +72,15 @@ MEASURED = {
     # Ran 2026-10-26: WEAK_STACK, +0.0145 over the 2-channel hybrid at 10/10 seeds,
     # CI95 [0.0108, 0.0172] excluding zero, short only of the INHERITED 0.02 margin.
     NEW_ARM: 0.4404,
+    # Ran 2026-10-28, GRADEABLE 2026-10-31 once the 270-seed null cleared the validity gate:
+    # NO_GAIN. It LOSES to a 4-mer-count ridge (0.1001 vs 0.1120) on the fragment rung, which is
+    # why retiring it shortens the blocked list without improving `best`.
+    SUCCESSOR_MEASURED: 0.1001,
 }
 
 EXPECTED_PLANNED = {
     "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
     "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
-    # The reachable re-scope that replaced multiresolution-pyramid-4-decades-UNRUN.
-    "pyramid-4scale-2.22decades-499bp-fragments",
 }
 
 #: Retired 2026-10-27 on its own executed evidence, NOT on a sibling's result.
@@ -136,7 +160,7 @@ def test_the_withdrawn_kill_option_is_recorded_not_merely_dropped():
     assert "scope reduction" in arm["verdict_consequence"].lower()
 
 
-def test_the_eight_measured_arms_are_unchanged():
+def test_the_nine_measured_arms_are_unchanged():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     measured = {n: a["metric"] for n, a in arms.items()
@@ -146,7 +170,7 @@ def test_the_eight_measured_arms_are_unchanged():
         assert arms[name]["evidence"].strip(), f"{name} lost its evidence string"
 
 
-def test_the_arm_set_is_exactly_eight_measured_and_three_planned():
+def test_the_arm_set_is_exactly_nine_measured_and_two_planned():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     planned = {n for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
@@ -158,13 +182,20 @@ def test_the_arm_set_is_exactly_eight_measured_and_three_planned():
     assert len(EXPECTED_PLANNED) + len(MEASURED) + len(killed) == len(arms)
 
 
-def test_ceiling_verdict_is_blocked_untried_arm_naming_three():
+def test_ceiling_verdict_is_blocked_untried_arm_naming_two():
+    """The verdict and `met` are the load-bearing assertions and they are UNCHANGED across the
+    2026-10-31 re-pin. Only the COUNT moved, 3 -> 2. Retiring an arm shortens the list of reasons
+    the criterion is blocked; it does not clear it.
+    """
     ledger = _live_ledger()
     verdict = ledger.ceiling_verdict(_criterion(ledger))
     assert verdict.verdict == "blocked:untried-arm"
     assert set(verdict.planned) == EXPECTED_PLANNED
-    assert len(verdict.planned) == 3
+    assert len(verdict.planned) == 2
     assert not verdict.met
+    # The measured set grew and `best` did NOT move: the new arm loses on its own rung.
+    assert verdict.best == NEW_ARM
+    assert SUCCESSOR_MEASURED in verdict.measured
 
 
 def test_the_retired_arm_cannot_be_READ_as_tested_and_failed():
@@ -204,6 +235,7 @@ def test_the_successor_arm_records_WHY_it_is_worth_running():
     """
     ledger = _live_ledger()
     arm = ledger._data["criteria"][_criterion(ledger)][SUCCESSOR]
+    assert arm["status"] == al.STATUS_MEASURED, "measured 2026-10-31; see this module's docstring"
     r = arm["rationale"]
     assert "2.22" in r and "1.70" in r, "it must state the span it buys over the measured sibling"
     assert "0.7928" in r, "it must name the FRAGMENT rung's own ceiling"
@@ -212,7 +244,15 @@ def test_the_successor_arm_records_WHY_it_is_worth_running():
         "it must refuse the cross-rung comparison the census ceiling_rule forbids"
     assert "pad/crop" in r, "the variable-length design point must be declared pre-run"
     # And the rationale must NOT have leaked into the field reserved for executed evidence.
-    assert arm["evidence"] == ""
+    # STRENGTHENED 2026-10-31: the arm is now measured, so `evidence` must hold EXECUTED evidence
+    # -- asserting emptiness would no longer protect anything. The no-leak invariant is kept as a
+    # direct check, which is a tighter statement than the old proxy of an empty string.
+    ev = arm["evidence"]
+    assert ev.strip(), "a measured arm must carry executed evidence"
+    assert "glm_fragment_pyramid_arm_kaggle_full_2026-10-28.json" in ev,         "the evidence must cite the run that produced the number"
+    assert "fragment_null_270seed_result_2026-10-31" in ev,         "and the null resolution that made the verdict gradeable at all"
+    assert r not in ev, "the rationale must not have been copied into the evidence field"
+    assert "2.22" not in ev or "NO_GAIN" in ev, "evidence must read as a result, not a plan"
 
 
 def test_the_eukaryotic_arm_is_still_present():
