@@ -98,7 +98,22 @@ def main() -> int:
     sys.modules["genomewide"] = gw
     gspec.loader.exec_module(gw)
     tiles = synthetic_tiles(gw.Tile)
-    gw.load_peak_tiles = lambda *a, **kw: list(tiles)
+
+    # THE STUB MUST HONOUR THE REAL CONTRACT. The first Kaggle run died because this stub returned a
+    # bare list while load_peak_tiles returns tuple[list[Tile], LoadStats] -- so the one boundary the
+    # dry run fakes was also the only one whose shape it got wrong, and a fixture I authored can only
+    # ever validate the shape I invented. The assertions below check the stub against the REAL
+    # function's annotation, so a future divergence fails here instead of on Kaggle.
+    ret = (gw.load_peak_tiles.__annotations__ or {}).get("return")
+    ret_s = str(ret)
+    assert "tuple" in ret_s and "LoadStats" in ret_s, (
+        "load_peak_tiles return annotation changed to %r -- re-derive the stub shape" % ret_s)
+    stub_ret = (list(tiles), gw.LoadStats(path="<dryrun-stub>"))
+    assert isinstance(stub_ret, tuple) and len(stub_ret) == 2
+    assert isinstance(stub_ret[0], list) and isinstance(stub_ret[0][0], gw.Tile)
+    assert isinstance(stub_ret[1], gw.LoadStats)
+    gw.load_peak_tiles = lambda *a, **kw: (list(tiles), gw.LoadStats(path="<dryrun-stub>"))
+    print("stub contract checked against the real annotation: %s" % ret_s)
     print("substrate stubbed: %d synthetic tiles over %d peaks"
           % (len(tiles), len({t.peak for t in tiles})))
 

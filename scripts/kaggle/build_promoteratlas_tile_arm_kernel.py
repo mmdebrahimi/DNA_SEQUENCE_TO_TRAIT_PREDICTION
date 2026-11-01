@@ -280,7 +280,15 @@ def main(smoke=False):
     det = float(np.abs(d1 - d2).max())
     print("determinism on %s: max|delta| = %.3e" % (dev, det), flush=True)
 
-    tiles_all = gw.load_peak_tiles(CACHE, allow_download=True)
+    # load_peak_tiles returns a TUPLE (list[Tile], LoadStats) -- not a bare list. The first Kaggle
+    # run died here because the dry run stubbed this function with a bare list, so the only boundary
+    # the dry run faked was also the only one whose contract it got wrong.
+    tiles_all, load_stats = gw.load_peak_tiles(CACHE, allow_download=True)
+    print("load stats: delim=%s header_cols=%s parsed=%s len_min=%s len_med=%s len_max=%s distinct=%s"
+          % (getattr(load_stats, "delimiter", "?"), getattr(load_stats, "n_header_columns", "?"),
+             getattr(load_stats, "n_parsed", "?"), getattr(load_stats, "length_min", "?"),
+             getattr(load_stats, "length_median", "?"), getattr(load_stats, "length_max", "?"),
+             getattr(load_stats, "n_distinct_lengths", "?")), flush=True)
     tiles = [t for t in tiles_all if t.category == "tile" and len(t.seq) == 150]
     print("tiles: %d loaded, %d after filter(category=='tile', len==150)"
           % (len(tiles_all), len(tiles)), flush=True)
