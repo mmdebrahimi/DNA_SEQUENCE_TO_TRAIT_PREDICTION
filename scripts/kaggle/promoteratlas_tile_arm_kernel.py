@@ -203,7 +203,30 @@ def main(smoke=False, n_null=0):
     # load_peak_tiles returns a TUPLE (list[Tile], LoadStats) -- not a bare list. The first Kaggle
     # run died here because the dry run stubbed this function with a bare list, so the only boundary
     # the dry run faked was also the only one whose contract it got wrong.
-    tiles_all, load_stats = gw.load_peak_tiles(CACHE, allow_download=True)
+    # BOUNDED RETRY around the GEO fetch. Observed 2026-11-01: a run died with
+    # ContentTooShortError "got only 0 out of 9604523 bytes" while the immediately preceding run
+    # downloaded the same file fine -- a transient NCBI blip, not a code defect. Without this, a
+    # network hiccup costs a whole push-and-wait cycle. The retry is HERE, in the kernel, and not in
+    # the embedded genomewide.py, because the dry run asserts that payload is byte-identical to the
+    # repo copy; patching it would break that check and silently fork project code.
+    tiles_all = load_stats = None
+    for attempt in range(1, 5):
+        try:
+            tiles_all, load_stats = gw.load_peak_tiles(CACHE, allow_download=True)
+            break
+        except Exception as exc:
+            print("tile fetch attempt %d/4 failed: %s: %s" % (attempt, type(exc).__name__, exc),
+                  flush=True)
+            if attempt == 4:
+                raise
+            # clear any partial download so a retry cannot inherit a truncated file
+            for junk in list(CACHE.glob("*.tmp")) + list(CACHE.glob("*.part")):
+                try:
+                    junk.unlink()
+                    print("   removed partial %s" % junk.name, flush=True)
+                except OSError:
+                    pass
+            time.sleep(20 * attempt)
     print("load stats: delim=%s header_cols=%s parsed=%s len_min=%s len_med=%s len_max=%s distinct=%s"
           % (getattr(load_stats, "delimiter", "?"), getattr(load_stats, "n_header_columns", "?"),
              getattr(load_stats, "n_parsed", "?"), getattr(load_stats, "length_min", "?"),
