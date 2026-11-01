@@ -1,0 +1,112 @@
+{
+ "schema": "promoteratlas-orthogonality-v1",
+ "source_artifact": "C:/Users/LAPTOP~1/AppData/Local/Temp/pa_arm_pull2/promoteratlas_tile_arm_full.json",
+ "n_seeds": 10,
+ "medians": {
+  "atlas": 0.5076,
+  "conv": 0.3234,
+  "gc": 0.3112,
+  "max_tx": 0.3968,
+  "decomposition": 0.3925,
+  "rank_avg_maxtx_atlas": 0.5402
+ },
+ "orthogonality_per_seed": {
+  "0": {
+   "conv": 0.4218,
+   "gc": 0.4004,
+   "max_tx": 0.4243,
+   "decomposition": 0.4477
+  },
+  "1": {
+   "conv": 0.4422,
+   "gc": 0.3934,
+   "max_tx": 0.4087,
+   "decomposition": 0.4323
+  },
+  "2": {
+   "conv": 0.415,
+   "gc": 0.3777,
+   "max_tx": 0.3828,
+   "decomposition": 0.4044
+  },
+  "3": {
+   "conv": 0.4241,
+   "gc": 0.3873,
+   "max_tx": 0.4021,
+   "decomposition": 0.4218
+  },
+  "4": {
+   "conv": 0.3567,
+   "gc": 0.3695,
+   "max_tx": 0.3843,
+   "decomposition": 0.4196
+  },
+  "5": {
+   "conv": 0.3779,
+   "gc": 0.4135,
+   "max_tx": 0.4181,
+   "decomposition": 0.44
+  },
+  "6": {
+   "conv": 0.3953,
+   "gc": 0.4017,
+   "max_tx": 0.4065,
+   "decomposition": 0.4236
+  },
+  "7": {
+   "conv": 0.3819,
+   "gc": 0.3851,
+   "max_tx": 0.4199,
+   "decomposition": 0.4191
+  },
+  "8": {
+   "conv": 0.4028,
+   "gc": 0.3735,
+   "max_tx": 0.4205,
+   "decomposition": 0.415
+  },
+  "9": {
+   "conv": 0.4883,
+   "gc": 0.3818,
+   "max_tx": 0.4001,
+   "decomposition": 0.4258
+  }
+ },
+ "orthogonality_median": {
+  "conv": 0.4089,
+  "gc": 0.3862,
+  "max_tx": 0.4076,
+  "decomposition": 0.4227
+ },
+ "paired_vs_conv": {
+  "per_seed_delta": [
+   0.2226,
+   0.1973,
+   0.169,
+   0.1753,
+   0.2203,
+   0.2037,
+   0.2182,
+   0.1938,
+   0.1704,
+   0.161
+  ],
+  "median": 0.1956,
+  "median_ci95": [
+   0.1704,
+   0.2182
+  ],
+  "achieved_coverage": 0.9785,
+  "seeds_won": 10,
+  "n": 10
+ },
+ "stack_comparison": {
+  "rank_avg_maxtx_plus_atlas": 0.5402,
+  "committed_2ch_hybrid_maxtx_plus_conv": 0.4254,
+  "committed_3ch_stack": 0.4404,
+  "delta_vs_2ch_hybrid": 0.1148
+ },
+ "merit_inference": "MEASURED, AND IT REFUTES THE STANDING INFERENCE. Rank-averaging atlas with max_tx beats the committed max_tx+conv hybrid by +0.1148, so this encoder carries something the conv channel does not. The claim that the next channel must carry a different PRIOR does not survive.",
+ "PENDING_VALIDITY": "Computed from run 1, whose verdict was NOT GATED -- its shuffled-label null failed at 0.0203 against a 0.02 bar and the gate could not fire. Every number here is PENDING a 270-seed pooled null. The orthogonality RELATIONSHIPS are informative regardless of the headline's validity, but `merit_inference` below asserts a refutation of a standing project claim and must NOT be cited until the null clears. See wiki/promoteratlas_tile_arm_run1_ungated_2026-11-01.json.",
+ "forecast_scored": "MY ORTHOGONALITY PREDICTION WAS WRONG, and informatively. The bar predicted atlas-vs-conv HIGH (both sequence-learned) and atlas-vs-max_tx LOWER (different prior). Measured: conv 0.4089 and max_tx 0.4076 -- indistinguishable -- with all four channels inside 0.386-0.423. The atlas is not behaving as 'another conv'; it sits roughly equidistant from every existing channel, which is neither branch of the prediction."
+}

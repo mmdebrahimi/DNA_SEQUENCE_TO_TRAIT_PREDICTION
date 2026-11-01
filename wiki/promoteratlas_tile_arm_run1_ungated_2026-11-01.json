@@ -1,0 +1,254 @@
+{
+ "schema": "promoteratlas-tile-arm-v1",
+ "arm": "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
+ "date": "2026-11-01",
+ "smoke": false,
+ "bar": "wiki/promoteratlas_arm_acceptance_bar.json",
+ "device": "cuda",
+ "determinism_max_abs_delta": 0.0,
+ "n_tiles_scored": 44106,
+ "n_seeds": 10,
+ "geometry_primary": "native150",
+ "embedding_sanity": {
+  "n_constant_dims": 0,
+  "mean_inter_tile_cosine": 0.6473
+ },
+ "split_reconcile": {
+  "0": {
+   "sha": "c2b76b9f11936fc5c7c8af4585f10dd3",
+   "expected": "c2b76b9f11936fc5c7c8af4585f10dd3",
+   "match": true,
+   "n_test": 11198,
+   "expected_n_test": 11198,
+   "held_out_peaks": 608
+  },
+  "1": {
+   "sha": "7b8853161accdfcc540125c8e4888f02",
+   "expected": "7b8853161accdfcc540125c8e4888f02",
+   "match": true,
+   "n_test": 11018,
+   "expected_n_test": 11018,
+   "held_out_peaks": 608
+  },
+  "2": {
+   "sha": "afe62afda595198b1b86ea33d2b15ee9",
+   "expected": "afe62afda595198b1b86ea33d2b15ee9",
+   "match": true,
+   "n_test": 11373,
+   "expected_n_test": 11373,
+   "held_out_peaks": 608
+  },
+  "3": {
+   "sha": "ccc2cf366919e3f0c8ed7b170ac416c6",
+   "expected": "ccc2cf366919e3f0c8ed7b170ac416c6",
+   "match": true,
+   "n_test": 10883,
+   "expected_n_test": 10883,
+   "held_out_peaks": 608
+  },
+  "4": {
+   "sha": "7b721d2a6429050f9e34d56d70186f0c",
+   "expected": "7b721d2a6429050f9e34d56d70186f0c",
+   "match": true,
+   "n_test": 11025,
+   "expected_n_test": 11025,
+   "held_out_peaks": 608
+  },
+  "5": {
+   "sha": "3f874853a829fec316ddf5494891aa7e",
+   "expected": "3f874853a829fec316ddf5494891aa7e",
+   "match": true,
+   "n_test": 10907,
+   "expected_n_test": 10907,
+   "held_out_peaks": 608
+  },
+  "6": {
+   "sha": "d7655713958634299da16be1da6c0337",
+   "expected": "d7655713958634299da16be1da6c0337",
+   "match": true,
+   "n_test": 10590,
+   "expected_n_test": 10590,
+   "held_out_peaks": 608
+  },
+  "7": {
+   "sha": "7f700de63db3196ed7cdc991c3f2252a",
+   "expected": "7f700de63db3196ed7cdc991c3f2252a",
+   "match": true,
+   "n_test": 11249,
+   "expected_n_test": 11249,
+   "held_out_peaks": 608
+  },
+  "8": {
+   "sha": "106c81fd797392783bab7d11f0e14eaf",
+   "expected": "106c81fd797392783bab7d11f0e14eaf",
+   "match": true,
+   "n_test": 10661,
+   "expected_n_test": 10661,
+   "held_out_peaks": 608
+  },
+  "9": {
+   "sha": "0ae5b67fb487bf6252a49df2b0f630e2",
+   "expected": "0ae5b67fb487bf6252a49df2b0f630e2",
+   "match": true,
+   "n_test": 10690,
+   "expected_n_test": 10690,
+   "held_out_peaks": 608
+  }
+ },
+ "arms": {
+  "native150": {
+   "per_seed": {
+    "0": 0.5461,
+    "1": 0.5499,
+    "2": 0.4983,
+    "3": 0.4986,
+    "4": 0.5075,
+    "5": 0.5163,
+    "6": 0.5078,
+    "7": 0.4933,
+    "8": 0.5016,
+    "9": 0.521
+   },
+   "median": 0.5076
+  },
+  "padded200": {
+   "per_seed": {
+    "0": 0.5219,
+    "1": 0.5373,
+    "2": 0.4898,
+    "3": 0.4911,
+    "4": 0.5002,
+    "5": 0.4997,
+    "6": 0.4939,
+    "7": 0.4793,
+    "8": 0.4969,
+    "9": 0.5171
+   },
+   "median": 0.4983
+  }
+ },
+ "gc_anchor": {
+  "per_seed": {
+   "0": 0.3,
+   "1": 0.3151,
+   "2": 0.3073,
+   "3": 0.2917,
+   "4": 0.3191,
+   "5": 0.3347,
+   "6": 0.3091,
+   "7": 0.3191,
+   "8": 0.3133,
+   "9": 0.2747
+  },
+  "median": 0.3112,
+  "seed0": 0.3,
+  "expected_seed0": 0.3,
+  "tol": 0.01
+ },
+ "shuffled_label_null": {
+  "per_seed": {
+   "0": 0.0758,
+   "1": 0.0233,
+   "2": 0.0842,
+   "3": 0.0173,
+   "4": 0.1293,
+   "5": 0.0591,
+   "6": -0.0201,
+   "7": -0.0215,
+   "8": -0.0909,
+   "9": 0.0105
+  },
+  "median": 0.0203
+ },
+ "incumbent_per_seed": {
+  "0": {
+   "conv": 0.3235,
+   "decomposition": 0.4021,
+   "gc": 0.3,
+   "max_tx": 0.3973
+  },
+  "1": {
+   "conv": 0.3526,
+   "decomposition": 0.395,
+   "gc": 0.3151,
+   "max_tx": 0.3997
+  },
+  "2": {
+   "conv": 0.3293,
+   "decomposition": 0.3915,
+   "gc": 0.3073,
+   "max_tx": 0.3916
+  },
+  "3": {
+   "conv": 0.3233,
+   "decomposition": 0.3719,
+   "gc": 0.2917,
+   "max_tx": 0.379
+  },
+  "4": {
+   "conv": 0.2872,
+   "decomposition": 0.4007,
+   "gc": 0.3191,
+   "max_tx": 0.4047
+  },
+  "5": {
+   "conv": 0.3126,
+   "decomposition": 0.3943,
+   "gc": 0.3347,
+   "max_tx": 0.3963
+  },
+  "6": {
+   "conv": 0.2896,
+   "decomposition": 0.3878,
+   "gc": 0.3091,
+   "max_tx": 0.3989
+  },
+  "7": {
+   "conv": 0.2995,
+   "decomposition": 0.368,
+   "gc": 0.3191,
+   "max_tx": 0.3897
+  },
+  "8": {
+   "conv": 0.3312,
+   "decomposition": 0.3934,
+   "gc": 0.3133,
+   "max_tx": 0.4107
+  },
+  "9": {
+   "conv": 0.36,
+   "decomposition": 0.3891,
+   "gc": 0.2747,
+   "max_tx": 0.3759
+  }
+ },
+ "wall_seconds": 210.8,
+ "paired_vs_conv": {
+  "atlas_median": 0.5076,
+  "conv_median": 0.3235,
+  "delta_median": 0.1841,
+  "seeds_won": 10,
+  "n_seeds": 10
+ },
+ "verdict": "ATLAS_BEATS_THERMODYNAMIC",
+ "verdict_ungated": {
+  "marked": "2026-11-01",
+  "status": "VERDICT NOT GATED -- DO NOT CITE THIS NUMBER AS VALIDATED",
+  "verdict_field_left_UNEDITED": "The verdict above still reads ATLAS_BEATS_THERMODYNAMIC because that is what the code mechanically returned. This block withdraws the READING, not the record.",
+  "why": "The bar's shuffled-label validity control FAILED and the gate could not fire. Measured null median over 10 seeds: 0.0203 against a bar of |median| < 0.02 -- outside it by 0.0003. The verdict function's clause read `abs(med(null) - med(gc)) < MARGIN`, i.e. |0.0203 - 0.3112| = 0.2909, which is never below 0.02, so INVALID_NULL_SCORED was unreachable. The single most consequential line in the check order could not execute.",
+  "the_bar_text_is_also_wrong": "The bar says `|median gain over GC| < 0.02`, which would require the shuffled-label model to be as GOOD as GC -- the opposite of the intent. Its derivation clause and the sibling fragment arm it inherits from both plainly mean the null must score NEAR ZERO. The corrected kernel applies that reading, which is the STRICTER one: it is the reading under which this run's own null fails. The bar's text is NOT re-worded, because a frozen bar is not edited after a result.",
+  "what_IS_established_by_this_run": {
+   "split_equality": "10 of 10 seeds byte-identical to the incumbents' committed tile_indices (n_test 11198/11018/11373/... all exact). The arm was scored on the incumbents' own test sets.",
+   "pipeline_anchor": "GC reproduces the committed anchor EXACTLY: 0.3000 at seed 0 against 0.3000 +/- 0.01, and median 0.3112 against the arms ledger's 0.3112. Loader, filter, split, log1p target, ridge and scorer are all correct.",
+   "determinism": "0.00e+00 on CUDA, confirming the locally-measured 0.0 on the real device.",
+   "embedding_sanity": "0 constant dims of 128, mean inter-tile cosine 0.6473.",
+   "incumbents_reproduced": "conv median 0.3234 and max_tx 0.3968 recomputed from the committed tables match the arms ledger exactly."
+  },
+  "what_is_NOT_established": "The headline. atlas median 0.5076, paired +0.1956 [0.1704, 0.2182] over conv at 10/10 seeds, and rank-avg(max_tx, atlas) 0.5402 against the committed 0.4254 hybrid are all PENDING the validity gate. They are recorded here, not reported as findings.",
+  "why_the_numbers_will_probably_reproduce": "The arm is deterministic (0.00e+00), the seeds and splits are fixed and verified, and the corrected run changes only the null's seed count and the gate's arithmetic. So the substantive question is entirely whether a 270-seed pooled null clears |median| < 0.02 -- NOT whether 0.5076 moves. Saying so in advance is the point: it is a prediction the next run tests, not a reassurance.",
+  "leading_alternative_explanation_NOT_excluded": "Corpus-selection exposure. The pretraining corpus holds 66 Escherichia/Shigella assemblies including BL21(DE3) and B str. REL606, and the corpus is described as regulatory sequences EXTRACTED FROM GenBank -- i.e. plausibly upstream-of-gene regions. If so, 'this sequence resembles what was selected into my pretraining corpus' is itself a proxy for 'this is a real promoter', which correlates with measured expression. That is not label leakage, and it is not excluded either. Distinguishing it needs the corpus sequences (a 2.3 GB h5 or the 3,371 FASTAs), which were not downloaded.",
+  "superseded_by": "the corrected run on the same Kaggle slug, with a 270-seed null extension"
+ },
+ "verdict_detail": "0.5076 >= 0.3973 + 0.02",
+ "per_tile_predictions_note": "dropped from this preserved copy; regenerate from the Kaggle run if the join needs re-doing"
+}

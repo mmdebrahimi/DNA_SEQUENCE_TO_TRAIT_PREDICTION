@@ -156,6 +156,36 @@ def main() -> int:
     if len(d["per_tile_predictions"]["0"]["pred"]) != len(d["per_tile_predictions"]["0"]["tile_indices"]):
         fails.append("per-tile predictions are ragged")
 
+    # ---- PHASE 2: exercise the null EXTENSION and the FIXED validity gate ----------------------
+    # The smoke path skips both. The gate is the line that let ATLAS_BEATS_THERMODYNAMIC through
+    # while the null was failing, so it is the single most important thing to exercise. The tile
+    # count assertion is relaxed here ONLY because synthetic tiles are not the real 44,106 pool --
+    # this is a plumbing test of the null loop and the gate, not a measurement.
+    print("\n--- phase 2: null extension + fixed validity gate ---")
+    k.EXPECTED_TILES = len(tiles)
+    sys.argv = ["kernel", "--full-only"]
+    rc2 = k.main(smoke=False, n_null=6)
+    full = json.loads((work / "promoteratlas_tile_arm_full.json").read_text(encoding="utf-8"))
+    ext = full.get("shuffled_label_null_extended")
+    print("extension      : n=%s median %s ci95 %s coverage %s bar_met=%s"
+          % (ext and ext["n_seeds"], ext and ext["median"], ext and ext["median_ci95"],
+             ext and ext["achieved_coverage"], ext and ext["bar_met"]))
+    print("verdict        : %s" % full.get("verdict"))
+    if ext is None:
+        fails.append("null extension did not run with n_null=6")
+    elif ext["n_seeds"] != 6:
+        fails.append("null extension ran %s seeds, expected 6" % ext["n_seeds"])
+    elif ext["bar_met"] != (abs(ext["median"]) < k.MARGIN):
+        fails.append("bar_met disagrees with its own median")
+
+    # The gate must FIRE on a failing null. Drive it directly rather than hoping synthetic data
+    # produces one: a gate that has only ever been observed passing is not a tested gate.
+    gate = lambda m: abs(m) >= k.MARGIN
+    if not (gate(0.0203) and gate(-0.05) and not gate(0.0199) and not gate(0.0)):
+        fails.append("the fixed null gate does not fire as specified")
+    else:
+        print("gate check     : fires at 0.0203 and -0.05, passes at 0.0199 and 0.0 (non-vacuous)")
+
     print("\n--- dry-run verdict ---")
     if fails:
         for f in fails:

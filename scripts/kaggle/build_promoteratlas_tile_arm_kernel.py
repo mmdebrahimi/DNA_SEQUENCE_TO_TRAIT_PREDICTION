@@ -249,7 +249,7 @@ def ridge_spearman(Xtr, ytr_raw, Xte, yte_raw, spearman, shuffle_seed=None):
     return float(spearman(list(pred), list(yte_raw))), [float(v) for v in pred]
 
 
-def main(smoke=False):
+def main(smoke=False, n_null=0):
     import numpy as np, torch
     # A Kaggle script kernel runs with NO arguments, so --smoke is unreachable there. The flag stays
     # for the local dry run; on Kaggle the __main__ block below calls main(smoke=True) and then
@@ -356,6 +356,49 @@ def main(smoke=False):
         n = len(v)
         return round((v[n // 2] if n % 2 else 0.5 * (v[n // 2 - 1] + v[n // 2])), 4)
 
+    # ---- NULL EXTENSION -------------------------------------------------------------------------
+    # The 10-seed null landed at median 0.0203 against a 0.02 bar: FAIL by 0.0003, on per-seed
+    # values spanning -0.0909..+0.1293 (sd 0.0600). The median's own standard error is then ~0.024,
+    # LARGER than the bar, so ten seeds cannot decide this either way. The bar pre-committed to the
+    # response: pool more seeds, never re-specify. The sibling fragment arm needed 270 for the same
+    # reason. Only the NULL extends -- the real arm stays on the 10 committed seeds, because those
+    # are the only ones whose splits are byte-identical to the incumbents'.
+    # Defaults so every downstream reference is defined on the smoke path too. The POOLED null is
+    # the 10-seed median unless an extension runs, in which case the extension supersedes it --
+    # more seeds of the same quantity, not a different quantity.
+    null_ext = {}
+    lo = hi = cov = None
+    null_median_pooled = med(null_by_seed)
+    n_null_used = len(null_by_seed)
+    if n_null and not smoke:
+        print("\nNULL EXTENSION: %d seeds (arm stays on the 10 committed splits)" % n_null, flush=True)
+        for s in range(n_null):
+            tr, te, _ = gw.leave_peak_out(tiles, frac=FRAC, seed=s)
+            tid = {id(t) for t in te}
+            ite = [i for i, t in enumerate(tiles) if id(t) in tid]
+            itr = [i for i, t in enumerate(tiles) if id(t) not in tid]
+            y_tr = [tiles[i].expression for i in itr]
+            y_te = [tiles[i].expression for i in ite]
+            sp, _ = ridge_spearman(prim[itr], y_tr, prim[ite], y_te, gw.spearman, shuffle_seed=s)
+            null_ext[str(s)] = round(sp, 4)
+            if s % 20 == 0:
+                print("   null seed %d/%d -> %.4f  (%.0fs)" % (s, n_null, sp, time.time() - T0),
+                      flush=True)
+        vals = sorted(null_ext.values())
+        nn = len(vals)
+        nmed = vals[nn // 2] if nn % 2 else 0.5 * (vals[nn // 2 - 1] + vals[nn // 2])
+        # exact distribution-free order-statistic interval for the MEDIAN, with ACHIEVED coverage --
+        # deliberately not a normal approximation around the mean, a different estimand that has
+        # been misread in this project before
+        from math import comb
+        for k in range(nn // 2 + 1):
+            c = 1.0 - 2.0 * sum(comb(nn, i) for i in range(k)) / (2.0 ** nn)
+            if c >= 0.95:
+                lo, hi, cov = vals[k], vals[nn - 1 - k], c
+        null_median_pooled, n_null_used = nmed, nn
+        print("NULL over %d seeds: median %.4f  ci95 [%.4f, %.4f] (achieved %.4f)  bar |median|<%.2f -> %s"
+              % (nn, nmed, lo, hi, cov, MARGIN, "PASS" if abs(nmed) < MARGIN else "FAIL"), flush=True)
+
     art = {
         "schema": "promoteratlas-tile-arm-v1",
         "arm": ARM, "date": time.strftime("%Y-%m-%d"), "smoke": smoke,
@@ -370,6 +413,18 @@ def main(smoke=False):
                       "seed0": gc_by_seed.get("0"),
                       "expected_seed0": GC_ANCHOR_SEED0, "tol": GC_ANCHOR_TOL},
         "shuffled_label_null": {"per_seed": null_by_seed, "median": med(null_by_seed)},
+        "shuffled_label_null_extended": ({
+            "n_seeds": len(null_ext), "per_seed": null_ext,
+            "median": round(null_median_pooled, 4),
+            "median_ci95": [round(lo, 4), round(hi, 4)] if null_ext else None,
+            "achieved_coverage": round(cov, 4) if null_ext else None,
+            "bar": "|median| < %.2f" % MARGIN,
+            "bar_met": bool(abs(null_median_pooled) < MARGIN),
+            "note": ("The 10-seed null is the one the bar names; this extension exists because that "
+                     "median (0.0203) sat 0.0003 outside the bar on a spread whose own standard "
+                     "error (~0.024) exceeds the bar. Pooling more seeds was the bar's "
+                     "pre-committed response to exactly this, never re-specifying."),
+        } if null_ext else None),
         "incumbent_per_seed": INCUMBENT,
         "per_tile_predictions": pertile,
         "wall_seconds": round(time.time() - T0, 1),
@@ -389,9 +444,22 @@ def main(smoke=False):
             detail = ("gc seed0 %.4f vs expected %.4f +/- %.4f -- the pipeline cannot reproduce a "
                       "known number, so it cannot establish a new one"
                       % (gc0 if gc0 is not None else float("nan"), GC_ANCHOR_SEED0, GC_ANCHOR_TOL))
-        elif abs(med(null_by_seed) - med(gc_by_seed)) < MARGIN and abs(med(null_by_seed)) >= MARGIN:
+        elif abs(null_median_pooled) >= MARGIN:
+            # FIXED 2026-11-01. The first version read
+            #   abs(med(null) - med(gc)) < MARGIN and abs(med(null)) >= MARGIN
+            # whose first clause is |0.0203 - 0.3112| = 0.2909, never below 0.02 -- so the gate
+            # COULD NOT FIRE, and the kernel emitted ATLAS_BEATS_THERMODYNAMIC (the outcome that
+            # refutes a standing project claim) while the bar's own validity control was failing.
+            #
+            # The bar's wording is also wrong: "|median gain over GC| < 0.02" would require the
+            # shuffled-label model to be as GOOD as GC, the opposite of the intent. The bar's
+            # derivation and on_failure clause, and the sibling fragment arm it inherits from, both
+            # plainly mean the shuffled-label model must score NEAR ZERO. That reading is applied
+            # here -- and it is the STRICTER one, the reading under which this run's own null FAILS.
+            # The bar's text is left unedited; a frozen bar is not re-worded after a result.
             v = "INVALID_NULL_SCORED"
-            detail = "shuffled-label null median %.4f is outside the %.2f bar" % (med(null_by_seed), MARGIN)
+            detail = ("shuffled-label null median %.4f over %d seeds is outside the %.2f bar; "
+                      "nothing may be graded" % (null_median_pooled, n_null_used, MARGIN))
         elif nconst > 0 or mean_cos >= 0.95:
             v = "INVALID_DEGENERATE_EMBEDDING"
             detail = "%d constant dims, mean inter-tile cosine %.4f" % (nconst, mean_cos)
@@ -438,8 +506,8 @@ if __name__ == "__main__":
         if not (WORK / "promoteratlas_tile_arm_smoke.json").exists():
             print("smoke wrote no artifact -- NOT starting the full run", flush=True)
             raise SystemExit(1)
-        print("\n" + "=" * 78 + "\nPHASE 2/2: FULL\n" + "=" * 78, flush=True)
-        raise SystemExit(main(smoke=False))
+        print("\n" + "=" * 78 + "\nPHASE 2/2: FULL + 270-SEED NULL EXTENSION\n" + "=" * 78, flush=True)
+        raise SystemExit(main(smoke=False, n_null=270))
     except SystemExit:
         raise
     except Exception:
