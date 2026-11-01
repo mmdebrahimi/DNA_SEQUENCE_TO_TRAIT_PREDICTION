@@ -8,16 +8,19 @@ Earlier attempts and why they failed, so this is not re-litigated:
   - POST /genome/accession/dataset_report            -> 404, wrong endpoint shape
   - GET  /genome/accession/{150 accs}/dataset_report -> 400, URL too long
   - GET  /genome/accession/{2 accs}/dataset_report   -> works
+  - the 400 was NOT the accession count and NOT throttling: the server said
+    'returned_content: ASSEMBLY_INFO is not a valid value'. I had that error body from the first
+    failure and read only the status code. 20 accessions with NO query params works.
 So: small chunks. ~3,371 accessions / 20 = ~169 requests.
 
 REFUSES a verdict below a 90% resolution rate. A failed lookup printing 'no E. coli found' is a
 broken lookup wearing the costume of a finding -- that fired twice already tonight.
 """
-import json, sys, time, urllib.request, urllib.error, collections
+import collections, json, os, sys, time, urllib.error, urllib.request
 
 HF = 'https://huggingface.co/api/datasets/LCoppens/PromoterAtlas-data'
 BASE = ('https://api.ncbi.nlm.nih.gov/datasets/v2alpha/genome/accession/%s'
-        '/dataset_report?returned_content=ASSEMBLY_INFO&page_size=100')
+        '/dataset_report')
 
 d = json.load(urllib.request.urlopen(HF, timeout=90))
 accs = sorted({s['rfilename'].split('/')[-1][:-6]
