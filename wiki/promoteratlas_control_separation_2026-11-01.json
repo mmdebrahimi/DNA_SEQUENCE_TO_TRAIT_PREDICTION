@@ -1,0 +1,179 @@
+{
+  "bar": "wiki/promoteratlas_exposure_acceptance_bar.json",
+  "committed": {
+    "atlas_native150": 0.5076,
+    "gc_median": 0.3112
+  },
+  "control_counts": {
+    "neg_control": 470,
+    "random": 936
+  },
+  "control_expression": {
+    "neg_control_max": 10.052,
+    "neg_control_median": 0.337,
+    "note": "measured from the substrate; the controls are genuinely low-output",
+    "random_max": 10.747,
+    "random_median": 0.3502,
+    "tile_max": 158.308,
+    "tile_median": 0.4338
+  },
+  "date": "2026-11-01",
+  "derived": {
+    "drop_from_removing_a_RANDOM_direction": 0.0001,
+    "drop_from_removing_separation_direction": -0.0019,
+    "surviving_margin_over_gc": 0.1983
+  },
+  "device": "cpu",
+  "harness_reconcile_detail": "RECONCILED (mismatched=[])",
+  "harness_reconciled": true,
+  "inherited_margin": 0.02,
+  "medians": {
+    "atlas_baseline": 0.5076,
+    "atlas_minus_logistic_dir": 0.5095,
+    "atlas_minus_meandiff_dir": 0.4913,
+    "atlas_minus_random_dir": 0.5075,
+    "gc_baseline": 0.3112,
+    "sep_auroc_embedding": 0.9156,
+    "sep_auroc_gc_only": 0.7641
+  },
+  "n_controls": 1406,
+  "n_seeds": 10,
+  "n_tiles": 44106,
+  "per_seed": {
+    "0": {
+      "atlas_baseline": 0.5461,
+      "atlas_minus_logistic_dir": 0.546,
+      "atlas_minus_meandiff_dir": 0.5285,
+      "atlas_minus_random_dir": 0.5456,
+      "gc_baseline": 0.3,
+      "n_test_controls": 352,
+      "n_test_tiles": 11198,
+      "sep_auroc_embedding": 0.9148,
+      "sep_auroc_gc_only": 0.7637
+    },
+    "1": {
+      "atlas_baseline": 0.5499,
+      "atlas_minus_logistic_dir": 0.5487,
+      "atlas_minus_meandiff_dir": 0.5313,
+      "atlas_minus_random_dir": 0.549,
+      "gc_baseline": 0.3151,
+      "n_test_controls": 352,
+      "n_test_tiles": 11018,
+      "sep_auroc_embedding": 0.9121,
+      "sep_auroc_gc_only": 0.7638
+    },
+    "2": {
+      "atlas_baseline": 0.4983,
+      "atlas_minus_logistic_dir": 0.4987,
+      "atlas_minus_meandiff_dir": 0.4806,
+      "atlas_minus_random_dir": 0.5031,
+      "gc_baseline": 0.3073,
+      "n_test_controls": 352,
+      "n_test_tiles": 11373,
+      "sep_auroc_embedding": 0.9181,
+      "sep_auroc_gc_only": 0.7767
+    },
+    "3": {
+      "atlas_baseline": 0.4986,
+      "atlas_minus_logistic_dir": 0.4975,
+      "atlas_minus_meandiff_dir": 0.4774,
+      "atlas_minus_random_dir": 0.4984,
+      "gc_baseline": 0.2917,
+      "n_test_controls": 352,
+      "n_test_tiles": 10883,
+      "sep_auroc_embedding": 0.9147,
+      "sep_auroc_gc_only": 0.7787
+    },
+    "4": {
+      "atlas_baseline": 0.5075,
+      "atlas_minus_logistic_dir": 0.509,
+      "atlas_minus_meandiff_dir": 0.4911,
+      "atlas_minus_random_dir": 0.5077,
+      "gc_baseline": 0.3191,
+      "n_test_controls": 352,
+      "n_test_tiles": 11025,
+      "sep_auroc_embedding": 0.9157,
+      "sep_auroc_gc_only": 0.7645
+    },
+    "5": {
+      "atlas_baseline": 0.5163,
+      "atlas_minus_logistic_dir": 0.5171,
+      "atlas_minus_meandiff_dir": 0.4988,
+      "atlas_minus_random_dir": 0.5156,
+      "gc_baseline": 0.3347,
+      "n_test_controls": 352,
+      "n_test_tiles": 10907,
+      "sep_auroc_embedding": 0.9122,
+      "sep_auroc_gc_only": 0.7586
+    },
+    "6": {
+      "atlas_baseline": 0.5078,
+      "atlas_minus_logistic_dir": 0.5101,
+      "atlas_minus_meandiff_dir": 0.4915,
+      "atlas_minus_random_dir": 0.5074,
+      "gc_baseline": 0.3091,
+      "n_test_controls": 352,
+      "n_test_tiles": 10590,
+      "sep_auroc_embedding": 0.9212,
+      "sep_auroc_gc_only": 0.7645
+    },
+    "7": {
+      "atlas_baseline": 0.4933,
+      "atlas_minus_logistic_dir": 0.4922,
+      "atlas_minus_meandiff_dir": 0.4778,
+      "atlas_minus_random_dir": 0.4913,
+      "gc_baseline": 0.3191,
+      "n_test_controls": 352,
+      "n_test_tiles": 11249,
+      "sep_auroc_embedding": 0.9185,
+      "sep_auroc_gc_only": 0.7807
+    },
+    "8": {
+      "atlas_baseline": 0.5016,
+      "atlas_minus_logistic_dir": 0.5009,
+      "atlas_minus_meandiff_dir": 0.483,
+      "atlas_minus_random_dir": 0.5015,
+      "gc_baseline": 0.3133,
+      "n_test_controls": 352,
+      "n_test_tiles": 10661,
+      "sep_auroc_embedding": 0.9159,
+      "sep_auroc_gc_only": 0.7577
+    },
+    "9": {
+      "atlas_baseline": 0.521,
+      "atlas_minus_logistic_dir": 0.5198,
+      "atlas_minus_meandiff_dir": 0.504,
+      "atlas_minus_random_dir": 0.5214,
+      "gc_baseline": 0.2747,
+      "n_test_controls": 352,
+      "n_test_tiles": 10690,
+      "sep_auroc_embedding": 0.9156,
+      "sep_auroc_gc_only": 0.7571
+    }
+  },
+  "per_tile_agreement_with_committed_arm_predictions": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0,
+    "4": 1.0,
+    "5": 1.0,
+    "6": 1.0,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0
+  },
+  "schema": "promoteratlas-control-separation-v1",
+  "verdict": "EXPOSURE_EXCLUDED_LINEAR",
+  "verdict_check_order": [
+    "INDETERMINATE_HARNESS_DRIFT",
+    "INDETERMINATE_CONTROLS_UNSEPARABLE",
+    "INDETERMINATE_REMOVAL_COST_UNBOUNDED",
+    "EXPOSURE_EXPLAINS",
+    "EXPOSURE_PARTIAL",
+    "EXPOSURE_EXCLUDED_LINEAR"
+  ],
+  "verdict_detail": "removing the detection direction costs only -0.0019 (<= margin 0.02), so the gain survives LINEAR removal essentially intact. BOUNDED BY CONSTRUCTION: a nonlinear detection signal survives a linear projection, so this may NEVER be written up as 'exposure excluded'.",
+  "verdict_is_valid": true,
+  "wall_seconds": 51.3
+}

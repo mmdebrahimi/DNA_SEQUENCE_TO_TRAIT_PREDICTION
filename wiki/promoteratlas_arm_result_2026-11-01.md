@@ -109,6 +109,33 @@ route by which a selection signal could inflate this number, and separating it n
 sequences (a 2.3 GB h5, or the 3,371 FASTAs), which were not downloaded. **Until that is done, read
 0.5076 as an upper bound on what this encoder contributes.**
 
+> **AMENDED 2026-11-01 (same day), and the amendment includes retracting a clause of this very
+> paragraph.** The conditional above — *"if so"* — is **resolved, and it resolved AGAINST the benign
+> reading**: the corpus IS upstream-of-gene regions. The authors' own
+> `extract_promoter_regions(..., regulatory_region_length=200)`
+> (`src/promoter_atlas/utils/genomics.py:6`) takes the 200 bp immediately upstream of each annotated
+> gene start, strand-aware, min 5 bp intergenic. So the exposure **mechanism is live**.
+>
+> **The clause *"separating it needs the corpus sequences (a 2.3 GB h5, or the 3,371 FASTAs), which
+> were not downloaded"* is FALSE and is retracted.** The h5 holds one one-hot `sequences` array plus
+> a `total_sequences` attribute — no coordinates, no gene names, no provenance — so downloading it
+> could never have answered this. What answered it was 138 lines of the authors' source plus the
+> **1,406 control sequences already in the substrate** (936 `random` + 470 `neg_control`, all exactly
+> 150 bp) that every arm on this rung discards via `category == 'tile'`.
+>
+> **Measured:** the embedding separates controls from tiles at AUROC **0.9156** (GC alone: 0.7641), so
+> the detection signal is unmistakably present — yet removing a 32-dim discriminative subspace drives
+> separability to **0.6823**, *below plain GC*, while costing the atlas channel only **0.0080** beyond
+> the capacity price of deleting any 32 of 128 dimensions, against the inherited 0.02 margin. The
+> surviving 0.4956 still sits 0.18 above GC. **So exposure does not explain the gain — under LINEAR
+> removal.**
+>
+> **This may never be written up as "exposure excluded":** every intervention was linear, so a
+> nonlinear detection signal survives all of it, and separability was reduced rather than removed.
+> **0.5076 keeps its measured value** (a measured metric is not retro-edited); the limit becomes
+> bounded rather than unquantified. Full result + the four of my own claims it corrects:
+> `wiki/promoteratlas_exposure_result_2026-11-01.md`.
+
 **2. Sequence exposure is real and measured.** The substrate is K-12 MG1655; that exact assembly
 (`GCF_000005845`) is absent from the corpus, but BL21 and REL606 share most of K-12's core genome.
 **The arm may not be described as evaluating on unseen sequence.**

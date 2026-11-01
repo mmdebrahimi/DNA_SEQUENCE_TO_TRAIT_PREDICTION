@@ -1,0 +1,74 @@
+{
+  "baseline": {
+    "atlas_median": 0.5076,
+    "committed_atlas": 0.5076,
+    "committed_gc": 0.3112,
+    "gc_median": 0.3112
+  },
+  "curve": {
+    "1": {
+      "atlas_drop_attributable": -0.0026,
+      "atlas_drop_vs_baseline": -0.0026,
+      "atlas_median": 0.5103,
+      "atlas_median_random_subspace": 0.5077,
+      "residual_separability_median": 0.9087,
+      "residual_separability_random_subspace": 0.9179
+    },
+    "16": {
+      "atlas_drop_attributable": 0.0025,
+      "atlas_drop_vs_baseline": 0.0036,
+      "atlas_median": 0.504,
+      "atlas_median_random_subspace": 0.5065,
+      "residual_separability_median": 0.8277,
+      "residual_separability_random_subspace": 0.9159
+    },
+    "2": {
+      "atlas_drop_attributable": -0.0024,
+      "atlas_drop_vs_baseline": -0.0025,
+      "atlas_median": 0.5102,
+      "atlas_median_random_subspace": 0.5078,
+      "residual_separability_median": 0.9052,
+      "residual_separability_random_subspace": 0.9177
+    },
+    "32": {
+      "atlas_drop_attributable": 0.008,
+      "atlas_drop_vs_baseline": 0.012,
+      "atlas_median": 0.4956,
+      "atlas_median_random_subspace": 0.5036,
+      "residual_separability_median": 0.6823,
+      "residual_separability_random_subspace": 0.9114
+    },
+    "4": {
+      "atlas_drop_attributable": -0.0042,
+      "atlas_drop_vs_baseline": -0.0025,
+      "atlas_median": 0.5102,
+      "atlas_median_random_subspace": 0.506,
+      "residual_separability_median": 0.9017,
+      "residual_separability_random_subspace": 0.9179
+    },
+    "8": {
+      "atlas_drop_attributable": 0.0007,
+      "atlas_drop_vs_baseline": 0.0008,
+      "atlas_median": 0.5069,
+      "atlas_median_random_subspace": 0.5076,
+      "residual_separability_median": 0.8923,
+      "residual_separability_random_subspace": 0.9171
+    }
+  },
+  "date": "2026-11-01",
+  "device": "cpu",
+  "fit_subsample_tiles": 8000,
+  "honest_limits": [
+    "Still LINEAR. A nonlinear detection signal survives any linear projection, at any k.",
+    "Deflation gives ONE ordered basis, not the optimal rank-k discriminative subspace.",
+    "Directions are fit on a 8000-tile subsample; the ridge uses every tile.",
+    "1,406 controls against 44,106 tiles, and pos_control is geometry-incompatible."
+  ],
+  "n_controls": 1406,
+  "n_seeds": 10,
+  "n_tiles": 44106,
+  "reading_rule_fixed_in_advance": "BOTH curves or nothing. Separability -> chance while atlas holds = evidence AGAINST the exposure explanation. Both fall together = exposure explains the gain. Atlas falls while separability holds = the projection is destroying capacity and nothing is attributable, which is what the random-subspace control measures at each k.",
+  "schema": "promoteratlas-subspace-removal-v1",
+  "wall_seconds": 257.8,
+  "why": "Experiment A's 1-D removal was underpowered BY CONSTRUCTION: separability was 0.9156 while removing the single best direction cost -0.0019, which is only consistent with a detection signal distributed over many of the 128 dimensions. Two defensible definitions of the direction also disagreed 8x. This is the version that can fail."
+}

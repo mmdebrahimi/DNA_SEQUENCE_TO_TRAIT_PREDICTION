@@ -1,0 +1,158 @@
+{
+  "answer": "YES for the authors' own extraction code: 200 bp immediately upstream of each annotated gene start, strand-aware, min 5 bp intergenic. The arm's honest limit stated this as a conditional ('IF those are upstream-of-gene regions'); the condition is met by the repository's own source. The exposure mechanism is therefore LIVE, and the magnitude of any inflation is a separate empirical question the control-separation experiment asks.",
+  "claims": [
+    {
+      "claim": "corpus_extraction_rule",
+      "reading": "The authors' own code extracts, per annotated gene, the REGULATORY_REGION_LENGTH=200 bp IMMEDIATELY UPSTREAM of the gene start, strand-aware (the minus strand takes the 200 bp downstream of the gene end and reverse-complements it), gated by min_intergenic_length=5 so a gene packed against its neighbour is skipped.",
+      "source_paths": [
+        "src/promoter_atlas/utils/genomics.py",
+        "src/promoter_atlas/io/genbank_io.py"
+      ],
+      "source_url": "https://github.com/LucasCoppens/PromoterAtlas (MIT) \u2014 local clone",
+      "status": "quoted",
+      "verbatim_lines": {
+        "genbank_io.py": [
+          {
+            "line": 57,
+            "text": "def extract_promoter_regions_genbank("
+          },
+          {
+            "line": 59,
+            "text": "    upstream_length: int = 200,"
+          },
+          {
+            "line": 67,
+            "text": "        upstream_length: Length of upstream region to extract (default: 200bp)"
+          },
+          {
+            "line": 123,
+            "text": "            if start < upstream_length:"
+          },
+          {
+            "line": 129,
+            "text": "                prom_seq = sequence[start - upstream_length:start]"
+          },
+          {
+            "line": 138,
+            "text": "                    'start': start - upstream_length,"
+          },
+          {
+            "line": 154,
+            "text": "            if len(sequence) - end < upstream_length:"
+          },
+          {
+            "line": 160,
+            "text": "                prom_seq = sequence[end:end + upstream_length].reverse_complement()"
+          },
+          {
+            "line": 170,
+            "text": "                    'end': end + upstream_length,"
+          }
+        ],
+        "genomics.py": [
+          {
+            "line": 6,
+            "text": "def extract_promoter_regions(gbs, min_intergenic_length=5, regulatory_region_length=200):"
+          },
+          {
+            "line": 37,
+            "text": "            if start < regulatory_region_length:"
+          },
+          {
+            "line": 41,
+            "text": "                # Take sequence UPSTREAM of start"
+          },
+          {
+            "line": 42,
+            "text": "                prom_seq = sequence[start-regulatory_region_length:start]"
+          },
+          {
+            "line": 52,
+            "text": "                    'start': start-regulatory_region_length,"
+          },
+          {
+            "line": 65,
+            "text": "            if len(sequence) - end < regulatory_region_length:"
+          },
+          {
+            "line": 69,
+            "text": "                # Take sequence DOWNSTREAM of end (which is UPSTREAM relative to gene direction)"
+          },
+          {
+            "line": 70,
+            "text": "                prom_seq = sequence[end:end+regulatory_region_length].reverse_complement()"
+          },
+          {
+            "line": 80,
+            "text": "                    'end': end+regulatory_region_length"
+          }
+        ]
+      },
+      "what_this_does_NOT_establish": "That THIS function produced the exact ~9M-sequence h5 the base model was trained on. scripts/train_base_model.py CONSUMES a prebuilt data/processed/sequence_dataset.h5 via --data_path and no script in the repo calls extract_promoter_regions to build it. So the provenance chain is CONVERGENT (same 200 bp geometry as the README's annotation path, same description as the dataset card) but not proven end to end."
+    },
+    {
+      "claim": "corpus_size_and_breadth",
+      "source_url": "https://github.com/LucasCoppens/PromoterAtlas/blob/main/README.md",
+      "status": "quoted",
+      "verbatim_lines": [
+        {
+          "line": 7,
+          "text": "PromoterAtlas is a 1.8 million parameter transformer model trained on approximately 9 million regulatory sequences from over 3,000 gammaproteobacterial species. The model demonstrates cross-species recognition of diverse regulatory elements, including:"
+        },
+        {
+          "line": 68,
+          "text": "| promoteratlas-base.pt | DNATransformer | Base model trained on ~9M regulatory sequences |"
+        }
+      ]
+    },
+    {
+      "claim": "h5_carries_no_coordinates_or_provenance",
+      "reading": "The corpus h5 is ONE dataset 'sequences' of shape (N, seq_length, 4) one-hot plus one attribute 'total_sequences'. No coordinates, no gene names, no source genome. So downloading the 2.3 GB h5 could NOT have answered the extraction question that reading 138 lines of the authors' source answered for free.",
+      "source_paths": [
+        "src/promoter_atlas/data/sequence_dataset.py"
+      ],
+      "status": "quoted",
+      "verbatim_lines": [
+        {
+          "line": 14,
+          "text": "        self.sequences = self.f['sequences']"
+        },
+        {
+          "line": 15,
+          "text": "        self.total_sequences = self.f.attrs['total_sequences']"
+        },
+        {
+          "line": 18,
+          "text": "        self.indices = np.random.permutation(self.total_sequences)"
+        },
+        {
+          "line": 21,
+          "text": "        return self.total_sequences"
+        },
+        {
+          "line": 26,
+          "text": "        orig_seq = self.sequences[real_idx]  # Expected shape: (sequence_length, 4)"
+        },
+        {
+          "line": 30,
+          "text": "            'sequence': torch.from_numpy(orig_seq).permute(1, 0).contiguous()"
+        }
+      ]
+    },
+    {
+      "claim": "paper_methods_extraction_statement",
+      "failure_mode": "The PMC route returned a cookie-enablement error page rather than article text. A summarizer reading that page reported 'NOT STATED', which is the exact collapse this field exists to prevent: the source was never read, so it is silent about nothing. Recorded as fetch_failed.",
+      "note": "This claim is NOT load-bearing any more. The extraction rule was recovered from the authors' source code (claim 1), which is a stronger provenance class than a prose Methods sentence: it is the executable rule, not a description of one.",
+      "source_url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC13377108/",
+      "status": "fetch_failed",
+      "verbatim_quote": ""
+    }
+  ],
+  "corrections_to_the_plan_that_motivated_this_probe": [
+    "The plan recorded that no corpus-construction method is readable in the clone and that the paper's Methods was 'the one remaining readable source'. That is WRONG. src/promoter_atlas/utils/genomics.py:6 defines extract_promoter_regions(..., regulatory_region_length=200) and src/promoter_atlas/io/genbank_io.py:57 defines extract_promoter_regions_genbank(..., upstream_length=200). The plan's research read sequence_dataset.py and train_base_model.py and stopped; it never read utils/ or io/.",
+    "So the standing lesson fired twice in one direction: reading the source was right, and the first read was not exhaustive. 'I read the source' is not 'I read the whole source'."
+  ],
+  "date": "2026-11-01",
+  "question": "Are the PromoterAtlas pretraining corpus sequences upstream-of-gene regions? If so, 'resembles the pretraining corpus' is itself a proxy for 'is a real promoter', which correlates with measured expression -- the arm's leading alternative explanation for arms.native150 = 0.5076.",
+  "schema": "promoteratlas-corpus-provenance-v1"
+}

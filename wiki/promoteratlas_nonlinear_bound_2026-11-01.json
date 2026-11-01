@@ -1,0 +1,73 @@
+{
+  "date": "2026-11-01",
+  "device": "cpu",
+  "embedding": {
+    "all_seeds_positive": true,
+    "gain_range": [
+      0.0031,
+      0.0164
+    ],
+    "linear_auroc_median": 0.9176,
+    "nonlinear_auroc_median": 0.9275,
+    "nonlinear_gain": 0.0099,
+    "per_seed_gain": [
+      0.0124,
+      0.0046,
+      0.0087,
+      0.0047,
+      0.0143,
+      0.0164,
+      0.0031,
+      0.0046,
+      0.0096,
+      0.0077
+    ],
+    "per_seed_linear": [
+      0.9149,
+      0.914,
+      0.9197,
+      0.9174,
+      0.9178,
+      0.9135,
+      0.9246,
+      0.9216,
+      0.9182,
+      0.9174
+    ],
+    "per_seed_nonlinear": [
+      0.9273,
+      0.9186,
+      0.9284,
+      0.9221,
+      0.9321,
+      0.9299,
+      0.9277,
+      0.9262,
+      0.9278,
+      0.9251
+    ]
+  },
+  "fit_subsample_tiles": 8000,
+  "gc_reference": {
+    "DEGENERATE_MY_DESIGN_FAILED": "This arm did NOT work as designed and is not a usable reference. I intended it as a scale for how much a nonlinear probe buys when there is little structure to find; instead the MLP scored WORSE than logistic on GC (median gain -0.1776) and swung from 0.3871 to 0.7631 across seeds. That is an MLP failing on a SINGLE standardised feature with early stopping on a tiny internal validation split, not a fact about nonlinearity. Do not quote the GC gain as evidence of anything. What survives from it is weak and worth stating: the probe is not magically strong.",
+    "linear_auroc_median": 0.7642,
+    "nonlinear_auroc_median": 0.5866,
+    "nonlinear_gain": -0.1776,
+    "why": "GC is ONE feature, so a nonlinear probe on it can only exploit a non-monotone relationship. It is the reference for how much a nonlinear probe buys when there is almost no structure to find, which keeps the embedding gain in scale."
+  },
+  "n_controls": 1406,
+  "n_seeds": 10,
+  "n_tiles": 44106,
+  "question": "Is the control-vs-tile detection signal in this embedding LINEARLY encoded? That bounds the one caveat the linear removal experiments structurally cannot touch.",
+  "reading_rule_fixed_in_advance": "nonlinear gain over linear < 0.02 => almost all detectable signal is LINEAR, so the linear subspace removal deleted almost all of it and the 'nonlinear survives' caveat is TIGHT. A larger gain => real detection headroom was left behind and the caveat is LOOSE.",
+  "schema": "promoteratlas-nonlinear-bound-v1",
+  "verdict": "LINEAR_CAVEAT_TIGHT",
+  "wall_seconds": 21.7,
+  "what_this_does_NOT_license": [
+    "It is NOT 'exposure excluded'. A tight bound says the signal a linear projection could not reach is SMALL on this control cohort and this embedding -- narrower than claiming no nonlinear exposure exists.",
+    "It is a bound on a PROBE, not a removal: nothing nonlinear was projected out.",
+    "One MLP architecture (64 hidden units, early stopping). A larger probe might find more, though it would also overfit 1,406 controls faster.",
+    "NOT pre-registered in the frozen bar; corroboration only, and it cannot change the graded verdict label."
+  ],
+  "why_the_embedding_number_is_still_readable": "The contrast between the two arms is the reassurance. The embedding gain is positive on 10 of 10 seeds in a tight band (+0.0031 to +0.0164, median +0.0082), while the GC arm swings 0.39-0.76. A noisy estimator producing a stable, uniformly-signed, small result on one input and chaos on another is behaving like a probe with little left to find in the first case -- which is the claim. It is corroboration, not proof."
+}
