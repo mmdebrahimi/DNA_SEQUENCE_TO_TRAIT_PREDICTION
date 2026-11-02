@@ -7,23 +7,19 @@ Graded by `wiki/positional_arm_acceptance_bar.json`, frozen before any number be
 
 ## DECISIONS NEEDED
 
-**The ceiling criterion now reads `met`, and whether to accept that is yours.** This arm
-was the last `planned` arm on the criterion, so recording it leaves 12 measured arms and
-none untried, which is what `ceiling_verdict` returns `met` for. That is a SUBSTANTIVE
-change to a criterion declared 2026-10-09, not bookkeeping: it says the arm set is
-exhausted and `best = promoteratlas-base-embeddings-frozen-150bp-padded-to-200` is the ceiling this project reached.
+**None from this arm's verdict.** `ceiling_verdict` reads `blocked:untried-arm`, so the criterion is
+unchanged by this arm and no scope decision falls out of it.
 
-The alternative is to declare a further arm under R6 before accepting the terminal. Two
-candidates are named and deliberately NOT declared here, because declaring one is itself
-the scope decision: the four shipped expression-prediction heads in the clone, and a
-fine-tuned rather than frozen encoder. Each would be a NEW arm, never a re-read of this
-one.
+**It stays open on 3 declared-but-unrun arm(s), which are named rather than left to
+be inferred:**
 
-**What this arm does NOT license either way:** `met` is a statement about the ARM SET
-being exhausted, not about the criterion's `best` of 0.5076 being close to the 0.941
-replicate-derived ceiling. It is not — it is 54% of it, and the project's own standing
-rule is that no tile-rung number may be read as a fraction of that ceiling without
-saying so, which is why it is said here.
+- `asgiven-position-resolved-promoteratlas-150bp`
+- `finetuned-promoteratlas-encoder-150bp`
+- `shipped-expression-heads-zeroshot-150bp`
+
+`best` is unmoved at `promoteratlas-base-embeddings-frozen-150bp-padded-to-200`. The criterion cannot read `met` while any of these is
+untried, which is the whole point of declaring them: an arm declared only once its
+cheap sibling succeeds is an arm that evaporates.
 
 ## CORRECTIONS
 

@@ -96,10 +96,25 @@ def render(res: dict, bar: dict, ceiling: dict | None = None) -> str:
         w("saying so, which is why it is said here.")
         w("")
     else:
+        c = ceiling or {}
         w("**None from this arm's verdict.** `ceiling_verdict` reads `%s`, so the criterion is"
-          % (ceiling or {}).get("verdict", "unrecomputed"))
+          % c.get("verdict", "unrecomputed"))
         w("unchanged by this arm and no scope decision falls out of it.")
         w("")
+        unrun = list(c.get("planned") or [])
+        if unrun:
+            w("**It stays open on %d declared-but-unrun arm(s), which are named rather than left to"
+              % len(unrun))
+            w("be inferred:**")
+            w("")
+            for name in unrun:
+                w("- `%s`" % name)
+            w("")
+            w("`best` is unmoved at `%s`. The criterion cannot read `met` while any of these is"
+              % c.get("best"))
+            w("untried, which is the whole point of declaring them: an arm declared only once its")
+            w("cheap sibling succeeds is an arm that evaporates.")
+            w("")
 
     # ---------------------------------------------------------------------------------------
     w("## CORRECTIONS")
