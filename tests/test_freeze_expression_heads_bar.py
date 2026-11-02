@@ -27,9 +27,12 @@ import pytest
 from scripts.freeze_expression_heads_bar import (
     ARM,
     CHECK_ORDER,
+    NULL_SIGNAL_RATIO,
     OUT,
     OUTCOMES,
     PRIMARY_REDUCTION,
+    SCORING_DIRECT,
+    SCORING_RIDGE_INELIGIBLE,
     ROUTE_CHEAP,
     ROUTE_RANK_TOLERANCE,
     ROUTE_TRUE,
@@ -420,4 +423,106 @@ def test_the_frozen_bar_requires_a_NON_CONSTANT_head_output_as_a_validity_contro
     vc = json.loads(OUT.read_text(encoding="utf-8"))["validity_controls"]
     assert "NON-CONSTANT" in vc["head_validity"]
     assert "clean null" in vc["head_validity"]
-    assert set(vc) == {"split_equality", "geometry", "head_validity", "shuffled_label_null"}
+    assert set(vc) == {"split_equality", "geometry", "head_validity", "permutation_null"}
+
+
+# --------------------------------------------------------------------------------------------------
+# the amended null -- the defect that would have cost a 4.64 h run
+# --------------------------------------------------------------------------------------------------
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_bar_does_NOT_use_the_shuffled_TRAINING_label_null_on_a_one_feature_arm():
+    """The inherited null is informative at 1,280 features and VACUOUS at one.
+
+    With a single feature, StandardScaler + Ridge can only scale and sign-flip, so shuffling the
+    training labels cannot destroy the ranking -- only its sign. The gate then either fails for a
+    reason unrelated to the heads or passes by sign cancellation.
+    """
+    bar = json.loads(OUT.read_text(encoding="utf-8"))
+    gates = [g for g, _ in bar["check_order"]]
+    assert "permutation_null" in gates
+    assert "shuffled_label_null" not in gates
+    assert "shuffled_label_null" not in bar["validity_controls"]
+
+
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_null_is_PREDICTOR_side_valid_and_carries_BOTH_its_conditions():
+    n = json.loads(OUT.read_text(encoding="utf-8"))["validity_controls"]["permutation_null"]
+    assert "FIXED predictor" in n["form"] and "PERMUTED TEST labels" in n["form"]
+    assert "NO refit" in n["form"]
+    assert "|median null| < 0.02" == n["condition_median"]
+    assert "x |real median Spearman|" in n["condition_magnitude"]
+    # the magnitude condition is what catches a null that cannot destroy its own signal
+    assert "cannot destroy the" in n["condition_magnitude"]
+
+
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_bar_records_WHY_the_inherited_null_was_replaced_with_its_measured_numbers():
+    n = json.loads(OUT.read_text(encoding="utf-8"))["validity_controls"]["permutation_null"]
+    w = n["why_not_the_inherited_shuffled_TRAINING_label_null"]
+    assert "ONE feature" in w and "SIGN-FLIP" in w
+    assert "0.8814" in w, "the measured pathology must be a figure, not an adjective"
+    assert "0.0088" in w, "the 128-feature control case must be recorded so the siblings are scoped"
+    assert "0.0371" in n["measured_replacement"]
+    assert "1/sqrt(n_test)" in n["measured_replacement"], (
+        "the replacement's magnitudes must be anchored to the sampling scale they sit at"
+    )
+
+
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_magnitude_ceiling_separates_the_broken_null_from_the_fixed_one():
+    """Scale-free by construction: ratio 1.00 for the rejected null, 0.04 for the kept one."""
+    real, broken, fixed = 0.8814, 0.8814, 0.0371
+    assert broken / real > NULL_SIGNAL_RATIO, "the rejected null must trip the ceiling"
+    assert fixed / real < NULL_SIGNAL_RATIO, "the kept null must clear it comfortably"
+
+
+# --------------------------------------------------------------------------------------------------
+# the declared scoring definition
+# --------------------------------------------------------------------------------------------------
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_bar_DECLARES_how_a_head_scalar_becomes_a_spearman_and_how_sign_is_handled():
+    s = json.loads(OUT.read_text(encoding="utf-8"))["scoring"]
+    assert s["definition"] == SCORING_DIRECT
+    assert "sign AS GIVEN" in s["formula"]
+    assert s["an_anticorrelated_head_reports_a_NEGATIVE_spearman"] is True
+
+
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_ridge_scoring_form_is_INELIGIBLE_because_it_would_end_the_zero_shot_claim():
+    s = json.loads(OUT.read_text(encoding="utf-8"))["scoring"]
+    assert s["ineligible_alternative"] == SCORING_RIDGE_INELIGIBLE
+    assert "fits the SIGN from the training labels" in s["why_the_ridge_form_is_ineligible"]
+    assert "stop being zero-shot" in s["why_the_ridge_form_is_ineligible"]
+
+
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_bar_keeps_the_scoring_half_of_the_incumbents_pipeline_and_says_which_half():
+    c = json.loads(OUT.read_text(encoding="utf-8"))["scoring"]["comparability_note"]
+    assert "log1p(expression)" in c and "RAW expression" in c
+    assert "fits nothing" in c, "a zero-shot arm inherits the scoring half only"
+
+
+# --------------------------------------------------------------------------------------------------
+# the amendment record -- a bar may be corrected before first use, not after
+# --------------------------------------------------------------------------------------------------
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_amendment_records_its_own_outcome_neutrality_and_a_revert_pre_commitment():
+    a = json.loads(OUT.read_text(encoding="utf-8"))["amendments_before_first_score"]
+    assert len(a) >= 1
+    e = a[0]
+    assert "TRIVIALLY SATISFIED" in e["outcome_neutrality"]
+    assert "no head has been scored" in e["outcome_neutrality"]
+    assert "after it, this same edit would be" in e["outcome_neutrality"].replace("\n", " ")
+    assert "YES" in e["new_threshold_introduced"], (
+        "a new threshold WAS added; declaring it openly is the point, since the usual rule forbids "
+        "one when amending after results exist"
+    )
+    assert "reverted" in e["revert_pre_commitment"]
+
+
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen")
+def test_the_amended_bar_pre_commits_the_scoring_and_the_null():
+    joined = " ".join(json.loads(OUT.read_text(encoding="utf-8"))["pre_commitments"])
+    assert "DIRECT Spearman with the sign as given" in joined
+    assert "PREDICTOR-side-valid" in joined
+    assert "BOTH its median and its magnitude condition" in joined

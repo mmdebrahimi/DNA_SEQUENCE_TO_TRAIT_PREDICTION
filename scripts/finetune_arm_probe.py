@@ -347,9 +347,15 @@ def measure_convergence(tiles, sizing: dict, *, lr: float, batch_size: int, pati
 
     length = len(sub[0].seq)
     Xtr = _onehot([sub[i].seq for i in tr], length)
-    ytr = torch.tensor([float(sub[i].expression) for i in tr])
+    # TRAIN ON log1p(expression), SCORE AGAINST RAW -- matching `ridge_spearman` exactly, whose own
+    # docstring says any deviation makes the number incomparable with the committed incumbent
+    # tables. The first version of this trainer used MSE on RAW expression, which would have
+    # confounded the OBJECTIVE TRANSFORM with the REPRESENTATION: a loss could then have meant the
+    # fine-tune optimised the wrong target scale rather than that the frozen representation was not
+    # the limit -- a THIRD reading on top of the budget-versus-representation pair the bar names.
+    ytr = torch.log1p(torch.tensor([float(sub[i].expression) for i in tr]))
     Xva = _onehot([sub[i].seq for i in va], length)
-    yva = [float(sub[i].expression) for i in va]
+    yva = [float(sub[i].expression) for i in va]      # RAW, deliberately -- the scoring half
 
     enc, head = _build_trainable(pa_repo)
     opt = torch.optim.Adam(list(enc.parameters()) + list(head.parameters()), lr=lr)
@@ -505,6 +511,20 @@ def probe(*, pa_repo=None, budget_seconds: float = DEFAULT_CONVERGENCE_BUDGET_SE
                       "yields a PARTIAL artifact nobody can read. A reader may disagree with the "
                       "number explicitly; it is a constant, not a judgement made per run."),
                   "alternatives_considered": [ROUTE_LOCAL, ROUTE_KAGGLE]},
+        "target_transform": {
+            "trained_on": "log1p(expression)",
+            "scored_against": "raw expression",
+            "inherited_not_chosen": True,
+            "source": ("dna_decode.glm.atlas_embed.ridge_spearman, which fits on log1p(expression) "
+                       "and scores Spearman against RAW expression, and whose docstring states that "
+                       "any deviation makes the number incomparable with the committed incumbent "
+                       "tables"),
+            "why_it_matters": ("training on RAW expression instead would confound the OBJECTIVE "
+                               "TRANSFORM with the REPRESENTATION, adding a third reading to the "
+                               "budget-versus-representation pair: a loss could mean the fine-tune "
+                               "optimised the wrong target scale. Fixed before this measurement, "
+                               "not after."),
+        },
         "comparator": {"frozen_incumbent_median_spearman": FROZEN_INCUMBENT,
                        "n_seeds": N_SEEDS, "split_frac": SPLIT_FRAC,
                        "comparison": ("the fine-tuned encoder's median Spearman against the FROZEN "

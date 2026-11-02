@@ -78,6 +78,30 @@ ROUTE_CHEAP = "full_latent_then_slice"
 #: picking a tolerance they clear -- is the exact failure this project has logged twice.
 ROUTE_RANK_TOLERANCE = 0.999
 
+#: How the arm's scalar becomes a Spearman. DECLARED, because the two candidates are different
+#: claims and leaving it unstated would be a free parameter inside a frozen bar.
+#:
+#: DIRECT is the arm's definition: `spearman(head_output[test], y[test])`, sign AS GIVEN. An
+#: anti-correlated head reports a negative Spearman and that IS the answer.
+#:
+#: The one-feature-ridge alternative was REJECTED, and not on taste. `StandardScaler` + `Ridge` on a
+#: single column can only scale and SIGN-FLIP, and it fits that sign from the TRAINING LABELS -- so
+#: scoring this arm through a ridge would borrow one bit of supervision from this substrate and the
+#: arm would no longer be zero-shot, which is the whole claim its own name makes. It is reported as
+#: an INELIGIBLE secondary with that caveat attached.
+SCORING_DIRECT = "direct_spearman_sign_as_given"
+SCORING_RIDGE_INELIGIBLE = "one_feature_ridge_borrows_sign_from_train"
+
+#: The null's magnitude ceiling, expressed as a fraction of the arm's OWN real signal.
+#:
+#: DERIVED FROM THE TESTED QUANTITY, not from the margin -- and the first version of this rail got
+#: that wrong. A permutation Spearman over ~1,000 test tiles has sampling spread near
+#: 1/sqrt(n) ~ 0.032, so holding every null below the 0.02 margin would fail on ordinary scatter and
+#: say nothing. Measured: the fixed null gives max|null| 0.0371 against a real 0.8772 (ratio 0.04),
+#: while the REJECTED one-feature-refit null gives max|null| 0.8814 against the same signal
+#: (ratio 1.00). A ratio ceiling separates those two by an order of magnitude and is scale-free.
+NULL_SIGNAL_RATIO = 0.5
+
 OUTCOMES = (
     "HEADS_ADDS",
     "HEADS_TIES",
@@ -95,7 +119,7 @@ CHECK_ORDER = (
     ("split_equality", "INDETERMINATE_SPLIT_MISMATCH"),
     ("geometry", "INDETERMINATE_GEOMETRY_FAIL"),
     ("head_validity", "INDETERMINATE_COLLAPSED_HEAD"),
-    ("shuffled_label_null", "INDETERMINATE_NULL_FAIL"),
+    ("permutation_null", "INDETERMINATE_NULL_FAIL"),
     ("primary_decision", ("HEADS_ADDS", "HEADS_TIES", "HEADS_NO_GAIN")),
 )
 
@@ -322,8 +346,42 @@ def build_bar(v: dict) -> dict:
             "head_validity": ("each head must produce finite, NON-CONSTANT output across the "
                               "cohort. A collapsed head would score as a clean null rather than as "
                               "a fault, which is the failure mode that most resembles a finding."),
-            "shuffled_label_null": ("median gain under shuffled training labels must satisfy "
-                                    "|median| < %.2f" % MARGIN),
+            "permutation_null": {
+                "form": ("FIXED predictor, PERMUTED TEST labels, NO refit: "
+                         "spearman(head_output[test], permute(y[test])) over the seed set."),
+                "condition_median": "|median null| < %.2f" % MARGIN,
+                "condition_magnitude": ("max|null| < %.2f x |real median Spearman| -- this is the "
+                                        "condition that catches a null which cannot destroy the "
+                                        "signal it is meant to destroy" % NULL_SIGNAL_RATIO),
+                "why_not_the_inherited_shuffled_TRAINING_label_null": (
+                    "The sibling arms shuffle TRAINING labels and refit, which works because their "
+                    "primaries are 1,280-feature matrices that a shuffled fit genuinely destroys. "
+                    "This arm's primary is ONE feature, where StandardScaler + Ridge can only scale "
+                    "and SIGN-FLIP, so shuffling the training labels cannot destroy the ranking -- "
+                    "only its sign. MEASURED: every such null returns +/-0.8814 against a real "
+                    "0.8814, i.e. the arm's entire signal with a random sign, so the gate either "
+                    "FAILS for a reason unrelated to the heads or PASSES by sign cancellation. "
+                    "Neither is a control. The 128-feature case measured 0.01-0.12 (median 0.0088) "
+                    "on the same data, which is why the sibling arms were unaffected."),
+                "measured_replacement": ("the permuted-test-label null measured |median| 0.0015, "
+                                         "max|null| 0.0371 against a real 0.8772 -- noise-sized, "
+                                         "and consistent with the 1/sqrt(n_test) ~ 0.032 sampling "
+                                         "scale a permutation Spearman has by construction"),
+            },
+        },
+        "scoring": {
+            "definition": SCORING_DIRECT,
+            "formula": "spearman(head_output[test], y[test]) with the sign AS GIVEN",
+            "ineligible_alternative": SCORING_RIDGE_INELIGIBLE,
+            "why_the_ridge_form_is_ineligible": (
+                "a one-feature ridge fits the SIGN from the training labels, so the arm would "
+                "borrow supervision from this substrate and stop being zero-shot -- which is the "
+                "claim its own name makes. Reported beside the primary, never as it."),
+            "an_anticorrelated_head_reports_a_NEGATIVE_spearman": True,
+            "comparability_note": (
+                "the incumbent 0.5076 comes from ridge_spearman, which fits on log1p(expression) "
+                "and scores Spearman against RAW expression. This arm fits nothing, so only the "
+                "SCORING half applies: Spearman against RAW expression, identically."),
         },
         "zero_shot_framing": probe["zero_shot_framing"],
         "forecast": {
@@ -346,6 +404,36 @@ def build_bar(v: dict) -> dict:
             "a null bounds TRANSFER to this rung, NOT the heads",
             "the route is %s and is NOT to be switched after seeing a score" % route["chosen"],
             "a collapsed head yields INDETERMINATE_COLLAPSED_HEAD, never a scored null",
+            "the arm is scored by DIRECT Spearman with the sign as given; the ridge form is "
+            "reported but is NOT eligible as the arm's result",
+            "the null is PREDICTOR-side-valid (fixed predictor, permuted test labels) and must "
+            "satisfy BOTH its median and its magnitude condition",
+        ],
+        "amendments_before_first_score": [
+            {
+                "amended": "2026-11-02",
+                "what": ("replaced the inherited shuffled-TRAINING-label null with a permuted-TEST-"
+                         "label null, and declared the scoring definition and sign handling"),
+                "why": ("the inherited null is INFORMATIVE AT 1,280 FEATURES AND VACUOUS AT ONE. "
+                        "This arm's primary is one feature, so the inherited gate would have "
+                        "returned INDETERMINATE_NULL_FAIL after a 4.64 h run for a reason that has "
+                        "nothing to do with the heads. The scoring definition was simply absent, "
+                        "and the two candidates differ on whether the arm is zero-shot at all."),
+                "outcome_neutrality": ("TRIVIALLY SATISFIED AND STATED RATHER THAN ASSUMED: no "
+                                       "head has been scored on this arm, so there is no measured "
+                                       "verdict that this amendment could move. A bar may be "
+                                       "corrected before its first use; after it, this same edit "
+                                       "would be a post-hoc change and would not be permissible."),
+                "new_threshold_introduced": ("YES -- NULL_SIGNAL_RATIO = %.1f. Declared openly "
+                                             "because the usual rule for amending a frozen bar is "
+                                             "that no new threshold may be added. That rule governs "
+                                             "edits made AFTER results exist; here none do."
+                                             % NULL_SIGNAL_RATIO),
+                "revert_pre_commitment": ("if the permuted-test-label null is later shown to be "
+                                          "insensitive to a fault the shuffled-training-label null "
+                                          "would have caught, this amendment is reverted and the "
+                                          "arm is re-scored, not re-interpreted."),
+            },
         ],
         "honest_limits_fixed_in_advance": [
             ("ZERO-SHOT TRANSFER, not head quality: all five heads were trained on other "
