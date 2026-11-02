@@ -7,8 +7,8 @@ positions discards WHERE in the window a signal sits. This module holds the redu
 that information, so the arm is a different REDUCTION over an identical forward pass.
 
 **Why every function here is pure and shape-agnostic.** The answer for a synthetic tensor is known
-by construction, so each reduction is testable without the 686 MB checkpoint, without D:, and
-without a 17-minute forward pass. The model-touching code lives in the scripts; nothing here
+by construction, so each reduction is testable without the checkpoint, without D:, and without a
+~15-minute forward pass. The model-touching code lives in the scripts; nothing here
 imports torch.
 
 **Two invariants this module exists to protect.**

@@ -1,0 +1,197 @@
+{
+  "arm": "positional-non-mean-pooled-promoteratlas-150bp",
+  "checkpoint": {
+    "bytes": 22313814,
+    "clone_bytes": 718812164,
+    "clone_mb": 686.0,
+    "mb": 21.28,
+    "path": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas\\trained_weights\\base_model\\promoteratlas-base.pt",
+    "pickle_globals": [
+      "collections.OrderedDict",
+      "pathlib.PosixPath",
+      "torch.FloatStorage",
+      "torch._utils._rebuild_tensor_v2"
+    ],
+    "sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624",
+    "size_note": "the BASE CHECKPOINT FILE is ~21 MB; the 686 MB figure in the surrounding notes is the whole CLONE, which also ships five expression-prediction heads and a segmentation head at ~11 MB each. 1,847,428 params x 4 bytes is only 7.05 MB, so the 21 MB file carries more than the weights. Recorded because a conflated size reads as a checkpoint-integrity fact and is not one.",
+    "volatile_location": true,
+    "why_hashed": "a temp-directory checkpoint can be removed by a reboot or a cleaner; the hash lets a replacement be verified identical rather than assumed"
+  },
+  "date": "2026-11-01",
+  "forward_contract": {
+    "latent_shape": [
+      2,
+      128,
+      150
+    ],
+    "ok": true,
+    "returns": "3-tuple"
+  },
+  "host": {
+    "cuda": false,
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.11.17",
+    "threads": 4,
+    "torch": "2.7.1+cu118"
+  },
+  "lag_set": {
+    "candidates_considered": [
+      {
+        "candidate": "dense_1_20",
+        "fits_in_ram": true,
+        "n_features": 2560,
+        "n_lags": 20,
+        "peak_design_bytes": 1806581760
+      },
+      {
+        "candidate": "log_spaced_9",
+        "fits_in_ram": true,
+        "n_features": 1152,
+        "n_lags": 9,
+        "peak_design_bytes": 812961792
+      },
+      {
+        "candidate": "coarse_5",
+        "fits_in_ram": true,
+        "n_features": 640,
+        "n_lags": 5,
+        "peak_design_bytes": 451645440
+      }
+    ],
+    "chosen": "dense_1_20",
+    "lags": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "n_features": 2560,
+    "n_lags": 20,
+    "rule": "the LARGEST candidate whose design matrix fits in RAM under the headroom factor; declared before the numbers, and only ever gives up resolution to a resource limit rather than trading it for a nicer number"
+  },
+  "model": {
+    "expected_params": 1847428,
+    "n_params": 1847428,
+    "params_match": true
+  },
+  "parity": {
+    "atol_used": 0.0001,
+    "max_abs_deviation": 4.352132478846471e-07,
+    "mean_abs_deviation": 1.252600880832573e-08,
+    "n_sampled": 512,
+    "p99_abs_deviation": 8.46385956876361e-08,
+    "passed": true,
+    "sampling": "deterministic stride over the cohort",
+    "what_it_proves": "the global mean DERIVED from the stored 10-bin means reproduces the committed mean-pool embedding, so every positional rung is measured on the same representation as the 0.5076 incumbent"
+  },
+  "resources": {
+    "free_ram_bytes": 6100967424,
+    "free_ram_gb": 6.1,
+    "headroom_factor": 1.5,
+    "n_rungs_fitting": 6,
+    "n_rungs_not_fitting": 0,
+    "ram_measured_via": "GlobalMemoryStatusEx",
+    "ridge_float64_copies": 2,
+    "rungs": [
+      {
+        "fits_in_ram": true,
+        "n_features": 2560,
+        "peak_design_bytes": 1806581760,
+        "peak_design_gb": 1.807,
+        "rung": "autocorr"
+      },
+      {
+        "fits_in_ram": true,
+        "n_features": 1280,
+        "peak_design_bytes": 903290880,
+        "peak_design_gb": 0.903,
+        "rung": "bins10_mean_oriented"
+      },
+      {
+        "fits_in_ram": true,
+        "n_features": 1280,
+        "peak_design_bytes": 903290880,
+        "peak_design_gb": 0.903,
+        "rung": "bins10_mean_asgiven"
+      },
+      {
+        "fits_in_ram": true,
+        "n_features": 1280,
+        "peak_design_bytes": 903290880,
+        "peak_design_gb": 0.903,
+        "rung": "bins10_max_oriented"
+      },
+      {
+        "fits_in_ram": true,
+        "n_features": 640,
+        "peak_design_bytes": 451645440,
+        "peak_design_gb": 0.452,
+        "rung": "bins5_mean_oriented"
+      },
+      {
+        "fits_in_ram": true,
+        "n_features": 256,
+        "peak_design_bytes": 180658176,
+        "peak_design_gb": 0.181,
+        "rung": "bins2_mean_oriented"
+      }
+    ],
+    "unknown_is_not_ok": "fits_in_ram=None means UNMEASURED, and the scoring runner treats it as a failed pre-check rather than as affordable"
+  },
+  "schema": "positional-arm-feasibility-v1",
+  "stored_block": {
+    "blocks": [
+      "bins10_mean",
+      "bins10_max",
+      "autocorr"
+    ],
+    "bytes": 903290880,
+    "destination": "D:/dna_decode_cache/ per the standing D: rule, not a tight C:",
+    "dtype": "float32",
+    "gb": 0.903,
+    "n_features_total": 5120,
+    "note": "bins10_mean is stored UNORIENTED; `orient` acts on the stored bin axis, so both orientation rungs cost no second forward pass"
+  },
+  "substrate": {
+    "filter": "category == 'tile' and len(seq) == 150",
+    "n_cohort": 44106,
+    "n_duplicate_sequences": 689,
+    "n_parsed": 46713,
+    "n_peaks": 2433,
+    "path": "D:\\dna_decode_cache\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz",
+    "sequence_length": 150,
+    "strand_counts": {
+      "+": 21821,
+      "-": 22285
+    },
+    "why_this_filter": "it is the filter scripts/promoteratlas_local_reconcile.py applied before building the committed embedding cache, which is indexed positionally against the filtered list"
+  },
+  "throughput": {
+    "batch": 64,
+    "caveat": "linear extrapolation from a 512-tile sample; contention from another job moves it, which is why it is recorded with the host's thread count",
+    "device": "cpu",
+    "full_pass_minutes_extrapolated": 12.79,
+    "full_pass_seconds_extrapolated": 767.3,
+    "n_sampled": 512,
+    "sample_seconds": 8.91,
+    "seq_per_second": 57.48
+  },
+  "verdict": "FEASIBLE",
+  "wall_seconds": 9.9
+}
