@@ -1,0 +1,384 @@
+{
+  "arm": "asgiven-position-resolved-promoteratlas-150bp",
+  "bar": "wiki/asgiven_arm_acceptance_bar.json",
+  "block": {
+    "checkpoint_sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624",
+    "geometry": {
+      "channels": 128,
+      "dtype": "float32",
+      "lags": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "n_bins": 10,
+      "n_features": 5120,
+      "n_rows": 44106,
+      "sequence_length": 150
+    },
+    "path": "D:\\dna_decode_cache\\promoteratlas_positional\\positional_block.npy",
+    "sidecar_status": "COMPLETE"
+  },
+  "comparator": {
+    "atlas_median": 0.5076,
+    "atlas_per_seed": {
+      "0": 0.5461,
+      "1": 0.5499,
+      "2": 0.4983,
+      "3": 0.4986,
+      "4": 0.5075,
+      "5": 0.5163,
+      "6": 0.5078,
+      "7": 0.4933,
+      "8": 0.5016,
+      "9": 0.521
+    },
+    "recomputed_in_run": false,
+    "source": "data/promoteratlas/local_reconcile_2026-11-01.json"
+  },
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "date": "2026-11-02",
+  "forecast_recorded_in_bar": {
+    "comparison_point": {
+      "asgiven_median": 0.5086,
+      "difference": 0.0193,
+      "oriented_primary_median": 0.4893
+    },
+    "my_forecast_record_in_this_project": "4 of 8. The positional arm's bar put p=0.45 on POSITIONAL_NO_GAIN and it landed there, which is the fourth hit. DO NOT defer to these priors -- and note this particular forecast is nearly free, because the number is already visible.",
+    "p_asgiven_adds": 0.05,
+    "p_asgiven_no_gain": 0.15,
+    "p_asgiven_ties": 0.8,
+    "predicted_outcome": "ASGIVEN_TIES",
+    "rationale": "The interval is already known to contain zero at the corrected level the positional run used, and widening to a plain 95% interval makes containing zero MORE likely, not less. The 0.15 on NO_GAIN is not symmetry: the positional run's value came from a secondary scored at alpha/6, and re-scoring at 95% could in principle resolve a small negative, though the point estimate -0.0042 argues against it.",
+    "recorded_before_any_score_for_this_arm": true
+  },
+  "free_ram_bytes_at_start": 7297540096,
+  "gates": {
+    "parity": {
+      "committed_median": 0.5076,
+      "derived_median": 0.5076,
+      "detail": "the global mean derived from the stored bin means reproduces the committed embedding and its per-seed Spearmans, so every rung below is comparable to 0.5076",
+      "embedding_level": {
+        "atol_used": 1e-05,
+        "max_abs_deviation": 1.0583549737708253e-06,
+        "mean_abs_deviation": 1.2745254828910284e-08,
+        "n_rows": 44106,
+        "p99_abs_deviation": 8.642673487990749e-08,
+        "passed": true
+      },
+      "embedding_tolerance": 1e-05,
+      "passed": true,
+      "spearman_level": {
+        "deviant_seeds": [],
+        "per_seed": {
+          "0": {
+            "abs_deviation": 0.0,
+            "committed": 0.5461,
+            "derived": 0.5461
+          },
+          "1": {
+            "abs_deviation": 0.0,
+            "committed": 0.5499,
+            "derived": 0.5499
+          },
+          "2": {
+            "abs_deviation": 0.0,
+            "committed": 0.4983,
+            "derived": 0.4983
+          },
+          "3": {
+            "abs_deviation": 0.0,
+            "committed": 0.4986,
+            "derived": 0.4986
+          },
+          "4": {
+            "abs_deviation": 0.0,
+            "committed": 0.5075,
+            "derived": 0.5075
+          },
+          "5": {
+            "abs_deviation": 0.0,
+            "committed": 0.5163,
+            "derived": 0.5163
+          },
+          "6": {
+            "abs_deviation": 0.0,
+            "committed": 0.5078,
+            "derived": 0.5078
+          },
+          "7": {
+            "abs_deviation": 0.0,
+            "committed": 0.4933,
+            "derived": 0.4933
+          },
+          "8": {
+            "abs_deviation": 0.0,
+            "committed": 0.5016,
+            "derived": 0.5016
+          },
+          "9": {
+            "abs_deviation": 0.0,
+            "committed": 0.521,
+            "derived": 0.521
+          }
+        },
+        "tolerance": 0.001
+      }
+    },
+    "shuffled_label_null": {
+      "bar": "|median| < 0.02",
+      "ci_method": "exact distribution-free order-statistic interval for the MEDIAN, with its achieved coverage -- not a normal approximation around the MEAN",
+      "detail": "the shuffled-label control is +0.0061 over 10 seeds, inside the |median|<0.02 bar",
+      "extended": false,
+      "median_10": 0.0061,
+      "median_ci95": [
+        -0.0043,
+        0.0196
+      ],
+      "median_ci_achieved_coverage": 0.978515625,
+      "n_extension_seeds": 0,
+      "n_pooled": 10,
+      "passed": true,
+      "per_seed_10": {
+        "0": 0.0274,
+        "1": 0.0102,
+        "2": 0.0171,
+        "3": -0.0017,
+        "4": 0.0659,
+        "5": 0.0196,
+        "6": 0.002,
+        "7": -0.0229,
+        "8": -0.0345,
+        "9": -0.0043
+      },
+      "per_seed_extension": {},
+      "pooled_median": 0.0061,
+      "rung": "bins10_mean_asgiven",
+      "statistic": "the shuffled-label model's OWN Spearman on the primary rung: ridge_spearman(primary[train], SHUFFLED train labels, primary[test], REAL test labels)",
+      "statistic_provenance": "INHERITED from the incumbent arm's IMPLEMENTATION, not from its prose. That bar's text reads '|median gain over GC| < 0.02' but its kernel computes no GC term at all. The implementation is the statistic that produced the fragment arm's +0.0517 and the atlas arm's 0.0203; a literal arm_shuffled-minus-GC would sit near -0.31 and could never clear a 0.02 bar. Discrepancy recorded rather than silently resolved."
+    },
+    "split_equality": {
+      "detail": "all 10 recomputed splits match the committed n_test_per_seed",
+      "mismatched_seeds": [],
+      "passed": true,
+      "per_seed": {
+        "0": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11198,
+          "n_test_committed": 11198,
+          "n_train": 32908
+        },
+        "1": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11018,
+          "n_test_committed": 11018,
+          "n_train": 33088
+        },
+        "2": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11373,
+          "n_test_committed": 11373,
+          "n_train": 32733
+        },
+        "3": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10883,
+          "n_test_committed": 10883,
+          "n_train": 33223
+        },
+        "4": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11025,
+          "n_test_committed": 11025,
+          "n_train": 33081
+        },
+        "5": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10907,
+          "n_test_committed": 10907,
+          "n_train": 33199
+        },
+        "6": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10590,
+          "n_test_committed": 10590,
+          "n_train": 33516
+        },
+        "7": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11249,
+          "n_test_committed": 11249,
+          "n_train": 32857
+        },
+        "8": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10661,
+          "n_test_committed": 10661,
+          "n_train": 33445
+        },
+        "9": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10690,
+          "n_test_committed": 10690,
+          "n_train": 33416
+        }
+      }
+    }
+  },
+  "honest_limits": [
+    "NOT a blind pre-registration -- see NOT_A_BLIND_PRE_REGISTRATION. This arm's evidential weight is lower than the positional arm's whatever it returns.",
+    "The orientation convention remains a 1-BIT INFERENCE from a performance difference between two rungs, not established biology. This arm tests the better-performing side of that inference; it does not establish which orientation `seq` is given in.",
+    "No promoter anchor exists on this substrate, so even an ADDS verdict would say that position bins relative to an ARBITRARY 150 bp window help -- not that a promoter register was recovered.",
+    "The encoder is FROZEN; this bounds nothing about a fine-tuned one.",
+    "689 duplicate sequences are unchanged and inherited by BOTH sides of the paired comparison.",
+    "The rung ceiling is 0.941 and replicate-derived. No tile-rung number may be read as a fraction of it without saying so."
+  ],
+  "margin": 0.02,
+  "multiplicity": {
+    "ci_percentiles": [
+      2.5,
+      97.5
+    ],
+    "correction": "NONE -- one comparison, judged at the plain 95% level",
+    "family_alpha": 0.05,
+    "n_primaries": 1,
+    "no_secondaries_declared": true,
+    "primary": "bins10_mean_asgiven",
+    "why_no_secondaries": "A second rung here would re-open the forking path the positional bar closed by making its secondaries ineligible, and would be a worse offence given the primary's number is already known. One rung, one interval, one verdict."
+  },
+  "not_a_blind_pre_registration": {
+    "already_observed_ci": [
+      -0.0079,
+      0.0017
+    ],
+    "already_observed_ci_level": [
+      0.4166666666666667,
+      99.58333333333333
+    ],
+    "already_observed_gain": -0.0042,
+    "already_observed_median": 0.5086,
+    "already_observed_rung": "bins10_mean_asgiven",
+    "source": "wiki/positional_arm_result_2026-11-01.json (read, not retyped)",
+    "statement": "The number this bar grades is ALREADY VISIBLE and was published before this arm existed. This is not a blind pre-registration and must never be presented as one.",
+    "what_it_costs": "A pre-registration's value is that the bar could not have been shaped by the result. That guarantee is absent here, so this arm's evidential weight is LOWER than the positional arm's, whatever it returns.",
+    "what_survives": "Whether the as-given reduction clears the inherited margin as a PRIMARY, scored through split-equality, parity and a shuffled-label null -- gates the positional run's secondaries never had to pass in that role. A foreseeable answer does not make the gates optional."
+  },
+  "primary_rung": "bins10_mean_asgiven",
+  "ram": {
+    "free_at_start_bytes": 7297540096,
+    "free_before_rung_bytes": 6351867904,
+    "headroom_factor": 1.5
+  },
+  "rung": {
+    "gain_bootstrap": {
+      "ci_hi": 0.0004,
+      "ci_lo": -0.0068,
+      "ci_percentiles": [
+        2.5,
+        97.5
+      ],
+      "mean": -0.0031,
+      "median": -0.0042,
+      "n_boot": 10000,
+      "n_seeds": 10,
+      "seed": 707
+    },
+    "median_spearman": 0.5086,
+    "n_features": 1280,
+    "n_seeds": 10,
+    "peak_design_bytes": 903290880,
+    "per_seed": {
+      "0": {
+        "atlas_committed": 0.5461,
+        "gain": -0.0126,
+        "spearman": 0.5335
+      },
+      "1": {
+        "atlas_committed": 0.5499,
+        "gain": -0.0123,
+        "spearman": 0.5376
+      },
+      "2": {
+        "atlas_committed": 0.4983,
+        "gain": 0.0016,
+        "spearman": 0.4999
+      },
+      "3": {
+        "atlas_committed": 0.4986,
+        "gain": 0.0033,
+        "spearman": 0.5019
+      },
+      "4": {
+        "atlas_committed": 0.5075,
+        "gain": -0.0055,
+        "spearman": 0.502
+      },
+      "5": {
+        "atlas_committed": 0.5163,
+        "gain": -0.0043,
+        "spearman": 0.512
+      },
+      "6": {
+        "atlas_committed": 0.5078,
+        "gain": 0.0031,
+        "spearman": 0.5109
+      },
+      "7": {
+        "atlas_committed": 0.4933,
+        "gain": -0.0044,
+        "spearman": 0.4889
+      },
+      "8": {
+        "atlas_committed": 0.5016,
+        "gain": 0.0046,
+        "spearman": 0.5062
+      },
+      "9": {
+        "atlas_committed": 0.521,
+        "gain": -0.0041,
+        "spearman": 0.5169
+      }
+    },
+    "role": "the arm's ONLY primary; no secondaries are declared",
+    "rung": "bins10_mean_asgiven",
+    "seed_wins_over_atlas": 4,
+    "skipped": false
+  },
+  "schema": "asgiven-arm-result-v1",
+  "substrate": {
+    "n_peaks": 2433,
+    "n_tiles": 44106,
+    "path": "D:\\dna_decode_cache\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz"
+  },
+  "verdict": "ASGIVEN_TIES",
+  "verdict_detail": "the interval neither clears the margin +0.0200 nor lies below zero, so no gain of at least the margin is demonstrated and no loss is either",
+  "verdict_is_rederivable_from_this_artifact": true,
+  "wall_seconds": 60.6
+}

@@ -276,6 +276,15 @@ class ScoreCtx:
     verbose: bool
     t0: float
     primary_matrix: object = None
+    #: Which rung the shuffled-label null is computed on. Defaults to this arm's first co-primary,
+    #: so behaviour is unchanged; a SIBLING arm with a different declared primary (the as-given arm
+    #: declares `bins10_mean_asgiven`) sets it, which is what lets the three gates be shared rather
+    #: than copied into a second runner.
+    primary_rung: str | None = None
+
+    @property
+    def primary(self) -> str:
+        return self.primary_rung or CO_PRIMARIES[0]
 
     def ys(self, idx):
         return [self.tiles[i].expression for i in idx]
@@ -368,7 +377,7 @@ def gate_parity(ctx: ScoreCtx) -> dict:
 # GATE 3: the shuffled-label null -- EXTENDS on failure rather than weakening
 # ---------------------------------------------------------------------------------------------------
 def gate_shuffled_label_null(ctx: ScoreCtx) -> dict:
-    primary = CO_PRIMARIES[0]
+    primary = ctx.primary
     prim = build_rung(ctx.arr, ctx.layout, primary, ctx.strands)
     ctx.primary_matrix = prim          # the ladder reuses it, so the rung is built exactly once
 
@@ -449,7 +458,7 @@ GATE_FUNCS = {
 # ---------------------------------------------------------------------------------------------------
 def score_ladder(ctx: ScoreCtx, rec: dict) -> dict:
     """Fills `rec["rungs"]` and `rec["ram"]`. Returns the per-tile predictions for the primary."""
-    primary = CO_PRIMARIES[0]
+    primary = ctx.primary
     pertile = {}
     min_free = rec["free_ram_bytes_at_start"]
 
