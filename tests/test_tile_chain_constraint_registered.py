@@ -16,6 +16,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 REPO = Path(__file__).resolve().parents[1]
 STORE = REPO / "soraya_runs" / "constraint-expiry.json"
 CID = "glm-tile-chain-promcalc-substrate-absent"
@@ -83,21 +85,64 @@ def test_the_rationale_names_the_anchor_risk():
     assert "REFUSED_ANCHOR_MISMATCH" in _store()["constraints"][CID]["rationale"]
 
 
-def test_the_eleven_pre_existing_constraints_are_still_present():
-    """This was an APPEND. Named individually, because a count alone would pass if one were swapped."""
-    rows = _store()["constraints"]
-    for cid in (
-        "north-star-step4-animals-deferred",
-        "ecoff-values-still-unsourced",
-        "f5-etd-route-retired-with-remainder",
-        "atlas-pfizer-vivli-request-gated",
-        "align-foundation-benchmark-is-a-proposal",
-        "cabbage-genomes-tree-coverage-uncensused",
-        "cabbage-clonality-g8-blocked-no-mash",
-        "local-gpu-vram-blocks-dna-lm-finetune",
-        "gd-finetune-gated-on-sampling-sweep-not-compute",
-        "env-python-pinned-313-no-315-wheels",
-        "glm-fragment-rung-kmer6-full-size-ram-bound",
-    ):
+#: Every constraint id this repo has seen registered. NAMED INDIVIDUALLY on purpose -- the original
+#: docstring is right that "a count alone would pass if one were swapped", and the names are the
+#: actual guard. `glm-tile-chain-promcalc-substrate-absent` is `CID` and is also asserted by its own
+#: test above; the redundancy is harmless and keeps this list a complete inventory.
+#:
+#: **The trailing total used to be `== 12` and had been RED against a registry of 14.** That is the
+#: same defect class the arms guards carried: an exact count standing where an invariant belongs. The
+#: count was 11 named + CID when written, and two rows have been appended since
+#: (`gd-sweep-weights-absent`, `mvp-bar-parser-blind-to-table-format`). Both are now NAMED rather
+#: than absorbed into a looser bound, so the file keeps its named-individually property, and the
+#: total is a FLOOR TIED TO THIS LIST so it cannot go stale on the next append.
+#:
+#: The test's name was also made count-free. It read "eleven" while naming eleven of fourteen rows,
+#: and a guard whose name misstates what it guards is the drift this project keeps finding in
+#: orientation strings.
+NAMED_CONSTRAINTS = (
+    "north-star-step4-animals-deferred",
+    "ecoff-values-still-unsourced",
+    "f5-etd-route-retired-with-remainder",
+    "atlas-pfizer-vivli-request-gated",
+    "align-foundation-benchmark-is-a-proposal",
+    "cabbage-genomes-tree-coverage-uncensused",
+    "cabbage-clonality-g8-blocked-no-mash",
+    "local-gpu-vram-blocks-dna-lm-finetune",
+    "gd-finetune-gated-on-sampling-sweep-not-compute",
+    "env-python-pinned-313-no-315-wheels",
+    "glm-fragment-rung-kmer6-full-size-ram-bound",
+    "gd-sweep-weights-absent",
+    "mvp-bar-parser-blind-to-table-format",
+    CID,
+)
+
+
+def assert_named_constraints_present(rows: dict) -> None:
+    """The guard, taking its store as an argument so a synthetic one can prove it non-vacuous."""
+    for cid in NAMED_CONSTRAINTS:
         assert cid in rows, f"pre-existing constraint {cid} vanished"
-    assert len(rows) == 12
+    assert len(rows) >= len(NAMED_CONSTRAINTS), (
+        f"the registry holds {len(rows)} rows but {len(NAMED_CONSTRAINTS)} are named; a row was "
+        f"removed without this list being updated"
+    )
+
+
+def test_the_pre_existing_constraints_are_still_present():
+    assert_named_constraints_present(_store()["constraints"])
+
+
+def test_the_presence_guard_is_NOT_VACUOUS_a_removed_constraint_is_detected():
+    """What the floor must not cost. A bound alone would pass a swap; the names are the guard."""
+    rows = dict(_store()["constraints"])
+    victim = NAMED_CONSTRAINTS[0]
+    rows.pop(victim)
+    with pytest.raises(AssertionError, match=victim):
+        assert_named_constraints_present(rows)
+
+
+def test_the_floor_does_not_drift_on_a_further_append():
+    """The whole reason the total is a floor rather than an equality."""
+    rows = dict(_store()["constraints"])
+    rows["a-synthetic-future-constraint"] = {"expiry_kind": "manual"}
+    assert_named_constraints_present(rows)          # must not raise
