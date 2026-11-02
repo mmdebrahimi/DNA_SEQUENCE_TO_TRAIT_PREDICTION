@@ -1,0 +1,161 @@
+{
+  "arm": "shipped-expression-heads-zeroshot-150bp",
+  "check_order": [
+    [
+      "split_equality",
+      "INDETERMINATE_SPLIT_MISMATCH"
+    ],
+    [
+      "geometry",
+      "INDETERMINATE_GEOMETRY_FAIL"
+    ],
+    [
+      "head_validity",
+      "INDETERMINATE_COLLAPSED_HEAD"
+    ],
+    [
+      "shuffled_label_null",
+      "INDETERMINATE_NULL_FAIL"
+    ],
+    [
+      "primary_decision",
+      [
+        "HEADS_ADDS",
+        "HEADS_TIES",
+        "HEADS_NO_GAIN"
+      ]
+    ]
+  ],
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "forecast": {
+    "my_forecast_record_in_this_project": "5 of 9. Do not defer to this prior; it is recorded so the bar can be scored on it.",
+    "p_heads_adds": 0.08,
+    "p_heads_no_gain": 0.7,
+    "p_heads_ties": 0.22,
+    "predicted_outcome": "HEADS_NO_GAIN",
+    "reasoning": "these heads were fitted on different libraries at 86 bp and are applied here with no fitting on this substrate at all, while the incumbent is a ridge FITTED on this rung. A zero-shot predictor losing to a fitted one is the expected direction."
+  },
+  "frozen": "2026-11-02",
+  "honest_limits_fixed_in_advance": [
+    "ZERO-SHOT TRANSFER, not head quality: all five heads were trained on other libraries, so a null bounds transfer to the GSE144621 tile rung and says nothing about the heads as predictors of the libraries they were fitted on.",
+    "GEOMETRY MISMATCH: the heads expect 86 positions and the substrate is 150, so every number here is a windowed application and not a native one. 65 windows per tile.",
+    "THE tslpred-kosuri2013 HEAD'S ENDPOINT DOES NOT MATCH THIS RUNG. It predicts TRANSLATION; promoter activity is a transcription quantity. It is included under the standing instruction to leave no stones unturned, and its inclusion WIDENS every head's interval via the alpha/5 correction rather than helping the arm.",
+    "CIRCULARITY IS SCOPED, NOT ABSENT: the urtecho2018 head is circular on the sigma70 rung (GSE108535) and must never be a comparator there. It is not circular on this substrate, and that scoping is recorded so nobody carries it to the wrong rung.",
+    "THE INCUMBENT IS A FITTED RIDGE AND THIS ARM IS NOT FITTED AT ALL. The comparison is therefore asymmetric in tuning budget, and it is asymmetric AGAINST this arm. A loss bounds the pair, not the heads alone.",
+    "0.941 IS THE REPLICATE CEILING, so the incumbent 0.5076 is 54%% of what is achievable. An arm that ties the incumbent has not approached the ceiling."
+  ],
+  "inherited_not_chosen": {
+    "comparator": {
+      "atlas_median": 0.5076,
+      "atlas_per_seed": {
+        "0": 0.5461,
+        "1": 0.5499,
+        "2": 0.4983,
+        "3": 0.4986,
+        "4": 0.5075,
+        "5": 0.5163,
+        "6": 0.5078,
+        "7": 0.4933,
+        "8": 0.5016,
+        "9": 0.521
+      },
+      "must_be_recomputed_in_run": false,
+      "source": "data/promoteratlas/local_reconcile_2026-11-01.json"
+    },
+    "margin": {
+      "derivation": "INHERITED verbatim from the tile-chain rung's incumbent bar; not re-chosen for this arm, because a per-arm margin is a free parameter",
+      "value": 0.02
+    },
+    "split": {
+      "frac": 0.25,
+      "n_seeds": 10,
+      "n_test_per_seed": {
+        "0": 11198,
+        "1": 11018,
+        "2": 11373,
+        "3": 10883,
+        "4": 11025,
+        "5": 10907,
+        "6": 10590,
+        "7": 11249,
+        "8": 10661,
+        "9": 10690
+      },
+      "rule": "leave_peak_out_indices, byte-identical to the incumbent's"
+    }
+  },
+  "metric_rule": "the arm's metric is max over the 5 declared heads of the median Spearman at the mean reduction; never over a ladder, never across arms",
+  "multiplicity": {
+    "ci_percentiles": [
+      0.5,
+      99.5
+    ],
+    "correction": "BONFERRONI over the 5 declared heads (alpha/5)",
+    "divisor_is_read_from_the_probe": true,
+    "divisor_moved_from_four_to_five": "an earlier note recorded four heads; five were measured. The correction is therefore alpha/5, which makes the arm HARDER to pass than alpha/4 -- the honest direction for an inherited miscount.",
+    "n_primaries": 5,
+    "primaries": [
+      "promoteratlas-trspred-hossain2020",
+      "promoteratlas-trspred-lafleur2022",
+      "promoteratlas-trspred-urtecho2018",
+      "promoteratlas-trspred-yu2021",
+      "promoteratlas-tslpred-kosuri2013"
+    ],
+    "why_not_heads_times_reductions": "the arm's metric is the MAXIMUM OVER HEADS at the primary reduction only. Correcting over heads x reductions would be ten comparisons wearing the costume of five, and would also make the ineligible secondary count toward the verdict."
+  },
+  "outcomes": [
+    "HEADS_ADDS",
+    "HEADS_TIES",
+    "HEADS_NO_GAIN",
+    "INDETERMINATE_SPLIT_MISMATCH",
+    "INDETERMINATE_GEOMETRY_FAIL",
+    "INDETERMINATE_COLLAPSED_HEAD",
+    "INDETERMINATE_NULL_FAIL"
+  ],
+  "pre_commitments": [
+    "a sub-margin gain returns HEADS_TIES, decided here and NOT re-readable as a win",
+    "the max reduction is reported but is NOT eligible as the arm's result",
+    "the arm's metric is the max over heads at the primary reduction ONLY",
+    "a null bounds TRANSFER to this rung, NOT the heads",
+    "the route is per_window_recompute and is NOT to be switched after seeing a score",
+    "a collapsed head yields INDETERMINATE_COLLAPSED_HEAD, never a scored null"
+  ],
+  "question": "do the five shipped expression heads, applied zero-shot, beat the frozen encoder's median Spearman 0.5076 by the inherited margin 0.02 on byte-identical splits?",
+  "reachable_equals_declared": true,
+  "reductions": {
+    "primary": "mean",
+    "secondary": "max",
+    "secondary_is_eligible_as_the_arms_result": false,
+    "why": "one primary per head. The max-over-windows reduction is declared now so it can be reported without being promotable: on the positional arm the highest-scoring rung was an ineligible secondary, and having said so in advance is the only reason that result could not be re-read as a win."
+  },
+  "schema": "expression-heads-acceptance-bar-v1",
+  "validity_controls": {
+    "geometry": "every head's fc1 must be (64, 11008) and the window count must be 65",
+    "head_validity": "each head must produce finite, NON-CONSTANT output across the cohort. A collapsed head would score as a clean null rather than as a fault, which is the failure mode that most resembles a finding.",
+    "shuffled_label_null": "median gain under shuffled training labels must satisfy |median| < 0.02",
+    "split_equality": "the test sets must match the committed n_test_per_seed exactly"
+  },
+  "windowing": {
+    "cheap_route_hours": 0.24,
+    "chosen": "per_window_recompute",
+    "faithful_route_is": "per_window_recompute",
+    "geometry": "11008 = 128 x 86",
+    "measured_rank_agreement": {
+      "promoteratlas-trspred-hossain2020": 0.9983,
+      "promoteratlas-trspred-lafleur2022": 0.9992,
+      "promoteratlas-trspred-urtecho2018": 0.9941,
+      "promoteratlas-trspred-yu2021": 0.9986,
+      "promoteratlas-tslpred-kosuri2013": 0.9888
+    },
+    "n_windows": 65,
+    "rejected_alternative": "full_latent_then_slice",
+    "tolerance": 0.999,
+    "tolerance_derivation": "DERIVED FROM THE MARGIN, not from these numbers. Gains on this rung sit in the 0.00-0.05 band against a margin of 0.02; two predictors agreeing at rho ~0.99 can differ in Spearman-against-labels by order 0.01, half the margin. Requiring 0.999 holds route-induced movement near 5% of the margin.",
+    "true_route_hours": 4.64,
+    "why": "head promoteratlas-tslpred-kosuri2013 agrees with the faithful route at only 0.9888, below the margin-derived tolerance 0.9990, so the cheap route is NOT allowed to define the arm. The arm pays 4.64 h instead of 0.24 h. The cheap route is probably fine -- but 'probably fine' is not a frozen bar, and a 19.3x saving does not justify an unquantified risk to the verdict.",
+    "why_the_true_route_is_the_faithful_one": "a head is a function from an 86-position latent to a scalar, so handing it 86-position latents is what APPLYING the head means. The cheap route feeds it a pooled representation computed with context the head never saw at training time, which is an approximation introduced for speed and nothing else.",
+    "worst_head": "promoteratlas-tslpred-kosuri2013",
+    "worst_rank_agreement": 0.9888
+  },
+  "zero_shot_framing": "These heads were trained on OTHER libraries (hossain2020, lafleur2022, urtecho2018, yu2021, kosuri2013). This arm therefore measures TRANSFER to the GSE144621 tile rung. A null result bounds that transfer; it does NOT bound the heads."
+}
