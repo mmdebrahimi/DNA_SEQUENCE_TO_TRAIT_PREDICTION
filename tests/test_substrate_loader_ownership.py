@@ -68,7 +68,21 @@ ALLOWED_MENTIONS: dict[str, frozenset[str]] = {
     # RESIDUAL, named rather than hidden: this exemption is per-MODULE, so if GSE144621-reading code
     # is ever added to lentimpra.py the detector will no longer catch it. Same property as the
     # encoder.py row above. The exemption buys legibility, not immunity.
-    "GSE144621": frozenset({"glm/encoder.py", "glm/lentimpra.py"}),
+    # glm/tile_controls.py: 1 docstring mention (line 4), added 2026-11-01 when that module was
+    # CORRECTED from parsing the substrate itself to calling the owner. VERIFIED BY READING THE
+    # HITS, per this file's own standard: exactly one `GSE144621` occurrence, inside the module
+    # docstring; zero `gzip` imports and zero `gzip.` attribute accesses (pinned at the syntax
+    # level by tests/test_tile_controls.py, because a substring search would match this very
+    # docstring); it imports `load_peak_tiles` and `GenomeWideDataError` FROM genomewide, so it
+    # is a consumer of the owner rather than a second reader; it opens no file.
+    # The same shape as the lentimpra row above, and worth the same note: the sentence that trips
+    # this detector is the sentence explaining that the OWNER parses the file -- prose describing
+    # the correct arrangement, firing the guard against the incorrect one.
+    # Measured before the row was added: with the parser deleted the guard STILL failed on this
+    # one mention, which is the evidence that this exemption does real work rather than covering
+    # a live reader. The RESIDUAL named above applies here identically -- per-MODULE, so
+    # substrate-reading code added to tile_controls.py later will not be caught.
+    "GSE144621": frozenset({"glm/encoder.py", "glm/lentimpra.py", "glm/tile_controls.py"}),
 }
 
 #: Accession -> (owning module relative to dna_decode/, the trap that owner's loader encodes).

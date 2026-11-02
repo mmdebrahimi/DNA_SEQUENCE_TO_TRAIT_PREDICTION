@@ -89,9 +89,9 @@
       },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 2,
+      "decoy_full_match": 3,
       "n_decoys": 241,
-      "decoy_match_rate": 0.0083,
+      "decoy_match_rate": 0.0124,
       "decoy_group_size": 3,
       "discrimination": "HIGH"
     },
@@ -119,9 +119,9 @@
       },
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
-      "decoy_full_match": 2,
+      "decoy_full_match": 3,
       "n_decoys": 241,
-      "decoy_match_rate": 0.0083,
+      "decoy_match_rate": 0.0124,
       "decoy_group_size": 3,
       "discrimination": "HIGH"
     },
@@ -143,8 +143,8 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 174,
-      "n_decoys": 726,
-      "decoy_match_rate": 0.2397,
+      "n_decoys": 727,
+      "decoy_match_rate": 0.2393,
       "decoy_group_size": 1,
       "discrimination": "MODERATE"
     },
@@ -172,9 +172,9 @@
         "0.941": 0.9412
       },
       "adjudicated_benign": [],
-      "decoy_full_match": 10,
+      "decoy_full_match": 9,
       "n_decoys": 362,
-      "decoy_match_rate": 0.0276,
+      "decoy_match_rate": 0.0249,
       "decoy_group_size": 2,
       "discrimination": "HIGH"
     },
@@ -230,7 +230,7 @@
       },
       "adjudicated_benign": [],
       "decoy_full_match": 11,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0152,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -255,7 +255,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 6,
-      "n_decoys": 726,
+      "n_decoys": 727,
       "decoy_match_rate": 0.0083,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -280,7 +280,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -304,7 +304,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -370,7 +370,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -405,7 +405,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -446,7 +446,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 726,
+      "n_decoys": 727,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -484,7 +484,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 726,
+      "n_decoys": 727,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -509,7 +509,7 @@
       },
       "adjudicated_benign": [],
       "decoy_full_match": 4,
-      "n_decoys": 726,
+      "n_decoys": 727,
       "decoy_match_rate": 0.0055,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -533,7 +533,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 2,
-      "n_decoys": 726,
+      "n_decoys": 727,
       "decoy_match_rate": 0.0028,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -564,7 +564,7 @@
       },
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -602,7 +602,7 @@
         }
       ],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -629,7 +629,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"
@@ -888,7 +888,7 @@
       "matched_only_after_rounding": {},
       "adjudicated_benign": [],
       "decoy_full_match": 0,
-      "n_decoys": 725,
+      "n_decoys": 726,
       "decoy_match_rate": 0.0,
       "decoy_group_size": 1,
       "discrimination": "HIGH"

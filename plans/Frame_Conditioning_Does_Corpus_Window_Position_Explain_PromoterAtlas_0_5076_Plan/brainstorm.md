@@ -143,6 +143,32 @@ gets graded without them.
 
 Carried to DECISIONS NEEDED at the top, where a reader will actually see them.
 
+## AMENDED 2026-11-01 — two of this review's own claims were wrong, and its open question is settled
+
+**"Roughly a ten-line change" was wrong.** The module change is small, but the owner enforces a
+minimum of eight columns and requires `peak_start`, `peak_end` and `strand`, which the five-column
+synthetic fixtures lacked. Seven of the nine tests used them, so the fixture rebuild was the bulk of
+the work. The estimate is left above as written; this is the correction.
+
+**"An ALLOWED_MENTIONS entry would be the WRONG fix" was half wrong.** True only of adding a row
+*instead of* deleting the parser. False as a blanket claim: the guard's criterion is the bare text
+pattern `\bGSE\d+` over whole files, and the module names the accession in a docstring sentence that
+survives the fix. Measured during execution — with the parser deleted the guard **still failed** on
+that one mention. Clearing it required both acts in order, and the row was added only after
+observing the failure, which is what makes it evidence rather than assumption.
+
+**The ordering divergence this review flagged is real.** Measured at file order 3,490 windows /
+624,812 bases against sorted 3,496 / 625,255 — a symmetric difference of 26 windows and 146 of
+43,061 uniquely-located tiles changing in-window status. So the "exact reproduction" claim genuinely
+could not stand, and row ordering is now an explicit parameter with every pinned figure labelled.
+
+**Two figures in this review are superseded.** Stated-coordinate agreement is 1193/43061 = 2.77%
+across every uniquely-located tile, and the trivial-overlap share is 2,359 or 8.2%. Both already
+appear corrected in the CORRECTIONS section above; noted here so the chain is complete.
+
+**Outcome.** The red ownership guard is green: 1 failed / 7 passed → 8 passed. Full record:
+`wiki/frame_plan_amendments_2026-11-01.md`.
+
 ## 6. Recommended next step
 
 Fix **C1** first: it is red now, it is roughly a ten-line change, and it removes a defect instead of

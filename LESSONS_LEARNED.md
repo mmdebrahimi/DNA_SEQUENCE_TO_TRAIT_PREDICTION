@@ -2,6 +2,68 @@
 
 Concise practical lessons from building Phase 1. Append-only.
 
+## 2026-11-01
+
+- **A doc that says "read the FAILURE SET, not the pass count" was itself wrong about one member of
+  the failure set, for an unknown length of time.** `README.md` carried that instruction *and* a
+  blanket classification — *"all 14 are absent DATA and none is a code defect"* — with a per-group
+  breakdown that summed correctly and so looked audited. Running the suite and reading the 13 rows
+  shows 12 absent-data and one that is not: a hand-maintained
+  `assert len(rows) == 12` against a constraint registry that now holds **14**. The breakdown was
+  also wrong in a second, quieter way — the essentiality group is 3, not 5, since `openpyxl`
+  closed 2 of them weeks ago, a correction already recorded in `TODOS.md` and never propagated to
+  the paragraph that states the total. **A summed breakdown is not a checked one; re-derive the
+  classification from the row names, not from the arithmetic.**
+- **A count rail that goes red because its subject legitimately grew is the one case where the
+  one-character fix is the wrong move.** The eleven *named* constraints the test exists to protect
+  are all still present; only the trailing total drifted. Bumping `12` → `14` is both the fix and
+  exactly the "tidying" the rail was written to interrupt, so it was recorded and escalated rather
+  than edited — the same resolution the 2026-10-27 R6 rails got. The reusable shape, already the
+  repo's recorded fix for hand-enumerated lists: prefer a *minimum* plus a roster DERIVED from the
+  registry over an absolute count typed beside it.
+- **A module docstring's architectural justification can be false, and this one licensed duplicating
+  a loader.** `dna_decode/glm/tile_controls.py` opened with *"This is a NEW module rather than an
+  edit to `genomewide.py`, and that is not a style choice"*, citing the base64-embedded-kernel
+  byte-identity assert in `scripts/promoteratlas_arm_dryrun.py`. That constraint is real but answers
+  a different question: it forbids **editing** the owner, not **calling** it. The argument for a
+  separate MODULE was silently reused as an argument for a separate PARSER, and the module shipped
+  with its own `gzip.open` + hardcoded tab split over a substrate that already had a registered
+  owner. **The correction cost nothing, which is the part worth remembering** — `load_peak_tiles`
+  already returned the control rows, so filtering its output gives 936 `random` + 470 `neg_control`
+  at 150 bp, byte-identical to what the second parser produced. Before accepting a docstring's
+  reason for not reusing something, check that the stated constraint applies to the reuse you are
+  actually declining.
+- **A text pattern over source cannot tell an import from a docstring, and in this change that bit
+  on BOTH sides within minutes.** The ownership guard's `\bGSE\d+` scan went red on a module whose
+  only remaining reference was a prose sentence *explaining that the owner parses the file* — prose
+  describing the correct arrangement, firing a guard aimed at the incorrect one. The fix's own first
+  draft then proposed asserting the module "no longer contains the substring `gzip`", which would go
+  red against correct code, because the docstring must NAME the delimiter trap (fragment files
+  space-delimited, peak-tile file tab-delimited) to explain why routing through the owner matters.
+  Both halves were resolved at the structure's level, not the text's: an `ast.parse` walk asserting
+  no import node names `gzip` and no attribute access targets it, plus an `ALLOWED_MENTIONS` row
+  added **only after measuring** that with the parser deleted the guard still failed on that single
+  docstring mention — which is the evidence the exemption covers prose rather than a live reader.
+- **"Replicate the upstream function faithfully" and "sort first" are different programs — measure
+  the divergence rather than asserting either way.** The corpus extractor threads a running
+  `last_end` through gene features in FILE order and gates each window on
+  `start - last_end >= min_intergenic_length`, so whether that order is coordinate-ascending decides
+  which windows exist at all; the cached GFF3's CDS rows are ascending on neither strand. Measured:
+  3,490 windows / 624,812 bases in file order against 3,496 / 625,255 sorted, a symmetric difference
+  of **26 windows** and **146 of 43,061 tiles** changing in-window status
+  (`wiki/frame_plan_window_ordering_2026-11-01.json`, verdict `ORDERING_DIVERGES`). A zero
+  difference was pre-declared a legitimate finding rather than a failed run, which is what made the
+  non-zero result readable.
+- **A probe that writes a fixed path unconditionally cannot be extended without rewriting its own
+  committed artifact, and a timing field guarantees the rewrite differs even when every input is
+  identical.** `scripts/frame_plan_feasibility_probe.py` fixes its output path as a module constant
+  and records `wall_seconds`, and that artifact is cited by two plans — so "extend the script and
+  leave the artifact untouched" was a contradiction, and a flag would have depended on every future
+  caller remembering to pass it. A separate script
+  (`scripts/frame_window_ordering_probe.py`) makes the promise true by construction. The accepted
+  cost is a duplicated corpus-window replica; the recorded fix if that drift becomes real is to lift
+  the replica into the package, not to re-merge the scripts.
+
 ## 2026-10-27 (k) — what the ten sections of today have in common
 
 A compression, not another list. Today produced ten changelog sections; re-read together they are

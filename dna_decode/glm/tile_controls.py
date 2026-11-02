@@ -8,23 +8,28 @@ substrate's own answer to "does this encoder separate real regulatory sequence f
 non-regulatory sequence", which is the question the PromoterAtlas arm's load-bearing honest limit
 asks and could not answer.
 
-**This is a NEW module rather than an edit to `genomewide.py`, and that is not a style choice.**
-`scripts/kaggle/build_promoteratlas_tile_arm_kernel.py` embeds `genomewide.py` as base64+gzip and
-`scripts/promoteratlas_arm_dryrun.py` asserts the embedded payload is BYTE-IDENTICAL to the repo
-copy. Adding a loader there would break that assert and silently fork project code -- the same
-reasoning the arm kernel records for putting its GEO retry in the kernel instead.
+**This module does NOT open the substrate. It CALLS the owner and filters the result.** That is a
+correction: the first version parsed the file itself with a hardcoded tab split, which made it a
+second reader of a substrate that already has one, and `tests/test_substrate_loader_ownership.py`
+registers `glm/genomewide.py` as that owner. The trap the guard names is real -- the fragment files
+in the same series are SPACE-delimited while the peak-tile file is TAB-delimited, so a second loader
+that does not inherit `sniff_delimiter` can parse one of them into zero rows, which reads as "no
+signal" rather than "no data". Routing through the owner also means this module inherits its
+non-ACGT and unparseable-value filters for free rather than repeating them.
+
+**Measured, which is why the correction costs nothing:** the owner already returns the control rows.
+`load_peak_tiles` yields all four categories, and filtering its output for 150 bp gives 936 `random`
+and 470 `neg_control` -- byte-identical to what the second parser produced.
 
 **`pos_control` is refused, not padded.** All 106 of its rows are 48-75 bp, so ZERO survive at 150 bp.
 Padding was measured on this exact encoder to contaminate the pooled embedding (max |delta| 1.232,
 min cosine 0.282, against a between-tile spread of about 0.17) because attention lets the all-zero
 columns reach the real positions, which masked pooling cannot undo. So the strongest positive control
 is simply unavailable in the native-150 cell, and `load_control_tiles` raises rather than coercing it.
-That narrows what the exposure experiment can show and is recorded as a limit, never worked around.
 """
 
 from __future__ import annotations
 
-import gzip
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -32,12 +37,10 @@ from pathlib import Path
 #: geometry-incompatible (see the module docstring) and `tile` is the thing being controlled FOR.
 CONTROL_CATEGORIES: tuple[str, ...] = ("random", "neg_control")
 
-#: Measured 2026-11-01 from the cached substrate, after the same `ACGT`-only and length filters
-#: `load_peak_tiles` applies. A loader that silently returns a different count is a defect, so the
+#: Measured 2026-11-01 THROUGH THE OWNER, after its own ACGT and value filters plus the 150 bp
+#: length filter applied here. A loader that silently returns a different count is a defect, so the
 #: real-data test asserts these exactly.
 EXPECTED_AT_150: dict[str, int] = {"random": 936, "neg_control": 470}
-
-PEAK_TILE_FILE = "GSE144621_peak_tile_expression_formatted_std.txt.gz"
 
 
 class ControlCohortError(RuntimeError):
@@ -46,29 +49,19 @@ class ControlCohortError(RuntimeError):
 
 @dataclass(frozen=True)
 class ControlSeq:
-    """One non-tile control sequence, carrying the same fields the arm scores tiles on."""
+    """One non-tile control sequence, carrying the same fields the arm scores tiles on.
+
+    Deliberately NOT the owner's `Tile` type. `Tile` carries a `peak` field, which is the SPLIT UNIT
+    for tiles -- tiles inside one peak overlap heavily, so the arm holds out whole peaks -- and a
+    control sequence has no peak. Returning `Tile` would hand callers a field that is meaningless
+    here and invite someone to split controls on it.
+    """
 
     seq: str
     expression: float
     category: str
     rep1: float = 0.0
     rep2: float = 0.0
-
-
-def _rows(path: Path):
-    with gzip.open(path, "rt", errors="replace") as fh:
-        hdr = next(fh).rstrip("\n").split("\t")
-        ix = {c: i for i, c in enumerate(hdr)}
-        need = ("variant", "expn_med", "category", "RNA_exp_sum_1", "RNA_exp_sum_2")
-        missing = [c for c in need if c not in ix]
-        if missing:
-            raise ControlCohortError(
-                f"{path.name} lacks required columns {missing}; the delimiter sniff or the file is wrong"
-            )
-        for line in fh:
-            q = line.rstrip("\n").split("\t")
-            if len(q) == len(hdr):
-                yield q, ix
 
 
 def load_control_tiles(
@@ -78,11 +71,13 @@ def load_control_tiles(
     length: int = 150,
     allow_download: bool = False,
 ) -> list[ControlSeq]:
-    """Load the non-tile control sequences at exactly `length` bp.
+    """Load the non-tile control sequences at exactly `length` bp, via the substrate's owner.
 
-    `cache_dir` is REQUIRED and has no default on purpose. `genomewide.DEFAULT_CACHE` is
-    `D:/dna_decode_cache/mpra`, a volume that is not attached on this host, so a defaulted call would
-    either attempt a download or fail with a confusing device error. Every call site passes the path.
+    `cache_dir` is a **DIRECTORY** and is required. Two reasons, and the narrowing is deliberate.
+    The owner resolves its own path by joining a cache directory with the file name, so a file path
+    is no longer meaningful here. And `genomewide.DEFAULT_CACHE` is `D:/dna_decode_cache/mpra`, a
+    volume that is not attached on this host, so a defaulted call would either attempt a download or
+    fail with a confusing device error. Every call site passes the path explicitly.
 
     `allow_download` exists only to make the offline intent explicit; this loader never fetches.
 
@@ -91,41 +86,52 @@ def load_control_tiles(
     statement about the encoder, when the truth would be "this category does not exist at this
     geometry" -- a statement about the substrate.
     """
+    from dna_decode.glm.genomewide import GenomeWideDataError, load_peak_tiles
+
     if allow_download:
         raise ControlCohortError(
             "load_control_tiles never downloads; the substrate is expected to be cached already"
         )
     d = Path(cache_dir)
-    path = d / PEAK_TILE_FILE if d.is_dir() else d
-    if not path.is_file():
-        raise ControlCohortError(f"substrate not cached at {path}")
+    if d.exists() and not d.is_dir():
+        raise ControlCohortError(
+            f"{d} is a file; this function takes the cache DIRECTORY because the owner "
+            f"(genomewide.load_peak_tiles) resolves the substrate's filename itself"
+        )
+
+    try:
+        rows, _stats = load_peak_tiles(d, allow_download=False)
+    except GenomeWideDataError as exc:
+        # Translate the owner's error into this module's public failure type so existing callers
+        # keep a stable contract. The owner raises this for an unreachable volume AND for a missing
+        # file with downloading disabled, which are the two cases a caller here can hit.
+        raise ControlCohortError(str(exc)) from exc
 
     want = set(categories)
     out: list[ControlSeq] = []
     per_cat: dict[str, int] = {c: 0 for c in want}
-    for q, ix in _rows(path):
-        cat = q[ix["category"]]
-        if cat not in want:
+    for t in rows:
+        if t.category not in want or len(t.seq) != length:
             continue
-        seq = q[ix["variant"]].upper()
-        if len(seq) != length or (set(seq) - set("ACGT")):
-            continue
-        try:
-            e = float(q[ix["expn_med"]])
-            r1 = float(q[ix["RNA_exp_sum_1"]])
-            r2 = float(q[ix["RNA_exp_sum_2"]])
-        except ValueError:
-            continue
-        per_cat[cat] += 1
-        out.append(ControlSeq(seq=seq, expression=e, category=cat, rep1=r1, rep2=r2))
+        per_cat[t.category] += 1
+        out.append(
+            ControlSeq(
+                seq=t.seq,
+                expression=t.expression,
+                category=t.category,
+                rep1=t.rep1,
+                rep2=t.rep2,
+            )
+        )
 
     empty = sorted(c for c, n in per_cat.items() if n == 0)
     if empty:
         raise ControlCohortError(
             f"categories {empty} yield ZERO rows at {length} bp. This is a SUBSTRATE fact, not an "
-            f"encoder result: `pos_control` rows are 48-75 bp, so none survives at 150. Padding them "
-            f"is refused -- it was measured to contaminate this encoder's embedding (max |delta| "
-            f"1.232). Request a geometry-compatible category, or accept the control is unavailable."
+            f"encoder result: `pos_control` rows are 48-75 bp, so none survives at 150. Padding "
+            f"them is refused -- it was measured to contaminate this encoder's embedding (max "
+            f"|delta| 1.232). Request a geometry-compatible category, or accept the control is "
+            f"unavailable."
         )
     return out
 

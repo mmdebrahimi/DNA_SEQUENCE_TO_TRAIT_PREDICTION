@@ -14,7 +14,7 @@ This plan runs the **additive** argument, which is the one a sceptic asks for: g
 
 Measured at full scale for this plan, and the numbers enable the design rather than merely permitting it:
 
-- A faithful replica of that rule over the cached MG1655 annotation yields **3,496 windows covering 625,255 bases = 13.47% of the genome**.
+- A replica of that rule over the cached MG1655 annotation, **under sorted-ascending ordering**, yields **3,496 windows covering 625,255 bases = 13.47% of the genome**. Under the upstream function's file-order threading it gives 3,490 and 624,812 instead; the two differ by 26 windows (`wiki/frame_plan_window_ordering_2026-11-01.json`).
 - **28,622 of 43,061 uniquely-located tiles (66.47%) overlap such a window**; 8,239 (19.13%) sit entirely inside one. So corpus membership is a feature with real variance, not a near-constant — which is what makes the absorption test possible at all.
 
 Three cells, in increasing strength:
@@ -27,7 +27,7 @@ Three cells, in increasing strength:
 
 ## Codebase Context
 
-**The coordinate trap is confirmed at scale and is the plan's central hazard.** The substrate's reference is `U00096.2`; the cached annotation is `GCF_000005845.2` / `NC_000913.3`. Measured on 2,000 tiles: the stated `start` column agrees with the genome at **63/2000 = 3.15%**, a coincidence rate. Located by direct sequence search instead, the top stated-vs-located offsets are **+1978 (387), +1977 (374), +1976 (294), +777 (286), +776 (85), 0 (83)** — offset *families*, i.e. cumulative indel drift between assembly versions, not a constant shift that could be corrected. **Any frame feature must locate by sequence and ignore `start`/`end` entirely.**
+**The coordinate trap is confirmed at scale and is the plan's central hazard.** The substrate's reference is `U00096.2`; the cached annotation is `GCF_000005845.2` / `NC_000913.3`. Measured across every uniquely-located tile: the stated `start` column agrees with the genome at **1193/43061 = 2.77%**, a coincidence rate. (An earlier first-2,000-row spot check gave 63/2000 = 3.15%; the full-scale figure supersedes it and reaches the same conclusion.) Located by direct sequence search instead, the top stated-vs-located offsets are **+1978 (387), +1977 (374), +1976 (294), +777 (286), +776 (85), 0 (83)** — offset *families*, i.e. cumulative indel drift between assembly versions, not a constant shift that could be corrected. **Any frame feature must locate by sequence and ignore `start`/`end` entirely.**
 
 **Locating is cheap and nearly complete.** Sweeping both strands of the 4,641,652 bp genome against a dict of tile sequences takes **5 s** and resolves **43,386 of 43,417 distinct sequences (0.9993)**, of which **43,061 are UNIQUE (0.9918)**, 325 are ambiguous (>1 occurrence) and 31 are not found. The sweep direction matters: indexing 44k tile keys and sliding the genome is fast, whereas 44k independent `str.find` calls over 4.6 Mb is not.
 
@@ -63,7 +63,7 @@ Every figure below is re-derived from a committed artifact or measured by the pr
 - From `wiki/promoteratlas_subspace_removal_2026-11-01.json`: at k=32, atlas **0.4956**, residual separability **0.6823**, random-subspace atlas **0.5036**, attributable drop **0.0080**.
 - From `wiki/promoteratlas_nonlinear_bound_2026-11-01.json`: linear probe **0.9176**, nonlinear **0.9275**, gain **+0.0099**, verdict `LINEAR_CAVEAT_TIGHT`.
 - From `data/promoteratlas/local_reconcile_2026-11-01.json`: verdict `RECONCILED`; atlas per-seed **10/10 exact**, GC per-seed **10/10 exact**, max \|Δ\| **0.00e+00**; per-tile correlation with the arm's committed predictions median **r = 1.000000**.
-- Measured for this plan (to be re-emitted by code in Steps 1–2): stated-coordinate agreement **63/2000**; distinct tile sequences **43,417** of 44,106 rows; located **43,386 (0.9993)**; uniquely located **43,061 (0.9918)**; ambiguous **325**; not found **31**; replicated corpus windows **3,496** covering **625,255 bp (13.47%)**; uniquely-located tiles overlapping a window **28,622 (66.47%)**, fully inside **8,239 (19.13%)**.
+- Measured for this plan (to be re-emitted by code in Steps 1–2): stated-coordinate agreement **1193/43061 = 2.77%** over every uniquely-located tile; distinct tile sequences **43,417** of 44,106 rows; located **43,386 (0.9993)**; uniquely located **43,061 (0.9918)**; ambiguous **325**; not found **31**; replicated corpus windows **3,496** covering **625,255 bp (13.47%)** UNDER SORTED ORDERING (file order: 3,490 and 624,812); uniquely-located tiles overlapping a window **28,622 (66.47%)**, fully inside **8,239 (19.13%)**.
 - Inherited margin: **0.02**, from `wiki/promoteratlas_arm_acceptance_bar.json` via `wiki/promoteratlas_exposure_acceptance_bar.json`. Not re-derived, not invented.
 
 ## Verification Signal
@@ -87,8 +87,9 @@ Files: dna_decode/glm/corpus_window.py, tests/test_corpus_window.py
 Depends on: none
 
 **What changes:**
-- `corpus_windows(cds_rows, genome_length, *, regulatory_region_length=200, min_intergenic_length=5)` returns the ordered list of `(start0, end0_exclusive, strand, locus_tag)` windows, reproducing `extract_promoter_regions` exactly — including that a gene skipped by the `start < regulatory_region_length` guard does NOT update the running `last_end`, and that the reverse-strand branch compares against the previous gene's START.
-- Both quirks are documented in the module as DELIBERATE REPLICATION of the authors' code, with the reasoning: the question is what the corpus contained, not what it should have contained. A "corrected" window would measure a rule nobody trained on.
+- `corpus_windows(cds_rows, genome_length, *, order="sorted", regulatory_region_length=200, min_intergenic_length=5)` returns the ordered list of `(start0, end0_exclusive, strand, locus_tag)` windows. It reproduces the upstream function's two quirks — a gene skipped by the `start < regulatory_region_length` guard does NOT update the running `last_end`, and the reverse-strand branch compares against the previous gene's START — and both are documented as DELIBERATE REPLICATION, because the question is what the corpus contained, not what it should have contained. A "corrected" window would measure a rule nobody trained on.
+- **`order` is an explicit named parameter and this plan NO LONGER claims exact reproduction, which was a contradiction.** The upstream function threads `last_end` through features in FILE order, and the cached GFF3's coding-sequence rows are measurably NOT ascending by start on either strand, so "replicate faithfully" and "sort first" are different programs. Measured by `scripts/frame_window_ordering_probe.py` into `wiki/frame_plan_window_ordering_2026-11-01.json`: file order gives **3,490 windows covering 624,812 bases**, sorted gives **3,496 covering 625,255**, with a **symmetric difference of 26 windows** and **146 of 43,061 uniquely-located tiles changing their in-window status**. Compounding it, the authors read **GenBank**, not this GFF3, so file order here is a different file's order and faithful reproduction is not well-defined from this input at all.
+- **The resulting claim is therefore scoped to "the corpus rule as specified at 200 bp with a 5 bp intergenic gate", never "as the authors ran it".** The default is `sorted`, and every figure this plan pins is a sorted-order figure.
 - `window_coverage(windows, genome_length) -> bytes` gives a per-base mask; `overlap_fraction(mask, pos0, length)` gives a tile's overlap.
 - CDS rows are filtered to those carrying a non-empty `locus_tag`, because the extractor filters on `"locus_tag" in feature.qualifiers`.
 - Explicit 1-based-inclusive GFF3 to 0-based-half-open conversion at the single boundary where it happens, asserted by test rather than assumed.
@@ -98,7 +99,7 @@ Depends on: none
 - Unit on a synthetic genome with planted CDS features: forward window placement, reverse-strand window placement, the `min_intergenic_length` rejection, and the `start < 200` edge rejection.
 - A test that pins the `last_end`-not-updated-on-skip quirk by constructing a case where correcting it would change the window set — so a future "tidy-up" fails loudly.
 - A test that pins the reverse-strand previous-START comparison the same way.
-- Real-data test, skipped without the cached GFF3: asserts **3,496** windows covering **625,255** bases, the figures measured for this plan.
+- Real-data test, skipped without the cached GFF3: asserts **3,496** windows covering **625,255** bases under the default `order="sorted"`, and **3,490** / **624,812** under `order="file"`. Asserting both is what makes the ordering parameter non-decorative.
 
 ### Step 2: Locate every tile by sequence search, and refuse the ambiguous
 Files: dna_decode/glm/tile_locate.py, tests/test_tile_locate.py
@@ -156,6 +157,7 @@ Depends on: Step 1, Step 2, Step 3, Step 4
 - Emitted BY CODE, after feasibility is established (window count, locate rate and feature variance all known) and BEFORE any conditioning number exists. Specifying a threshold before asking what the substrate permits produced four amended thresholds in a single session in this repo.
 - Inherits the **0.02** margin; asserts it is still present in the parent bar rather than restating it.
 - Fixes the primary frame granularity (`in_window_any`) in advance, so the 66%/19% choice cannot be made after seeing which one gives a better answer.
+- **Names BOTH missing controls, so the bar cannot be frozen without them.** (i) A MATCHED-STRENGTH comparison: the atlas margin is reported over a series of baselines of increasing standalone strength — `gc`, `gc + dinucleotide`, `gc + kmer4`, and `gc + frame` — so absorption is judged against how much any equally strong feature shrinks the margin, not against the unstrengthened baseline. Without it, margin shrinkage is confounded with "the baseline simply got better". (ii) A SIZE-MATCHED RANDOM stratification: tiles are split into strata of the same sizes at random and the within-stratum margins measured, giving the null for how much stratification alone moves the margin. The subtractive predecessor had a random-direction control for exactly this purpose and the additive cells had no analogue.
 - Records a forecast with explicit probabilities over the named outcomes. The standing record is **2 of 7** and the errors have been pessimistic; the forecast exists to be scored, not deferred to.
 - Pre-commitments: (a) the frame must be shown INFORMATIVE before any absorption claim is read, and the response to an uninformative frame is a better positional feature, never a weaker test; (b) `FRAME_EXCLUDED_CONDITIONAL` is bounded — it excludes the corpus-window rule as replicated, at 200 bp with a 5 bp intergenic gate, on one organism's annotation, and may never be written as "position excluded"; (c) the stratified cell's baseline must be re-measured ON THE SAME STRATUM, never compared to the full-cohort 0.5076, because stratifying changes both n and the peak composition; (d) `arms.native150` keeps its measured value whatever the outcome.
 
@@ -174,6 +176,7 @@ Depends on: Step 3, Step 5
 - **C1** — predict `in_window_any` from the 128-dim embedding, held out over the committed splits, reporting AUROC beside the GC-only equivalent. The positional restatement of the measured 0.9156 separability.
 - **C2** — fit the identical ridge on `gc`, on `gc + frame`, and on `atlas`, and report the atlas margin over each. The strengthened baseline must show a better TRAINING fit than plain GC, else the run returns `INDETERMINATE_BASELINE_NOT_STRENGTHENED`.
 - **C3** — restrict to in-window tiles, then to out-of-window tiles, and re-measure BOTH atlas and GC within each stratum, reporting the within-stratum margin. This controls for frame membership by construction, so it does not require the frame to be linearly modellable.
+- **Each stratum's expression spread is reported beside its margin, because the strata are measurably NOT exchangeable.** In-window interquartile range is 0.4735 with standard deviation 3.380; out-of-window is 0.2710 with 5.535 — so the shapes differ and not merely the scales, and a rank correlation inside the narrower stratum is attenuated for BOTH channels. Without the spread beside the margin a reader cannot tell range restriction from absorption.
 - Excluded-tile accounting is explicit in the artifact: ambiguous, not-found and non-unique counts reconcile with the scored count.
 - Grades through the Step-4 grader against the Step-5 bar, validity checks first.
 - Per-tile vectors and the locate cache stay in gitignored `data/promoteratlas/`; the wiki artifact carries medians only. A 102,755-decimal dump broke two contract-number guards on 2026-11-01.
@@ -219,7 +222,7 @@ Note: Parallel execution requires a git repository with a configured remote. If 
 
 ## Risk Flags
 
-- Severity: high — **The substrate's stated coordinates are wrong and using them yields a self-consistent, entirely wrong frame.** Measured agreement 63/2000 = 3.15%, with offsets in families (+1976/+1977/+1978, +776/+777) rather than a constant. Resolved by locating via sequence search only, plus a Step-2 source-inspection test asserting the stated columns are never read.
+- Severity: high — **The substrate's stated coordinates are wrong and using them yields a self-consistent, entirely wrong frame.** Measured agreement 1193/43061 = 2.77%, with offsets in families (+1976/+1977/+1978, +776/+777) rather than a constant. Resolved by locating via sequence search only, plus a Step-2 source-inspection test asserting the stated columns are never read.
 - Severity: high — **A "corrected" window replica would measure a rule nobody trained on.** The authors' extractor carries two apparent defects (a skipped gene not updating `last_end`; the reverse branch comparing against the previous gene's start). Step 1 replicates both and pins each with a test that fails if a future edit tidies them.
 - Severity: medium — **`genomewide.py` is embedded base64+gzip in the arm kernel with a byte-identity assert in `scripts/promoteratlas_arm_dryrun.py`.** Any edit silently invalidates the dry run. All new code lands in new modules; verified by an empty diff at the end of every wave.
 - Severity: medium — **The stratified cell changes n and peak composition, so its baseline must be re-measured within the stratum.** Comparing a within-stratum atlas number to the full-cohort 0.5076 would manufacture a difference. Pinned as a Step-5 pre-commitment, not left to the writer.
@@ -265,7 +268,7 @@ Note: Parallel execution requires a git repository with a configured remote. If 
 ## Verification
 
 1. **Frozen-surface and lock check, before and after:** the frozen five plus `uv.lock` diff empty; `genomewide.py` and `expression.py` diff empty; the active prospective lock re-verifies.
-2. **Window replica:** 3,496 windows covering 625,255 bases on the cached annotation, and both replicated quirks pinned by tests that fail if corrected.
+2. **Window replica:** 3,496 windows covering 625,255 bases under sorted ordering and 3,490 / 624,812 under file ordering, with both replicated quirks pinned by tests that fail if corrected and the ordering divergence recorded in its own artifact.
 3. **Locate rate:** 43,061 of 43,417 distinct sequences uniquely located, 325 ambiguous and 31 not-found counted, and the unique rate at or above the 0.95 floor.
 4. **Feature variance:** `in_window_any` fires on 28,622 tiles and `in_window_full` on 8,239; neither is constant.
 5. **Bar reachability:** every outcome reachable by a constructed input, and the reachable set EQUALS the grader's `CHECK_ORDER`.

@@ -1,23 +1,51 @@
-## CORRECTION 2026-11-01 — CLAUDE.md's "14 failures, none a code defect" is wrong by one
+## CORRECTION 2026-11-01 — CLAUDE.md's "14 failures, none a code defect" is wrong on the COUNT, and the one code defect is now FIXED
 
-The baseline for `/execute-plan` measured **14 failed / 7227 passed / 180 skipped**. Thirteen are the
-recorded absent-data failures. The fourteenth is a **code regression introduced 2026-11-01**:
+**Live count, grounded on a full run 2026-11-01 (9m48s): 13 failed / 7,238 passed / 180 skipped.**
+CLAUDE.md still says *"14 failed"* and *"all 14 remaining are absent DATA, NONE a code defect"*. The
+count is stale and **the second clause is wrong twice over** — once for most of today (a real
+regression, fixed below), and once standing: **12 of the 13 are absent data and the 13th is not.**
 
+> `tests/test_tile_chain_constraint_registered.py::test_the_eleven_pre_existing_constraints_are_still_present`
+> ends in a hand-maintained `assert len(rows) == 12` while the constraint registry now holds **14**.
+> Its eleven NAMED constraints are all still present — only the total drifted. **Pre-existing**, not
+> from today's work (which registers no constraint; `git status dna_decode/constraints/` is empty).
+> **Deliberately NOT re-pinned** — a count rail is guard structure, and bumping `12` → `14` is both
+> the one-character fix and precisely the tidying the rail exists to interrupt. Open question
+> recorded in `TODOS.md`: whether a total-count assertion earns its keep beside the named-membership
+> loop that already carries the invariant.
+
+CLAUDE.md **cannot be corrected in place** — it sits at 35,459 of its 35,460-word ceiling (room for
+~one word) and additions there are USER AUTHORITY. This entry is the correction of record;
+`README.md`'s suite paragraph carries the same figures and HAS been updated.
+
+**RESOLVED — the code regression is gone.**
 `tests/test_substrate_loader_ownership.py::test_each_substrate_accession_is_read_by_exactly_ONE_module`
-→ *GSE144621 is named in `['glm/tile_controls.py']` as well as its owner `glm/genomewide.py`*.
+fired on *GSE144621 is named in `['glm/tile_controls.py']` as well as its owner
+`glm/genomewide.py`*, because `tile_controls._rows` opened the peak-tile file itself with a
+hardcoded tab split — correct for that file and wrong by exactly the mechanism the guard names (the
+fragment siblings are SPACE-delimited; `sniff_delimiter` in the owner is what decides per file).
+`load_control_tiles` now calls `genomewide.load_peak_tiles` and filters the result, the parser is
+gone, and that file is **8 passed** (was 1 failed / 7 passed). Routing changed **no data**: 936
+`random` + 470 `neg_control` at 150 bp, identical. The signature narrowed to a cache **DIRECTORY**,
+because the owner resolves the filename itself.
 
-`tile_controls._rows` opens the peak-tile file itself with a hardcoded tab split. That is correct for
-this file and wrong by exactly the mechanism the guard names: the fragment siblings are
-SPACE-delimited, `sniff_delimiter` is what decides per file, and a second loader inherits none of the
-owner's guards.
+**One instruction in the superseded version of this entry was WRONG and was deliberately not
+followed as written.** It said *"Do **not** add an `ALLOWED_MENTIONS` entry; that list is for
+prose-only mentions"* — and after the fix the surviving reference IS prose-only: a single docstring
+sentence *explaining that the owner parses the file*. The guard matches `\bGSE\d+` over source text
+and cannot tell a docstring from an import, so a row was added, **but only after measuring that with
+the parser deleted the guard still failed on that one mention** — which is the evidence the
+exemption covers prose rather than a live reader. The structural fact is asserted at the structure's
+level instead: `tests/test_tile_controls.py` uses `ast.parse` to check no import node names `gzip`
+and no attribute access targets it, because a substring search for `gzip` would match the very
+docstring that explains the delimiter trap. That substring form was specifically rejected and must
+not be reinstated.
 
-**The fix dissolves it rather than exempting it, and is measured:** `load_peak_tiles` already returns
-all 46,713 rows including the 936 `random` + 470 `neg_control` at 150 bp — identical counts to the
-second loader's — so `load_control_tiles` becomes a filter over the owner's output and the parser
-goes. Do **not** add an `ALLOWED_MENTIONS` entry; that list is for prose-only mentions.
-
-Recorded here because CLAUDE.md sits at 35,459 of its 35,460-word ceiling. Full review:
+Full review:
 `plans/Frame_Conditioning_Does_Corpus_Window_Position_Explain_PromoterAtlas_0_5076_Plan/brainstorm.md`.
+Residuals (ordering divergence bounded in shape not magnitude; the duplicated corpus-window replica;
+`pos_control` unavailable at 150 bp) are in `TODOS.md` under *Frame-conditioning / corpus-window
+residuals (2026-11-01)*.
 
 ---
 

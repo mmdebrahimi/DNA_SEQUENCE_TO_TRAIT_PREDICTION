@@ -283,6 +283,50 @@ Plan `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technic
 - [ ] **Carried honest limit, unchanged by this work:** `baselines.py:92` has no conditional Markov variant, so the null is unconditional while the GLM is conditioned. The comparison **handicaps the null**, which means a GLM loss is understated, not overstated.
 - [ ] **Do not quote the 2026-10-19 headline (GLM 0.8141 vs null 0.3876) for anything.** Doubly invalid: inert sampling knobs AND `conditional=False` against the aligned promoter set. The valid baseline is `wiki/glm_generator_falsifier_REAL_2026-10-07.json`.
 
+## A red count rail, pre-existing and NOT absent data — a user call, not executor work (2026-11-01)
+
+- [ ] **`tests/test_tile_chain_constraint_registered.py::test_the_eleven_pre_existing_constraints_are_still_present` ends in `assert len(rows) == 12`; the constraint registry now holds **14**.** Measured on a full suite 2026-11-01 (13 failed / 7,238 passed / 180 skipped, 9m48s): this is **the only one of the 13 that is not absent DATA**, so the standing `README.md` / `CLAUDE.md` claim that *all* remaining failures are environment and *none* is a code defect was wrong about this row — and had been for some time. **It is pre-existing**: `git status dna_decode/constraints/` is empty for the 2026-11-01 work, which registers no constraint. **The eleven NAMED constraints are all still present** — the test's `cid in rows` loop passes; only the trailing total has drifted, by two added constraints (`expiry: register the promcalc blocker` is the most recent commit to the rail's own file). **Deliberately NOT re-pinned.** Per the standing rule, a guard that is red because its subject legitimately moved is a record-and-escalate, and a count rail is part of the project's guard structure: bumping `12` → `14` is the single edit that makes it green and is also exactly the "tidying" the rail exists to interrupt. The open question is a schema one — whether a total-count assertion earns its keep next to the named-membership loop that already carries the real invariant, or whether it should be replaced by a *minimum* plus a named roster derived from the registry (the repo's recorded fix for hand-enumerated lists beside the data that defines them).
+
+## Frame-conditioning / corpus-window residuals (2026-11-01)
+
+Instruments: `scripts/frame_plan_feasibility_probe.py` (committed artifact, cited by two plans) and
+`scripts/frame_window_ordering_probe.py` (new, read-only, offline). Measured:
+`wiki/frame_plan_window_ordering_2026-11-01.json`, verdict `ORDERING_DIVERGES` — 3,490 windows /
+624,812 bases in file order against 3,496 / 625,255 sorted, symmetric difference **26 windows**,
+**146 of 43,061 tiles** changing in-window status. **No decoder change, no CLI trait, no
+`cell_registry` contract.**
+
+- [x] **[DONE 2026-11-01] `dna_decode/glm/tile_controls.py` was a second reader of a substrate that
+  has a registered owner.** It now calls `genomewide.load_peak_tiles` and filters the result instead
+  of opening the `.gz` itself, so it inherits `sniff_delimiter` plus the owner's non-ACGT and
+  unparseable-value filters. Routing changed **no data** (936 `random` + 470 `neg_control` at
+  150 bp, identical), the signature narrowed from file-or-directory to **directory only** (the owner
+  resolves the filename), and `tests/test_substrate_loader_ownership.py` went from 1 failed /
+  7 passed to 8 passed. The surviving single docstring mention carries an `ALLOWED_MENTIONS` row
+  added only after measuring that, with the parser deleted, the guard still failed on it alone.
+- [ ] **The ordering divergence is bounded in SHAPE, not in MAGNITUDE, and closing that needs one
+  read of a different file.** The upstream extractor reads **GenBank**, not the GFF3 this probe
+  parses, so "file order" here is *this file's* order and not the order that built the published
+  corpus. Until the GenBank's feature order is read, the measurement says the two programs differ —
+  it does not say by how much upstream, and so cannot be quoted as the published corpus's exposure.
+- [ ] **Two scripts now carry a duplicated corpus-window replica, and the accepted fix is recorded
+  rather than applied.** `frame_window_ordering_probe.corpus_windows` is a named function;
+  `frame_plan_feasibility_probe.main` carries the same `last_end` / `MIN_IG` logic **inlined**
+  (~lines 132-150), which is why a grep for the function name finds only one copy. Both reproduce
+  `extract_promoter_regions` including two upstream quirks
+  kept deliberately (a gene skipped by the `start < regulatory_region_length` guard does not update
+  the running `last_end`; the reverse-strand branch compares against the previous gene's START).
+  Two copies can drift into emitting different window sets under the same name. **If that drift
+  becomes real the fix on record is to lift the replica into the package — not to re-merge the
+  scripts**, because the existing probe writes a fixed path unconditionally and stamps
+  `wall_seconds`, so any run of a modified version rewrites a committed, cited artifact.
+- [ ] **`pos_control` stays unavailable at 150 bp and must not be padded.** All 106 rows are 48-75 bp,
+  so zero survive; padding was measured on this exact encoder to contaminate the pooled embedding
+  (max |delta| 1.232, min cosine 0.282, against a between-tile spread of ~0.17) because attention
+  lets all-zero columns reach real positions and masked pooling cannot undo it. `load_control_tiles`
+  raises rather than coercing. **This narrows what the exposure experiment can show** — the strongest
+  positive control simply does not exist in the native-150 cell.
+
 ## Pre-existing known limitations (not bugs)
 
 - **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.

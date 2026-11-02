@@ -1,0 +1,36 @@
+{
+  "cds_rows_with_locus_tag": 4340,
+  "contig": "NC_000913.3",
+  "date": "2026-11-01",
+  "file_order": {
+    "bases_covered": 624812,
+    "n_distinct_windows": 3490,
+    "n_windows": 3490,
+    "tiles_in_window": 28584
+  },
+  "file_order_is_ascending_by_start": {
+    "+": false,
+    "-": false
+  },
+  "genome_length": 4641652,
+  "honest_limits": [
+    "The upstream code reads GenBank, not this GFF3, so FILE order here is this file's order and not the order that built the published corpus. This bounds the SHAPE of the divergence, not its exact magnitude upstream.",
+    "Both quirks of the upstream function are reproduced rather than corrected, which is deliberate; a corrected replica would measure a rule nobody trained on.",
+    "One organism, one annotation build."
+  ],
+  "min_intergenic_length": 5,
+  "reading": "A non-zero symmetric difference means 'replicate the upstream function faithfully' and 'sort first' are different programs, so a plan cannot claim both. A ZERO difference would mean the divergence is not real and the ordering parameter is unnecessary configuration -- a finding, not a failed run.",
+  "regulatory_region_length": 200,
+  "schema": "frame-plan-window-ordering-v1",
+  "sorted_order": {
+    "bases_covered": 625255,
+    "n_distinct_windows": 3496,
+    "n_windows": 3496,
+    "tiles_in_window": 28622
+  },
+  "symmetric_difference_windows": 26,
+  "tiles_changing_in_window_status": 146,
+  "uniquely_located_tiles": 43061,
+  "verdict": "ORDERING_DIVERGES",
+  "wall_seconds": 5.3
+}
