@@ -1,0 +1,94 @@
+{
+  "anchors": {
+    "best_arm": 0.5076,
+    "conv": 0.3234,
+    "conv_minus_gc": 0.0122,
+    "corroborating_artifact": "wiki/glm_encoder_gate_result_2026-10-08.md",
+    "fraction_of_ceiling_captured_by_best": 0.5394,
+    "gc": 0.3112,
+    "headroom_best_minus_gc": 0.1964,
+    "replicate_ceiling": 0.941,
+    "why_this_is_the_anchor": "A within-substrate contrast is the only quantity that crosses a substrate boundary. Raw Spearman does not: the panels have different noise floors and different assays."
+  },
+  "arm": "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "forecast": {
+    "my_record": "2 of 6 in this project. The last bar put p=0.08 on the outcome that happened. Do NOT defer to these priors.",
+    "p_METHOD_LIMITED": 0.1,
+    "p_SUBSTRATE_LIMITED": 0.55,
+    "p_SUBSTRATE_NEUTRAL": 0.2,
+    "p_any_INDETERMINATE": 0.15,
+    "reasoning": "Published methods reach ~0.73-0.83 on this panel against a bacterial rung whose BEST is 0.5076, and constructed-molecular is the one regime where this project's learned arms have measured wins. So headroom probably exists. Against that: the conv is tiny (13k params), untuned for human sequence, and GC may itself be stronger on human regulatory elements."
+  },
+  "frozen": "2026-11-01",
+  "frozen_before": [
+    "any GC-on-human number existed",
+    "any conv-on-human number existed",
+    "any atlas-on-human number existed",
+    "the fold assignment had been resolved onto loaded rows"
+  ],
+  "honest_limits_fixed_in_advance": [
+    "THE BIGGEST ONE: this is ONE substrate change, not a substrate sweep. A human lentiMPRA panel differs from bacterial tiles in assay, in element length (230 bp vs 150 bp), in kingdom and in how the library was constructed. The arm cannot say WHICH of those differences carries any effect it finds.",
+    "The bacterial anchor 0.0122 is treated as a FIXED POINT; its own uncertainty is not propagated into the CI, so a verdict that lands near the boundary is weaker than the predicate makes it look.",
+    "The conv encoder's hyperparameters were chosen on the BACTERIAL rung. Reusing them on human sequence is the honest apples-to-apples choice for a method-class comparison, but it is NOT a tuned human model and must never be reported as one.",
+    "A constructed panel is the regime this project already knows learned methods work in (constructed -> molecular, Spearman 0.761 on TEM-1). So a SUBSTRATE_LIMITED result CORROBORATES an existing finding rather than discovering something; its value is that it bounds the tile-chain ceiling, not that it is news about constructed panels.",
+    "Nothing here licenses a claim about eukaryotic g->p generally. The project's organism-level eukaryotic embedding arm is a CLOSED NEGATIVE on natural populations (Arabidopsis, de-confounded) and this arm does not reopen it: constructed variation is a different regime, which is the whole reason this arm is scoped to a constructed panel."
+  ],
+  "known_before_freezing_and_deliberately_not_a_predicate": [
+    "the Table S6 incumbent values (published prior art, not a result of this arm)",
+    "that the substrate is on disk and MD5-verified (wiki/lentimpra_acquisition_2026-10-27.md)"
+  ],
+  "outcomes": {
+    "INDETERMINATE_DEGENERATE_TARGET": {
+      "meaning": "the shipped `assay_degeneracy` bar, imported not restated. CcdB posted this project's best-looking number purely because 79.3% of its values sat at a ceiling, so this screen runs BEFORE any correlation is read.",
+      "predicate": "activity mode-share > 0.25 or fewer than 20 distinct levels"
+    },
+    "INDETERMINATE_JOIN_RATE": {
+      "meaning": "the substrate did not assemble; nothing is scored",
+      "predicate": "sequence-to-activity join rate < 0.95 (the loader's MIN_JOIN_RATE)"
+    },
+    "INDETERMINATE_NO_FOLDS": {
+      "meaning": "scoring on splits of my own invention would silently change what the incumbents' folds mean; refuse instead",
+      "predicate": "the published fold assignment does not resolve onto the loaded rows"
+    },
+    "METHOD_LIMITED": {
+      "meaning": "A learned encoder buys no more -- or less -- on the new substrate. Changing substrate does not rescue the approach, and the limit travels with the method.",
+      "predicate": "CI upper bound < 0.0122"
+    },
+    "SUBSTRATE_LIMITED": {
+      "meaning": "A learned encoder buys MORE on a constructed eukaryotic panel than it bought on bacterial tiles. The bacterial ceiling was the substrate's, and the rung's ten method arms were competing for headroom that was never there.",
+      "predicate": "paired-bootstrap CI lower bound of conv_human_minus_gc_human > 0.0122"
+    },
+    "SUBSTRATE_NEUTRAL": {
+      "meaning": "No detectable difference. The arm is MEASURED and discriminates nothing, which is a real outcome and not a failure -- it retires the arm without moving the ceiling story either way.",
+      "predicate": "CI contains 0.0122"
+    }
+  },
+  "primary_measurement": {
+    "definition": "Spearman(predicted, measured activity) for a conv encoder RETRAINED on the human panel, minus the same for a GC-only ridge, on IDENTICAL published folds.",
+    "splits": "the panel's own published fold assignment (Table S9 `fold` column)",
+    "uncertainty": "paired bootstrap over folds; the CI is the verdict input, not the point",
+    "what": "conv_human_minus_gc_human",
+    "why_conv_and_not_the_atlas": "PromoterAtlas is pretrained on gammaproteobacterial promoters, so on human sequence it is out-of-distribution BY CONSTRUCTION and a low number would be unattributable between 'substrate is not the limit' and 'this encoder does not transfer'. A retrained conv has no such confound."
+  },
+  "question": "Was the bacterial rung's ceiling the METHOD's or the SUBSTRATE's? Every measured arm changed the method and the rung topped out at 0.5394 of a 0.941 replicate ceiling. Run the same learned-encoder-vs-dumb-baseline contrast on a CONSTRUCTED human panel and compare the CONTRAST, not the raw number.",
+  "reachable_outcomes_equal_check_order": true,
+  "refused_comparisons": {
+    "published_incumbents_head_to_head": {
+      "what_is_done_instead": "they are recorded verbatim with metric_unstated: true, as context for what this panel supports, and they inform no predicate",
+      "why": "Table S6 publishes per-fold values for Enformer, MPRALegNet, Sei, MPRAnn and a biochemical feature set and NEVER STATES THE METRIC. Comparing our named Spearman to an unnamed quantity would be an assumption wearing a number's clothes."
+    }
+  },
+  "schema": "eukaryotic-arm-acceptance-bar-v1",
+  "secondary_measurements": [
+    {
+      "caveat": "frozen bacterial encoder on human sequence = out-of-distribution",
+      "status": "reported, NEVER a verdict input",
+      "what": "atlas_human_minus_gc_human"
+    },
+    {
+      "status": "reported only if the human panel supplies a replicate-derived reliability estimate; refused otherwise rather than substituted",
+      "what": "fraction_of_ceiling_captured"
+    }
+  ]
+}

@@ -1,0 +1,464 @@
+{
+  "bar": "wiki/eukaryotic_arm_acceptance_bar.json",
+  "cells": [
+    {
+      "activity": {
+        "distinct": 7192,
+        "max": 6.8933,
+        "min": -3.0036,
+        "mode_share": 0.0006
+      },
+      "cell": "HepG2",
+      "degeneracy_screen": {
+        "degenerate": false,
+        "mode_share": 0.0006,
+        "mode_value": -0.353122871417449,
+        "n": 61463,
+        "n_distinct_values": 7192,
+        "reason": "usable: effect values are well spread"
+      },
+      "folds": {
+        "n_distinct": 10,
+        "sizes": {
+          "1": 6146,
+          "10": 6149,
+          "2": 6146,
+          "3": 6146,
+          "4": 6146,
+          "5": 6146,
+          "6": 6146,
+          "7": 6146,
+          "8": 6146,
+          "9": 6146
+        },
+        "unassigned": 0
+      },
+      "gc": {
+        "max": 0.7565,
+        "min": 0.2826
+      },
+      "length": {
+        "n_distinct": 1,
+        "uniform": true,
+        "values": {
+          "230": 61463
+        }
+      },
+      "load_seconds": 0.2,
+      "n_records": 61463,
+      "stats": {
+        "cell": "HepG2",
+        "fold_sizes": {
+          "1": 6146,
+          "2": 6146,
+          "3": 6146,
+          "4": 6146,
+          "5": 6146,
+          "6": 6146,
+          "7": 6146,
+          "8": 6146,
+          "9": 6146,
+          "10": 6149
+        },
+        "join_rate": 1.0,
+        "length_max": 230,
+        "length_min": 230,
+        "n_designed": 164307,
+        "n_folds": 10,
+        "n_joined": 61463,
+        "n_measured": 61463,
+        "s3_header_row": 4,
+        "s3_sheet": "HepG2 large-scale",
+        "s6_header_row": 1,
+        "s6_sheet": "Fold assignment, HepG2",
+        "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)"
+      }
+    },
+    {
+      "activity": {
+        "distinct": 5494,
+        "max": 5.8063,
+        "min": -2.9905,
+        "mode_share": 0.0008
+      },
+      "cell": "K562",
+      "degeneracy_screen": {
+        "degenerate": false,
+        "mode_share": 0.0008,
+        "mode_value": -0.808839489901103,
+        "n": 98332,
+        "n_distinct_values": 5494,
+        "reason": "usable: effect values are well spread"
+      },
+      "folds": {
+        "n_distinct": 10,
+        "sizes": {
+          "1": 9833,
+          "10": 9835,
+          "2": 9833,
+          "3": 9833,
+          "4": 9833,
+          "5": 9833,
+          "6": 9833,
+          "7": 9833,
+          "8": 9833,
+          "9": 9833
+        },
+        "unassigned": 0
+      },
+      "gc": {
+        "max": 0.7739,
+        "min": 0.2783
+      },
+      "length": {
+        "n_distinct": 1,
+        "uniform": true,
+        "values": {
+          "230": 98332
+        }
+      },
+      "load_seconds": 0.3,
+      "n_records": 98332,
+      "stats": {
+        "cell": "K562",
+        "fold_sizes": {
+          "1": 9833,
+          "2": 9833,
+          "3": 9833,
+          "4": 9833,
+          "5": 9833,
+          "6": 9833,
+          "7": 9833,
+          "8": 9833,
+          "9": 9833,
+          "10": 9835
+        },
+        "join_rate": 1.0,
+        "length_max": 230,
+        "length_min": 230,
+        "n_designed": 243778,
+        "n_folds": 10,
+        "n_joined": 98332,
+        "n_measured": 98332,
+        "s3_header_row": 2,
+        "s3_sheet": "K562 large-scale",
+        "s6_header_row": 1,
+        "s6_sheet": "Fold assignment, K562",
+        "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)"
+      }
+    }
+  ],
+  "date": "2026-11-01",
+  "published_incumbents": {
+    "metric_unstated": true,
+    "refused_as_verdict_input": true,
+    "value": {
+      "by_cell": {
+        "HepG2": {
+          "Biochemical (cell-type matched)": {
+            "1": 0.729147389,
+            "2": 0.734296949,
+            "3": 0.729031551,
+            "4": 0.741407218,
+            "5": 0.730698591,
+            "6": 0.735300838,
+            "7": 0.734926643,
+            "8": 0.733172437,
+            "9": 0.731806432,
+            "10": 0.720325972
+          },
+          "Biochemical (universal feature set)": {
+            "1": 0.734465119,
+            "2": 0.737471442,
+            "3": 0.734905006,
+            "4": 0.745183585,
+            "5": 0.734506587,
+            "6": 0.740325614,
+            "7": 0.739511039,
+            "8": 0.73684531,
+            "9": 0.73692075,
+            "10": 0.724749025
+          },
+          "Enformer": {
+            "1": 0.832778356,
+            "2": 0.835215781,
+            "3": 0.824219026,
+            "4": 0.832009506,
+            "5": 0.830958639,
+            "6": 0.831294565,
+            "7": 0.827681296,
+            "8": 0.832064017,
+            "9": 0.825952554,
+            "10": 0.833924529
+          },
+          "MPRALegNet": {
+            "1": 0.834085792776734,
+            "2": 0.837984848783056,
+            "3": 0.825543379513124,
+            "4": 0.835333788248217,
+            "5": 0.829319771028281,
+            "6": 0.840707557973549,
+            "7": 0.8300646131766,
+            "8": 0.837140004755942,
+            "9": 0.825223156641561,
+            "10": 0.837713596899733
+          },
+          "MPRAnn": {
+            "1": 0.7678113,
+            "2": 0.767212,
+            "3": 0.7596235,
+            "4": 0.7728232,
+            "5": 0.7641577,
+            "6": 0.7742192,
+            "7": 0.764663,
+            "8": 0.7614576,
+            "9": 0.7587733,
+            "10": 0.7737761
+          },
+          "Sei": {
+            "1": 0.788678825910407,
+            "2": 0.794861713906426,
+            "3": 0.786566330112138,
+            "4": 0.798127115162561,
+            "5": 0.793143053257083,
+            "6": 0.793647948153655,
+            "7": 0.787261221974608,
+            "8": 0.788357682590388,
+            "9": 0.787269749565611,
+            "10": 0.795792162939275
+          }
+        },
+        "K562": {
+          "Biochemical (cell-type matched)": {
+            "1": 0.719977057,
+            "2": 0.729145204,
+            "3": 0.722074658,
+            "4": 0.721560455,
+            "5": 0.715638952,
+            "6": 0.719378155,
+            "7": 0.722908041,
+            "8": 0.727731026,
+            "9": 0.730243452,
+            "10": 0.726041629
+          },
+          "Biochemical (universal feature set)": {
+            "1": 0.735795242,
+            "2": 0.746396092,
+            "3": 0.739821192,
+            "4": 0.737345085,
+            "5": 0.733812945,
+            "6": 0.735747253,
+            "7": 0.740364755,
+            "8": 0.744563664,
+            "9": 0.747632355,
+            "10": 0.742879493
+          },
+          "Enformer": {
+            "1": 0.846314079,
+            "2": 0.849773134,
+            "3": 0.849149984,
+            "4": 0.84968185,
+            "5": 0.846428945,
+            "6": 0.84545389,
+            "7": 0.852320417,
+            "8": 0.847728751,
+            "9": 0.85908126,
+            "10": 0.850750854
+          },
+          "MPRALegNet": {
+            "1": 0.865139912526356,
+            "2": 0.869414541156763,
+            "3": 0.863124228363684,
+            "4": 0.866890019568749,
+            "5": 0.863653549376697,
+            "6": 0.863974485273211,
+            "7": 0.868869617639793,
+            "8": 0.863322293410103,
+            "9": 0.870083646118127,
+            "10": 0.870318513998358
+          },
+          "MPRAnn": {
+            "1": 0.8024873,
+            "2": 0.8119497,
+            "3": 0.7997155,
+            "4": 0.8080341,
+            "5": 0.8055178,
+            "6": 0.8073038,
+            "7": 0.8092538,
+            "8": 0.8071912,
+            "9": 0.8177875,
+            "10": 0.8126465
+          },
+          "Sei": {
+            "1": 0.814818621274327,
+            "2": 0.812087939948737,
+            "3": 0.810730570328862,
+            "4": 0.814050293780786,
+            "5": 0.811303538083895,
+            "6": 0.813076731210001,
+            "7": 0.81649292892383,
+            "8": 0.814722303567913,
+            "9": 0.825138006539444,
+            "10": 0.817442818188436
+          }
+        },
+        "WTC11": {
+          "Biochemical (cell-type matched)": {
+            "1": 0.712596104,
+            "2": 0.70801161,
+            "3": 0.706429646,
+            "4": 0.687552997,
+            "5": 0.71749983,
+            "6": 0.724793396,
+            "7": 0.691979954,
+            "8": 0.723226238,
+            "9": 0.71901717,
+            "10": 0.732951662
+          },
+          "Biochemical (universal feature set)": {
+            "1": 0.738925649,
+            "2": 0.744943233,
+            "3": 0.744098737,
+            "4": 0.726427536,
+            "5": 0.748058929,
+            "6": 0.760633246,
+            "7": 0.729483296,
+            "8": 0.752795965,
+            "9": 0.7513489,
+            "10": 0.761151508
+          },
+          "Enformer": {
+            "1": 0.836507162,
+            "2": 0.843935243,
+            "3": 0.830017327,
+            "4": 0.822374546,
+            "5": 0.833779856,
+            "6": 0.822330306,
+            "7": 0.840204796,
+            "8": 0.834771383,
+            "9": 0.837503961,
+            "10": 0.833141061
+          },
+          "MPRALegNet": {
+            "1": 0.794630525709026,
+            "2": 0.792858481129936,
+            "3": 0.792092233433091,
+            "4": 0.783720392255432,
+            "5": 0.805063437888107,
+            "6": 0.796741161362754,
+            "7": 0.795811680420342,
+            "8": 0.781672454085792,
+            "9": 0.802917103501133,
+            "10": 0.800022819519306
+          },
+          "MPRAnn": {
+            "1": 0.7622201,
+            "2": 0.7613842,
+            "3": 0.7594165,
+            "4": 0.7485547,
+            "5": 0.7487349,
+            "6": 0.7582338,
+            "7": 0.7559832,
+            "8": 0.7451447,
+            "9": 0.7734823,
+            "10": 0.7585207
+          },
+          "Sei": {
+            "1": 0.830257967173115,
+            "2": 0.816717807359767,
+            "3": 0.8201164042704709,
+            "4": 0.812618884976001,
+            "5": 0.816780355423275,
+            "6": 0.826927208944713,
+            "7": 0.819834122847764,
+            "8": 0.821334745727624,
+            "9": 0.831275265497958,
+            "10": 0.81601575752523
+          }
+        }
+      },
+      "metric": "UNSPECIFIED_IN_SOURCE",
+      "metric_resolution_attempt": {
+        "corroboration_NOT_the_answer": "the paper states MPRALegNet reached 'Pearson r ~ 0.83' COMBINING folds, and the HepG2 MPRALegNet fold-mean here is 0.8333. Suggestive of Pearson; it is a different aggregation and says nothing about this sheet.",
+        "decisive_next_check": "call unparsed_rows() and read the rows this parser DISCARDS. The header row cannot settle it: the header is 'test fold | <method names>' and carries no coefficient, so the earlier instruction to read it could never have worked. A caption or units row is where a metric statement would sit, and those are precisely the skipped rows. Running it needs the substrate volume attached; that is a prerequisite, not the reason the previous check was wrong.",
+        "paper_reports_both": "the publication's MPRALegNet panels carry 'corresponding Pearson (r) and Spearman (rho) correlation values', so the paper has no single global benchmarking metric to copy",
+        "table_identity_mismatch": "the paper's IN-TEXT 'Supplementary Table 6' is a biochemical-feature / bigWig manifest (it is cited for '1,506 bigWig files for HepG2 cells'), whereas this S6_FILE is 'Table S6 - folds and performance.xlsx' carrying a 'Benchmarking results' sheet the paper never names. Do NOT cite 'the paper's Table S6' as the provenance of these numbers.",
+        "verdict": "UNRESOLVED_TABLE_IDENTITY_UNVERIFIED"
+      },
+      "sheet": "Benchmarking results",
+      "source": "Table S6 - folds and performance.xlsx"
+    },
+    "why": "Table S6 names no metric. These are context for what the panel supports, not a comparator; the frozen bar refuses the head-to-head."
+  },
+  "purpose": "validity-first feasibility, so the arm's own run is not what discovers its substrate is unusable",
+  "schema": "eukaryotic-arm-feasibility-v1",
+  "usable_cells": {
+    "HepG2": {
+      "n": 61463,
+      "stats": {
+        "cell": "HepG2",
+        "fold_sizes": {
+          "1": 6146,
+          "2": 6146,
+          "3": 6146,
+          "4": 6146,
+          "5": 6146,
+          "6": 6146,
+          "7": 6146,
+          "8": 6146,
+          "9": 6146,
+          "10": 6149
+        },
+        "join_rate": 1.0,
+        "length_max": 230,
+        "length_min": 230,
+        "n_designed": 164307,
+        "n_folds": 10,
+        "n_joined": 61463,
+        "n_measured": 61463,
+        "s3_header_row": 4,
+        "s3_sheet": "HepG2 large-scale",
+        "s6_header_row": 1,
+        "s6_sheet": "Fold assignment, HepG2",
+        "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)"
+      },
+      "usable": true
+    },
+    "K562": {
+      "n": 98332,
+      "stats": {
+        "cell": "K562",
+        "fold_sizes": {
+          "1": 9833,
+          "2": 9833,
+          "3": 9833,
+          "4": 9833,
+          "5": 9833,
+          "6": 9833,
+          "7": 9833,
+          "8": 9833,
+          "9": 9833,
+          "10": 9835
+        },
+        "join_rate": 1.0,
+        "length_max": 230,
+        "length_min": 230,
+        "n_designed": 243778,
+        "n_folds": 10,
+        "n_joined": 98332,
+        "n_measured": 98332,
+        "s3_header_row": 2,
+        "s3_sheet": "K562 large-scale",
+        "s6_header_row": 1,
+        "s6_sheet": "Fold assignment, K562",
+        "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)"
+      },
+      "usable": true
+    },
+    "WTC11": {
+      "reason": "WTC11 joins at 0.0000 (0 of 23064 measured rows), below the 0.95 bar. This is a KEY problem, not a small cohort: S6 keys this cell by Ensembl gene id while S3 uses element names. Returning the overlap would hand back a 0",
+      "usable": false
+    }
+  },
+  "wall_seconds": 158.6
+}

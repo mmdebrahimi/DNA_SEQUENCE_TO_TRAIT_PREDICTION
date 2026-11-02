@@ -1,5 +1,35 @@
 """Guards for the declared orthogonal-modality stack arm.
 
+RE-PINNED A FIFTH TIME ON 2026-11-01, and this time the PLANNED arm is a different arm rather than
+a shorter list. `substrate-change-constructed-eukaryotic-or-human-panel` RAN locally over 10
+published folds of HepG2 (n=61,463, join rate 1.0000) against a bar frozen beforehand at
+`wiki/eukaryotic_arm_acceptance_bar.json`, and returned SUBSTRATE_LIMITED: a retrained conv encoder
+reaches 0.4853 against a GC-only ridge at 0.2362, a gain of +0.2471 with a paired-bootstrap CI
+[+0.2399, +0.2536] over folds, against the BACTERIAL anchor of +0.0122. Legitimate under R6 -- the
+arm resolved on its OWN executed evidence. In the same breath, G-A candidate 8's
+`positional-non-mean-pooled-promoteratlas-150bp` was DECLARED under R6, because an arm declared only
+once its cheap sibling succeeds is an arm that evaporates. So the set is now 11 measured / 1 planned
+/ 1 KILLED over 13.
+
+What is UNCHANGED, and it is what keeps this a re-pin rather than an escalation: the ceiling verdict
+is STILL `blocked:untried-arm` and STILL `not met`, and `best` is STILL the atlas arm at 0.5076. By
+this file's own standing rule, had re-pinning flipped the verdict the correct action would have been
+to stop and escalate instead.
+
+What this re-pin makes STRONGER, and it is a new KIND of invariant here:
+`test_the_human_arms_metric_is_not_read_as_best` pins that the eukaryotic arm's metric -- a HUMAN
+lentiMPRA Spearman sitting in a criterion whose other ten are BACTERIAL -- cannot silently become
+`best`. `ceiling_verdict` picks `best` as a max over metrics, so the moment a human arm outscores
+0.5076 that max would be comparing across substrates with different noise floors, which is exactly
+what the arm's own bar forbids. It is harmless today (0.4853 < 0.5076) and the guard exists so it
+cannot become harmful quietly; the fix if it fires is to move the arm to its own criterion, which is
+a scope change and therefore the user's call, NOT to relax the assertion.
+
+Two test names were also made COUNT-FREE (`test_the_measured_arms_are_unchanged`,
+`test_the_arm_set_is_exactly_the_pinned_partition`). They read "ten" while asserting over eleven
+arms, having carried a count through four re-pins -- a guard whose name misstates what it guards is
+the same drift this project keeps finding in orientation strings.
+
 RE-PINNED A FOURTH TIME ON 2026-11-01, and this time the BEST arm moves, which is a substantive
 change rather than a count. `promoteratlas-base-embeddings-frozen-150bp-padded-to-200` RAN on a
 Kaggle T4 over 44,106 peak tiles x 10 seeds and closed `ATLAS_BEATS_THERMODYNAMIC` at median
@@ -81,7 +111,17 @@ SUCCESSOR_MEASURED = "pyramid-4scale-2.22decades-499bp-fragments"
 ATLAS_ARM = "promoteratlas-base-embeddings-frozen-150bp-padded-to-200"
 BEST_ARM = ATLAS_ARM
 
-# The TEN measured arms, pinned by metric. Restating a measured number elsewhere
+#: RAN 2026-11-01 locally over 10 published folds of HepG2. Its metric is a HUMAN lentiMPRA
+#: Spearman while every sibling metric is a BACTERIAL tile Spearman, so it is pinned here for
+#: completeness and `test_the_human_arms_metric_is_not_read_as_best` pins that the incommensurability
+#: cannot turn into a silent cross-substrate `best`.
+EUK_ARM = "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN"
+
+#: Declared 2026-11-01 under R6 from G-A candidate 8, AT THE MOMENT its sibling ran -- which is the
+#: point of R6: an arm declared only once its cheap sibling succeeds is an arm that evaporates.
+POSITIONAL_ARM = "positional-non-mean-pooled-promoteratlas-150bp"
+
+# The measured arms, pinned by metric. Restating a measured number elsewhere
 # would now have to change this line too.
 MEASURED = {
     "gc-single-feature": 0.3112,
@@ -103,10 +143,17 @@ MEASURED = {
     # 0.4983, so padding costs 0.0093). Paired +0.1956 [0.1704, 0.2182] over conv at 10/10 seeds on
     # byte-identical test sets. Read as an UPPER BOUND: corpus-selection exposure is not excluded.
     ATLAS_ARM: 0.5076,
+    # Ran 2026-11-01 LOCALLY (D: reattached), 10 published folds of HepG2, n=61,463, join rate
+    # 1.0000: SUBSTRATE_LIMITED. conv 0.4853 vs a GC-only ridge 0.2362 -> gain +0.2471 with a
+    # paired-bootstrap CI [+0.2399, +0.2536] against the BACTERIAL anchor +0.0122 (conv 0.3234 - gc
+    # 0.3112). NOT COMMENSURABLE with the arms above: this is a human Spearman on a different assay
+    # with a different noise floor, which is why the arm's contribution is the CONTRAST and not the
+    # level, and why it must never be read as `best`.
+    EUK_ARM: 0.4853,
 }
 
 EXPECTED_PLANNED = {
-    "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
+    POSITIONAL_ARM,
 }
 
 #: Retired 2026-10-27 on its own executed evidence, NOT on a sibling's result.
@@ -186,7 +233,7 @@ def test_the_withdrawn_kill_option_is_recorded_not_merely_dropped():
     assert "scope reduction" in arm["verdict_consequence"].lower()
 
 
-def test_the_ten_measured_arms_are_unchanged():
+def test_the_measured_arms_are_unchanged():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     measured = {n: a["metric"] for n, a in arms.items()
@@ -196,15 +243,16 @@ def test_the_ten_measured_arms_are_unchanged():
         assert arms[name]["evidence"].strip(), f"{name} lost its evidence string"
 
 
-def test_the_arm_set_is_exactly_ten_measured_and_one_planned():
+def test_the_arm_set_is_exactly_the_pinned_partition():
     ledger = _live_ledger()
     arms = ledger._data["criteria"][_criterion(ledger)]
     planned = {n for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
     assert planned == EXPECTED_PLANNED
     killed = {n for n, a in arms.items() if a["status"] == al.STATUS_KILLED}
     assert killed == {KILLED_ARM}, "exactly one arm has ever been retired here"
-    # 12 total: 11 plus the declared successor. The arithmetic must reconcile with the whole.
-    assert len(arms) == 12
+    # 13 total: the 12 above plus POSITIONAL_ARM, declared 2026-11-01 under R6 at the moment
+    # its sibling ran. The arithmetic must reconcile with the whole.
+    assert len(arms) == 13
     assert len(EXPECTED_PLANNED) + len(MEASURED) + len(killed) == len(arms)
 
 
@@ -314,6 +362,30 @@ def test_kill_arm_still_refuses_without_evidence(sandbox):
     with pytest.raises(al.ArmsError, match="evidence"):
         ledger.kill_arm(crit, "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
                         reason="not worth it", evidence="")
+
+
+def test_the_human_arms_metric_is_not_read_as_best():
+    """The eukaryotic arm's metric is a HUMAN Spearman in a criterion whose other metrics are
+    BACTERIAL, and `ceiling_verdict` picks `best` as a max over metrics. So `best` is only
+    meaningful here while no human arm outscores the bacterial leader.
+
+    Harmless TODAY -- 0.4853 < 0.5076 -- and this guard exists so it cannot become harmful
+    silently. If a future human arm outscores the bacterial best, this fires, and the answer is NOT
+    to relax it: it is to move the arm to its own criterion, which is a scope change and therefore
+    the user's call. The structural issue is annotated on the arm itself rather than papered over.
+    """
+    ledger = _live_ledger()
+    arms = ledger._data["criteria"][_criterion(ledger)]
+    verdict = ledger.ceiling_verdict(_criterion(ledger))
+
+    assert verdict.best == BEST_ARM, "`best` must stay the bacterial leader"
+    assert MEASURED[EUK_ARM] < MEASURED[BEST_ARM], (
+        "a human-substrate metric now exceeds the bacterial best, so `best` is comparing across "
+        "substrates; move the arm to its own criterion rather than relaxing this")
+    # The incommensurability is RECORDED on the arm, not merely known here.
+    note = arms[EUK_ARM].get("metric_not_commensurable_with_siblings", "")
+    assert note.strip(), "the arm lost the annotation that its metric is not commensurable"
+    assert "bacterial" in note.lower() and "best" in note.lower()
 
 
 def test_killing_every_unrun_arm_would_change_the_verdict(sandbox):
