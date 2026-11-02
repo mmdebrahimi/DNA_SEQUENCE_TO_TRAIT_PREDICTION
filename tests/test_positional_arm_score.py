@@ -604,3 +604,122 @@ def test_main_returns_1_when_scoring_raises(monkeypatch):
 
     monkeypatch.setattr(sc, "run", lambda **_: (_ for _ in ()).throw(ScoreError("nope")))
     assert sc.main([]) == 1
+
+
+# --------------------------------------------------------------------------------------------------
+# the decomposition: the gate ORDER is data, and it is SOURCED from the frozen bar
+# --------------------------------------------------------------------------------------------------
+def test_gate_sequence_is_derived_from_the_frozen_bars_check_order():
+    """The order must not be restated anywhere. It is the bar's, and this proves the derivation."""
+    from scripts.freeze_positional_arm_bar import CHECK_ORDER
+    from scripts.positional_arm_score import GATE_SEQUENCE
+
+    want = tuple((g, o) for g, o in CHECK_ORDER if isinstance(o, str))
+    assert GATE_SEQUENCE == want
+    assert [g for g, _ in GATE_SEQUENCE] == ["split_equality", "parity", "shuffled_label_null"]
+
+
+def test_gate_sequence_matches_the_frozen_bar_artifact_on_disk():
+    """A reordered refactor must fail rather than silently score before a gate."""
+    from scripts.freeze_positional_arm_bar import OUT as BAR_OUT
+    from scripts.positional_arm_score import GATE_SEQUENCE
+
+    if not BAR_OUT.is_file():
+        pytest.skip("bar not frozen")
+    declared = json.loads(BAR_OUT.read_text(encoding="utf-8"))["verdict_check_order"]
+    gates = [g for g, _ in GATE_SEQUENCE]
+    assert declared[:len(gates)] == gates, (
+        "the runner's gate order and the frozen bar's verdict_check_order disagree")
+    assert declared[-1] == "co_primary_decision", "the decision must come last"
+
+
+def test_every_gate_in_the_sequence_has_an_implementation_and_no_orphans():
+    from scripts.positional_arm_score import GATE_FUNCS, GATE_SEQUENCE
+
+    assert set(GATE_FUNCS) == {g for g, _ in GATE_SEQUENCE}
+    assert all(callable(f) for f in GATE_FUNCS.values())
+
+
+def test_the_gates_are_invoked_in_the_declared_order_and_stop_at_the_first_failure(monkeypatch):
+    """Observes the real dispatch rather than trusting the tuple."""
+    import scripts.positional_arm_score as sc
+
+    tiles, st = make_cohort()
+    bar = make_bar(tiles)
+    called: list[str] = []
+    wrapped = {}
+    for name, fn in sc.GATE_FUNCS.items():
+        def mk(n, f):
+            def inner(ctx):
+                called.append(n)
+                return f(ctx)
+            return inner
+        wrapped[name] = mk(name, fn)
+    monkeypatch.setattr(sc, "GATE_FUNCS", wrapped)
+
+    go(tiles, st, make_block(), bar, scorer=stub_scorer(parity_by_seed=_passing_parity(bar)))
+    assert called == ["split_equality", "parity", "shuffled_label_null"]
+
+    # a split mismatch must stop the chain at the FIRST gate
+    called.clear()
+    go(tiles, st, make_block(), make_bar(tiles, n_test={str(s): 1 for s in range(N_SEEDS)}),
+       scorer=stub_scorer(parity_by_seed=[0.5] * N_SEEDS))
+    assert called == ["split_equality"], "a failed gate must not let later gates run"
+
+
+def test_each_extracted_gate_returns_a_dict_with_passed_and_detail():
+    """The contract `run`'s loop depends on: it reads only `passed` and `detail`."""
+    import scripts.positional_arm_score as sc
+
+    tiles, st = make_cohort()
+    bar = make_bar(tiles)
+    rec = go(tiles, st, make_block(), bar,
+             scorer=stub_scorer(parity_by_seed=_passing_parity(bar)))
+    for name in sc.GATE_FUNCS:
+        g = rec["gates"][name]
+        assert isinstance(g["passed"], bool)
+        assert isinstance(g["detail"], str) and g["detail"].strip()
+
+
+def test_the_primary_rung_is_built_exactly_once_across_the_null_gate_and_the_ladder():
+    """Before the extraction the null gate and the ladder shared one local. `ScoreCtx.primary_matrix`
+    preserves that, and this test is what stops the decomposition quietly doubling the work."""
+    import scripts.positional_arm_score as sc
+
+    tiles, st = make_cohort()
+    bar = make_bar(tiles)
+    built: list[str] = []
+    real = sc.build_rung
+
+    def counting(block, layout, name, strands):
+        built.append(name)
+        return real(block, layout, name, strands)
+
+    import unittest.mock as mock
+    with mock.patch.object(sc, "build_rung", counting):
+        go(tiles, st, make_block(), bar,
+           scorer=stub_scorer(parity_by_seed=_passing_parity(bar)))
+    primary = CO_PRIMARIES[0]
+    assert built.count(primary) == 1, "the primary rung was built %d times" % built.count(primary)
+    assert built.count("global_mean") == 1
+
+
+def test_run_stays_decomposed_and_below_the_complexity_ceiling():
+    """Guards the refactor itself. `run` measured cyclomatic ~58 over 304 lines before Step 5."""
+    import ast
+
+    src = (Path(__file__).resolve().parents[1] / "scripts/positional_arm_score.py").read_text(
+        encoding="utf-8")
+    tree = ast.parse(src)
+    found = {}
+    for node in ast.walk(tree):
+        if isinstance(node, ast.FunctionDef):
+            c = 1 + sum(
+                isinstance(k, (ast.If, ast.For, ast.While, ast.ExceptHandler, ast.BoolOp,
+                               ast.IfExp, ast.Assert))
+                for k in ast.walk(node))
+            found[node.name] = c
+    assert found["run"] < 25, "run is cyclomatic ~%d; the gate chain has been re-inlined" % found["run"]
+    for gate in ("gate_split_equality", "gate_parity", "gate_shuffled_label_null", "score_ladder"):
+        assert gate in found, "%s was removed; the decomposition is gone" % gate
+        assert found[gate] < 25, "%s is cyclomatic ~%d" % (gate, found[gate])
