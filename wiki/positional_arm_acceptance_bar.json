@@ -1,0 +1,233 @@
+{
+  "arm": "positional-non-mean-pooled-promoteratlas-150bp",
+  "check_order_rationale": "Validity FIRST, so a broken run can never read as a finding, and split equality before everything else because every other number is meaningless if the test sets differ.",
+  "closed_outcome_set": [
+    "POSITIONAL_ADDS",
+    "POSITIONAL_NO_GAIN",
+    "POSITIONAL_AMBIGUOUS",
+    "INDETERMINATE_PARITY_FAIL",
+    "INDETERMINATE_SPLIT_MISMATCH",
+    "INDETERMINATE_NULL_FAIL"
+  ],
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "forecast": {
+    "my_forecast_record_in_this_project": "3 of 7. The fragment-null P1 was falsified twice, P2 mislocated its interval, and the atlas arm's own bar put p=0.55 on LOSES_ALONE and p=0.08 on what actually happened. DO NOT defer to these priors.",
+    "p_autocorr_is_the_one_that_clears_given_adds": 0.4,
+    "p_positional_adds": 0.25,
+    "p_positional_ambiguous": 0.3,
+    "p_positional_no_gain": 0.45,
+    "predicted_outcome": "POSITIONAL_NO_GAIN",
+    "rationale": "Against: every sequence-statistics arm on this rung clusters 0.2691-0.3234 while the mean-pooled atlas sits at 0.5076, and a ridge over 1,280 or 2,560 correlated columns on ~33,000 training rows has far more variance to pay for than the 128-dim pool. Without a promoter register the bins are positions in an arbitrary window, which is the scoping correction above. For: mean-pooling provably discards information the latent carries, the incumbent's own recorded limit says so, and the ridge can ignore useless columns at alpha=1.0 more cheaply than it can recover discarded ones.",
+    "recorded_before_any_number_exists": true
+  },
+  "frozen": "2026-11-02T15:12:06Z",
+  "frozen_before_any_score_exists": true,
+  "honest_limits_fixed_in_advance": [
+    "No promoter anchor exists on this substrate, so a NO_GAIN says that position bins relative to an ARBITRARY window add nothing -- NOT that positional structure is absent. The negative must never be over-read as closing positional readouts generally.",
+    "The orientation convention of `seq` is UNRESOLVED and is inferred from a performance difference between two rungs. That is a 1-bit inference, not established biology: only 576 of 22,285 minus sequences (2.6%) have their reverse complement among the plus sequences, and ZERO of those share a peak, so plus and minus tiles are distinct genomic windows rather than two orientations of one element.",
+    "689 duplicate sequences are known on this substrate and are UNCHANGED by this arm. A train/test-straddling duplicate affects this arm exactly as it affects the incumbent, so the PAIRED comparison is the right shape while the absolute levels inherit the issue.",
+    "The encoder is FROZEN and its hyperparameters were chosen elsewhere; this is not a tuned positional model and a NO_GAIN does not bound what a fine-tuned one could do.",
+    "Ten seeds is the inherited pairing. The fragment-pyramid arm needed 270 pooled seeds before its null cleared, so ten may be too few here for the same reason.",
+    "The rung ceiling is 0.941 and replicate-derived. No tile-rung number may be read as a fraction of it without saying so."
+  ],
+  "inherited_not_chosen": {
+    "comparator": {
+      "atlas_median": 0.5076,
+      "atlas_per_seed": {
+        "0": 0.5461,
+        "1": 0.5499,
+        "2": 0.4983,
+        "3": 0.4986,
+        "4": 0.5075,
+        "5": 0.5163,
+        "6": 0.5078,
+        "7": 0.4933,
+        "8": 0.5016,
+        "9": 0.521
+      },
+      "gc_median": 0.3112,
+      "gc_per_seed": {
+        "0": 0.3,
+        "1": 0.3151,
+        "2": 0.3073,
+        "3": 0.2917,
+        "4": 0.3191,
+        "5": 0.3347,
+        "6": 0.3091,
+        "7": 0.3191,
+        "8": 0.3133,
+        "9": 0.2747
+      },
+      "must_be_recomputed_in_run": false,
+      "source": "data/promoteratlas/local_reconcile_2026-11-01.json",
+      "verdict": "RECONCILED",
+      "why": "the incumbent is never re-run by this arm, so this arm cannot move the number it is being graded against"
+    },
+    "margin": {
+      "derivation": "INHERITED verbatim from the tile-rung arms so the bars stay commensurable; the same margin the 499bp fragment arm, the hybrid/stack arms and the measured atlas arm were graded against.",
+      "value": 0.02
+    },
+    "scorer": {
+      "protocol": "StandardScaler on train, Ridge(alpha=1.0), fit on log1p(expression), score Spearman against RAW expression",
+      "spec": "dna_decode.glm.atlas_embed.ridge_spearman, unchanged"
+    },
+    "split": {
+      "frac": 0.25,
+      "leakage_unit": "the called expression PEAK, not the tile",
+      "n_seeds": 10,
+      "n_test_per_seed": {
+        "0": 11198,
+        "1": 11018,
+        "2": 11373,
+        "3": 10883,
+        "4": 11025,
+        "5": 10907,
+        "6": 10590,
+        "7": 11249,
+        "8": 10661,
+        "9": 10690
+      },
+      "seed_range": "0..9",
+      "spec": "genomewide.leave_peak_out(tiles, frac=0.25, seed=s) for s in 0..9"
+    }
+  },
+  "measured_and_inherited_from_the_probe": {
+    "checkpoint_sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624",
+    "free_ram_bytes_at_freeze": 6100967424,
+    "lag_set": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "lag_set_name": "dense_1_20",
+    "lag_set_rule": "the LARGEST candidate whose design matrix fits in RAM under the headroom factor; declared before the numbers, and only ever gives up resolution to a resource limit rather than trading it for a nicer number",
+    "parity_max_abs_deviation_achieved": 4.352132478846471e-07,
+    "parity_tolerance": 1e-05,
+    "parity_tolerance_rule": "the smallest power of ten at least 10x the achieved deviation; derived from the measurement, not preferred",
+    "ram_headroom_factor": 1.5,
+    "rungs_fitting_in_ram": {
+      "autocorr": true,
+      "bins10_max_oriented": true,
+      "bins10_mean_asgiven": true,
+      "bins10_mean_oriented": true,
+      "bins2_mean_oriented": true,
+      "bins5_mean_oriented": true
+    },
+    "source": "wiki/positional_arm_feasibility_2026-11-01.json",
+    "throughput_seq_per_second": 57.48
+  },
+  "multiplicity": {
+    "autocorr_needs_no_orientation_variant": "an autocorrelation is invariant under reversal of its series -- the set of position pairs separated by k is unchanged when the series is read backwards -- so the autocorr co-primary is IMMUNE to the unresolved orientation convention that the bins rungs carry a 1-bit inference about",
+    "co_primaries": [
+      "bins10_mean_oriented",
+      "autocorr"
+    ],
+    "co_primary_alpha_each": 0.025,
+    "co_primary_ci_percentiles": [
+      1.25,
+      98.75
+    ],
+    "co_primary_hypotheses": {
+      "autocorr": "does periodic SPACING carry signal, measured anchor-free so it does not need a promoter register",
+      "bins10_mean_oriented": "does a POSITION-RESOLVED reduction beat a position-AVERAGED one"
+    },
+    "co_primary_n_comparisons": 2,
+    "divisor_discrepancy_recorded": "The plan's prose named a '5-comparison corrected level' for the secondaries while listing FOUR of them. Neither 5 nor 4 is the family-wise count over everything measured, so this bar uses 6 = every rung on the ladder. That is strictly more conservative than the plan's 5, it is internally consistent, and it is outcome-neutral: a secondary can never be the arm's result, so its interval width moves no verdict. Recorded rather than silently applied.",
+    "family_alpha": 0.05,
+    "secondaries": [
+      "bins10_mean_asgiven",
+      "bins10_max_oriented",
+      "bins2_mean_oriented",
+      "bins5_mean_oriented"
+    ],
+    "secondaries_are_ineligible_as_the_arms_result": true,
+    "secondary_alpha_each": 0.008333333333333333,
+    "secondary_ci_percentiles": [
+      0.4166666666666667,
+      99.58333333333333
+    ],
+    "secondary_n_comparisons": 6,
+    "why_ineligible": "six rungs against one incumbent is a garden of forking paths if the best is reported; classify() consults the co-primaries ONLY, so ineligibility is enforced by construction rather than by convention"
+  },
+  "outcomes_defined_before_running": {
+    "INDETERMINATE_NULL_FAIL": "the shuffled-label control cleared the bar; nothing is graded",
+    "INDETERMINATE_PARITY_FAIL": "the global mean derived from the stored bin means does not reproduce the committed embedding",
+    "INDETERMINATE_SPLIT_MISMATCH": "the recomputed splits differ from the committed ones",
+    "POSITIONAL_ADDS": "the corrected interval for at least one CO-PRIMARY's paired gain over the committed atlas per-seed values lies entirely above +0.02",
+    "POSITIONAL_AMBIGUOUS": "at least one co-primary interval contains +0.02, so no difference is detectable at the corrected level",
+    "POSITIONAL_NO_GAIN": "BOTH co-primary intervals lie entirely below +0.02"
+  },
+  "pre_commitments": [
+    "The margin 0.02 is INHERITED and will NOT be re-specified after a number exists.",
+    "If the shuffled-label null fails, the response is MORE SEEDS, never a weaker control.",
+    "The measured sibling's 0.5076 is NEVER retro-edited; it is read from its committed per-seed table and this arm cannot move it.",
+    "A secondary rung is NEVER reported as the arm's result, however it scores. classify() cannot see the secondaries at all.",
+    "The verdict field emitted by the run is whatever this bar mechanically returns. A withdrawn reading goes in a namespace-separate block, leaving the verdict unedited.",
+    "A miss does NOT kill the fine-tuned variant or the four shipped expression heads. Each is a NEW arm to declare under R6, never a re-read of this one.",
+    "A rung whose design matrix fails the RAM pre-check is recorded as SKIPPED with its byte estimate, never silently dropped and never quietly retried at a smaller width."
+  ],
+  "question": "Does a POSITION-RESOLVED reduction of the SAME frozen PromoterAtlas latent beat the position-AVERAGED mean-pool incumbent (median Spearman 0.5076) by the rung's inherited margin of 0.02?",
+  "reachable_equals_closed": true,
+  "reachable_outcome_set": [
+    "INDETERMINATE_NULL_FAIL",
+    "INDETERMINATE_PARITY_FAIL",
+    "INDETERMINATE_SPLIT_MISMATCH",
+    "POSITIONAL_ADDS",
+    "POSITIONAL_AMBIGUOUS",
+    "POSITIONAL_NO_GAIN"
+  ],
+  "reproduce": [
+    "uv run python -m scripts.positional_arm_probe",
+    "uv run python scripts/freeze_positional_arm_bar.py",
+    "uv run python -m scripts.positional_arm_extract",
+    "uv run python -m scripts.positional_arm_score"
+  ],
+  "schema": "positional-arm-acceptance-bar-v1",
+  "scoping_corrections_fixed_in_advance": [
+    "This arm CANNOT test the -35/-10 spacing claim its own ledger rationale asserts. genomewide.Tile exposes seq, expression, peak, strand, category, active, rep1, rep2 -- there is no TSS, no promoter register and no peak-relative offset, so a bin index is a position in an ARBITRARY 150 bp window, not a promoter coordinate. What is testable is narrower: does a position-resolved reduction beat a position-averaged one.",
+    "Because of that, the readout matching the stated spacing mechanism is NOT bins. Spacing is translation-invariant, so the anchor-free autocorrelation is a declared CO-PRIMARY testing a DIFFERENT hypothesis -- not a second shot at the same one."
+  ],
+  "validity_controls": {
+    "parity": {
+      "on_failure": "INDETERMINATE_PARITY_FAIL, and stop",
+      "spec": "derive the global mean from the STORED 10-bin means, score it through ridge_spearman on those same splits, and assert it reproduces the committed atlas per-seed values",
+      "tolerance": 1e-05,
+      "why": "this is what makes every later number comparable to 0.5076 rather than merely adjacent to it"
+    },
+    "shuffled_label_null": {
+      "bar": "|median gain over GC| < 0.02",
+      "derivation": "same FORM and bar as the fragment-pyramid arm, whose own 10-seed null landed at +0.0517 and voided its verdict until a 270-seed pooled null cleared the gate",
+      "on_failure": "INDETERMINATE_NULL_FAIL, and SPEND MORE SEEDS -- never re-specify",
+      "spec": "refit the ridge on shuffled tile labels, same splits and seeds"
+    },
+    "split_equality": {
+      "on_failure": "INDETERMINATE_SPLIT_MISMATCH, and stop",
+      "spec": "recompute leave_peak_out(frac=0.25) for seeds 0-9 and assert n_test_per_seed matches the committed values for ALL ten",
+      "why_first": "every other number is meaningless if the test sets differ; the arm would not be scored on the incumbent's held-out peaks"
+    }
+  },
+  "verdict_check_order": [
+    "split_equality",
+    "parity",
+    "shuffled_label_null",
+    "co_primary_decision"
+  ],
+  "why_this_is_not_a_re_read_of_the_measured_arm": "The incumbent arm reduces the latent with z[:, :, :L].mean(dim=2). This arm reduces the SAME forward pass differently and never re-reads the incumbent's number, which is read from its committed per-seed table. Under R6 it is a distinct arm, declared before this bar existed."
+}
