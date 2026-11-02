@@ -890,3 +890,13 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 - The plan records its own disproportion as a high-severity risk: the chain is two planning cycles deep with no code changed, the red ownership guard is still red one plan away, and a fourth review cycle on the same subject should be read as a signal to stop planning and execute.
 
 ---
+## [plan_file: Positional_PromoterAtlas_Arm_Does_Position_Resolved_Latent_Structure_Beat_The_Mean_Pool_Plan/] 2026-11-01
+**Summary:** Tests whether a position-resolved reduction of the SAME frozen PromoterAtlas latent beats the masked-mean-pool incumbent at median Spearman 0.5076 by the rung's inherited 0.02 margin -- the last `planned` arm on the tile-chain ceiling criterion, declared under R6 and previously planless.
+**Key decisions:**
+- The plan narrows the arm against its own declared rationale, which I wrote: peak tiles carry no TSS or promoter register, so the arm CANNOT test the -35/-10 spacing claim, and position is relative to an arbitrary 150 bp window rather than to a promoter frame.
+- Because of that, anchor-free channel AUTOCORRELATION is a declared CO-PRIMARY beside 10-bin means rather than a second shot at the same hypothesis -- spacing is translation-invariant, so bins cannot target it and autocorrelation can; both are judged at a Bonferroni-corrected two-primary level written into the bar, with four named secondaries explicitly ineligible as the arm's result.
+- A PARITY gate is the thing that makes every later number comparable to 0.5076: the global mean is derived from the stored equal-size bin means and must reproduce the committed `tile_embeddings_native150_n44106.npy` and its per-seed scores, and `bin_means` REFUSES a ragged final bin rather than truncating, because a silent ragged bin breaks that recovery quietly.
+- Strand is handled as a declared empirical variant rather than a guess: tiles are near-balanced 21,821 plus / 22,285 minus and plus/minus are measured NOT to be reverse-complement pairs (2.6% RC overlap, zero sharing a peak), so the orientation convention of `seq` is unresolved by the data and is inferred from a performance difference -- a 1-bit inference, flagged as such.
+- Clearing the last planned arm may flip `ceiling_verdict` to `met`, which is a substantive change to a criterion declared 2026-10-09 rather than bookkeeping, so Step 6 stops and surfaces it instead of recording it in passing.
+
+---

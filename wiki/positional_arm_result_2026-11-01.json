@@ -1,0 +1,766 @@
+{
+  "arm": "positional-non-mean-pooled-promoteratlas-150bp",
+  "bar": "wiki/positional_arm_acceptance_bar.json",
+  "block": {
+    "checkpoint_sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624",
+    "geometry": {
+      "channels": 128,
+      "dtype": "float32",
+      "lags": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "n_bins": 10,
+      "n_features": 5120,
+      "n_rows": 44106,
+      "sequence_length": 150
+    },
+    "path": "D:\\dna_decode_cache\\promoteratlas_positional\\positional_block.npy",
+    "sidecar_status": "COMPLETE"
+  },
+  "comparator": {
+    "atlas_median": 0.5076,
+    "atlas_per_seed": {
+      "0": 0.5461,
+      "1": 0.5499,
+      "2": 0.4983,
+      "3": 0.4986,
+      "4": 0.5075,
+      "5": 0.5163,
+      "6": 0.5078,
+      "7": 0.4933,
+      "8": 0.5016,
+      "9": 0.521
+    },
+    "recomputed_in_run": false,
+    "source": "data/promoteratlas/local_reconcile_2026-11-01.json",
+    "why": "the incumbent is never re-run by this arm, so this arm cannot move the number it is graded against"
+  },
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "date": "2026-11-01",
+  "forecast_recorded_in_bar": {
+    "my_forecast_record_in_this_project": "3 of 7. The fragment-null P1 was falsified twice, P2 mislocated its interval, and the atlas arm's own bar put p=0.55 on LOSES_ALONE and p=0.08 on what actually happened. DO NOT defer to these priors.",
+    "p_autocorr_is_the_one_that_clears_given_adds": 0.4,
+    "p_positional_adds": 0.25,
+    "p_positional_ambiguous": 0.3,
+    "p_positional_no_gain": 0.45,
+    "predicted_outcome": "POSITIONAL_NO_GAIN",
+    "rationale": "Against: every sequence-statistics arm on this rung clusters 0.2691-0.3234 while the mean-pooled atlas sits at 0.5076, and a ridge over 1,280 or 2,560 correlated columns on ~33,000 training rows has far more variance to pay for than the 128-dim pool. Without a promoter register the bins are positions in an arbitrary window, which is the scoping correction above. For: mean-pooling provably discards information the latent carries, the incumbent's own recorded limit says so, and the ridge can ignore useless columns at alpha=1.0 more cheaply than it can recover discarded ones.",
+    "recorded_before_any_number_exists": true
+  },
+  "free_ram_bytes_at_start": 6333976576,
+  "gates": {
+    "parity": {
+      "committed_median": 0.5076,
+      "derived_median": 0.5076,
+      "detail": "the global mean derived from the stored bin means reproduces the committed embedding and its per-seed Spearmans, so every rung below is comparable to 0.5076",
+      "embedding_level": {
+        "atol_used": 1e-05,
+        "max_abs_deviation": 1.0583549737708253e-06,
+        "mean_abs_deviation": 1.2745254828910284e-08,
+        "n_rows": 44106,
+        "p99_abs_deviation": 8.642673487990749e-08,
+        "passed": true
+      },
+      "embedding_tolerance": 1e-05,
+      "passed": true,
+      "spearman_level": {
+        "deviant_seeds": [],
+        "per_seed": {
+          "0": {
+            "abs_deviation": 0.0,
+            "committed": 0.5461,
+            "derived": 0.5461
+          },
+          "1": {
+            "abs_deviation": 0.0,
+            "committed": 0.5499,
+            "derived": 0.5499
+          },
+          "2": {
+            "abs_deviation": 0.0,
+            "committed": 0.4983,
+            "derived": 0.4983
+          },
+          "3": {
+            "abs_deviation": 0.0,
+            "committed": 0.4986,
+            "derived": 0.4986
+          },
+          "4": {
+            "abs_deviation": 0.0,
+            "committed": 0.5075,
+            "derived": 0.5075
+          },
+          "5": {
+            "abs_deviation": 0.0,
+            "committed": 0.5163,
+            "derived": 0.5163
+          },
+          "6": {
+            "abs_deviation": 0.0,
+            "committed": 0.5078,
+            "derived": 0.5078
+          },
+          "7": {
+            "abs_deviation": 0.0,
+            "committed": 0.4933,
+            "derived": 0.4933
+          },
+          "8": {
+            "abs_deviation": 0.0,
+            "committed": 0.5016,
+            "derived": 0.5016
+          },
+          "9": {
+            "abs_deviation": 0.0,
+            "committed": 0.521,
+            "derived": 0.521
+          }
+        },
+        "tolerance": 0.001
+      }
+    },
+    "shuffled_label_null": {
+      "bar": "|median| < 0.02",
+      "ci_method": "exact distribution-free order-statistic interval for the MEDIAN, with its achieved coverage -- not a normal approximation around the MEAN",
+      "detail": "the shuffled-label control is +0.0053 over 10 seeds, inside the |median|<0.02 bar",
+      "extended": false,
+      "median_10": 0.0053,
+      "median_ci95": [
+        -0.0067,
+        0.0169
+      ],
+      "median_ci_achieved_coverage": 0.978515625,
+      "n_extension_seeds": 0,
+      "n_pooled": 10,
+      "passed": true,
+      "per_seed_10": {
+        "0": 0.017,
+        "1": 0.009,
+        "2": 0.0151,
+        "3": 0.0016,
+        "4": 0.0538,
+        "5": 0.0169,
+        "6": -0.0067,
+        "7": -0.0183,
+        "8": -0.0373,
+        "9": -0.0018
+      },
+      "per_seed_extension": {},
+      "pooled_median": 0.0053,
+      "rung": "bins10_mean_oriented",
+      "statistic": "the shuffled-label model's OWN Spearman on the primary rung: ridge_spearman(primary[train], SHUFFLED train labels, primary[test], REAL test labels)",
+      "statistic_provenance": "INHERITED from the incumbent arm's IMPLEMENTATION, not from its prose. That bar's text reads '|median gain over GC| < 0.02' but its kernel computes no GC term at all. The implementation is the statistic that produced the fragment arm's +0.0517 and the atlas arm's 0.0203; a literal arm_shuffled-minus-GC would sit near -0.31 and could never clear a 0.02 bar. Discrepancy recorded rather than silently resolved."
+    },
+    "split_equality": {
+      "detail": "all 10 recomputed splits match the committed n_test_per_seed",
+      "mismatched_seeds": [],
+      "passed": true,
+      "per_seed": {
+        "0": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11198,
+          "n_test_committed": 11198,
+          "n_train": 32908
+        },
+        "1": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11018,
+          "n_test_committed": 11018,
+          "n_train": 33088
+        },
+        "2": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11373,
+          "n_test_committed": 11373,
+          "n_train": 32733
+        },
+        "3": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10883,
+          "n_test_committed": 10883,
+          "n_train": 33223
+        },
+        "4": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11025,
+          "n_test_committed": 11025,
+          "n_train": 33081
+        },
+        "5": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10907,
+          "n_test_committed": 10907,
+          "n_train": 33199
+        },
+        "6": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10590,
+          "n_test_committed": 10590,
+          "n_train": 33516
+        },
+        "7": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 11249,
+          "n_test_committed": 11249,
+          "n_train": 32857
+        },
+        "8": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10661,
+          "n_test_committed": 10661,
+          "n_train": 33445
+        },
+        "9": {
+          "held_out_peaks": 608,
+          "match": true,
+          "n_test": 10690,
+          "n_test_committed": 10690,
+          "n_train": 33416
+        }
+      }
+    }
+  },
+  "honest_limits": [
+    "No promoter anchor exists on this substrate, so a NO_GAIN says that position bins relative to an ARBITRARY window add nothing -- NOT that positional structure is absent. The negative must never be over-read as closing positional readouts generally.",
+    "The orientation convention of `seq` is UNRESOLVED and is inferred from a performance difference between two rungs. That is a 1-bit inference, not established biology: only 576 of 22,285 minus sequences (2.6%) have their reverse complement among the plus sequences, and ZERO of those share a peak, so plus and minus tiles are distinct genomic windows rather than two orientations of one element.",
+    "689 duplicate sequences are known on this substrate and are UNCHANGED by this arm. A train/test-straddling duplicate affects this arm exactly as it affects the incumbent, so the PAIRED comparison is the right shape while the absolute levels inherit the issue.",
+    "The encoder is FROZEN and its hyperparameters were chosen elsewhere; this is not a tuned positional model and a NO_GAIN does not bound what a fine-tuned one could do.",
+    "Ten seeds is the inherited pairing. The fragment-pyramid arm needed 270 pooled seeds before its null cleared, so ten may be too few here for the same reason.",
+    "The rung ceiling is 0.941 and replicate-derived. No tile-rung number may be read as a fraction of it without saying so."
+  ],
+  "margin": 0.02,
+  "multiplicity": {
+    "autocorr_needs_no_orientation_variant": "an autocorrelation is invariant under reversal of its series -- the set of position pairs separated by k is unchanged when the series is read backwards -- so the autocorr co-primary is IMMUNE to the unresolved orientation convention that the bins rungs carry a 1-bit inference about",
+    "co_primaries": [
+      "bins10_mean_oriented",
+      "autocorr"
+    ],
+    "co_primary_alpha_each": 0.025,
+    "co_primary_ci_percentiles": [
+      1.25,
+      98.75
+    ],
+    "co_primary_hypotheses": {
+      "autocorr": "does periodic SPACING carry signal, measured anchor-free so it does not need a promoter register",
+      "bins10_mean_oriented": "does a POSITION-RESOLVED reduction beat a position-AVERAGED one"
+    },
+    "co_primary_n_comparisons": 2,
+    "divisor_discrepancy_recorded": "The plan's prose named a '5-comparison corrected level' for the secondaries while listing FOUR of them. Neither 5 nor 4 is the family-wise count over everything measured, so this bar uses 6 = every rung on the ladder. That is strictly more conservative than the plan's 5, it is internally consistent, and it is outcome-neutral: a secondary can never be the arm's result, so its interval width moves no verdict. Recorded rather than silently applied.",
+    "family_alpha": 0.05,
+    "secondaries": [
+      "bins10_mean_asgiven",
+      "bins10_max_oriented",
+      "bins2_mean_oriented",
+      "bins5_mean_oriented"
+    ],
+    "secondaries_are_ineligible_as_the_arms_result": true,
+    "secondary_alpha_each": 0.008333333333333333,
+    "secondary_ci_percentiles": [
+      0.4166666666666667,
+      99.58333333333333
+    ],
+    "secondary_n_comparisons": 6,
+    "why_ineligible": "six rungs against one incumbent is a garden of forking paths if the best is reported; classify() consults the co-primaries ONLY, so ineligibility is enforced by construction rather than by convention"
+  },
+  "ram": {
+    "free_at_start_bytes": 6333976576,
+    "headroom_factor": 1.5,
+    "min_free_observed_bytes": 4236636160,
+    "note": "free RAM is re-measured before every rung because it moves during a run; the minimum observed is what a reader should size against"
+  },
+  "rungs": {
+    "autocorr": {
+      "eligible_as_the_arms_result": true,
+      "gain_bootstrap": {
+        "ci_hi": -0.1032,
+        "ci_lo": -0.1227,
+        "ci_percentiles": [
+          1.25,
+          98.75
+        ],
+        "mean": -0.1115,
+        "median": -0.1089,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "median_spearman": 0.3975,
+      "n_features": 2560,
+      "n_seeds": 10,
+      "peak_design_bytes": 1806581760,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.1142,
+          "spearman": 0.4319
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.147,
+          "spearman": 0.4029
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.1042,
+          "spearman": 0.3941
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.1058,
+          "spearman": 0.3928
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.1111,
+          "spearman": 0.3964
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.1176,
+          "spearman": 0.3987
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.1163,
+          "spearman": 0.3915
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.099,
+          "spearman": 0.3943
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.0934,
+          "spearman": 0.4082
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.1068,
+          "spearman": 0.4142
+        }
+      },
+      "role": "co-primary",
+      "seed_wins_over_atlas": 0,
+      "skipped": false
+    },
+    "bins10_max_oriented": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.0061,
+        "ci_lo": -0.0192,
+        "ci_percentiles": [
+          0.4166666666666667,
+          99.58333333333333
+        ],
+        "mean": -0.0133,
+        "median": -0.0127,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "median_spearman": 0.4954,
+      "n_features": 1280,
+      "n_seeds": 10,
+      "peak_design_bytes": 903290880,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.0193,
+          "spearman": 0.5268
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.0225,
+          "spearman": 0.5274
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.0085,
+          "spearman": 0.4898
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.0108,
+          "spearman": 0.4878
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": 0.0057,
+          "spearman": 0.5132
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.0105,
+          "spearman": 0.5058
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.0209,
+          "spearman": 0.4869
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.0146,
+          "spearman": 0.4787
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.0106,
+          "spearman": 0.491
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.0212,
+          "spearman": 0.4998
+        }
+      },
+      "role": "secondary",
+      "seed_wins_over_atlas": 1,
+      "skipped": false
+    },
+    "bins10_mean_asgiven": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": 0.0017,
+        "ci_lo": -0.0079,
+        "ci_percentiles": [
+          0.4166666666666667,
+          99.58333333333333
+        ],
+        "mean": -0.0031,
+        "median": -0.0042,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "median_spearman": 0.5086,
+      "n_features": 1280,
+      "n_seeds": 10,
+      "peak_design_bytes": 903290880,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.0126,
+          "spearman": 0.5335
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.0123,
+          "spearman": 0.5376
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": 0.0016,
+          "spearman": 0.4999
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": 0.0033,
+          "spearman": 0.5019
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.0055,
+          "spearman": 0.502
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.0043,
+          "spearman": 0.512
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": 0.0031,
+          "spearman": 0.5109
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.0044,
+          "spearman": 0.4889
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": 0.0046,
+          "spearman": 0.5062
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.0041,
+          "spearman": 0.5169
+        }
+      },
+      "role": "secondary",
+      "seed_wins_over_atlas": 4,
+      "skipped": false
+    },
+    "bins10_mean_oriented": {
+      "eligible_as_the_arms_result": true,
+      "gain_bootstrap": {
+        "ci_hi": -0.016,
+        "ci_lo": -0.0219,
+        "ci_percentiles": [
+          1.25,
+          98.75
+        ],
+        "mean": -0.0188,
+        "median": -0.0187,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "median_spearman": 0.4893,
+      "n_features": 1280,
+      "n_seeds": 10,
+      "peak_design_bytes": 903290880,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.0256,
+          "spearman": 0.5205
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.0191,
+          "spearman": 0.5308
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.0195,
+          "spearman": 0.4788
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.0155,
+          "spearman": 0.4831
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.0119,
+          "spearman": 0.4956
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.0186,
+          "spearman": 0.4977
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.0264,
+          "spearman": 0.4814
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.0149,
+          "spearman": 0.4784
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.0187,
+          "spearman": 0.4829
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.0176,
+          "spearman": 0.5034
+        }
+      },
+      "role": "co-primary",
+      "seed_wins_over_atlas": 0,
+      "skipped": false
+    },
+    "bins2_mean_oriented": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.004,
+        "ci_lo": -0.0088,
+        "ci_percentiles": [
+          0.4166666666666667,
+          99.58333333333333
+        ],
+        "mean": -0.0062,
+        "median": -0.0052,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "median_spearman": 0.5,
+      "n_features": 256,
+      "n_seeds": 10,
+      "peak_design_bytes": 180658176,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.0046,
+          "spearman": 0.5415
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.0038,
+          "spearman": 0.5461
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.0095,
+          "spearman": 0.4888
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.0058,
+          "spearman": 0.4928
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.0042,
+          "spearman": 0.5033
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.0027,
+          "spearman": 0.5136
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.011,
+          "spearman": 0.4968
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.0031,
+          "spearman": 0.4902
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.0081,
+          "spearman": 0.4935
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.0096,
+          "spearman": 0.5114
+        }
+      },
+      "role": "secondary",
+      "seed_wins_over_atlas": 0,
+      "skipped": false
+    },
+    "bins5_mean_oriented": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.008,
+        "ci_lo": -0.0142,
+        "ci_percentiles": [
+          0.4166666666666667,
+          99.58333333333333
+        ],
+        "mean": -0.0109,
+        "median": -0.0108,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "median_spearman": 0.497,
+      "n_features": 640,
+      "n_seeds": 10,
+      "peak_design_bytes": 451645440,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.015,
+          "spearman": 0.5311
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.0083,
+          "spearman": 0.5416
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.0106,
+          "spearman": 0.4877
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.0057,
+          "spearman": 0.4929
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.0063,
+          "spearman": 0.5012
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.013,
+          "spearman": 0.5033
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.0187,
+          "spearman": 0.4891
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.0091,
+          "spearman": 0.4842
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.0113,
+          "spearman": 0.4903
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.0111,
+          "spearman": 0.5099
+        }
+      },
+      "role": "secondary",
+      "seed_wins_over_atlas": 0,
+      "skipped": false
+    }
+  },
+  "schema": "positional-arm-result-v1",
+  "scoping_corrections": [
+    "This arm CANNOT test the -35/-10 spacing claim its own ledger rationale asserts. genomewide.Tile exposes seq, expression, peak, strand, category, active, rep1, rep2 -- there is no TSS, no promoter register and no peak-relative offset, so a bin index is a position in an ARBITRARY 150 bp window, not a promoter coordinate. What is testable is narrower: does a position-resolved reduction beat a position-averaged one.",
+    "Because of that, the readout matching the stated spacing mechanism is NOT bins. Spacing is translation-invariant, so the anchor-free autocorrelation is a declared CO-PRIMARY testing a DIFFERENT hypothesis -- not a second shot at the same one."
+  ],
+  "substrate": {
+    "n_peaks": 2433,
+    "n_tiles": 44106,
+    "path": "D:\\dna_decode_cache\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz"
+  },
+  "verdict": "POSITIONAL_NO_GAIN",
+  "verdict_detail": "both co-primary intervals lie entirely BELOW the margin +0.0200",
+  "verdict_is_rederivable_from_this_artifact": true,
+  "wall_seconds": 282.9
+}

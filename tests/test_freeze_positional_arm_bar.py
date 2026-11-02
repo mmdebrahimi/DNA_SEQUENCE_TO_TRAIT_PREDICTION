@@ -192,8 +192,20 @@ def test_every_classify_outcome_is_in_the_closed_set():
 # verify -- the refusals, against real mutated copies
 # --------------------------------------------------------------------------------------------------
 def _copies(tmp_path: Path):
+    """Anchor copies with the arm reset to PLANNED -- the only state a freeze is legal in.
+
+    **These tests used to read the LIVE ledger as their fixture, and that was my defect.** Once the
+    arm was recorded as `measured` (Step 6 of the plan), `verify()` began refusing -- correctly,
+    because a bar may only be frozen while no number exists -- and five tests went red *because the
+    code works*. A unit test of `verify()`'s logic must not be coupled to a transient live state
+    that the project legitimately and permanently moves past. The reset is what makes these tests
+    about the FUNCTION rather than about today's ledger; the live post-measurement behaviour is
+    pinned separately below.
+    """
     rec = json.loads(RECONCILE.read_text(encoding="utf-8"))
     led = json.loads(LEDGER.read_text(encoding="utf-8"))
+    led["criteria"][_crit(led)][ARM].update(
+        status="planned", metric=None, evidence="", resolved_at="")
     rp, lp = tmp_path / "reconcile.json", tmp_path / "ledger.json"
     rp.write_text(json.dumps(rec), encoding="utf-8")
     lp.write_text(json.dumps(led), encoding="utf-8")
@@ -210,10 +222,27 @@ def _crit(led: dict) -> str:
 
 
 @pytest.mark.skipif(not FEASIBILITY.is_file(), reason="feasibility artifact absent; run the probe")
-def test_verify_passes_on_the_committed_artifacts():
-    v = verify()
+def test_verify_passes_on_the_committed_anchors_in_their_pre_freeze_state(tmp_path):
+    _rec, _led, rp, lp = _copies(tmp_path)
+    v = verify(reconcile_path=rp, ledger_path=lp)
     assert v["reconcile"]["verdict"] == "RECONCILED"
     assert v["arms"][ARM]["status"] == "planned"
+
+
+@pytest.mark.skipif(not FEASIBILITY.is_file(), reason="feasibility artifact absent; run the probe")
+def test_verify_now_REFUSES_on_the_LIVE_ledger_because_the_arm_is_measured():
+    """The post-run reality, pinned deliberately: a bar cannot be re-frozen after the fact.
+
+    This is the mirror of the test above. Together they say: `verify()` accepts the anchors as they
+    stood when the bar was frozen, and refuses them now that a number exists -- which is the whole
+    point of the status check, not an accident of ordering.
+    """
+    live = json.loads(LEDGER.read_text(encoding="utf-8"))
+    status = live["criteria"][_crit(live)][ARM]["status"]
+    if status != "measured":
+        pytest.skip("the arm is %r, not yet measured" % status)
+    with pytest.raises(BarRefused, match="not 'planned'|already carries metric"):
+        verify()
 
 
 @pytest.mark.skipif(not FEASIBILITY.is_file(), reason="feasibility artifact absent; run the probe")
@@ -304,11 +333,12 @@ def test_verify_refuses_a_drifted_incumbent_or_anchor_arm(tmp_path):
 
 @pytest.mark.skipif(not FEASIBILITY.is_file(), reason="feasibility artifact absent; run the probe")
 def test_verify_refuses_a_failed_feasibility_probe(tmp_path):
+    _rec, _led, rp, lp = _copies(tmp_path)
     feas = json.loads(FEASIBILITY.read_text(encoding="utf-8"))
     feas["parity"]["passed"] = False
     fp = _write(tmp_path / "feas.json", feas)
     with pytest.raises(BarRefused, match="feasibility verdict"):
-        verify(feasibility_path=fp)
+        verify(reconcile_path=rp, ledger_path=lp, feasibility_path=fp)
 
 
 def test_verify_refuses_an_absent_anchor_source(tmp_path):
@@ -404,8 +434,28 @@ def test_the_frozen_bar_records_a_forecast_with_its_record_and_the_do_not_defer_
 
 
 @pytest.mark.skipif(not FEASIBILITY.is_file(), reason="feasibility artifact absent; run the probe")
-def test_build_bar_is_a_pure_function_of_the_verified_anchors():
+def test_build_bar_is_a_pure_function_of_the_verified_anchors(tmp_path):
     """Re-deriving the bar from the same anchors must reproduce it except for the freeze stamp."""
-    a, b = build_bar(verify()), build_bar(verify())
+    _rec, _led, rp, lp = _copies(tmp_path)
+    v = verify(reconcile_path=rp, ledger_path=lp)
+    a, b = build_bar(v), build_bar(v)
     a.pop("frozen"), b.pop("frozen")
     assert a == b
+
+
+@pytest.mark.skipif(not OUT.is_file(), reason="bar not frozen yet")
+def test_the_bar_on_disk_still_matches_a_rebuild_from_its_pre_freeze_anchors(tmp_path):
+    """The frozen bar must not have drifted from the anchors it was built on.
+
+    Compared with `frozen` and the probe-derived throughput/free-RAM stripped: those are timing and
+    host measurements that legitimately differ between the freeze run and a rebuild.
+    """
+    _rec, _led, rp, lp = _copies(tmp_path)
+    rebuilt = build_bar(verify(reconcile_path=rp, ledger_path=lp))
+    on_disk = json.loads(OUT.read_text(encoding="utf-8"))
+    volatile = ("throughput_seq_per_second", "free_ram_bytes_at_freeze")
+    for d in (rebuilt, on_disk):
+        d.pop("frozen", None)
+        for k in volatile:
+            d["measured_and_inherited_from_the_probe"].pop(k, None)
+    assert rebuilt == on_disk

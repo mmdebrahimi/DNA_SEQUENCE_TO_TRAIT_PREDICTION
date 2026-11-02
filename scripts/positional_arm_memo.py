@@ -27,6 +27,11 @@ OUT = REPO / "wiki/positional_arm_result_2026-11-01.md"
 
 TERMINAL = ("POSITIONAL_ADDS", "POSITIONAL_NO_GAIN", "POSITIONAL_AMBIGUOUS")
 
+#: The tile rung's replicate-derived ceiling. Named here only so the fraction below is COMPUTED
+#: rather than hand-typed; the bar's honest limits carry the same figure and the standing rule that
+#: no tile-rung number may be read as a fraction of it without saying so.
+RUNG_CEILING = 0.941
+
 
 def _rung_rows(res: dict) -> list[str]:
     rows = ["| rung | role | features | median rho | gain vs atlas | corrected CI | seed wins |",
@@ -83,8 +88,12 @@ def render(res: dict, bar: dict, ceiling: dict | None = None) -> str:
         w("one.")
         w("")
         w("**What this arm does NOT license either way:** `met` is a statement about the ARM SET")
-        w("being exhausted, not about %.4f being close to the 0.941 replicate ceiling. It is not."
-          % max([r.get("median_spearman") or 0 for r in res["rungs"].values()] + [atlas]))
+        w("being exhausted, not about the criterion's `best` of %.4f being close to the %.3f"
+          % (atlas, RUNG_CEILING))
+        w("replicate-derived ceiling. It is not — it is %.0f%% of it, and the project's own standing"
+          % (100.0 * atlas / RUNG_CEILING))
+        w("rule is that no tile-rung number may be read as a fraction of that ceiling without")
+        w("saying so, which is why it is said here.")
         w("")
     else:
         w("**None from this arm's verdict.** `ceiling_verdict` reads `%s`, so the criterion is"
@@ -101,9 +110,42 @@ def render(res: dict, bar: dict, ceiling: dict | None = None) -> str:
     for i, c in enumerate(res["scoping_corrections"], 1):
         w("%d. %s" % (i, c))
         w("")
+    asg = res["rungs"].get("bins10_mean_asgiven")
+    ori = res["rungs"].get("bins10_mean_oriented")
+    if asg and ori and not asg.get("skipped") and not ori.get("skipped"):
+        d = asg["median_spearman"] - ori["median_spearman"]
+        b = asg["gain_bootstrap"]
+        w("**The orientation convention is no longer unresolved, and it resolved AGAINST orienting.**")
+        w("The frozen bar records it as a 1-bit inference *\"from a performance difference between")
+        w("two rungs\"* and lists it under what this arm does not establish. This run supplied that")
+        w("difference: as-given scores **%.4f** against oriented **%.4f**, so reversing the bin axis"
+          % (asg["median_spearman"], ori["median_spearman"]))
+        w("on minus-strand tiles **destroys about %.4f of signal rather than aligning the cohorts**."
+          % d)
+        w("The bar's own text is left UNEDITED — it was correct when frozen — and this resolution is")
+        w("recorded beside it rather than written back into it.")
+        w("")
+        w("**The consequence is load-bearing and uncomfortable: the arm's declared co-primary was the")
+        w("ORIENTED rung, so the eligible primary was handicapped by the transform this same run")
+        w("shows to be the wrong one.** The verdict stands unedited anyway, because as-given does not")
+        w("clear the margin either — gain %+.4f, CI [%+.4f, %+.4f], which CONTAINS zero, so it TIES"
+          % (b["median"], b["ci_lo"], b["ci_hi"]))
+        w("the incumbent rather than beating it. A variant with as-given as the primary would be a")
+        w("NEW ARM under R6, never a re-read of this one.")
+        w("")
+        if asg["median_spearman"] > atlas:
+            w("**And this is the multiplicity rule doing real work rather than decorating the bar.**")
+            w("`bins10_mean_asgiven` at %.4f is the highest rung on the ladder and sits ABOVE the"
+              % asg["median_spearman"])
+            w("incumbent %.4f. It is a declared SECONDARY and INELIGIBLE as this arm's result, so it"
+              % atlas)
+            w("is not the metric and does not set the criterion's `best`. Reporting the best of six")
+            w("rungs would have claimed a gain — and even that rung's own interval contains zero.")
+            w("")
+
     prov = gates["shuffled_label_null"].get("statistic_provenance")
     if prov:
-        w("**A third correction, to an inherited surface rather than to this arm.** %s" % prov)
+        w("**A further correction, to an inherited surface rather than to this arm.** %s" % prov)
         w("")
 
     # ---------------------------------------------------------------------------------------
