@@ -1,0 +1,550 @@
+{
+  "arm": "shipped-expression-heads-zeroshot-150bp",
+  "checkpoint": {
+    "buffer_elements_excluded_by_parameters": 64,
+    "bytes": 22313814,
+    "count_trap": "the state dictionary sums to 1847492 while model.parameters() gives 1847428; the 64 element gap is 8 rotary inv_freq BUFFERS at 8 elements each. The repo enforces the PARAMETER count, so a probe comparing the state-dict sum to it reports a mismatch that does not exist.",
+    "n_elements_via_state_dict": 1847492,
+    "n_parameters_via_model_parameters": 1847428,
+    "path": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas\\trained_weights\\base_model\\promoteratlas-base.pt",
+    "pickle_globals": [
+      "collections.OrderedDict",
+      "pathlib.PosixPath",
+      "torch.FloatStorage",
+      "torch._utils._rebuild_tensor_v2"
+    ],
+    "sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624"
+  },
+  "circularity_scope": {
+    "circular_head": "promoteratlas-trspred-urtecho2018",
+    "circular_on_rung": "GSE108535",
+    "is_circular_here": false,
+    "recorded_because": "so nobody reuses this head on the rung where it IS circular",
+    "this_substrate": "GSE144621",
+    "why": "the urtecho2018 head IS circular on the sigma70 rung (GSE108535) and must never be a comparator there. This substrate is GSE144621 peak tiles, and this project's own withdrawn lead established that no genome-wide or tiling Urtecho head exists, so it is not circular HERE."
+  },
+  "cost_projection": {
+    "base_forward_pass": {
+      "seconds_full_cohort": 941.9,
+      "seconds_sampled": 1.03,
+      "shared_across_heads": true,
+      "why_shared": "all 5 heads carry base weights byte-identical to the frozen base, so one forward pass feeds every head"
+    },
+    "cheap_route": {
+      "hours_all_heads": 0.24,
+      "n_heads": 5,
+      "seconds_all_heads": 873.9,
+      "seconds_per_head": 174.8
+    },
+    "true_route": {
+      "hours_all_heads": 4.64,
+      "n_heads": 5,
+      "seconds_all_heads": 16708.8,
+      "seconds_per_head": 3341.8
+    }
+  },
+  "criterion_hint": "ceiling",
+  "date": "2026-11-02",
+  "endpoint_scope": {
+    "limit": "promoteratlas-tslpred-kosuri2013 predicts TRANSLATION, which is a different quantity from the promoter activity this rung measures, and it uniquely carries log_transform=True. It is declared anyway under the standing instruction to leave no stones unturned, with the mismatch stated as a limit rather than resolved by exclusion.",
+    "transcription_heads": [
+      "promoteratlas-trspred-hossain2020",
+      "promoteratlas-trspred-lafleur2022",
+      "promoteratlas-trspred-urtecho2018",
+      "promoteratlas-trspred-yu2021"
+    ],
+    "translation_heads": [
+      "promoteratlas-tslpred-kosuri2013"
+    ]
+  },
+  "geometry": {
+    "arithmetic": "11008 = 128 x 86",
+    "direct_feed_is_impossible": true,
+    "edge_asymmetry_note": "the right edge is wider than the left because padding='same' on an even kernel splits (3, 4), not (4, 3)",
+    "edge_columns_left": 9,
+    "edge_columns_right": 11,
+    "fc1_in_features": 11008,
+    "head_seq_length": 86,
+    "n_windows": 65,
+    "substrate_length": 150,
+    "substrate_would_flatten_to": 19200,
+    "window_arithmetic": "150 - 86 + 1 = 65"
+  },
+  "heads": {
+    "promoteratlas-trspred-hossain2020": {
+      "base_max_abs_dev": 0.0,
+      "base_tensors_checked": 124,
+      "base_tensors_identical": 124,
+      "denormalisation_note": "mean/std (and the log transform where present) are MONOTONE, so they cannot move a rank-based verdict. An ABSOLUTE predicted expression value would be wrong without them.",
+      "endpoint": "trspred",
+      "fc1_shape": [
+        64,
+        11008
+      ],
+      "implied_seq_length": 86,
+      "log_transform": false,
+      "n_elements_head_only": 967041,
+      "n_elements_total": 2814533,
+      "normalization_params": {
+        "mean": -6.497496076558214,
+        "std": 1.7971079650996693
+      },
+      "path": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas\\trained_weights\\expression_prediction\\promoteratlas-trspred-hossain2020.pt",
+      "spearman_is_invariant_to_the_denormalisation": true
+    },
+    "promoteratlas-trspred-lafleur2022": {
+      "base_max_abs_dev": 0.0,
+      "base_tensors_checked": 124,
+      "base_tensors_identical": 124,
+      "denormalisation_note": "mean/std (and the log transform where present) are MONOTONE, so they cannot move a rank-based verdict. An ABSOLUTE predicted expression value would be wrong without them.",
+      "endpoint": "trspred",
+      "fc1_shape": [
+        64,
+        11008
+      ],
+      "implied_seq_length": 86,
+      "log_transform": false,
+      "n_elements_head_only": 967041,
+      "n_elements_total": 2814533,
+      "normalization_params": {
+        "mean": -2.6186564410911406,
+        "std": 0.7572823396263633
+      },
+      "path": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas\\trained_weights\\expression_prediction\\promoteratlas-trspred-lafleur2022.pt",
+      "spearman_is_invariant_to_the_denormalisation": true
+    },
+    "promoteratlas-trspred-urtecho2018": {
+      "base_max_abs_dev": 0.0,
+      "base_tensors_checked": 124,
+      "base_tensors_identical": 124,
+      "denormalisation_note": "mean/std (and the log transform where present) are MONOTONE, so they cannot move a rank-based verdict. An ABSOLUTE predicted expression value would be wrong without them.",
+      "endpoint": "trspred",
+      "fc1_shape": [
+        64,
+        11008
+      ],
+      "implied_seq_length": 86,
+      "log_transform": false,
+      "n_elements_head_only": 967041,
+      "n_elements_total": 2814533,
+      "normalization_params": {
+        "mean": -1.9113091955612622,
+        "std": 1.3785508810953426
+      },
+      "path": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas\\trained_weights\\expression_prediction\\promoteratlas-trspred-urtecho2018.pt",
+      "spearman_is_invariant_to_the_denormalisation": true
+    },
+    "promoteratlas-trspred-yu2021": {
+      "base_max_abs_dev": 0.0,
+      "base_tensors_checked": 124,
+      "base_tensors_identical": 124,
+      "denormalisation_note": "mean/std (and the log transform where present) are MONOTONE, so they cannot move a rank-based verdict. An ABSOLUTE predicted expression value would be wrong without them.",
+      "endpoint": "trspred",
+      "fc1_shape": [
+        64,
+        11008
+      ],
+      "implied_seq_length": 86,
+      "log_transform": false,
+      "n_elements_head_only": 967041,
+      "n_elements_total": 2814533,
+      "normalization_params": {
+        "mean": -2.5776072614528536,
+        "std": 1.0655762273050722
+      },
+      "path": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas\\trained_weights\\expression_prediction\\promoteratlas-trspred-yu2021.pt",
+      "spearman_is_invariant_to_the_denormalisation": true
+    },
+    "promoteratlas-tslpred-kosuri2013": {
+      "base_max_abs_dev": 0.0,
+      "base_tensors_checked": 124,
+      "base_tensors_identical": 124,
+      "denormalisation_note": "mean/std (and the log transform where present) are MONOTONE, so they cannot move a rank-based verdict. An ABSOLUTE predicted expression value would be wrong without them.",
+      "endpoint": "tslpred",
+      "fc1_shape": [
+        64,
+        11008
+      ],
+      "implied_seq_length": 86,
+      "log_transform": true,
+      "n_elements_head_only": 967041,
+      "n_elements_total": 2814533,
+      "normalization_params": {
+        "log_transform": 1.0,
+        "mean": 8.036709855804032,
+        "std": 1.1801895700816036
+      },
+      "path": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas\\trained_weights\\expression_prediction\\promoteratlas-tslpred-kosuri2013.pt",
+      "spearman_is_invariant_to_the_denormalisation": true
+    }
+  },
+  "host": {
+    "cpu_count": 8,
+    "platform": "Windows-10-10.0.19045-SP0",
+    "python": "3.11.17"
+  },
+  "multiplicity_consequence": "The head count IS the arm's Bonferroni divisor. FIVE heads were found, not the four an earlier note recorded, so the bar must correct at alpha/5. That makes the arm HARDER to pass than alpha/4, which is the honest direction for an inherited miscount.",
+  "n_heads": 5,
+  "resources": {
+    "binding_constraint": "WALL CLOCK on the true route, not memory: the arm reduces to one scalar per tile per head, so the design is tiny, while the true route costs 65 trunk evaluations per tile per head.",
+    "fits_in_ram": true,
+    "fits_in_ram_semantics": "None means UNMEASURED and must never be read as True",
+    "free_ram_bytes": 5540958208,
+    "headroom_factor": 1.5,
+    "n_heads": 5,
+    "n_tiles": 44106,
+    "n_windows": 65,
+    "ram_is_not_the_binding_constraint": true,
+    "reduced_values_bytes": 3528480
+  },
+  "routes": {
+    "promoteratlas-trspred-hossain2020": {
+      "contaminated_columns_at_that_offset": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85
+      ],
+      "n_windows": 65,
+      "noise_floor_at_offset_30": {
+        "max_abs_dev": 0.0,
+        "median_abs_dev": 0.0,
+        "n_columns": 66,
+        "why": "columns the closed form says are identical; any deviation here is float32 conv-blocking noise amplified by max-pool argmax ties, NOT the edge effect"
+      },
+      "per_reduction": {
+        "max": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.14354729652404785,
+            "mean_abs_dev": 0.029069702218597133,
+            "median_abs_dev": 0.01866626739501953,
+            "n": 48,
+            "pearson": 0.9990524917196608
+          },
+          "spearman_cheap_vs_true": 0.9968519322622666,
+          "true_is_constant": false
+        },
+        "mean": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.0664554238319397,
+            "mean_abs_dev": 0.02495342057469922,
+            "median_abs_dev": 0.01957237720489502,
+            "n": 48,
+            "pearson": 0.9997676931887176
+          },
+          "spearman_cheap_vs_true": 0.9982631350412506,
+          "true_is_constant": false
+        }
+      },
+      "per_window_deviation": {
+        "max_abs_dev": 0.2943374067544937,
+        "mean_abs_dev": 0.035037792773726276,
+        "median_abs_dev": 0.02718031406402588,
+        "n": 3120,
+        "pearson": 0.9988605474005497
+      },
+      "seconds_cheap_route": 0.222,
+      "seconds_true_route": 3.439,
+      "true_route_cost_multiple": 15.5
+    },
+    "promoteratlas-trspred-lafleur2022": {
+      "contaminated_columns_at_that_offset": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85
+      ],
+      "n_windows": 65,
+      "noise_floor_at_offset_30": {
+        "max_abs_dev": 0.0,
+        "median_abs_dev": 0.0,
+        "n_columns": 66,
+        "why": "columns the closed form says are identical; any deviation here is float32 conv-blocking noise amplified by max-pool argmax ties, NOT the edge effect"
+      },
+      "per_reduction": {
+        "max": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.06617367267608643,
+            "mean_abs_dev": 0.02314291273554166,
+            "median_abs_dev": 0.018331289291381836,
+            "n": 48,
+            "pearson": 0.9993269366280514
+          },
+          "spearman_cheap_vs_true": 0.9954407294832827,
+          "true_is_constant": false
+        },
+        "mean": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.04523015767335892,
+            "mean_abs_dev": 0.014012973794403175,
+            "median_abs_dev": 0.011569559574127197,
+            "n": 48,
+            "pearson": 0.9998548600880378
+          },
+          "spearman_cheap_vs_true": 0.999240121580547,
+          "true_is_constant": false
+        }
+      },
+      "per_window_deviation": {
+        "max_abs_dev": 0.21672585606575012,
+        "mean_abs_dev": 0.020535382670230973,
+        "median_abs_dev": 0.01623135805130005,
+        "n": 3120,
+        "pearson": 0.9990153784960991
+      },
+      "seconds_cheap_route": 0.137,
+      "seconds_true_route": 3.187,
+      "true_route_cost_multiple": 23.3
+    },
+    "promoteratlas-trspred-urtecho2018": {
+      "contaminated_columns_at_that_offset": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85
+      ],
+      "n_windows": 65,
+      "noise_floor_at_offset_30": {
+        "max_abs_dev": 0.0,
+        "median_abs_dev": 0.0,
+        "n_columns": 66,
+        "why": "columns the closed form says are identical; any deviation here is float32 conv-blocking noise amplified by max-pool argmax ties, NOT the edge effect"
+      },
+      "per_reduction": {
+        "max": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.07146650552749634,
+            "mean_abs_dev": 0.02537158007423083,
+            "median_abs_dev": 0.023726820945739746,
+            "n": 48,
+            "pearson": 0.9962307014184618
+          },
+          "spearman_cheap_vs_true": 0.981545809813287,
+          "true_is_constant": false
+        },
+        "mean": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.05309385061264038,
+            "mean_abs_dev": 0.015688683992872637,
+            "median_abs_dev": 0.014833390712738037,
+            "n": 48,
+            "pearson": 0.997250714972327
+          },
+          "spearman_cheap_vs_true": 0.9941380807642205,
+          "true_is_constant": false
+        }
+      },
+      "per_window_deviation": {
+        "max_abs_dev": 0.24969527125358582,
+        "mean_abs_dev": 0.028159158854769207,
+        "median_abs_dev": 0.02247941493988037,
+        "n": 3120,
+        "pearson": 0.9957113203385434
+      },
+      "seconds_cheap_route": 0.152,
+      "seconds_true_route": 3.001,
+      "true_route_cost_multiple": 19.7
+    },
+    "promoteratlas-trspred-yu2021": {
+      "contaminated_columns_at_that_offset": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85
+      ],
+      "n_windows": 65,
+      "noise_floor_at_offset_30": {
+        "max_abs_dev": 0.0,
+        "median_abs_dev": 0.0,
+        "n_columns": 66,
+        "why": "columns the closed form says are identical; any deviation here is float32 conv-blocking noise amplified by max-pool argmax ties, NOT the edge effect"
+      },
+      "per_reduction": {
+        "max": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.021326780319213867,
+            "mean_abs_dev": 0.008215652778744698,
+            "median_abs_dev": 0.007212936878204346,
+            "n": 48,
+            "pearson": 0.9994704646978486
+          },
+          "spearman_cheap_vs_true": 0.9989144594007816,
+          "true_is_constant": false
+        },
+        "mean": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.024635151028633118,
+            "mean_abs_dev": 0.008571267884690315,
+            "median_abs_dev": 0.006706118583679199,
+            "n": 48,
+            "pearson": 0.9997723525043966
+          },
+          "spearman_cheap_vs_true": 0.998588797221016,
+          "true_is_constant": false
+        }
+      },
+      "per_window_deviation": {
+        "max_abs_dev": 0.09209835529327393,
+        "mean_abs_dev": 0.011318613739254383,
+        "median_abs_dev": 0.009421586990356445,
+        "n": 3120,
+        "pearson": 0.9988709587001386
+      },
+      "seconds_cheap_route": 0.189,
+      "seconds_true_route": 4.341,
+      "true_route_cost_multiple": 23.0
+    },
+    "promoteratlas-tslpred-kosuri2013": {
+      "contaminated_columns_at_that_offset": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        75,
+        76,
+        77,
+        78,
+        79,
+        80,
+        81,
+        82,
+        83,
+        84,
+        85
+      ],
+      "n_windows": 65,
+      "noise_floor_at_offset_30": {
+        "max_abs_dev": 0.0,
+        "median_abs_dev": 0.0,
+        "n_columns": 66,
+        "why": "columns the closed form says are identical; any deviation here is float32 conv-blocking noise amplified by max-pool argmax ties, NOT the edge effect"
+      },
+      "per_reduction": {
+        "max": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.2975080609321594,
+            "mean_abs_dev": 0.024379192385822535,
+            "median_abs_dev": 0.016634583473205566,
+            "n": 48,
+            "pearson": 0.9931775364121773
+          },
+          "spearman_cheap_vs_true": 0.9864307425097698,
+          "true_is_constant": false
+        },
+        "mean": {
+          "cheap_is_constant": false,
+          "deviation": {
+            "max_abs_dev": 0.11017227172851562,
+            "mean_abs_dev": 0.02114036267933746,
+            "median_abs_dev": 0.01445692777633667,
+            "n": 48,
+            "pearson": 0.9966771074797911
+          },
+          "spearman_cheap_vs_true": 0.9888189318280504,
+          "true_is_constant": false
+        }
+      },
+      "per_window_deviation": {
+        "max_abs_dev": 0.44835065305233,
+        "mean_abs_dev": 0.030263383398787716,
+        "median_abs_dev": 0.01876544952392578,
+        "n": 3120,
+        "pearson": 0.9952568345058174
+      },
+      "seconds_cheap_route": 0.251,
+      "seconds_true_route": 4.216,
+      "true_route_cost_multiple": 16.8
+    }
+  },
+  "schema": "expression-heads-feasibility-v1",
+  "substrate": {
+    "bp": 150,
+    "n_peaks": 2433,
+    "n_tiles": 44106,
+    "path": "D:\\dna_decode_cache\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz",
+    "sample_indices_n": 48,
+    "sample_is_strided": true
+  },
+  "verdict": "FEASIBLE_ROUTE_CHOICE_IS_THE_BARS",
+  "verdict_detail": "the geometry, the base identity and both routes' cost and deviation are measured for every head; which route to use is an acceptance-bar decision and is deliberately NOT made here. Cheap route projects to 0.24 h over all heads, true route to 4.64 h.",
+  "wall_seconds": 27.7,
+  "zero_shot_framing": "These heads were trained on OTHER libraries (hossain2020, lafleur2022, urtecho2018, yu2021, kosuri2013). This arm therefore measures TRANSFER to the GSE144621 tile rung. A null result bounds that transfer; it does NOT bound the heads."
+}
