@@ -900,3 +900,14 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 - Clearing the last planned arm may flip `ceiling_verdict` to `met`, which is a substantive change to a criterion declared 2026-10-09 rather than bookkeeping, so Step 6 stops and surfaces it instead of recording it in passing.
 
 ---
+
+## [plan_file: Declare_And_Run_All_Three_Successor_Arms_And_Convert_The_Guards_From_State_Pins_To_Invariants_Plan/] 2026-11-02
+**Summary:** The authority call left open by the positional arm's execution is answered — declare all three named successor arms under R6 and run them, rather than accept `ceiling_verdict = met` as the criterion's terminal, and clear the four pieces of residue that execution left behind.
+**Key decisions:**
+- Declaring any arm restores a non-empty `planned` set, so `ceiling_verdict` returns to `blocked:untried-arm`; four of the eight red guards go green on their own and re-pinning the rest becomes an ordinary re-pin rather than the escalation it would otherwise have been.
+- The guards are converted from EXACT-STATE pins to INVARIANT pins plus a historical-metric SUBSET pin, so they survive declaration and all three subsequent measurements instead of needing three more re-pins.
+- The expression heads are geometry-locked to 86 bp — all four `fc1.weight` are `(64, 11008)` and `11008 = 128 x 86`, against a 150 bp substrate — so the arm needs a windowing decision frozen in its bar before any head output is scored, measured against a true per-window recompute.
+- The as-given arm's bar is explicitly NOT a blind pre-registration (its 0.5086 was already visible as the positional run's ineligible secondary) and therefore predicts a TIE rather than a win, with a single primary so no second rung can be fished.
+- The fine-tune's compute route and seed/epoch budget are derived from a measured probe rather than an estimate, and its bar pre-commits the distinction between a budget-limited null and a representation-limited one.
+
+---

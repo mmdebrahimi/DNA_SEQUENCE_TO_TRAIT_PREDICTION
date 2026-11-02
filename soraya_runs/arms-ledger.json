@@ -1,6 +1,17 @@
 {
   "criteria": {
     "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling": {
+      "asgiven-position-resolved-promoteratlas-150bp": {
+        "cost_tier": "cheap",
+        "declared_at": "2026-11-02T16:46:45Z",
+        "declared_from": "plans/Declare_And_Run_All_Three_Successor_Arms_And_Convert_The_Guards_From_State_Pins_To_Invariants_Plan/technical-plan.md",
+        "evidence": "",
+        "metric": null,
+        "name": "asgiven-position-resolved-promoteratlas-150bp",
+        "rationale": "Declared 2026-11-02 under R6 after the positional arm measured. **Motivated by a MEASUREMENT rather than a preference, which is the only reason it is worth an arm:** the positional arm's orientation diagnostic resolved AGAINST orienting -- as-given 0.5086 against oriented 0.4893 -- so reversing the bin axis on minus-strand tiles DESTROYS about 0.0193 of signal rather than aligning the cohorts. The positional arm's declared co-primary was the ORIENTED rung, so its eligible primary was handicapped by the transform that same run showed to be wrong. This arm changes the DECLARED PRIMARY to the as-given reduction, which is what makes it a distinct arm under R6 and NOT a re-read of the positional arm. **Pre-committed honesty: it is expected to TIE, not win.** 0.5086 sits above the incumbent 0.5076 but its paired CI [-0.0079, +0.0017] CONTAINS zero, so the bar predicts a tie and the arm's job is not to re-report 0.5086 as a gain. **And its bar is NOT a blind pre-registration** -- the number was already visible as the positional run's INELIGIBLE secondary, which is a real weakness stated rather than hidden. Cheap because the features are already extracted and committed on D:; it needs no second forward pass.",
+        "resolved_at": "",
+        "status": "planned"
+      },
       "conv-3width-13k-params-150bp": {
         "cost_tier": "cheap",
         "declared_at": "2026-10-09T14:42:29Z",
@@ -9,6 +20,17 @@
         "name": "conv-3width-13k-params-150bp",
         "resolved_at": "2026-10-09T14:42:29Z",
         "status": "measured"
+      },
+      "finetuned-promoteratlas-encoder-150bp": {
+        "cost_tier": "large",
+        "declared_at": "2026-11-02T16:46:45Z",
+        "declared_from": "plans/Declare_And_Run_All_Three_Successor_Arms_And_Convert_The_Guards_From_State_Pins_To_Invariants_Plan/technical-plan.md",
+        "evidence": "",
+        "metric": null,
+        "name": "finetuned-promoteratlas-encoder-150bp",
+        "rationale": "Declared 2026-11-02 under R6, and it is the arm the positional arm's own limits point at: that arm froze the encoder, so its NO_GAIN bounds nothing about a fine-tuned one. **Tractable here precisely because the encoder is small -- 1,847,428 parameters, not a 1.2B LM -- so this is NOT comparable to the project's blocked large-LM fine-tunes.** Local compute is CPU-only (cuda False, 4 threads) at a measured 57.5 seq/s forward; the established GPU route is a Kaggle T4 kernel and scripts/kaggle/ already holds seven builders, so the route is chosen from a MEASURED probe rather than estimated. **The outcome that must not be over-read, pre-committed:** beating 0.5076 shows the frozen representation was the limit, while failing to shows either the SUBSTRATE or the TRAINING BUDGET was -- and a budget-limited null is not a representation-limited one. The probe's measured epoch-to-early-stop curve is what separates them, and without that curve this arm should not be run at all.",
+        "resolved_at": "",
+        "status": "planned"
       },
       "fragment-rung-321k-rows-size-lever-LB-M9": {
         "cost_tier": "large",
@@ -156,6 +178,17 @@
         "rationale": "The reachable re-scope of multiresolution-pyramid-4-decades-UNRUN, which its own probe measured as substrate-gated at 60.1x. SPAN CORRECTED 2026-10-27 (measured, was overstated 2.5x): the arm's NAME carries the MAX span log10(499/3)=2.2210, but that is realised on 49 of 321,123 fragments. Median length is 244 bp = 1.9103 decades, p99 308 bp, and only 4.0% of rows reach 300 bp. So against the measured sibling pyramid-4scale-1.70decades-150bp the honest gain is +0.21 decades at the MEDIAN (244/150 = 1.63x more length), NOT +0.52 / 3.33x. Quote the median. Every branch is still a real biological scale (no degenerate 1 bp branch, which encoder.py rejects as inflating the metric without testing the hypothesis it stands for). Substrate is already local: 321,123 rows (LB) / 318,457 (M9) at 48-499 bp. COMPARATOR CARE -- this arm is on the FRAGMENT rung (ceiling 0.7928), NOT the tile rung (0.941), so its number must NEVER be read against the sibling's 0.3167 or against promcalc's 0.3968: the census ceiling_rule says each rung carries its own ceiling and none is inherited. The fragment-rung incumbent is kmer4 at spearman 0.1313 (30,000 rows). OPEN DESIGN POINT for the pre-registration: fragments are VARIABLE length (359 distinct), and load_fragments' own docstring states k-mer features are the length-invariant honest default here, so a fixed-window pyramid needs a pad/crop rule DECLARED BEFORE the run.",
         "resolved_at": "2026-11-01T01:42:53Z",
         "status": "measured"
+      },
+      "shipped-expression-heads-zeroshot-150bp": {
+        "cost_tier": "medium",
+        "declared_at": "2026-11-02T16:46:45Z",
+        "declared_from": "plans/Declare_And_Run_All_Three_Successor_Arms_And_Convert_The_Guards_From_State_Pins_To_Invariants_Plan/technical-plan.md",
+        "evidence": "",
+        "metric": null,
+        "name": "shipped-expression-heads-zeroshot-150bp",
+        "rationale": "Declared 2026-11-02 under R6. The PromoterAtlas clone ships five expression-prediction heads and a segmentation head beside the frozen base, and none has ever been scored on this rung. **Measured, not assumed: all four transcription heads carry base weights BYTE-IDENTICAL to promoteratlas-base.pt -- 124/124 tensors, max |dev| 0.000e+00 -- so this arm measures FROZEN encoder + trained head, not a fine-tuned encoder**, and all four can share one forward pass. **It is NOT a drop-in, and the obstruction is arithmetic:** every head's fc1.weight is (64, 11008) where 11008 = 128 x 86, so the heads are geometry-locked to 86 bp while this substrate is 150 bp (which flattens to 128 x 150 = 19200). The arm therefore needs a windowing decision frozen in its bar BEFORE any head output is scored, and measured against a true per-window recompute because conv padding='same' makes the cheap full-latent reduction differ at the edges. **Zero-shot TRANSFER framing, pre-committed:** these heads were trained on OTHER libraries, so a null bounds transfer to the tile rung rather than bounding the heads. **Circularity scope, narrower than it looks:** the urtecho2018 head IS circular on the sigma70 rung (GSE108535) and must never be a comparator there, but this substrate is GSE144621 peak tiles and the repo's own withdrawn lead established that no genome-wide/tiling Urtecho head exists -- so it is not circular HERE. Recorded so nobody reuses it on the wrong rung.",
+        "resolved_at": "",
+        "status": "planned"
       },
       "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN": {
         "comparator_care": "Carried from the rationale because it is the bar hazard for this arm: Table S6 publishes per-fold incumbents on these EXACT folds (MPRALegNet 0.8333 HepG2 / 0.8665 K562, Enformer 0.8306 / 0.8497) but NEVER STATES THE METRIC. A bar that compares against those numbers without establishing what they measure would be comparing to an unknown quantity.",
