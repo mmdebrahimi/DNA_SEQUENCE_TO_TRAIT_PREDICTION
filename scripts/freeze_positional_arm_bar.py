@@ -170,7 +170,9 @@ def classify(co_primary_cis: dict, *, margin: float = MARGIN) -> tuple[str, str]
 # ---------------------------------------------------------------------------------------------------
 # verify -- re-read the anchors, refuse on drift
 # ---------------------------------------------------------------------------------------------------
-def _ceiling_arms(ledger: dict) -> dict:
+def ceiling_arms_and_criterion(ledger: dict) -> tuple[dict, str]:
+    """The single ceiling criterion's arm dict plus its key. PUBLIC because sibling freeze scripts
+    import it rather than re-deriving the lookup; the name says it returns both."""
     crits = [k for k in ledger.get("criteria", {}) if k.startswith(CRITERION_PREFIX)]
     if len(crits) != 1:
         raise BarRefused(
@@ -218,7 +220,7 @@ def verify(*, reconcile_path: Path = RECONCILE, ledger_path: Path = LEDGER,
                              % (key, len(rec.get(key, {})), EXPECTED_N_SEEDS))
 
     ledger = json.loads(Path(ledger_path).read_text(encoding="utf-8"))
-    arms, criterion = _ceiling_arms(ledger)
+    arms, criterion = ceiling_arms_and_criterion(ledger)
     if ARM not in arms:
         raise BarRefused(
             "the arm %r is NOT declared on %r. A bar for an undeclared arm would grade work that "

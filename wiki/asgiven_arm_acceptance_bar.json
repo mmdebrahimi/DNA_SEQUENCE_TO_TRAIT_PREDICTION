@@ -1,0 +1,172 @@
+{
+  "NOT_A_BLIND_PRE_REGISTRATION": {
+    "already_observed_ci": [
+      -0.0079,
+      0.0017
+    ],
+    "already_observed_ci_level": [
+      0.4166666666666667,
+      99.58333333333333
+    ],
+    "already_observed_gain": -0.0042,
+    "already_observed_median": 0.5086,
+    "already_observed_rung": "bins10_mean_asgiven",
+    "source": "wiki/positional_arm_result_2026-11-01.json (read, not retyped)",
+    "statement": "The number this bar grades is ALREADY VISIBLE and was published before this arm existed. This is not a blind pre-registration and must never be presented as one.",
+    "what_it_costs": "A pre-registration's value is that the bar could not have been shaped by the result. That guarantee is absent here, so this arm's evidential weight is LOWER than the positional arm's, whatever it returns.",
+    "what_survives": "Whether the as-given reduction clears the inherited margin as a PRIMARY, scored through split-equality, parity and a shuffled-label null -- gates the positional run's secondaries never had to pass in that role. A foreseeable answer does not make the gates optional."
+  },
+  "arm": "asgiven-position-resolved-promoteratlas-150bp",
+  "check_order_rationale": "Validity FIRST, split equality before everything else.",
+  "closed_outcome_set": [
+    "ASGIVEN_ADDS",
+    "ASGIVEN_TIES",
+    "ASGIVEN_NO_GAIN",
+    "INDETERMINATE_SPLIT_MISMATCH",
+    "INDETERMINATE_PARITY_FAIL",
+    "INDETERMINATE_NULL_FAIL"
+  ],
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "forecast": {
+    "comparison_point": {
+      "asgiven_median": 0.5086,
+      "difference": 0.0193,
+      "oriented_primary_median": 0.4893
+    },
+    "my_forecast_record_in_this_project": "4 of 8. The positional arm's bar put p=0.45 on POSITIONAL_NO_GAIN and it landed there, which is the fourth hit. DO NOT defer to these priors -- and note this particular forecast is nearly free, because the number is already visible.",
+    "p_asgiven_adds": 0.05,
+    "p_asgiven_no_gain": 0.15,
+    "p_asgiven_ties": 0.8,
+    "predicted_outcome": "ASGIVEN_TIES",
+    "rationale": "The interval is already known to contain zero at the corrected level the positional run used, and widening to a plain 95% interval makes containing zero MORE likely, not less. The 0.15 on NO_GAIN is not symmetry: the positional run's value came from a secondary scored at alpha/6, and re-scoring at 95% could in principle resolve a small negative, though the point estimate -0.0042 argues against it.",
+    "recorded_before_any_score_for_this_arm": true
+  },
+  "frozen": "2026-11-02T17:09:35Z",
+  "frozen_before_any_score_for_THIS_arm_exists": true,
+  "honest_limits_fixed_in_advance": [
+    "NOT a blind pre-registration -- see NOT_A_BLIND_PRE_REGISTRATION. This arm's evidential weight is lower than the positional arm's whatever it returns.",
+    "The orientation convention remains a 1-BIT INFERENCE from a performance difference between two rungs, not established biology. This arm tests the better-performing side of that inference; it does not establish which orientation `seq` is given in.",
+    "No promoter anchor exists on this substrate, so even an ADDS verdict would say that position bins relative to an ARBITRARY 150 bp window help -- not that a promoter register was recovered.",
+    "The encoder is FROZEN; this bounds nothing about a fine-tuned one.",
+    "689 duplicate sequences are unchanged and inherited by BOTH sides of the paired comparison.",
+    "The rung ceiling is 0.941 and replicate-derived. No tile-rung number may be read as a fraction of it without saying so."
+  ],
+  "inherited_not_chosen": {
+    "comparator": {
+      "atlas_median": 0.5076,
+      "atlas_per_seed": {
+        "0": 0.5461,
+        "1": 0.5499,
+        "2": 0.4983,
+        "3": 0.4986,
+        "4": 0.5075,
+        "5": 0.5163,
+        "6": 0.5078,
+        "7": 0.4933,
+        "8": 0.5016,
+        "9": 0.521
+      },
+      "must_be_recomputed_in_run": false,
+      "source": "data/promoteratlas/local_reconcile_2026-11-01.json",
+      "verdict": "RECONCILED",
+      "why": "the incumbent is never re-run, so this arm cannot move its own comparator"
+    },
+    "features": {
+      "block": "D:/dna_decode_cache/promoteratlas_positional/positional_block.npy",
+      "reduction": "bins10_mean sliced from the stored block and flattened WITHOUT `orient` -- which is the entire difference from the positional arm's primary",
+      "source": "the COMMITTED stored block; no second forward pass"
+    },
+    "margin": {
+      "derivation": "INHERITED verbatim from the tile-rung arms, as in the positional bar, so the bars stay commensurable",
+      "value": 0.02
+    },
+    "scorer": {
+      "spec": "dna_decode.glm.atlas_embed.ridge_spearman, unchanged"
+    },
+    "split": {
+      "frac": 0.25,
+      "leakage_unit": "the called expression PEAK, not the tile",
+      "n_seeds": 10,
+      "n_test_per_seed": {
+        "0": 11198,
+        "1": 11018,
+        "2": 11373,
+        "3": 10883,
+        "4": 11025,
+        "5": 10907,
+        "6": 10590,
+        "7": 11249,
+        "8": 10661,
+        "9": 10690
+      },
+      "spec": "genomewide.leave_peak_out(tiles, frac=0.25, seed=s) for s in 0..9"
+    }
+  },
+  "multiplicity": {
+    "ci_percentiles": [
+      2.5,
+      97.5
+    ],
+    "correction": "NONE -- one comparison, judged at the plain 95% level",
+    "family_alpha": 0.05,
+    "n_primaries": 1,
+    "no_secondaries_declared": true,
+    "primary": "bins10_mean_asgiven",
+    "why_no_secondaries": "A second rung here would re-open the forking path the positional bar closed by making its secondaries ineligible, and would be a worse offence given the primary's number is already known. One rung, one interval, one verdict."
+  },
+  "outcomes_defined_before_running": {
+    "ASGIVEN_ADDS": "the 95% interval lies entirely above +0.02",
+    "ASGIVEN_NO_GAIN": "the interval lies entirely below zero",
+    "ASGIVEN_TIES": "the interval neither clears +0.02 nor lies below zero. This DELIBERATELY absorbs an interval inside (0, 0.02]: a sub-margin gain is not a gain by the bar this rung grades against, and calling it an ADD would grade this arm against a softer bar than its siblings",
+    "INDETERMINATE_NULL_FAIL": "the shuffled-label control cleared the bar; nothing graded",
+    "INDETERMINATE_PARITY_FAIL": "the derived global mean does not reproduce the committed embedding",
+    "INDETERMINATE_SPLIT_MISMATCH": "the recomputed splits differ from the committed ones"
+  },
+  "pre_commitments": [
+    "The predicted outcome is ASGIVEN_TIES. The arm's job is NOT to re-report 0.5086 as a gain.",
+    "The margin 0.02 is INHERITED and will not be re-specified after a number exists.",
+    "A sub-margin gain returns ASGIVEN_TIES, decided here and not after seeing where the interval lands.",
+    "No secondary rung will be added to this arm. If another reduction is worth scoring it is a NEW arm under R6.",
+    "The positional arm's 0.4893, its verdict and its bar are never retro-edited.",
+    "If the null fails, the response is MORE SEEDS, never a weaker control."
+  ],
+  "question": "Does the AS-GIVEN position-resolved reduction, as a DECLARED PRIMARY scored through the full validity chain, beat the mean-pool incumbent (median Spearman 0.5076) by the rung's inherited margin of 0.02?",
+  "reachable_equals_closed": true,
+  "reachable_outcome_set": [
+    "ASGIVEN_ADDS",
+    "ASGIVEN_NO_GAIN",
+    "ASGIVEN_TIES",
+    "INDETERMINATE_NULL_FAIL",
+    "INDETERMINATE_PARITY_FAIL",
+    "INDETERMINATE_SPLIT_MISMATCH"
+  ],
+  "reproduce": [
+    "uv run python scripts/freeze_asgiven_arm_bar.py",
+    "uv run python -m scripts.asgiven_arm_score"
+  ],
+  "schema": "asgiven-arm-acceptance-bar-v1",
+  "validity_controls": {
+    "parity": {
+      "on_failure": "INDETERMINATE_PARITY_FAIL, and stop",
+      "spec": "derive the global mean from the stored 10-bin means and assert it reproduces the committed embedding and its per-seed Spearmans",
+      "tolerance": 1e-05,
+      "why": "it is what makes this arm's number comparable to 0.5076"
+    },
+    "shuffled_label_null": {
+      "bar": "|median| < 0.02",
+      "on_failure": "INDETERMINATE_NULL_FAIL, and SPEND MORE SEEDS -- never re-specify",
+      "spec": "refit the ridge on shuffled TRAIN labels, same splits and seeds, scoring against REAL test labels -- the incumbent's IMPLEMENTATION, not its prose"
+    },
+    "split_equality": {
+      "on_failure": "INDETERMINATE_SPLIT_MISMATCH, and stop",
+      "spec": "recompute the split for seeds 0-9 and assert n_test_per_seed matches"
+    }
+  },
+  "verdict_check_order": [
+    "split_equality",
+    "parity",
+    "shuffled_label_null",
+    "primary_decision"
+  ],
+  "why_this_is_a_distinct_arm_under_R6": "It changes the DECLARED PRIMARY. In the positional arm `bins10_mean_asgiven` was a SECONDARY and INELIGIBLE as that arm's result; here it is the primary and the only rung. The positional arm's verdict is untouched and is never retro-edited."
+}
