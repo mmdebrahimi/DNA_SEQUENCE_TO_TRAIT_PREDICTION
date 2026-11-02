@@ -152,7 +152,13 @@ MEASURED = {
     EUK_ARM: 0.4853,
 }
 
-EXPECTED_PLANNED = {
+#: HISTORICAL, and deliberately no longer asserted anywhere (converted 2026-11-02). This was the
+#: exact planned-set pin; three guards compared against it and all three went red every time an arm
+#: legitimately resolved or a new one was declared. They now assert the INVARIANT the pin was
+#: approximating -- `planned` non-empty iff the verdict is `blocked:untried-arm` -- so this set is
+#: kept only as the record of what one day's arm set was. **Do not re-introduce it into an
+#: assertion**: that is the drift the conversion exists to end.
+HISTORICAL_PLANNED_2026_11_01 = {
     POSITIONAL_ARM,
 }
 
@@ -233,43 +239,121 @@ def test_the_withdrawn_kill_option_is_recorded_not_merely_dropped():
     assert "scope reduction" in arm["verdict_consequence"].lower()
 
 
-def test_the_measured_arms_are_unchanged():
-    ledger = _live_ledger()
-    arms = ledger._data["criteria"][_criterion(ledger)]
-    measured = {n: a["metric"] for n, a in arms.items()
-                if a["status"] == al.STATUS_MEASURED}
-    assert measured == MEASURED, "a measured arm's metric moved"
-    for name in MEASURED:
-        assert arms[name]["evidence"].strip(), f"{name} lost its evidence string"
+def test_no_historical_measured_metric_has_moved():
+    """SUBSET pin, converted from an exact-equality pin on 2026-11-02.
 
+    **What the exact pin actually protected and what it cost.** `measured == MEASURED` kept a
+    published number from drifting, which is the real guard and is preserved below. But it ALSO
+    asserted that no arm may ever be added to the measured set, so it went red on every legitimate
+    measurement -- and its failure message said *"a measured arm's metric moved"* when in fact the
+    measured SET had gained a member and no historical metric had moved at all. A guard whose
+    message misdescribes its own failure sends the next reader looking for the wrong defect.
 
-def test_the_arm_set_is_exactly_the_pinned_partition():
-    ledger = _live_ledger()
-    arms = ledger._data["criteria"][_criterion(ledger)]
-    planned = {n for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
-    assert planned == EXPECTED_PLANNED
-    killed = {n for n, a in arms.items() if a["status"] == al.STATUS_KILLED}
-    assert killed == {KILLED_ARM}, "exactly one arm has ever been retired here"
-    # 13 total: the 12 above plus POSITIONAL_ARM, declared 2026-11-01 under R6 at the moment
-    # its sibling ran. The arithmetic must reconcile with the whole.
-    assert len(arms) == 13
-    assert len(EXPECTED_PLANNED) + len(MEASURED) + len(killed) == len(arms)
-
-
-def test_ceiling_verdict_is_blocked_untried_arm_naming_one():
-    """The verdict and `met` are the load-bearing assertions and they are UNCHANGED across all four
-    re-pins. The COUNT has moved 3 -> 2 -> 1 as arms resolved on their own evidence, and on
-    2026-11-01 `best` moved too. Neither clears a criterion that an untried arm blocks.
+    The subset form keeps the protection that matters (a historical number cannot change) and
+    survives the three successor arms declared 2026-11-02 being measured, instead of needing three
+    more re-pins.
     """
     ledger = _live_ledger()
+    arms = ledger._data["criteria"][_criterion(ledger)]
+    measured = {n: a["metric"] for n, a in arms.items() if a["status"] == al.STATUS_MEASURED}
+
+    for name, metric in MEASURED.items():
+        assert name in measured, f"{name} is no longer measured"
+        assert measured[name] == metric, (
+            f"{name}'s published metric moved from {metric} to {measured[name]}")
+        assert arms[name]["evidence"].strip(), f"{name} lost its evidence string"
+
+    # new measured arms are permitted, and every one must carry a metric and its evidence
+    for name in sorted(set(measured) - set(MEASURED)):
+        assert measured[name] is not None, f"{name} is measured with no metric"
+        assert arms[name]["evidence"].strip(), f"{name} is measured with no evidence"
+
+
+def test_the_arm_partition_reconciles_with_the_whole():
+    """INVARIANT pin, converted from an exact-set pin on 2026-11-02.
+
+    The exact form asserted `planned == EXPECTED_PLANNED` and `len(arms) == 13`, both of which are
+    properties of one day rather than of the ledger. What is actually invariant -- and what the
+    original comment said it was reaching for -- is that the three buckets the verdict partitions on
+    reconcile with the declared total, with nothing falling outside them. Reading the three sets
+    cannot catch an arm whose status is a typo; the arithmetic can.
+    """
+    ledger = _live_ledger()
+    arms = ledger._data["criteria"][_criterion(ledger)]
+
+    buckets = {al.STATUS_MEASURED: set(), al.STATUS_PLANNED: set(), al.STATUS_KILLED: set()}
+    orphans = []
+    for name, a in arms.items():
+        if a.get("status") in buckets:
+            buckets[a["status"]].add(name)
+        else:
+            orphans.append((name, a.get("status")))
+
+    assert not orphans, f"arm(s) in no bucket the verdict partitions on: {orphans!r}"
+    assert sum(len(v) for v in buckets.values()) == len(arms)
+    assert buckets[al.STATUS_KILLED] == {KILLED_ARM}, "exactly one arm has ever been retired here"
+    assert MEASURED.keys() <= buckets[al.STATUS_MEASURED], "a historical measured arm left the set"
+    # a FLOOR, not an equality: arms are appended over time and the count is not the guard.
+    assert len(arms) >= len(MEASURED) + 1, "the declared total fell below its historical floor"
+
+
+def test_the_verdict_is_blocked_IF_AND_ONLY_IF_an_arm_is_untried():
+    """BICONDITIONAL pin, converted from an exact-state pin on 2026-11-02.
+
+    **The property R5/R6 actually rests on is an IMPLICATION, not a state:** while any arm is still
+    `planned` the ceiling question is OPEN, so a cheap arm clearing a threshold cannot settle it.
+    The old form asserted `verdict == "blocked:untried-arm"` together with
+    `set(planned) == EXPECTED_PLANNED` and `len(planned) == 1`, which is that implication PLUS a
+    snapshot of one day's arm set. The snapshot is what went red when the positional arm was
+    recorded on 2026-11-01 and again when three successors were declared on 2026-11-02; the
+    implication never moved and still has not.
+
+    Asserted in BOTH directions, so neither a `met` verdict over an untried arm nor a `blocked`
+    verdict over a fully-measured set can pass.
+    """
+    ledger = _live_ledger()
+    arms = ledger._data["criteria"][_criterion(ledger)]
     verdict = ledger.ceiling_verdict(_criterion(ledger))
-    assert verdict.verdict == "blocked:untried-arm"
-    assert set(verdict.planned) == EXPECTED_PLANNED
-    assert len(verdict.planned) == 1
-    assert not verdict.met
-    # `best` MOVED on 2026-11-01: the atlas arm at 0.5076 displaced the 3-channel stack at 0.4404.
-    # The previous re-pin asserted `best == NEW_ARM` so that exactly this could not pass silently.
-    assert verdict.best == BEST_ARM
+    planned = {n for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
+
+    assert set(verdict.planned) == planned, "the verdict and the file disagree about what is planned"
+    if planned:
+        assert verdict.verdict == "blocked:untried-arm", (
+            f"{len(planned)} arm(s) are untried ({sorted(planned)}) but the verdict reads "
+            f"{verdict.verdict!r}; an untried arm must block the criterion")
+        assert not verdict.met
+    else:
+        assert verdict.verdict in ("met", "blocked:single-arm"), (
+            f"no arm is planned but the verdict reads {verdict.verdict!r}")
+        assert verdict.met == (verdict.verdict == "met")
+
+
+def test_best_is_the_argmax_over_measured_and_a_leader_change_must_be_EXPLICIT():
+    """`best` stays an EXACT pin on purpose -- this one is not converted.
+
+    A leader change is a substantive event, not bookkeeping, and the previous re-pin added
+    `best == NEW_ARM` precisely so a shift could not pass silently. It has fired twice as designed
+    (the stack arm at 0.4404 was displaced by the atlas arm at 0.5076). **If a successor arm
+    out-scores 0.5076 this will fire again, and the correct response is to re-pin BEST_ARM naming
+    the new leader -- never to relax the assertion.**
+
+    The argmax clause beside it is the invariant: it catches a `best` that is not actually the
+    maximum, which an exact pin alone cannot.
+    """
+    ledger = _live_ledger()
+    arms = ledger._data["criteria"][_criterion(ledger)]
+    verdict = ledger.ceiling_verdict(_criterion(ledger))
+
+    measured = {n: a["metric"] for n, a in arms.items()
+                if a["status"] == al.STATUS_MEASURED and a["metric"] is not None}
+    assert measured
+    assert verdict.best in measured
+    assert measured[verdict.best] == max(measured.values()), "`best` is not the argmax"
+
+    assert verdict.best == BEST_ARM, (
+        f"the leader moved from {BEST_ARM} to {verdict.best} "
+        f"({measured.get(BEST_ARM)} -> {measured[verdict.best]}). This guard exists to make that "
+        f"EXPLICIT: re-pin BEST_ARM with the reason, do not relax this assertion.")
     assert verdict.best != NEW_ARM, "the leader moved; this guard exists to make that explicit"
     assert MEASURED[BEST_ARM] > MEASURED[NEW_ARM]
     assert SUCCESSOR_MEASURED in verdict.measured
@@ -397,10 +481,23 @@ def test_killing_every_unrun_arm_would_change_the_verdict(sandbox):
     """
     ledger = al.ArmsLedger(cwd=str(sandbox))
     crit = _criterion(ledger)
-    for name in EXPECTED_PLANNED:
+    # DERIVED from the sandbox rather than from a pinned set, converted 2026-11-02: the old form
+    # killed only EXPECTED_PLANNED, so once three successor arms were declared it killed one of
+    # four and the verdict correctly stayed blocked -- the test failed while the property it
+    # describes still held.
+    unrun = sorted(n for n, a in ledger._data["criteria"][crit].items()
+                   if a.get("status") == al.STATUS_PLANNED)
+    if not unrun:
+        pytest.skip("no arm is planned, so the withdrawal has no subject to be load-bearing for")
+    for name in unrun:
         ledger.kill_arm(crit, name, reason="measured failure on its own run",
                         evidence="synthetic executed evidence (test only)")
     assert ledger.ceiling_verdict(crit).verdict != "blocked:untried-arm"
-    # And the real ledger is untouched.
-    assert _live_ledger().ceiling_verdict(
-        _criterion(_live_ledger())).verdict == "blocked:untried-arm"
+
+    # And the real ledger is untouched -- asserted as the biconditional, not a fixed string.
+    live = _live_ledger()
+    live_arms = live._data["criteria"][_criterion(live)]
+    live_planned = {n for n, a in live_arms.items() if a["status"] == al.STATUS_PLANNED}
+    live_verdict = live.ceiling_verdict(_criterion(live)).verdict
+    assert (live_verdict == "blocked:untried-arm") == bool(live_planned)
+    assert live_planned, "the sandbox kills must not have reached the live ledger"

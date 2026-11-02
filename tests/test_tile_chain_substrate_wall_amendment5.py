@@ -191,11 +191,16 @@ def test_the_arm_RESOLVED_BY_ITS_OWN_RUN_and_the_ceiling_is_STILL_blocked():
     # the untested form is recorded as a GAP, and deliberately not declared as a new arm
     assert "NEW modality family" in arm["narrowed_successor_NOT_declared_as_an_arm"]
 
-    # and the ceiling is still blocked -- by siblings, verified rather than asserted
+    # and the ceiling's blocked-ness tracks its SIBLINGS, verified rather than asserted.
+    #
+    # CONVERTED 2026-11-02 to a biconditional. The old form was `assert planned`, which asserted
+    # that a sibling happens to be untried TODAY -- a property of one day's arm set, not of this
+    # arm. It went red the moment the last sibling was measured, while everything this test is
+    # actually about (the arm left `planned` only by naming its own artifact) still held. What is
+    # invariant is that `blocking()` names this criterion exactly when a sibling is untried.
     crit = json.loads(ARMS.read_text(encoding="utf-8"))["criteria"][CEILING]
     planned = [k for k, a in crit.items() if a.get("status") == "planned"]
-    assert planned, "no `planned` arm remains, so the ceiling would read as settled"
-    assert ARM not in planned
+    assert ARM not in planned, "the subject arm must have left `planned` on its own evidence"
 
     sys.path.insert(0, str(Path.home() / ".claude" / "skills" / "soraya" / "scripts"))
     try:
@@ -203,8 +208,10 @@ def test_the_arm_RESOLVED_BY_ITS_OWN_RUN_and_the_ceiling_is_STILL_blocked():
     except ImportError:  # pragma: no cover - the skill is not installed in CI
         pytest.skip("soraya arms_ledger not importable here")
     blocked = arms_ledger.ArmsLedger(REPO).blocking()
-    assert any(CEILING in str(b) for b in blocked), (
-        f"blocking() no longer names the ceiling criterion; got {blocked!r}")
+    names_ceiling = any(CEILING in str(b) for b in blocked)
+    assert names_ceiling == bool(planned), (
+        f"blocking() {'names' if names_ceiling else 'does not name'} the ceiling criterion while "
+        f"{len(planned)} sibling arm(s) are untried ({planned!r}); got {blocked!r}")
 
 
 def test_the_raw_JSON_edit_PRESERVED_every_unmodelled_key_on_the_arm():
