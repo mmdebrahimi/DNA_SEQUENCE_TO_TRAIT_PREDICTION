@@ -341,7 +341,12 @@ def test_the_artifact_chose_its_route_from_the_measurement_with_the_ceiling_name
     assert r["chosen"] in (F.ROUTE_LOCAL, F.ROUTE_KAGGLE)
     assert r["ceiling_seconds"] == F.LOCAL_WALL_CEILING_SECONDS
     assert set(r["alternatives_considered"]) == {F.ROUTE_LOCAL, F.ROUTE_KAGGLE}
-    assert "operational" in r["ceiling_is_operational_not_statistical"]
+    # the key NAMES the ceiling as operational; the value must give the operational REASON and
+    # say the number is a constant a reader may disagree with, not a per-run judgement
+    why = r["ceiling_is_operational_not_statistical"]
+    assert "overnight run is recoverable" in why
+    assert "abandoned part-way" in why
+    assert "constant, not a judgement made per run" in why
 
 
 @pytest.mark.skipif(not ARTIFACT.is_file(), reason="probe has not been run")
