@@ -349,7 +349,7 @@ def _win(rel) -> str:
 
 
 def render_bat(job: str, command: list[str], *, rationale: str = "",
-               state_rel: str = "data/unattended") -> str:
+               state_rel: str = "data/unattended", env: dict | None = None) -> str:
     """The launcher text for one job, matching the existing convention EXACTLY.
 
     THE COMMAND IS EMITTED ON ONE LINE, not with `^` continuations as the hand-written launchers
@@ -362,6 +362,21 @@ def render_bat(job: str, command: list[str], *, rationale: str = "",
     if not command:
         raise DetachedLaunchError("a launcher with no command would write EXIT=0 having done "
                                   "nothing, which reads as a successful run")
+
+    # Extra environment, set INSIDE `setlocal` so it cannot leak to the launching shell.
+    #
+    # This exists because `PA_REPO` is read at MODULE IMPORT time by atlas_embed, so it must be
+    # in the environment before python starts -- a runtime argument could not reach it. Values are
+    # quoted `set "K=V"` form, which is what keeps a path containing spaces intact; this host's
+    # repo path has one, so the unquoted form would silently truncate it.
+    env = dict(env or {})
+    for k, val in env.items():
+        if not k or any(c in k for c in ' ="%'):
+            raise DetachedLaunchError("env name %r is not settable from a .bat" % k)
+        if '"' in str(val) or "%" in str(val):
+            raise DetachedLaunchError(
+                "env value for %r contains a quote or a %% -- cmd would mangle it and the job "
+                "would start with a silently wrong value, which is worse than refusing" % k)
 
     log = _win("%s/%s.log" % (state_rel, job))
     sentinel = _win("%s/%s.sentinel" % (state_rel, job))
@@ -393,6 +408,11 @@ def render_bat(job: str, command: list[str], *, rationale: str = "",
         "REM Unbuffered, or a death loses the last minutes of the log -- which is precisely the",
         "REM window that explains the death.",
         "set PYTHONUNBUFFERED=1",
+        *([""] + ["REM Job environment, set inside setlocal so it cannot leak to the caller.",
+                  "REM PA_REPO and friends are read at module import, so a runtime argument",
+                  "REM could not reach them."]
+          + ['set "%s=%s"' % (k, v) for k, v in sorted(env.items())]
+          if env else []),
         "",
         'echo ==== start %DATE% %TIME% ==== > "%LOG%"',
         "",
@@ -421,9 +441,10 @@ def render_bat(job: str, command: list[str], *, rationale: str = "",
 
 
 def write_bat(job: str, command: list[str], *, rationale: str = "",
-              repo: Path | None = None, state_rel: str = "data/unattended") -> Path:
+              repo: Path | None = None, state_rel: str = "data/unattended",
+              env: dict | None = None) -> Path:
     repo = repo or REPO
-    text = render_bat(job, command, rationale=rationale, state_rel=state_rel)
+    text = render_bat(job, command, rationale=rationale, state_rel=state_rel, env=env)
     out = repo / ("run_%s_detached.bat" % job)
     # CRLF: cmd tolerates LF, but every hand-written launcher here is CRLF and a mixed tree
     # invites a diff nobody can read.

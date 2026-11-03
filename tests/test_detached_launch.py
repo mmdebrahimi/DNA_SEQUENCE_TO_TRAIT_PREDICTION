@@ -163,6 +163,50 @@ def test_the_generated_bat_anchors_paths_to_its_own_directory():
     assert 'set "SENTINEL=%~dp0data\\unattended\\demo.sentinel"' in text
 
 
+def test_the_generated_bat_sets_requested_env_vars_before_the_payload():
+    """`PA_REPO` is read at MODULE IMPORT time by atlas_embed, so it must be in the environment
+    before python starts -- a runtime argument could not reach it."""
+    text = _bat(env={"PA_REPO": "C:/repo/data/pa_clone_durable"})
+    assert 'set "PA_REPO=C:/repo/data/pa_clone_durable"' in text
+    lines = text.splitlines()
+    assert lines.index('set "PA_REPO=C:/repo/data/pa_clone_durable"') < \
+        next(i for i, ln in enumerate(lines) if "glm_run_lock.py run" in ln)
+
+
+def test_env_vars_are_set_inside_setlocal_so_they_cannot_leak():
+    text = _bat(env={"PA_REPO": "C:/x"})
+    lines = text.splitlines()
+    assert lines.index("setlocal") < lines.index('set "PA_REPO=C:/x"')
+    assert lines.index('set "PA_REPO=C:/x"') < lines.index("endlocal")
+
+
+def test_env_values_are_QUOTED_so_a_path_with_spaces_survives():
+    """This host's repo path contains a space. The unquoted `set K=V` form would truncate at it
+    and the job would start with a silently wrong root."""
+    text = _bat(env={"PA_REPO": "C:/Users/Laptop Portable/x"})
+    assert 'set "PA_REPO=C:/Users/Laptop Portable/x"' in text
+
+
+def test_a_bat_with_no_env_is_unchanged():
+    """The env block is omitted entirely when empty, so the generated text for the existing jobs
+    does not move."""
+    assert _bat(env={}) == _bat()
+    assert _bat(env=None) == _bat()
+
+
+@pytest.mark.parametrize("bad", [{"A B": "x"}, {"A=B": "x"}, {'A"B': "x"}, {"A%B": "x"}])
+def test_an_unsettable_env_NAME_is_refused(bad):
+    with pytest.raises(dl.DetachedLaunchError, match="not settable"):
+        dl.render_bat("demo", ["cmd", "/c", "exit", "0"], env=bad)
+
+
+@pytest.mark.parametrize("bad", [{"A": 'x"y'}, {"A": "50%done"}])
+def test_an_env_VALUE_cmd_would_mangle_is_refused(bad):
+    """Refusing beats starting a multi-day job with a silently wrong value."""
+    with pytest.raises(dl.DetachedLaunchError, match="mangle"):
+        dl.render_bat("demo", ["cmd", "/c", "exit", "0"], env=bad)
+
+
 def test_the_generated_bat_has_no_caret_continuations():
     """One long command line instead: a trailing space after `^` silently truncates the command
     with no diagnostic, on a generated file nobody proof-reads."""
