@@ -1,0 +1,331 @@
+{
+  "PA_REPO": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\pa_clone_durable",
+  "all_checkpoints_audited": true,
+  "checkpoint_audits": {
+    "trained_weights/base_model/promoteratlas-base.pt": {
+      "globals": [
+        "collections.OrderedDict",
+        "pathlib.PosixPath",
+        "torch.FloatStorage",
+        "torch._utils._rebuild_tensor_v2"
+      ],
+      "passed": true
+    },
+    "trained_weights/expression_prediction/promoteratlas-trspred-hossain2020.pt": {
+      "globals": [
+        "_codecs.encode",
+        "collections.OrderedDict",
+        "numpy.core.multiarray.scalar",
+        "numpy.dtype",
+        "torch.FloatStorage",
+        "torch._utils._rebuild_tensor_v2"
+      ],
+      "passed": true
+    },
+    "trained_weights/expression_prediction/promoteratlas-trspred-lafleur2022.pt": {
+      "globals": [
+        "_codecs.encode",
+        "collections.OrderedDict",
+        "numpy.core.multiarray.scalar",
+        "numpy.dtype",
+        "torch.FloatStorage",
+        "torch._utils._rebuild_tensor_v2"
+      ],
+      "passed": true
+    },
+    "trained_weights/expression_prediction/promoteratlas-trspred-urtecho2018.pt": {
+      "globals": [
+        "_codecs.encode",
+        "collections.OrderedDict",
+        "numpy.core.multiarray.scalar",
+        "numpy.dtype",
+        "torch.FloatStorage",
+        "torch._utils._rebuild_tensor_v2"
+      ],
+      "passed": true
+    },
+    "trained_weights/expression_prediction/promoteratlas-trspred-yu2021.pt": {
+      "globals": [
+        "_codecs.encode",
+        "collections.OrderedDict",
+        "numpy.core.multiarray.scalar",
+        "numpy.dtype",
+        "torch.FloatStorage",
+        "torch._utils._rebuild_tensor_v2"
+      ],
+      "passed": true
+    },
+    "trained_weights/expression_prediction/promoteratlas-tslpred-kosuri2013.pt": {
+      "globals": [
+        "_codecs.encode",
+        "collections.OrderedDict",
+        "numpy.core.multiarray.scalar",
+        "numpy.dtype",
+        "torch.FloatStorage",
+        "torch._utils._rebuild_tensor_v2"
+      ],
+      "passed": true
+    },
+    "trained_weights/segmentation/promoteratlas-annotation.pt": {
+      "globals": [
+        "collections.OrderedDict",
+        "torch.FloatStorage",
+        "torch._utils._rebuild_tensor_v2"
+      ],
+      "passed": true
+    }
+  },
+  "date": "2026-11-03",
+  "dest_root": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\pa_clone_durable",
+  "files": [
+    {
+      "action": "already_present",
+      "bytes": 22313814,
+      "dest_sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624",
+      "digest_matches": true,
+      "relpath": "trained_weights/base_model/promoteratlas-base.pt",
+      "source_sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624"
+    },
+    {
+      "action": "already_present",
+      "bytes": 11310034,
+      "dest_sha256": "31af6913670eb25066c4a3d9aff21832da26c2a6e57f2067ed36e167fdcfba11",
+      "digest_matches": true,
+      "relpath": "trained_weights/expression_prediction/promoteratlas-trspred-hossain2020.pt",
+      "source_sha256": "31af6913670eb25066c4a3d9aff21832da26c2a6e57f2067ed36e167fdcfba11"
+    },
+    {
+      "action": "already_present",
+      "bytes": 11310034,
+      "dest_sha256": "cbd8c226c753f54b63c0bfc9470e87422958133129ca04a20e9ffdbf85e179be",
+      "digest_matches": true,
+      "relpath": "trained_weights/expression_prediction/promoteratlas-trspred-lafleur2022.pt",
+      "source_sha256": "cbd8c226c753f54b63c0bfc9470e87422958133129ca04a20e9ffdbf85e179be"
+    },
+    {
+      "action": "already_present",
+      "bytes": 11310034,
+      "dest_sha256": "65d9182631d85fbb0de5d1512a0ad0c39386b1652a473c318a6525bbc91bbd8c",
+      "digest_matches": true,
+      "relpath": "trained_weights/expression_prediction/promoteratlas-trspred-urtecho2018.pt",
+      "source_sha256": "65d9182631d85fbb0de5d1512a0ad0c39386b1652a473c318a6525bbc91bbd8c"
+    },
+    {
+      "action": "already_present",
+      "bytes": 11309354,
+      "dest_sha256": "b4b9f5420c98ad56e67486b1fcac874bd85c2bd4b16533564a293ff44ceaa934",
+      "digest_matches": true,
+      "relpath": "trained_weights/expression_prediction/promoteratlas-trspred-yu2021.pt",
+      "source_sha256": "b4b9f5420c98ad56e67486b1fcac874bd85c2bd4b16533564a293ff44ceaa934"
+    },
+    {
+      "action": "already_present",
+      "bytes": 11309690,
+      "dest_sha256": "d91213184696fd1ca6f4275c9dc1a927223f52c0c9af543bf6aa1ace8490e716",
+      "digest_matches": true,
+      "relpath": "trained_weights/expression_prediction/promoteratlas-tslpred-kosuri2013.pt",
+      "source_sha256": "d91213184696fd1ca6f4275c9dc1a927223f52c0c9af543bf6aa1ace8490e716"
+    },
+    {
+      "action": "already_present",
+      "bytes": 8813208,
+      "dest_sha256": "4a35073fac78f5fad430698490bdeb614c1202e31ee600a3e6fa1c153d756ca7",
+      "digest_matches": true,
+      "relpath": "trained_weights/segmentation/promoteratlas-annotation.pt",
+      "source_sha256": "4a35073fac78f5fad430698490bdeb614c1202e31ee600a3e6fa1c153d756ca7"
+    },
+    {
+      "action": "already_present",
+      "bytes": 151,
+      "dest_sha256": "68e2a142d409a618b8e74c36e740bbee7d2a57ebcdf01f5dcf544a7517e6f6a9",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/annotation/__init__.py",
+      "source_sha256": "68e2a142d409a618b8e74c36e740bbee7d2a57ebcdf01f5dcf544a7517e6f6a9"
+    },
+    {
+      "action": "already_present",
+      "bytes": 7404,
+      "dest_sha256": "db14820b9f90ca8fc2753c5e5801d6e6c6b930a073437fe4821406bca40cdc95",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/annotation/annotator.py",
+      "source_sha256": "db14820b9f90ca8fc2753c5e5801d6e6c6b930a073437fe4821406bca40cdc95"
+    },
+    {
+      "action": "already_present",
+      "bytes": 6515,
+      "dest_sha256": "5277326faf631571b511a3aa299099c86dac007324a9140207508623ebaba950",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/annotation/fasta_annotator.py",
+      "source_sha256": "5277326faf631571b511a3aa299099c86dac007324a9140207508623ebaba950"
+    },
+    {
+      "action": "already_present",
+      "bytes": 0,
+      "dest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/data/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "action": "already_present",
+      "bytes": 1357,
+      "dest_sha256": "02a10c76552d6e904cd141f7e38c93899f2270ded6ccabf0a559df5351b972c6",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/data/sequence_dataset.py",
+      "source_sha256": "02a10c76552d6e904cd141f7e38c93899f2270ded6ccabf0a559df5351b972c6"
+    },
+    {
+      "action": "already_present",
+      "bytes": 913,
+      "dest_sha256": "f4333b9832bffb23bd25f6785f5bddf0d78653990c3220c3e4e6a9761a87a108",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/io/__init__.py",
+      "source_sha256": "f4333b9832bffb23bd25f6785f5bddf0d78653990c3220c3e4e6a9761a87a108"
+    },
+    {
+      "action": "already_present",
+      "bytes": 6939,
+      "dest_sha256": "f3d48cb3858bd2b3b1c1f516d5003e5a5d52cc8033f025efd5397366ebb291cb",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/io/fasta_io.py",
+      "source_sha256": "f3d48cb3858bd2b3b1c1f516d5003e5a5d52cc8033f025efd5397366ebb291cb"
+    },
+    {
+      "action": "already_present",
+      "bytes": 1451,
+      "dest_sha256": "0fce303ed7341cb952e3b55302bed5620709d59360d6884c4a236995bf17ac8d",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/io/formats.py",
+      "source_sha256": "0fce303ed7341cb952e3b55302bed5620709d59360d6884c4a236995bf17ac8d"
+    },
+    {
+      "action": "already_present",
+      "bytes": 5730,
+      "dest_sha256": "27bf2d7a59bcfd586f14fd1eb12ca4dfca9f9281bff49ba657e68b3ebbe99fc1",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/io/genbank_io.py",
+      "source_sha256": "27bf2d7a59bcfd586f14fd1eb12ca4dfca9f9281bff49ba657e68b3ebbe99fc1"
+    },
+    {
+      "action": "already_present",
+      "bytes": 7235,
+      "dest_sha256": "a56ad2808b32f1540971c42ba056185306d44688b90bba8e547047639554cffd",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/io/gff_io.py",
+      "source_sha256": "a56ad2808b32f1540971c42ba056185306d44688b90bba8e547047639554cffd"
+    },
+    {
+      "action": "already_present",
+      "bytes": 0,
+      "dest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/models/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "action": "already_present",
+      "bytes": 6024,
+      "dest_sha256": "acca0516edb66b82e7a53f73255297451edb9d0f1aa0ab7612b7ee4a233cbe99",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/models/dna_transformer.py",
+      "source_sha256": "acca0516edb66b82e7a53f73255297451edb9d0f1aa0ab7612b7ee4a233cbe99"
+    },
+    {
+      "action": "already_present",
+      "bytes": 2831,
+      "dest_sha256": "a162bd7e058fb12229837538417553ad702fd23763ea6782768cac67f85eac3b",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/models/expression_predictor.py",
+      "source_sha256": "a162bd7e058fb12229837538417553ad702fd23763ea6782768cac67f85eac3b"
+    },
+    {
+      "action": "already_present",
+      "bytes": 2761,
+      "dest_sha256": "1d1cd8f96ed86f0450e074d7dc20769c3a295e7da7d9dfe72ad346d87b6487ce",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/models/promoter_segmenter.py",
+      "source_sha256": "1d1cd8f96ed86f0450e074d7dc20769c3a295e7da7d9dfe72ad346d87b6487ce"
+    },
+    {
+      "action": "already_present",
+      "bytes": 4323,
+      "dest_sha256": "00ebc2249cac819022df5162b5eb30db3387ec7d4438a8f31fd3d5a12b5395b5",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/prediction/expression_predictor.py",
+      "source_sha256": "00ebc2249cac819022df5162b5eb30db3387ec7d4438a8f31fd3d5a12b5395b5"
+    },
+    {
+      "action": "already_present",
+      "bytes": 0,
+      "dest_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/utils/__init__.py",
+      "source_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "action": "already_present",
+      "bytes": 4052,
+      "dest_sha256": "be10339e9d397478897f84cd4ebfbb6b8dd5e27d34c9cea70a5c0880548757ab",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/utils/genomics.py",
+      "source_sha256": "be10339e9d397478897f84cd4ebfbb6b8dd5e27d34c9cea70a5c0880548757ab"
+    },
+    {
+      "action": "already_present",
+      "bytes": 5538,
+      "dest_sha256": "41b40fc60df9425136120c613365308c676c3f62e5ab547fdf7887860d76411f",
+      "digest_matches": true,
+      "relpath": "src/promoter_atlas/utils/visualisation.py",
+      "source_sha256": "41b40fc60df9425136120c613365308c676c3f62e5ab547fdf7887860d76411f"
+    }
+  ],
+  "host": {
+    "cpu_count": 8,
+    "platform": "Windows-10-10.0.19045-SP0"
+  },
+  "how_to_use": "export PA_REPO=<dest_root>; atlas_embed.DEFAULT_PA_REPO already reads it, so no code change is needed",
+  "idempotent": true,
+  "n_already_present": 25,
+  "n_copied": 0,
+  "ok": true,
+  "pinned_base_checkpoint": {
+    "bytes": 22313814,
+    "expected_bytes": 22313814,
+    "expected_sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624",
+    "matches_pin": true,
+    "path": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\pa_clone_durable\\trained_weights\\base_model\\promoteratlas-base.pt",
+    "sha256": "bb413bc8602f05b6903ee06da9cebecb461990aebfa129c62bb3cb56cd7bf624"
+  },
+  "required_source": "src/promoter_atlas/models/dna_transformer.py",
+  "required_source_present": true,
+  "schema": "durable-clone-v1",
+  "source_root": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\pa_probe\\PromoterAtlas",
+  "subtrees": [
+    "trained_weights",
+    "src/promoter_atlas"
+  ],
+  "target_is_C_drive_deliberately": {
+    "confidence": "favourable-but-NOT-proven, in the register the existing launcher uses. Not a guarantee -- which is why the runs depending on this mirror still checkpoint per unit.",
+    "inverts": "the standing project rule that heavy artifacts live on D:, never on C:",
+    "why": "run_tile_conv_detached.bat records SIX deaths of long unattended jobs on this host: four STATUS_IN_PAGE_ERROR (0xc0000006) with torch memory-mapping 4.33 GB of weights off the USB volume, and two with no event on any of 118 logs. The single long job that ever reached rc=0 kept its data on C:.",
+    "why_the_rule_is_not_violated": "the D: rule exists to keep a chronically-full C: clear of HEAVY artifacts; this mirror is 87.7 MB, and the bulk caches stay on D:"
+  },
+  "verification": {
+    "mismatched": [],
+    "n_files": 25,
+    "n_matched": 25,
+    "ok": true,
+    "rule": "ok requires EVERY file to match; a percentage would let a partial mirror read as a qualified success, and for a checkpoint that is just a failure",
+    "total_bytes": 87739392,
+    "unchecked": []
+  },
+  "wall_seconds": 0.9,
+  "what_is_load_bearing": {
+    "load_atlas_needs": [
+      "trained_weights/base_model/promoteratlas-base.pt",
+      "src/promoter_atlas/models/dna_transformer.py"
+    ],
+    "measured": "dna_transformer.py imports ONLY torch -- no package siblings -- so it genuinely stands alone under importlib spec loading. atlas_heads.load_head needs no source at all; it reads state dicts.",
+    "why_copy_more": "the whole src/promoter_atlas tree is copied because it is small and a narrower copy would break silently if anything else is ever reached for"
+  }
+}
