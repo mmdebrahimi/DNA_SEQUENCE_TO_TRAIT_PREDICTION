@@ -327,6 +327,64 @@ def classify(job: str, *, state_dir: Path | None = None, now: float | None = Non
                      reason="pid %s alive, heartbeat %ss old" % (pid, age), **common)
 
 
+HOLDING_STATES = (STATE_RUNNING, STATE_STALLED)
+"""States in which another job still holds a model, so a second torch job must not start.
+
+STALLED counts, which is the non-obvious half: a stalled job is ALIVE -- it holds its memory and
+its threads -- so starting beside it invites exactly the access violation the run lock exists to
+prevent. Progress is not the question here; occupancy is.
+"""
+
+
+def wait_for(job: str, *, timeout_seconds: float, poll_seconds: float = 30.0,
+             state_dir: Path | None = None, verbose: bool = True,
+             sleep=time.sleep, now=time.time) -> dict:
+    """Block until `job` is no longer holding a model, or until the timeout.
+
+    WHY THIS EXISTS. Two concurrent torch jobs is this host's documented access-violation hazard,
+    and the two unattended runs would otherwise share four CPU threads and halve each other. The
+    run lock cannot express this: separate jobs hold separate locks, and giving them one lock
+    would make the second REFUSE rather than defer, which converts a scheduling problem into a
+    run that simply never happens.
+
+    So the ordering is encoded here instead of left as a human instruction -- the second run can
+    be launched immediately and starts itself when the first clears. An instruction to "launch
+    this after the other finishes" is a step someone has to be present for, and absence is the
+    whole constraint this plan is built around.
+
+    ON TIMEOUT IT PROCEEDS, LOUDLY, AND THAT IS A JUDGEMENT WORTH NAMING. A timeout far longer
+    than the first job's projection means that job is in an unknown state, and the ten-day window
+    is the scarcer resource of the two -- a run that never starts wastes all of it. So the wait
+    gives up and continues, printing `WAIT_TIMEOUT` into the log so the decision is auditable
+    rather than silent. A caller that would rather not start at all should read the exit code,
+    which distinguishes the two outcomes.
+    """
+    t0 = now()
+    seen = []
+    while True:
+        st = classify(job, state_dir=state_dir, now=now())
+        if st.state not in HOLDING_STATES:
+            if verbose:
+                print("WAIT_CLEAR %s is %s after %.0fs -- proceeding"
+                      % (job, st.state, now() - t0), flush=True)
+            return {"outcome": "clear", "waited_seconds": round(now() - t0, 1),
+                    "final_state": st.state, "states_seen": seen}
+        if st.state not in seen:
+            seen.append(st.state)
+        if (now() - t0) >= timeout_seconds:
+            if verbose:
+                print("WAIT_TIMEOUT %s is still %s after %.0fs (limit %.0fs) -- PROCEEDING "
+                      "ANYWAY, because a run that never starts wastes the whole window. Two "
+                      "concurrent torch jobs is a known hazard on this host; read the log."
+                      % (job, st.state, now() - t0, timeout_seconds), flush=True)
+            return {"outcome": "timeout", "waited_seconds": round(now() - t0, 1),
+                    "final_state": st.state, "states_seen": seen}
+        if verbose:
+            print("WAIT %s is %s (%s) -- %.0fs elapsed"
+                  % (job, st.state, st.reason, now() - t0), flush=True)
+        sleep(poll_seconds)
+
+
 def known_jobs(state_dir: Path | None = None) -> list[str]:
     d = state_dir or DEFAULT_STATE_DIR
     if not d.is_dir():
@@ -334,6 +392,12 @@ def known_jobs(state_dir: Path | None = None) -> list[str]:
     suffix = ".heartbeat.json"
     jobs = {p.name[: -len(suffix)] for p in d.glob("*" + suffix)}
     jobs |= {p.stem for p in d.glob("*.sentinel")}
+    # Logs too, so a job that has STARTED but not yet written a heartbeat is VISIBLE rather than
+    # absent. A launcher waiting for another job to clear is exactly that case, and it is the one
+    # a reader most needs to see -- an invisible pending run is indistinguishable from a launcher
+    # that was never started, which is the conflation NOT_STARTED exists to surface rather than
+    # hide. It classifies NOT_STARTED, which is honest: no heartbeat means no work done yet.
+    jobs |= {p.stem for p in d.glob("*.log")}
     return sorted(jobs)
 
 
@@ -349,7 +413,9 @@ def _win(rel) -> str:
 
 
 def render_bat(job: str, command: list[str], *, rationale: str = "",
-               state_rel: str = "data/unattended", env: dict | None = None) -> str:
+               state_rel: str = "data/unattended", env: dict | None = None,
+               wait_for_job: str | None = None,
+               wait_timeout_seconds: float = 12 * 3600.0) -> str:
     """The launcher text for one job, matching the existing convention EXACTLY.
 
     THE COMMAND IS EMITTED ON ONE LINE, not with `^` continuations as the hand-written launchers
@@ -377,6 +443,15 @@ def render_bat(job: str, command: list[str], *, rationale: str = "",
             raise DetachedLaunchError(
                 "env value for %r contains a quote or a %% -- cmd would mangle it and the job "
                 "would start with a silently wrong value, which is worse than refusing" % k)
+
+    if wait_for_job is not None:
+        if not wait_for_job or any(c in wait_for_job for c in ' \\/:*?"<>|'):
+            raise DetachedLaunchError("wait_for_job %r must be a bare filename-safe token"
+                                      % wait_for_job)
+        if wait_for_job == job:
+            raise DetachedLaunchError(
+                "job %r cannot wait for itself: it writes its own heartbeat, so it would either "
+                "wait on a state it has not created yet or on one it created last run" % job)
 
     log = _win("%s/%s.log" % (state_rel, job))
     sentinel = _win("%s/%s.sentinel" % (state_rel, job))
@@ -415,6 +490,19 @@ def render_bat(job: str, command: list[str], *, rationale: str = "",
           if env else []),
         "",
         'echo ==== start %DATE% %TIME% ==== > "%LOG%"',
+        *([""] + [
+            "REM WAIT FOR THE OTHER TORCH JOB TO CLEAR BEFORE STARTING.",
+            "REM Two concurrent torch jobs is this host's documented access-violation hazard, and",
+            "REM four CPU threads shared between them halves both. The run lock cannot express",
+            "REM this -- separate jobs hold separate locks, and sharing one would make this run",
+            "REM REFUSE rather than defer, turning a scheduling problem into a run that never",
+            "REM happens. Encoding the order here means this launcher can be started immediately",
+            "REM and begins by itself, instead of needing someone present at the handover.",
+            "REM On timeout it proceeds anyway and says so in the log: a run that never starts",
+            "REM wastes the whole window, which is the scarcer resource.",
+            'uv run python scripts/detached_launch.py wait-for %s --timeout %d >> "%%LOG%%" 2>&1'
+            % (wait_for_job, int(wait_timeout_seconds)),
+        ] if wait_for_job else []),
         "",
         "REM Guarded by the PID-bearing run lock: a second launch over a long window exits 9",
         "REM rather than running two concurrent torch jobs, which is this host's documented",
@@ -442,9 +530,12 @@ def render_bat(job: str, command: list[str], *, rationale: str = "",
 
 def write_bat(job: str, command: list[str], *, rationale: str = "",
               repo: Path | None = None, state_rel: str = "data/unattended",
-              env: dict | None = None) -> Path:
+              env: dict | None = None, wait_for_job: str | None = None,
+              wait_timeout_seconds: float = 12 * 3600.0) -> Path:
     repo = repo or REPO
-    text = render_bat(job, command, rationale=rationale, state_rel=state_rel, env=env)
+    text = render_bat(job, command, rationale=rationale, state_rel=state_rel, env=env,
+                      wait_for_job=wait_for_job,
+                      wait_timeout_seconds=wait_timeout_seconds)
     out = repo / ("run_%s_detached.bat" % job)
     # CRLF: cmd tolerates LF, but every hand-written launcher here is CRLF and a mixed tree
     # invites a diff nobody can read.
@@ -480,11 +571,23 @@ def main(argv=None) -> int:
         argv, after = argv[:i], argv[i + 1:]
     p = argparse.ArgumentParser(description=__doc__,
                                 formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument("action", choices=["emit", "status"])
+    p.add_argument("action", choices=["emit", "status", "wait-for"])
     p.add_argument("job", nargs="?")
     p.add_argument("--rationale", default="")
     p.add_argument("--json", action="store_true")
+    p.add_argument("--timeout", type=float, default=12 * 3600.0,
+                   help="wait-for: seconds before giving up and proceeding anyway")
+    p.add_argument("--poll", type=float, default=30.0)
     a = p.parse_args(argv)
+
+    if a.action == "wait-for":
+        if not a.job:
+            print("wait-for requires a job name", file=sys.stderr)
+            return 2
+        res = wait_for(a.job, timeout_seconds=a.timeout, poll_seconds=a.poll)
+        # 0 = the other job cleared; 10 = timed out and proceeded anyway. The launcher ignores
+        # the code and continues either way; a caller that would rather not start can read it.
+        return 0 if res["outcome"] == "clear" else 10
 
     if a.action == "emit":
         if not a.job:

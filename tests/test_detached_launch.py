@@ -369,6 +369,24 @@ def test_status_all_finds_jobs_known_only_by_sentinel(tmp_path):
     assert dl.known_jobs(tmp_path) == ["heartbeat-only", "sentinel-only"]
 
 
+def test_a_job_with_only_a_LOG_is_visible_as_NOT_STARTED(tmp_path):
+    """A launcher that has started but not yet written a heartbeat -- one waiting for another job
+    to clear -- must be VISIBLE. An invisible pending run is indistinguishable from a launcher
+    that was never started, which is the conflation NOT_STARTED exists to surface."""
+    tmp_path.mkdir(parents=True, exist_ok=True)
+    (tmp_path / "waiting.log").write_text("==== start ====\nWAIT other is RUNNING\n",
+                                          encoding="utf-8")
+    assert "waiting" in dl.known_jobs(tmp_path)
+    assert dl.classify("waiting", state_dir=tmp_path).state == dl.STATE_NOT_STARTED
+
+
+def test_log_discovery_does_not_duplicate_a_job_known_by_heartbeat(tmp_path):
+    _write_hb(tmp_path, "j", pid=os.getpid())
+    (tmp_path / "j.log").write_text("x", encoding="utf-8")
+    (tmp_path / "j.sentinel").write_text("EXIT=0", encoding="utf-8")
+    assert dl.known_jobs(tmp_path) == ["j"]
+
+
 def test_known_jobs_is_empty_on_a_missing_state_dir(tmp_path):
     assert dl.known_jobs(tmp_path / "nope") == []
 
@@ -379,6 +397,149 @@ def test_render_status_marks_only_the_states_needing_attention(tmp_path):
     text = dl.render_status(dl.status_all(tmp_path))
     bad = [ln for ln in text.splitlines() if ln.startswith("!!")]
     assert len(bad) == 1 and "bad" in bad[0]
+
+
+# --------------------------------------------------------------------- waiting for another job
+
+
+class _Clock:
+    """A fake clock, so the wait's timing is tested without spending it.
+
+    ANCHORED TO REAL TIME, not to an arbitrary epoch. The heartbeats these tests write carry
+    `time.time()` timestamps, and `classify` computes their age against whatever `now` it is
+    given -- so a clock starting at 1,000,000 made every age hugely NEGATIVE and a deliberately
+    stale heartbeat read as fresh. The clock controls ELAPSED time; it must not relocate the
+    epoch.
+    """
+
+    def __init__(self):
+        self.t = time.time()
+        self.sleeps = []
+
+    def now(self):
+        return self.t
+
+    def sleep(self, s):
+        self.sleeps.append(s)
+        self.t += s
+
+
+def test_the_wait_returns_immediately_when_the_other_job_is_not_running(tmp_path):
+    _write_sentinel(tmp_path, "other", 0)
+    c = _Clock()
+    res = dl.wait_for("other", timeout_seconds=3600, state_dir=tmp_path, verbose=False,
+                      sleep=c.sleep, now=c.now)
+    assert res["outcome"] == "clear"
+    assert res["final_state"] == dl.STATE_COMPLETE
+    assert c.sleeps == [], "it slept while the other job was already finished"
+
+
+def test_the_wait_returns_clear_on_a_FAILED_other_job(tmp_path):
+    """A failed job holds nothing. Waiting for it to succeed would wait forever."""
+    _write_sentinel(tmp_path, "other", 1)
+    c = _Clock()
+    res = dl.wait_for("other", timeout_seconds=3600, state_dir=tmp_path, verbose=False,
+                      sleep=c.sleep, now=c.now)
+    assert res["outcome"] == "clear" and res["final_state"] == dl.STATE_FAILED
+
+
+def test_the_wait_returns_clear_when_the_other_job_DIED_without_a_sentinel(tmp_path):
+    """The unexplained-death case. It is gone, so it holds nothing."""
+    _write_hb(tmp_path, "other", pid=_a_definitely_dead_pid())
+    c = _Clock()
+    res = dl.wait_for("other", timeout_seconds=3600, state_dir=tmp_path, verbose=False,
+                      sleep=c.sleep, now=c.now)
+    assert res["outcome"] == "clear" and res["final_state"] == dl.STATE_DEAD
+
+
+def test_the_wait_returns_clear_when_the_other_job_NEVER_STARTED(tmp_path):
+    c = _Clock()
+    res = dl.wait_for("ghost", timeout_seconds=3600, state_dir=tmp_path, verbose=False,
+                      sleep=c.sleep, now=c.now)
+    assert res["outcome"] == "clear" and res["final_state"] == dl.STATE_NOT_STARTED
+
+
+def test_the_wait_BLOCKS_while_the_other_job_is_running_then_proceeds(tmp_path):
+    """The real case: it waits, and it stops waiting the moment the other job finishes."""
+    _write_hb(tmp_path, "other", pid=os.getpid(), age=1.0)
+    c = _Clock()
+    calls = {"n": 0}
+
+    def sleeping(s):
+        calls["n"] += 1
+        c.sleep(s)
+        if calls["n"] == 3:                      # the other job finishes on the third poll
+            _write_sentinel(tmp_path, "other", 0)
+
+    res = dl.wait_for("other", timeout_seconds=3600, state_dir=tmp_path, verbose=False,
+                      sleep=sleeping, now=c.now, poll_seconds=30)
+    assert res["outcome"] == "clear"
+    assert calls["n"] == 3
+
+
+def test_the_wait_treats_a_STALLED_job_as_still_HOLDING(tmp_path):
+    """The non-obvious half: a stalled job is ALIVE, so it holds its memory and threads.
+    Occupancy is the question, not progress."""
+    _write_hb(tmp_path, "other", pid=os.getpid(), age=60 * dl.STALE_MULTIPLE + 300, cadence=60)
+    assert dl.classify("other", state_dir=tmp_path).state == dl.STATE_STALLED
+    c = _Clock()
+    res = dl.wait_for("other", timeout_seconds=120, state_dir=tmp_path, verbose=False,
+                      sleep=c.sleep, now=c.now, poll_seconds=30)
+    assert res["outcome"] == "timeout"
+    assert res["final_state"] == dl.STATE_STALLED
+
+
+def test_the_wait_PROCEEDS_on_timeout_rather_than_refusing(tmp_path):
+    """A judgement, named: a run that never starts wastes the whole window, which is scarcer
+    than the risk of a brief overlap. The outcome is reported so the decision is auditable."""
+    _write_hb(tmp_path, "other", pid=os.getpid(), age=1.0)
+    c = _Clock()
+    res = dl.wait_for("other", timeout_seconds=90, state_dir=tmp_path, verbose=False,
+                      sleep=c.sleep, now=c.now, poll_seconds=30)
+    assert res["outcome"] == "timeout"
+    assert res["waited_seconds"] >= 90
+
+
+def test_the_wait_records_which_states_it_saw(tmp_path):
+    _write_hb(tmp_path, "other", pid=os.getpid(), age=1.0)
+    c = _Clock()
+    res = dl.wait_for("other", timeout_seconds=60, state_dir=tmp_path, verbose=False,
+                      sleep=c.sleep, now=c.now, poll_seconds=30)
+    assert dl.STATE_RUNNING in res["states_seen"]
+
+
+def test_the_holding_states_are_exactly_the_live_ones():
+    """A terminal state in HOLDING_STATES would make the wait hang forever on a finished job."""
+    assert set(dl.HOLDING_STATES) == {dl.STATE_RUNNING, dl.STATE_STALLED}
+    for s in (dl.STATE_COMPLETE, dl.STATE_FAILED, dl.STATE_REFUSED, dl.STATE_DEAD,
+              dl.STATE_NOT_STARTED):
+        assert s not in dl.HOLDING_STATES
+
+
+def test_the_generated_bat_emits_the_wait_before_the_payload():
+    text = _bat(wait_for_job="other_job", wait_timeout_seconds=1800)
+    lines = text.splitlines()
+    wait_i = next(i for i, ln in enumerate(lines) if "wait-for other_job" in ln)
+    pay_i = next(i for i, ln in enumerate(lines) if "glm_run_lock.py run" in ln)
+    assert wait_i < pay_i
+    assert "--timeout 1800" in lines[wait_i]
+
+
+def test_a_bat_with_no_wait_is_unchanged():
+    assert _bat(wait_for_job=None) == _bat()
+
+
+def test_a_job_cannot_wait_for_ITSELF():
+    """It writes its own heartbeat, so it would wait on a state it has not created yet, or on
+    the one it left behind last run."""
+    with pytest.raises(dl.DetachedLaunchError, match="wait for itself"):
+        dl.render_bat("demo", ["cmd", "/c", "exit", "0"], wait_for_job="demo")
+
+
+@pytest.mark.parametrize("bad", ["a b", "a/b", ""])
+def test_an_unsafe_wait_target_is_refused(bad):
+    with pytest.raises(dl.DetachedLaunchError, match="wait_for_job"):
+        dl.render_bat("demo", ["cmd", "/c", "exit", "0"], wait_for_job=bad)
 
 
 # --------------------------------------------------------------------- heartbeat
