@@ -1,0 +1,188 @@
+{
+  "anchors_verified_live": {
+    "comparator": "data\\promoteratlas\\local_reconcile_2026-11-01.json",
+    "ledger": "soraya_runs\\arms-ledger.json",
+    "probe": "wiki\\finetune_arm_feasibility_2026-11-02.json",
+    "rule": "every number in this bar is re-read from an anchor at freeze time. A bar anchored to retyped numbers is anchored to nothing."
+  },
+  "arm": "finetuned-promoteratlas-encoder-150bp",
+  "budget_versus_representation": {
+    "evidence_today": {
+      "best_epoch": 6,
+      "curve_field": "convergence.val_spearman_by_epoch",
+      "epochs_after_best": 8,
+      "n_epochs_scored": 15,
+      "probe_field": "convergence.early_stop",
+      "scope_limit": "a SUBSAMPLE curve. It bounds the SHAPE of convergence, NOT the full-cohort epoch count, because measuring the latter is the expensive run this probe exists to size.",
+      "turned": true,
+      "why_this_is_not_enough": "it is a SUBSAMPLE curve over 2160 tiles. It bounds the SHAPE of convergence, not the full-cohort epoch count, so the budget-limited reading is closed by INFERENCE rather than by measurement."
+    },
+    "how_it_gets_closed_empirically": "closing the budget-limited reading EMPIRICALLY. A metric flat from epoch 7 to epoch 38 (5.4x the budget) rules out 'more budget would have helped' by measurement instead of by inference from a 2,160-tile subsample curve.",
+    "ineligible_diagnostics": {
+      "purpose": "answering 'would more budget have helped?' and nothing else",
+      "status": "INELIGIBLE as the arm's result, pre-declared",
+      "what": "the per-epoch validation metric at every epoch from 8 to 38",
+      "why_pre_declared": "the same shape as max-over-windows on the heads arm, where the highest-scoring rung was an ineligible secondary and having declared it ineligible IN ADVANCE is the only reason that run could not be re-read as a win. A diagnostic that may become the result is not a diagnostic."
+    },
+    "the_distinction": "beating 0.5076 shows the frozen REPRESENTATION was the limit. Failing to beat it shows either that the representation was NOT the limit, or that the substrate or the BUDGET was. Only a convergence curve separates those readings."
+  },
+  "ceiling": {
+    "ceiling_hours": 129.6,
+    "commit_fraction": 0.6,
+    "derivation": "216.00 h of window x 0.60 committable = 129.60 h. The fraction is derived from this host's MEASURED throughput variance: two timings disagreed by 34%, so a horizon sized on today's rate can take 1.34x as long, which alone permits at most 0.746 of the window. The remaining headroom pays for an unattended reboot, which is plausible over days and which nothing restarts automatically.",
+    "hours_available": 216.0,
+    "replaces": {
+      "constant": "LOCAL_WALL_CEILING_SECONDS = 6 * 3600",
+      "its_own_stated_justification": "'six hours is chosen because an overnight run is recoverable while a multi-day local run often is not' -- recorded in the probe as operational, NOT statistical",
+      "what_is_kept": "the operational logic itself -- a run must fit the time actually available with margin. Only the fixed number is replaced.",
+      "why_it_no_longer_binds": "the justification is a claim about ATTENDANCE, and an authorised unattended window of known length is direct evidence about attendance. The premise that a multi-day run gets abandoned part-way is false for a window the user declared in advance and asked to have filled."
+    }
+  },
+  "check_order": [
+    [
+      "run_completed",
+      "INDETERMINATE_RUN_DIED"
+    ],
+    [
+      "budget_reached",
+      "INDETERMINATE_BUDGET_EXHAUSTED"
+    ],
+    [
+      "split_equality",
+      "INDETERMINATE_SPLIT_MISMATCH"
+    ],
+    [
+      "shuffled_label_null",
+      "INDETERMINATE_NULL_FAIL"
+    ],
+    [
+      "primary_decision",
+      [
+        "FINETUNE_ADDS",
+        "FINETUNE_TIES",
+        "FINETUNE_NO_GAIN"
+      ]
+    ]
+  ],
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "frozen": "2026-11-03",
+  "frozen_hyperparameters": {
+    "batch_size": 128,
+    "deviation_rule": "a deviation is allowed; an UNRECORDED deviation raises. Every key that differs from the checkpoint's own config carries its reason here.",
+    "deviations_from_pretraining_recipe": [
+      {
+        "parameter": "batch_size",
+        "pretraining_value": 1024,
+        "probe_value": 128,
+        "why": "the pretraining batch of 1024 was used on a CUDA device for a masked language-model objective. This host is CPU-only with 4 threads, and the throughput was MEASURED across batch sizes rather than assumed: 128 is the fastest of {'32': 24.7, '64': 23.7, '128': 27.0}, so it is the batch the arm uses AND the rate the projection is computed from. Bigger is not faster here."
+      },
+      {
+        "parameter": "n_epochs",
+        "pretraining_value": 2000,
+        "probe_value": 15,
+        "why": "the pretraining budget of 2000 epochs is for the masked LM objective on the full corpus; this is a bounded convergence OBSERVATION sized from the measured throughput"
+      },
+      {
+        "parameter": "patience",
+        "pretraining_value": 25,
+        "probe_value": 2,
+        "why": "the pretraining patience of 25 is calibrated to a 2000-epoch budget; a subsample curve of 15 epochs cannot express it, so the probe uses a proportionate value and the artifact reports whether the curve turned under it"
+      }
+    ],
+    "early_stopping": {
+      "monitor": "validation Spearman against RAW expression",
+      "patience": 2,
+      "rule": "stop after 2 non-improving epochs and report the BEST epoch, which is what the probe's curve measured. The frozen budget 7 is therefore a MAXIMUM; a seed may stop earlier and that is not a budget failure."
+    },
+    "learning_rate": 0.001,
+    "n_epochs_budget": 7,
+    "patience": 2,
+    "read_from": "the probe artifact's hyperparameters_used and local_projection blocks"
+  },
+  "horizon": {
+    "diagnostic_horizon_epochs": 38,
+    "frozen_budget_epochs": 7,
+    "minutes_per_epoch": 20.4,
+    "multiple_of_frozen_budget": 5.4,
+    "n_seeds": 10,
+    "projected_hours_at_horizon": 129.3,
+    "what_the_extra_epochs_are_for": "closing the budget-limited reading EMPIRICALLY. A metric flat from epoch 7 to epoch 38 (5.4x the budget) rules out 'more budget would have helped' by measurement instead of by inference from a 2,160-tile subsample curve.",
+    "why_one_long_run_not_three": "training is sequential and deterministic given a seed, so a single run carried to epoch 38 with the validation metric recorded at EVERY epoch contains the frozen budget's verdict as a prefix -- same seeds, same data order. Three separate runs at E, 2E and 4E epochs would cost 7E epochs per seed for strictly less information."
+  },
+  "inherited_not_chosen": {
+    "comparator": {
+      "arm": "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
+      "comparison": "the fine-tuned encoder's median Spearman over seeds against the frozen encoder's 0.5076 on BYTE-IDENTICAL splits. Identical splits are what make the difference attributable to the representation rather than to the data partition.",
+      "median_spearman": 0.5076,
+      "n_seeds": 10,
+      "split_frac": 0.25,
+      "verified_live": "RECONCILED, zero mismatched seeds, median re-read not retyped"
+    },
+    "margin": {
+      "derivation": "INHERITED verbatim from the tile-chain rung's incumbent bar. Never re-chosen here; a margin picked per-arm is a margin picked to be cleared.",
+      "value": 0.02
+    },
+    "null_signal_ratio": {
+      "imported_from": "scripts.freeze_expression_heads_bar.NULL_SIGNAL_RATIO",
+      "value": 0.5,
+      "why_imported_not_restated": "the rail is scale-free -- a ceiling expressed as a fraction of the arm's own signal -- so it transfers without re-derivation, and importing it means the two arms cannot silently drift apart. A restated copy is a copy that goes stale."
+    },
+    "target_transform": {
+      "inherited_from": "dna_decode.glm.atlas_embed.ridge_spearman",
+      "inherited_not_chosen": true,
+      "scored_against": "raw expression",
+      "source": "dna_decode.glm.atlas_embed.ridge_spearman, which fits on log1p(expression) and scores Spearman against RAW expression, and whose docstring states that any deviation makes the number incomparable with the committed incumbent tables",
+      "trained_on": "log1p(expression)",
+      "why_it_is_not_a_free_parameter": "ridge_spearman fits on log1p(expression) and scores Spearman against RAW expression, and its docstring states that any deviation makes the number incomparable with the committed incumbent tables. Training on raw expression instead would confound the OBJECTIVE TRANSFORM with the REPRESENTATION, which is the single thing this arm exists to isolate.",
+      "why_it_matters": "training on RAW expression instead would confound the OBJECTIVE TRANSFORM with the REPRESENTATION, adding a third reading to the budget-versus-representation pair: a loss could mean the fine-tune optimised the wrong target scale. Fixed before this measurement, not after."
+    }
+  },
+  "multiplicity": {
+    "contrast_is_deliberate": "recorded because an uncorrected arm beside a corrected one invites the reading that this one was given an easier test. It was given a smaller hypothesis space.",
+    "correction": "none",
+    "n_declared_comparisons": 1,
+    "why": "exactly ONE comparison is declared: the median over seeds against the committed 0.5076. The heads arm is corrected at alpha/5 because it declares five heads and takes a MAXIMUM over them. Applying a divisor to a single comparison would widen the interval for no reason and make a real gain harder to see."
+  },
+  "null": {
+    "gate": "max|null| must fall below 0.50 x the arm's own measured signal",
+    "is_it_vacuous_here": false,
+    "kind": "shuffled_training_labels",
+    "procedure": "re-run the fine-tune with the TRAINING labels permuted, leaving the architecture, the split, the data order and every hyperparameter untouched, then score against the true test labels.",
+    "sampling_diagnostic_not_a_gate": "a permutation Spearman over the test split has sampling spread near 1/sqrt(n), which on the full cohort is an order of magnitude tighter than this ratio ceiling. The tighter figure is REPORTED beside the null and is not the gate -- re-deriving a gate against the number it is about to judge is the failure this project has logged twice.",
+    "why_not": "the fine-tune genuinely FITS -- 1.8M trainable parameters over 33,080 training tiles -- so destroying the labels destroys the fit and the null collapses toward zero. A null that can move is a null that tests something.",
+    "why_the_heads_arm_needed_a_DIFFERENT_null": "a one-feature zero-shot predictor scored through StandardScaler + Ridge can only SCALE and SIGN-FLIP, and it takes that sign from the training labels. Shuffling them therefore returns plus-or-minus the arm's entire signal -- MEASURED at +-0.8814 against a real 0.8814, a ratio of 1.00. That null is vacuous by construction, which is why the heads arm uses a PREDICTOR-SIDE null (fixed predictor, permuted TEST labels, no refit) measured at max|null| 0.0371 against the same signal, a ratio of 0.04.",
+    "why_this_is_recorded_here": "so the difference between the two arms' nulls reads as a measured consequence of their predictors rather than as one arm having been held to a weaker standard. With 1.8M trainable parameters the one-feature degeneracy is simply absent."
+  },
+  "outcomes": [
+    "FINETUNE_ADDS",
+    "FINETUNE_TIES",
+    "FINETUNE_NO_GAIN",
+    "INDETERMINATE_RUN_DIED",
+    "INDETERMINATE_BUDGET_EXHAUSTED",
+    "INDETERMINATE_SPLIT_MISMATCH",
+    "INDETERMINATE_NULL_FAIL"
+  ],
+  "question": "does fine-tuning the PromoterAtlas encoder on this rung beat the FROZEN encoder's median Spearman 0.5076 by the inherited margin 0.02, on byte-identical splits?",
+  "reachable_equals_declared": true,
+  "route": {
+    "ceiling_hours": 129.6,
+    "chosen": "local_cpu",
+    "fits": true,
+    "local_projection_hours": 23.82,
+    "probe_had_chosen": "kaggle_t4",
+    "rejected_alternative": "kaggle_t4",
+    "why": "the measured local projection 23.82 h FITS the window-derived ceiling 129.60 h (18% of it), so the arm runs locally and needs no mid-flight attendance. This is the decisive property, not the compute: a Kaggle chain requires an invocation to retrieve its output and nothing will invoke me inside this window.",
+    "why_the_probe_chose_differently": "the probe routed to 'kaggle_t4' against the FIXED 6.00 h ceiling, which this bar replaces. Nothing measured changed: the local projection is the same 23.82 h in both. Only the ceiling moved, and it moved because a window was authorised."
+  },
+  "schema": "finetune-arm-acceptance-bar-v1",
+  "what_a_null_here_bounds": "the fine-tuned ENCODER on THIS rung at THIS budget. It does not bound fine-tuning in general, it does not bound the architecture, and at 7 epochs it cannot bound what a much larger budget would do -- which is precisely why the ineligible diagnostics exist.",
+  "why_liveness_is_checked_first": "this inverts the heads arm's ordering on purpose. There, split equality came first because every later number is meaningless if the test sets differ. Here the run can fail to produce numbers AT ALL -- this host has six recorded long-run deaths, two of which left no event on any of 118 logs -- so the first question is whether there is anything to read at all. INDETERMINATE_RUN_DIED is the DEAD_NO_SENTINEL case from scripts/detached_launch.py, and INDETERMINATE_BUDGET_EXHAUSTED is a run that stopped cleanly but short of its frozen budget. Neither is a verdict about the arm.",
+  "window": {
+    "attendance": "NONE. I execute only when invoked, so nothing inside this window can depend on me mid-flight -- which is why a Kaggle chain is unavailable here regardless of its compute, and why the ceiling question is live at all.",
+    "authorised_by": "the user, who stated the absence and asked for the longest run that fits it",
+    "end": "2026-11-13T00:00:00",
+    "hours": 216.0,
+    "name": "vacation-2026-11",
+    "start": "2026-11-04T00:00:00"
+  }
+}
