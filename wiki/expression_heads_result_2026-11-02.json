@@ -1,0 +1,1005 @@
+{
+  "arm": "shipped-expression-heads-zeroshot-150bp",
+  "arm_metric": 0.1178,
+  "bar": "wiki/expression_heads_acceptance_bar.json",
+  "best_head": "promoteratlas-trspred-yu2021",
+  "best_primary": {
+    "eligible_as_the_arms_result": true,
+    "gain_bootstrap": {
+      "ci_hi": -0.3861,
+      "ci_lo": -0.4131,
+      "ci_percentiles": [
+        0.5,
+        99.5
+      ],
+      "mean": -0.3981,
+      "median": -0.3922,
+      "n_boot": 10000,
+      "n_seeds": 10,
+      "seed": 707
+    },
+    "head": "promoteratlas-trspred-yu2021",
+    "median_spearman": 0.1178,
+    "n_seeds": 10,
+    "per_seed": {
+      "0": {
+        "atlas_committed": 0.5461,
+        "gain": -0.426,
+        "spearman": 0.1201
+      },
+      "1": {
+        "atlas_committed": 0.5499,
+        "gain": -0.4307,
+        "spearman": 0.1192
+      },
+      "2": {
+        "atlas_committed": 0.4983,
+        "gain": -0.4033,
+        "spearman": 0.095
+      },
+      "3": {
+        "atlas_committed": 0.4986,
+        "gain": -0.383,
+        "spearman": 0.1156
+      },
+      "4": {
+        "atlas_committed": 0.5075,
+        "gain": -0.3902,
+        "spearman": 0.1173
+      },
+      "5": {
+        "atlas_committed": 0.5163,
+        "gain": -0.391,
+        "spearman": 0.1253
+      },
+      "6": {
+        "atlas_committed": 0.5078,
+        "gain": -0.3934,
+        "spearman": 0.1144
+      },
+      "7": {
+        "atlas_committed": 0.4933,
+        "gain": -0.375,
+        "spearman": 0.1183
+      },
+      "8": {
+        "atlas_committed": 0.5016,
+        "gain": -0.3865,
+        "spearman": 0.1151
+      },
+      "9": {
+        "atlas_committed": 0.521,
+        "gain": -0.4015,
+        "spearman": 0.1195
+      }
+    },
+    "reduction": "mean",
+    "seed_wins_over_atlas": 0
+  },
+  "block": {
+    "batch": 64,
+    "heads": [
+      "promoteratlas-trspred-hossain2020",
+      "promoteratlas-trspred-lafleur2022",
+      "promoteratlas-trspred-urtecho2018",
+      "promoteratlas-trspred-yu2021",
+      "promoteratlas-tslpred-kosuri2013"
+    ],
+    "layout": {
+      "_total": 10,
+      "promoteratlas-trspred-hossain2020::max": 1,
+      "promoteratlas-trspred-hossain2020::mean": 0,
+      "promoteratlas-trspred-lafleur2022::max": 3,
+      "promoteratlas-trspred-lafleur2022::mean": 2,
+      "promoteratlas-trspred-urtecho2018::max": 5,
+      "promoteratlas-trspred-urtecho2018::mean": 4,
+      "promoteratlas-trspred-yu2021::max": 7,
+      "promoteratlas-trspred-yu2021::mean": 6,
+      "promoteratlas-tslpred-kosuri2013::max": 9,
+      "promoteratlas-tslpred-kosuri2013::mean": 8
+    },
+    "n_done": 44106,
+    "n_rows": 44106,
+    "pa_repo": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\pa_clone_durable",
+    "reductions": [
+      "mean",
+      "max"
+    ],
+    "route": "per_window_recompute",
+    "schema": "expression-heads-scalars-v1",
+    "status": "COMPLETE",
+    "wall_seconds": 304.2,
+    "why_streamed": "the full-cohort latent would be 3.39 GB of float32; each batch computes its latent once, applies every head, reduces, and discards"
+  },
+  "comparator": {
+    "atlas_median": 0.5076,
+    "atlas_per_seed": {
+      "0": 0.5461,
+      "1": 0.5499,
+      "2": 0.4983,
+      "3": 0.4986,
+      "4": 0.5075,
+      "5": 0.5163,
+      "6": 0.5078,
+      "7": 0.4933,
+      "8": 0.5016,
+      "9": 0.521
+    },
+    "recomputed_in_run": false
+  },
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "date": "2026-11-02",
+  "forecast_recorded_in_bar": {
+    "my_forecast_record_in_this_project": "5 of 9. Do not defer to this prior; it is recorded so the bar can be scored on it.",
+    "p_heads_adds": 0.08,
+    "p_heads_no_gain": 0.7,
+    "p_heads_ties": 0.22,
+    "predicted_outcome": "HEADS_NO_GAIN",
+    "reasoning": "these heads were fitted on different libraries at 86 bp and are applied here with no fitting on this substrate at all, while the incumbent is a ridge FITTED on this rung. A zero-shot predictor losing to a fitted one is the expected direction."
+  },
+  "free_ram_bytes_at_start": 7635726336,
+  "gates": {
+    "geometry": {
+      "detail": "5 heads at fc1 (64, 11008), 65 windows",
+      "heads_with_wrong_fc1": [],
+      "n_windows": 65,
+      "passed": true
+    },
+    "head_validity": {
+      "detail": "all 5 heads finite and non-constant",
+      "passed": true,
+      "per_head": {
+        "promoteratlas-trspred-hossain2020": {
+          "finite": true,
+          "n_distinct": 43424,
+          "std": 0.6885869296450886
+        },
+        "promoteratlas-trspred-lafleur2022": {
+          "finite": true,
+          "n_distinct": 43404,
+          "std": 0.3656503232441462
+        },
+        "promoteratlas-trspred-urtecho2018": {
+          "finite": true,
+          "n_distinct": 43366,
+          "std": 0.21420950889418297
+        },
+        "promoteratlas-trspred-yu2021": {
+          "finite": true,
+          "n_distinct": 43381,
+          "std": 0.20759678673525692
+        },
+        "promoteratlas-tslpred-kosuri2013": {
+          "finite": true,
+          "n_distinct": 43416,
+          "std": 0.16775365446976748
+        }
+      }
+    },
+    "permutation_null": {
+      "condition_magnitude_passed": true,
+      "condition_median_passed": true,
+      "detail": "median -0.0005 (bar |median|<0.02) and max|null| 0.0205 = 0.174x the real 0.1178 (bar <0.50x)",
+      "form": "fixed predictor, permuted TEST labels, NO refit",
+      "head": "promoteratlas-trspred-yu2021",
+      "max_abs": 0.0205,
+      "max_abs_over_real": 0.174,
+      "mean_abs": 0.0089,
+      "median": -0.0005,
+      "passed": true,
+      "per_seed": [
+        -0.0048,
+        -0.0205,
+        0.0086,
+        -0.0168,
+        0.0123,
+        0.005,
+        0.0008,
+        -0.0019,
+        -0.016,
+        0.0018
+      ],
+      "real_median_spearman": 0.1178,
+      "sampling_scale_1_over_sqrt_n_test": 0.0094
+    },
+    "split_equality": {
+      "detail": "all 10 seeds reproduce the committed test-set sizes",
+      "n_test_per_seed": {
+        "0": 11198,
+        "1": 11018,
+        "2": 11373,
+        "3": 10883,
+        "4": 11025,
+        "5": 10907,
+        "6": 10590,
+        "7": 11249,
+        "8": 10661,
+        "9": 10690
+      },
+      "passed": true
+    }
+  },
+  "honest_limits": [
+    "ZERO-SHOT TRANSFER, not head quality: all five heads were trained on other libraries, so a null bounds transfer to the GSE144621 tile rung and says nothing about the heads as predictors of the libraries they were fitted on.",
+    "GEOMETRY MISMATCH: the heads expect 86 positions and the substrate is 150, so every number here is a windowed application and not a native one. 65 windows per tile.",
+    "THE tslpred-kosuri2013 HEAD'S ENDPOINT DOES NOT MATCH THIS RUNG. It predicts TRANSLATION; promoter activity is a transcription quantity. It is included under the standing instruction to leave no stones unturned, and its inclusion WIDENS every head's interval via the alpha/5 correction rather than helping the arm.",
+    "CIRCULARITY IS SCOPED, NOT ABSENT: the urtecho2018 head is circular on the sigma70 rung (GSE108535) and must never be a comparator there. It is not circular on this substrate, and that scoping is recorded so nobody carries it to the wrong rung.",
+    "THE INCUMBENT IS A FITTED RIDGE AND THIS ARM IS NOT FITTED AT ALL. The comparison is therefore asymmetric in tuning budget, and it is asymmetric AGAINST this arm. A loss bounds the pair, not the heads alone.",
+    "0.941 IS THE REPLICATE CEILING, so the incumbent 0.5076 is 54%% of what is achievable. An arm that ties the incumbent has not approached the ceiling."
+  ],
+  "margin": 0.02,
+  "metric_rule": "the arm's metric is max over the 5 declared heads of the median Spearman at the mean reduction; never over a ladder, never across arms",
+  "multiplicity": {
+    "ci_percentiles": [
+      0.5,
+      99.5
+    ],
+    "correction": "BONFERRONI over the 5 declared heads (alpha/5)",
+    "divisor_is_read_from_the_probe": true,
+    "divisor_moved_from_four_to_five": "an earlier note recorded four heads; five were measured. The correction is therefore alpha/5, which makes the arm HARDER to pass than alpha/4 -- the honest direction for an inherited miscount.",
+    "n_primaries": 5,
+    "primaries": [
+      "promoteratlas-trspred-hossain2020",
+      "promoteratlas-trspred-lafleur2022",
+      "promoteratlas-trspred-urtecho2018",
+      "promoteratlas-trspred-yu2021",
+      "promoteratlas-tslpred-kosuri2013"
+    ],
+    "why_not_heads_times_reductions": "the arm's metric is the MAXIMUM OVER HEADS at the primary reduction only. Correcting over heads x reductions would be ten comparisons wearing the costume of five, and would also make the ineligible secondary count toward the verdict."
+  },
+  "primaries": {
+    "promoteratlas-trspred-hossain2020": {
+      "eligible_as_the_arms_result": true,
+      "gain_bootstrap": {
+        "ci_hi": -0.8438,
+        "ci_lo": -0.8805,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.86,
+        "median": -0.85,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-hossain2020",
+      "median_spearman": -0.3451,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.8808,
+          "spearman": -0.3347
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.9093,
+          "spearman": -0.3594
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.851,
+          "spearman": -0.3527
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.8302,
+          "spearman": -0.3316
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.8716,
+          "spearman": -0.3641
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.879,
+          "spearman": -0.3627
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.849,
+          "spearman": -0.3412
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.8393,
+          "spearman": -0.346
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.8459,
+          "spearman": -0.3443
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.8441,
+          "spearman": -0.3231
+        }
+      },
+      "reduction": "mean",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-trspred-lafleur2022": {
+      "eligible_as_the_arms_result": true,
+      "gain_bootstrap": {
+        "ci_hi": -0.8724,
+        "ci_lo": -0.9136,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.8899,
+        "median": -0.8754,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-lafleur2022",
+      "median_spearman": -0.3732,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.9185,
+          "spearman": -0.3724
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.9489,
+          "spearman": -0.399
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.8757,
+          "spearman": -0.3774
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.8726,
+          "spearman": -0.374
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.8926,
+          "spearman": -0.3851
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.9083,
+          "spearman": -0.392
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.8751,
+          "spearman": -0.3673
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.862,
+          "spearman": -0.3687
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.8721,
+          "spearman": -0.3705
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.8728,
+          "spearman": -0.3518
+        }
+      },
+      "reduction": "mean",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-trspred-urtecho2018": {
+      "eligible_as_the_arms_result": true,
+      "gain_bootstrap": {
+        "ci_hi": -0.7601,
+        "ci_lo": -0.8072,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.7805,
+        "median": -0.7771,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-urtecho2018",
+      "median_spearman": -0.2669,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.8067,
+          "spearman": -0.2606
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.8482,
+          "spearman": -0.2983
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.7678,
+          "spearman": -0.2695
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.7422,
+          "spearman": -0.2436
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.7863,
+          "spearman": -0.2788
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.79,
+          "spearman": -0.2737
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.7864,
+          "spearman": -0.2786
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.7576,
+          "spearman": -0.2643
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.763,
+          "spearman": -0.2614
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.7568,
+          "spearman": -0.2358
+        }
+      },
+      "reduction": "mean",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-trspred-yu2021": {
+      "eligible_as_the_arms_result": true,
+      "gain_bootstrap": {
+        "ci_hi": -0.3861,
+        "ci_lo": -0.4131,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.3981,
+        "median": -0.3922,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-yu2021",
+      "median_spearman": 0.1178,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.426,
+          "spearman": 0.1201
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.4307,
+          "spearman": 0.1192
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.4033,
+          "spearman": 0.095
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.383,
+          "spearman": 0.1156
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.3902,
+          "spearman": 0.1173
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.391,
+          "spearman": 0.1253
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.3934,
+          "spearman": 0.1144
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.375,
+          "spearman": 0.1183
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.3865,
+          "spearman": 0.1151
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.4015,
+          "spearman": 0.1195
+        }
+      },
+      "reduction": "mean",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-tslpred-kosuri2013": {
+      "eligible_as_the_arms_result": true,
+      "gain_bootstrap": {
+        "ci_hi": -0.4954,
+        "ci_lo": -0.5286,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.5106,
+        "median": -0.5009,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-tslpred-kosuri2013",
+      "median_spearman": 0.0032,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.5441,
+          "spearman": 0.002
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.546,
+          "spearman": 0.0039
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.5008,
+          "spearman": -0.0025
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.4847,
+          "spearman": 0.0139
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.5104,
+          "spearman": -0.0029
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.501,
+          "spearman": 0.0153
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.4967,
+          "spearman": 0.0111
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.4909,
+          "spearman": 0.0024
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.4972,
+          "spearman": 0.0044
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.5338,
+          "spearman": -0.0128
+        }
+      },
+      "reduction": "mean",
+      "seed_wins_over_atlas": 0
+    }
+  },
+  "route": "per_window_recompute",
+  "schema": "expression-heads-result-v1",
+  "scoring": {
+    "an_anticorrelated_head_reports_a_NEGATIVE_spearman": true,
+    "comparability_note": "the incumbent 0.5076 comes from ridge_spearman, which fits on log1p(expression) and scores Spearman against RAW expression. This arm fits nothing, so only the SCORING half applies: Spearman against RAW expression, identically.",
+    "definition": "direct_spearman_sign_as_given",
+    "formula": "spearman(head_output[test], y[test]) with the sign AS GIVEN",
+    "ineligible_alternative": "one_feature_ridge_borrows_sign_from_train",
+    "why_the_ridge_form_is_ineligible": "a one-feature ridge fits the SIGN from the training labels, so the arm would borrow supervision from this substrate and stop being zero-shot -- which is the claim its own name makes. Reported beside the primary, never as it."
+  },
+  "secondaries": {
+    "promoteratlas-trspred-hossain2020": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.7764,
+        "ci_lo": -0.8113,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.7921,
+        "median": -0.7846,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-hossain2020",
+      "median_spearman": -0.2795,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.8131,
+          "spearman": -0.267
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.8382,
+          "spearman": -0.2883
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.7869,
+          "spearman": -0.2886
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.7764,
+          "spearman": -0.2778
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.8042,
+          "spearman": -0.2967
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.8065,
+          "spearman": -0.2902
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.7761,
+          "spearman": -0.2683
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.7716,
+          "spearman": -0.2783
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.7823,
+          "spearman": -0.2807
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.7656,
+          "spearman": -0.2446
+        }
+      },
+      "reduction": "max",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-trspred-lafleur2022": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.7446,
+        "ci_lo": -0.7894,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.7644,
+        "median": -0.7601,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-lafleur2022",
+      "median_spearman": -0.2539,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.7821,
+          "spearman": -0.236
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.8267,
+          "spearman": -0.2768
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.7545,
+          "spearman": -0.2562
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.7674,
+          "spearman": -0.2688
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.7658,
+          "spearman": -0.2583
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.7881,
+          "spearman": -0.2718
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.7356,
+          "spearman": -0.2278
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.7449,
+          "spearman": -0.2516
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.7469,
+          "spearman": -0.2453
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.7323,
+          "spearman": -0.2113
+        }
+      },
+      "reduction": "max",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-trspred-urtecho2018": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.5748,
+        "ci_lo": -0.6165,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.5929,
+        "median": -0.5899,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-urtecho2018",
+      "median_spearman": -0.0817,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.6051,
+          "spearman": -0.059
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.6551,
+          "spearman": -0.1052
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.5937,
+          "spearman": -0.0954
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.5756,
+          "spearman": -0.077
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.6082,
+          "spearman": -0.1007
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.5952,
+          "spearman": -0.0789
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.5774,
+          "spearman": -0.0696
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.5784,
+          "spearman": -0.0851
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.5862,
+          "spearman": -0.0846
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.554,
+          "spearman": -0.033
+        }
+      },
+      "reduction": "max",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-trspred-yu2021": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.3332,
+        "ci_lo": -0.3566,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.3437,
+        "median": -0.3374,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-trspred-yu2021",
+      "median_spearman": 0.1754,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.3647,
+          "spearman": 0.1814
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.3726,
+          "spearman": 0.1773
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.3573,
+          "spearman": 0.141
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.3422,
+          "spearman": 0.1564
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.3339,
+          "spearman": 0.1736
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.3385,
+          "spearman": 0.1778
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.3295,
+          "spearman": 0.1783
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.3256,
+          "spearman": 0.1677
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.3363,
+          "spearman": 0.1653
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.3363,
+          "spearman": 0.1847
+        }
+      },
+      "reduction": "max",
+      "seed_wins_over_atlas": 0
+    },
+    "promoteratlas-tslpred-kosuri2013": {
+      "eligible_as_the_arms_result": false,
+      "gain_bootstrap": {
+        "ci_hi": -0.2804,
+        "ci_lo": -0.3235,
+        "ci_percentiles": [
+          0.5,
+          99.5
+        ],
+        "mean": -0.3013,
+        "median": -0.3049,
+        "n_boot": 10000,
+        "n_seeds": 10,
+        "seed": 707
+      },
+      "head": "promoteratlas-tslpred-kosuri2013",
+      "median_spearman": 0.2087,
+      "n_seeds": 10,
+      "per_seed": {
+        "0": {
+          "atlas_committed": 0.5461,
+          "gain": -0.3431,
+          "spearman": 0.203
+        },
+        "1": {
+          "atlas_committed": 0.5499,
+          "gain": -0.3394,
+          "spearman": 0.2105
+        },
+        "2": {
+          "atlas_committed": 0.4983,
+          "gain": -0.3092,
+          "spearman": 0.1891
+        },
+        "3": {
+          "atlas_committed": 0.4986,
+          "gain": -0.3143,
+          "spearman": 0.1843
+        },
+        "4": {
+          "atlas_committed": 0.5075,
+          "gain": -0.3007,
+          "spearman": 0.2068
+        },
+        "5": {
+          "atlas_committed": 0.5163,
+          "gain": -0.2794,
+          "spearman": 0.2369
+        },
+        "6": {
+          "atlas_committed": 0.5078,
+          "gain": -0.2646,
+          "spearman": 0.2432
+        },
+        "7": {
+          "atlas_committed": 0.4933,
+          "gain": -0.2766,
+          "spearman": 0.2167
+        },
+        "8": {
+          "atlas_committed": 0.5016,
+          "gain": -0.267,
+          "spearman": 0.2346
+        },
+        "9": {
+          "atlas_committed": 0.521,
+          "gain": -0.3182,
+          "spearman": 0.2028
+        }
+      },
+      "reduction": "max",
+      "seed_wins_over_atlas": 0
+    }
+  },
+  "secondary_is_ineligible": true,
+  "substrate": {
+    "bp": 150,
+    "n_peaks": 2433,
+    "n_tiles": 44106,
+    "path": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz"
+  },
+  "verdict": "HEADS_NO_GAIN",
+  "verdict_detail": "the whole interval [-0.4131, -0.3861] lies below zero, so a LOSS is demonstrated",
+  "verdict_is_rederivable_from_this_artifact": true,
+  "wall_seconds": 314.7
+}
