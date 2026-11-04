@@ -4,6 +4,24 @@ Deferred work and post-Phase-1 polish.
 
 See also: `plans/Ecoli_G2P_Phase1_Ship_Path_Plan.md` for the contracted ship-path plan (archived 2026-05-12); `FUTURE_FEATURES.md` for Phase 2+ ideas.
 
+## Host constraint with an expiry test — added 2026-11-04
+
+This laptop hard-powered-off three times in eighteen hours (11-03 18:22, 11-03 ~22:0x, 11-04 ~12:0x),
+the last about two minutes after a 4-thread torch job started, with the battery reporting 100% on AC.
+No BugCheck, no minidump, no WHEA error. It cost two artifacts, both left as full-length files of 41
+NUL bytes: a result sidecar and git's own branch ref. Leading hypothesis, labelled as one: the power
+path plus a battery that reports full and cannot carry load.
+
+**Standing constraint:** do not give this host a multi-day CPU-saturating job. The fine-tune arm runs
+on server2 instead (same torch 2.7.1+cu118, same 4 threads, so relocated rather than altered).
+
+- [ ] **Expiry test — run this to RETIRE the constraint, do not let it become a permanent belief.**
+      After the adapter and battery are checked: run a 2-hour 4-thread torch load on AC, then confirm
+      zero unexpected shutdowns in the System log (`Kernel-Power 41` / `EventLog 6008`) across the
+      window. If it passes, delete this section and the constraint with it.
+- [ ] Worth checking while it is open: whether the two surviving NUL-file incidents share a disk, since
+      both were on `C:` and the one long job that ever reached `rc=0` here also kept its data on `C:`.
+
 ## Phase 2 — Entry criteria (gate before any Phase 2 work)
 
 - [ ] Real-data smoke: one E. coli genome end-to-end with prediction + attribution captured (no ground-truth comparison required at entry)
