@@ -453,6 +453,241 @@ def test_THIS_FIXTURE_CANNOT_SETTLE_WHETHER_THE_NULL_IS_VACUOUS(tmp_path):
         % rec["untrained_val_spearman"])
 
 
+def test_the_REQUIRED_NULLS_run_BEFORE_the_ineligible_tail(tmp_path):
+    """The critical ordering fix.
+
+    The null is a GATE in the frozen bar, so running it after the full horizon meant a ceiling
+    overrun destroyed the verdict rather than the tail -- and at the measured per-epoch cost
+    (166.0 h against a 129.6 h ceiling) the overrun was the expected outcome, not a risk.
+    """
+    rec = _run(tmp_path, horizon_epochs=8, n_seeds=2, n_null_seeds=1)
+    names = [p["phase"] for p in rec["phases"]]
+    assert names == ["1-seeds-to-frozen-budget", "2-nulls-at-frozen-budget",
+                     "3-extend-to-horizon"], names
+    depths = [p["to_epochs"] for p in rec["phases"]]
+    assert depths == [4, 4, 8], "phases must go budget, nulls-at-budget, then extend: %r" % depths
+    # the nulls are reached at the BUDGET, never at the horizon
+    assert rec["phases"][1]["to_epochs"] == rec["frozen_budget_epochs"]
+
+
+def test_the_verdict_does_NOT_depend_on_the_diagnostic_TAIL(tmp_path):
+    """horizon == budget skips phase 3 entirely, and the arm is still fully scoreable. That is the
+    property the reordering buys: a stop in the tail costs diagnostics, not the verdict."""
+    rec = _run(tmp_path, horizon_epochs=4, n_seeds=2, n_null_seeds=1)
+    assert [p["phase"] for p in rec["phases"]] == ["1-seeds-to-frozen-budget",
+                                                   "2-nulls-at-frozen-budget"]
+    assert rec["verdict_secured"] is True
+    assert rec["null"]["n_replicates"] == 1
+
+
+def test_a_bound_BEFORE_the_nulls_leaves_the_verdict_UNSECURED(tmp_path):
+    """The honest other direction: stopping in phase 1 or 2 genuinely has no verdict, and the
+    record must say so rather than implying the arm is scoreable."""
+    rec = R.run(bar=BAR, tiles=_tiles(), ckpt_dir=Path(tmp_path), build=_build,
+                n_seeds=2, horizon_epochs=8, n_null_seeds=1, verbose=False,
+                wall_ceiling_hours=1e-9, now=0.0)
+    assert rec["status"] == R.STATUS_BOUNDED
+    assert rec["verdict_secured"] is False
+    assert rec["null"]["n_replicates"] == 0
+
+
+def test_verdict_secured_is_FALSE_when_the_horizon_is_shorter_than_the_budget(tmp_path):
+    """A diagnostic run below the budget cannot secure a verdict, and phase 1 must not silently
+    overshoot the horizon it was handed."""
+    rec = _run(tmp_path, horizon_epochs=3, n_seeds=1, n_null_seeds=1)
+    assert rec["verdict_secured"] is False
+    assert rec["phases"][0]["to_epochs"] == 3, "phase 1 overshot the requested horizon"
+
+
+def test_the_THREE_PHASE_run_reproduces_a_SINGLE_PHASE_run_bit_for_bit(tmp_path):
+    """Why the reordering is FREE, checked rather than argued.
+
+    Splitting a seed into 'to 4' then 'extend to 8' must give the same curve as training straight
+    to 8. It does only because each epoch's shuffle is a pure function of (seed, epoch); with
+    accumulated RNG the split would have changed every number after the break.
+    """
+    tiles = _tiles()
+    kw = dict(seed=0, lr=0.01, batch_size=8, split_frac=0.25, build=_build, verbose=False)
+    straight = R.train_one_seed(tiles, horizon_epochs=8, ckpt_dir=tmp_path / "one", **kw)
+    R.train_one_seed(tiles, horizon_epochs=4, ckpt_dir=tmp_path / "split", **kw)
+    split = R.train_one_seed(tiles, horizon_epochs=8, ckpt_dir=tmp_path / "split", **kw)
+    assert split["val_spearman_by_epoch"] == straight["val_spearman_by_epoch"], (
+        "the split run diverged:\n  straight %r\n  split    %r"
+        % (straight["val_spearman_by_epoch"], split["val_spearman_by_epoch"]))
+
+
+def test_the_heartbeat_denominator_matches_the_horizon_ACTUALLY_run(tmp_path):
+    """The bar states an unreachable 38 while the runner does 36, and a duplicate read of the bar
+    made a COMPLETED run report 360/380 = 95% forever -- which on the one surface an absent reader
+    checks looks like a stall. One resolution, one denominator."""
+    from scripts.detached_launch import classify, read_heartbeat
+
+    state = tmp_path / "st"
+    rec = R.run(bar=BAR, tiles=_tiles(), ckpt_dir=Path(tmp_path / "ck"), build=_build,
+                n_seeds=2, horizon_epochs=6, n_null_seeds=0, verbose=False,
+                heartbeat=__import__("scripts.detached_launch", fromlist=["Heartbeat"]).Heartbeat(
+                    "dn", units_total=2 * 6, state_dir=state, cadence_seconds=0))
+    assert rec["status"] == R.STATUS_COMPLETE
+    hb = read_heartbeat((state / "dn.heartbeat.json"))
+    assert hb["units_total"] == 12
+    assert hb["units_done"] == 12, "a completed run must report 100%%, got %d/%d" % (
+        hb["units_done"], hb["units_total"])
+    assert classify("dn", state_dir=state).units_done == 12
+
+
+def test_a_MEASURED_per_epoch_cost_overrides_the_bars_rounded_training_only_figure(tmp_path):
+    """The bar's minutes_per_epoch is rounded to 0.1 min AND counts training only. Both matter:
+    the rounding alone exceeded the ceiling's slack, and the omitted validation pass was +28%."""
+    rec = R.run(bar=BAR, tiles=_tiles(), ckpt_dir=Path(tmp_path), build=_build,
+                n_seeds=1, horizon_epochs=6, n_null_seeds=0, verbose=False,
+                seconds_per_epoch=1568.1)
+    assert rec["plan"]["seconds_per_epoch_used"] == 1568.1
+    assert "MEASURED" in rec["plan"]["seconds_per_epoch_source"]
+
+
+def test_plan_run_REFUSES_a_ceiling_that_cannot_reach_the_frozen_budget(tmp_path):
+    """Found by writing the test above with self-contradictory parameters: a 1 h ceiling at the
+    measured 1568.1 s/epoch buys 2 epochs against a 4-epoch budget, and plan_run refused rather
+    than starting a run that could never produce a verdict. Pinning that it keeps refusing."""
+    with pytest.raises(R.RunRefused, match="must not start"):
+        R.run(bar=BAR, tiles=_tiles(), ckpt_dir=Path(tmp_path), build=_build,
+              n_seeds=1, n_null_seeds=0, verbose=False, seconds_per_epoch=1568.1,
+              wall_ceiling_hours=1.0)
+
+
+def test_the_bars_rounded_figure_is_LABELLED_as_training_only_when_used(tmp_path):
+    rec = _run(tmp_path, horizon_epochs=4, n_seeds=1, n_null_seeds=0)
+    src = rec["plan"]["seconds_per_epoch_source"]
+    assert "TRAINING-ONLY" in src and "validation" in src
+
+
+def test_a_horizon_diverging_from_the_FROZEN_BAR_is_RECORDED_not_silent(tmp_path):
+    """Overriding the bar's horizon is legitimate -- the horizon governs only the pre-declared
+    ineligible tail, so it cannot move the verdict -- but it must be visible in the artifact
+    rather than a silent disagreement between a frozen bar and the run."""
+    bar = json.loads(json.dumps(BAR))
+    bar["horizon"] = dict(BAR["horizon"], diagnostic_horizon_epochs=38)
+    rec = R.run(bar=bar, tiles=_tiles(), ckpt_dir=Path(tmp_path), build=_build,
+                n_seeds=1, horizon_epochs=6, n_null_seeds=0, verbose=False)
+    d = rec["plan"]["diverges_from_frozen_bar"]
+    assert d["bar_states"] == 38 and d["actually_run"] == 6
+    assert "null" in d["why"]
+    assert "cannot move the arm's result" in d["why_this_is_not_a_bar_edit"]
+
+
+def test_no_divergence_block_when_the_horizon_MATCHES_the_bar(tmp_path):
+    bar = json.loads(json.dumps(BAR))
+    bar["horizon"] = dict(BAR["horizon"], diagnostic_horizon_epochs=6)
+    rec = R.run(bar=bar, tiles=_tiles(), ckpt_dir=Path(tmp_path), build=_build,
+                n_seeds=1, horizon_epochs=6, n_null_seeds=0, verbose=False)
+    assert "diverges_from_frozen_bar" not in rec["plan"]
+
+
+def test_chunked_prediction_is_NUMERICALLY_IDENTICAL_to_one_pass():
+    """The memory fix must not move the number.
+
+    The real launch died allocating 7.94 GB because the validation set went through in one call
+    (n_val 11,026 x 8 heads x 150 x 150 x 4 bytes). Chunking it is only safe if the predictions are
+    the same values in the same order, since the Spearman is computed against the raw targets
+    positionally.
+    """
+    torch.manual_seed(0)
+    enc, head = _build()
+    X = torch.rand(37, 4, 24)
+    one = R.predict_in_chunks(enc, head, X, chunk=10_000)
+    many = R.predict_in_chunks(enc, head, X, chunk=4)
+    assert one.shape == (37,) and many.shape == (37,)
+    assert np.allclose(one, many, atol=0, rtol=0), "chunking changed the predictions"
+
+
+def test_chunked_prediction_preserves_ORDER():
+    """Order matters: a reordered output would silently pair every prediction with another tile's
+    label and still produce a plausible Spearman."""
+    torch.manual_seed(0)
+    enc, head = _build()
+    X = torch.rand(11, 4, 24)
+    full = R.predict_in_chunks(enc, head, X, chunk=11)
+    for i in range(11):
+        single = R.predict_in_chunks(enc, head, X[i:i + 1], chunk=1)
+        assert np.allclose(full[i], single[0], atol=1e-6), "row %d moved" % i
+
+
+def test_the_chunk_actually_splits_on_a_realistic_validation_size():
+    """Non-vacuity: with the shipped VAL_CHUNK and the real cohort's validation size, more than one
+    chunk must be used -- otherwise this fix is inert and the OOM would recur."""
+    n_val_real = 11026                      # measured: 25% peak-blocked split of 44,106 tiles
+    assert R.VAL_CHUNK < n_val_real
+    assert -(-n_val_real // R.VAL_CHUNK) > 1
+
+
+def test_the_chunk_bounds_the_attention_tensor_well_under_host_ram():
+    """The derivation, checked rather than asserted in prose: one block's attention at VAL_CHUNK
+    must stay far below the 6-8 GB of free RAM measured on this host."""
+    bytes_per = R.VAL_CHUNK * 8 * 150 * 150 * 4     # batch x heads x seq x seq x float32
+    assert bytes_per < 1_000_000_000, "%.2f GB per attention tensor is too close to the wall" % (
+        bytes_per / 1e9)
+    unbatched = 11026 * 8 * 150 * 150 * 4
+    assert unbatched > 7e9, "the unbatched size must reproduce the ~7.9 GB that actually failed"
+
+
+def test_a_heartbeat_lands_BEFORE_the_first_epoch_completes(tmp_path):
+    """Found on the first real launch: the job read NOT_STARTED while it was healthily training.
+
+    The first heartbeat used to land only after an epoch COMPLETED -- ~20 minutes on the full
+    cohort -- so for that whole window a running job was indistinguishable from one that never
+    launched. The fix is checked by driving the beat with a build that raises on its FIRST epoch:
+    if a heartbeat exists afterwards, it was written before any epoch finished.
+    """
+    from scripts.detached_launch import Heartbeat, classify, read_heartbeat, STATE_RUNNING
+
+    class _FailsAfterBaseline(torch.nn.Module):
+        """Succeeds for the untrained-baseline forward, then raises inside the first epoch.
+
+        The order in train_one_seed is: build -> untrained baseline forward -> pre-epoch beat ->
+        epoch loop. A module that raised on every forward would die BEFORE the beat and prove
+        nothing, so it must survive exactly the baseline call.
+        """
+
+        def __init__(self):
+            super().__init__()
+            self.c = torch.nn.Conv1d(4, 8, 3, padding=1)
+            self.calls = 0
+
+        def forward(self, x, return_latent=False):
+            self.calls += 1
+            if self.calls > 1:
+                raise RuntimeError("first epoch reached; stopping so the pre-epoch beat survives")
+            z = torch.relu(self.c(x))
+            return (None, None, z) if return_latent else z
+
+    hb = Heartbeat("pre-epoch", units_total=100, state_dir=tmp_path / "st", cadence_seconds=99_999)
+    with pytest.raises(RuntimeError, match="first epoch reached"):
+        R.train_one_seed(_tiles(), seed=0, horizon_epochs=1, lr=0.01, batch_size=8,
+                         split_frac=0.25, ckpt_dir=tmp_path / "ck",
+                         build=lambda: (_FailsAfterBaseline(), torch.nn.Linear(8, 1)),
+                         heartbeat=hb, verbose=False)
+
+    rec = read_heartbeat(hb.path)
+    assert rec is not None, "no heartbeat was written before the first epoch"
+    assert rec.get("phase") == "training", (
+        "the surviving record is %r -- an in-loop beat, so no epoch-free beat was written"
+        % {k: rec.get(k) for k in ('epoch', 'phase', 'units_done')})
+    assert rec["units_done"] == 0, "no epoch completed, so progress must read 0"
+    assert classify("pre-epoch", state_dir=tmp_path / "st").state == STATE_RUNNING
+
+
+def test_the_pre_epoch_beat_reports_zero_progress_honestly(tmp_path):
+    """It makes the job VISIBLE; it must not imply an epoch has finished."""
+    from scripts.detached_launch import Heartbeat, read_heartbeat
+
+    hb = Heartbeat("honest", units_total=100, state_dir=tmp_path / "st", cadence_seconds=99_999)
+    R.train_one_seed(_tiles(), seed=0, horizon_epochs=2, lr=0.01, batch_size=8, split_frac=0.25,
+                     ckpt_dir=tmp_path / "ck", build=_build, heartbeat=hb, verbose=False)
+    # after the run the count has advanced, but the FIRST record said 0 epochs done
+    assert read_heartbeat(hb.path)["units_done"] > 0
+    assert R.heartbeat_units(0, 0, 10) == 0, "seed 0 with no epochs done must report 0"
+
+
 def test_the_untrained_baseline_is_recorded_for_every_seed(tmp_path):
     """It is the field that distinguishes a fine-tune that learned unjustified structure from a
     random readout of an already-informative representation. Both produce a high null."""
