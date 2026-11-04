@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import subprocess
 import time
 from pathlib import Path
@@ -55,8 +56,10 @@ EXHAUSTED = "relaunch_budget_exhausted"
 RELAUNCH = "relaunch"
 NO_LAUNCHER = "launcher_absent"
 NOT_OWNER = "not_the_owning_host"
+UNREACHABLE = "preconditions_unmet"
 
-ALL_DECISIONS = (DONE, RUNNING, EXHAUSTED, RELAUNCH, NO_LAUNCHER, NOT_OWNER)
+ALL_DECISIONS = (DONE, RUNNING, EXHAUSTED, RELAUNCH, NO_LAUNCHER, NOT_OWNER,
+                 UNREACHABLE)
 
 #: AN EXPLICIT OWNERSHIP MARKER, and it exists because of a footgun this script created.
 #:
@@ -108,6 +111,39 @@ def write_state(rec: dict, state_dir: Path | None = None) -> Path:
     return final
 
 
+#: `set "KEY=VALUE"` as the launcher generator emits it, quoted form only.
+_SET_RE = re.compile(r'(?mi)^\s*set\s+"([A-Za-z_][A-Za-z0-9_]*)=([^"]*)"\s*$')
+
+#: Launcher variables whose values are PATHS the run must be able to reach. Read from the launcher
+#: rather than hardcoded, so the check follows the generator instead of drifting from it.
+PATH_VARS = ("PA_REPO", "MPRA_CACHE")
+
+
+def declared_env_paths(launcher: Path) -> dict:
+    """The path-valued environment the launcher sets, as {name: value}.
+
+    Parsed from the launcher itself so this cannot disagree with what the run will actually use.
+    `LOG`/`SENTINEL`/`LOCK` are excluded: they are OUTPUTS and are created by the launcher, so
+    requiring them to pre-exist would refuse every first launch.
+    """
+    try:
+        text = Path(launcher).read_text(encoding="ascii", errors="replace")
+    except OSError:
+        return {}
+    return {k.upper(): v for k, v in _SET_RE.findall(text) if k.upper() in PATH_VARS}
+
+
+def unreachable_env(launcher: Path) -> dict:
+    """Declared path variables that do NOT resolve on this host, as {name: value}.
+
+    This is the USB-volume case, and it is measured rather than hypothetical: this project records
+    six deaths of long unattended jobs reading off a portable volume, and the only ~12 h job that
+    reached rc=0 kept its data on an internal disk. If the volume carrying the cohort cache
+    disappears, relaunching cannot help -- so the watchdog must not spend its bounded budget on it.
+    """
+    return {k: v for k, v in declared_env_paths(launcher).items() if not Path(v).exists()}
+
+
 def owner_path(state_dir: Path | None = None) -> Path:
     return (state_dir or STATE_DIR) / OWNER_MARKER_NAME
 
@@ -123,7 +159,8 @@ def read_owner(state_dir: Path | None = None) -> str | None:
 
 def decide(*, artifact: Path, lock_holder: dict | None, relaunches: int,
            launcher: Path, max_relaunches: int = MAX_RELAUNCHES,
-           owner: str | None = None, this_host: str = "") -> dict:
+           owner: str | None = None, this_host: str = "",
+           unreachable: dict | None = None) -> dict:
     """PURE. What to do, and why. Order matters and is the contract.
 
     `artifact` is checked FIRST so a finished run can never be relaunched, and the live lock holder
@@ -147,6 +184,13 @@ def decide(*, artifact: Path, lock_holder: dict | None, relaunches: int,
                            "than one machine, so every other check would have passed -- a path "
                            "that resolves is not evidence that a host owns a run."
                            % (owner or "(unclaimed)", this_host))}
+    if unreachable:
+        return {"decision": UNREACHABLE,
+                "reason": ("the launcher declares path(s) that do not resolve on this host: %r. "
+                           "Relaunching cannot fix a detached volume, so the bounded relaunch "
+                           "budget is NOT spent on it -- this project records six deaths of long "
+                           "unattended jobs reading off a portable volume."
+                           % sorted(unreachable.items()))}
     if relaunches >= max_relaunches:
         return {"decision": EXHAUSTED,
                 "reason": ("already relaunched %d times against a bound of %d. Refusing to keep "
@@ -171,7 +215,8 @@ def current_decision(*, state_dir: Path | None = None, artifact: Path | None = N
                relaunches=int(st.get("relaunches", 0)),
                launcher=launcher or LAUNCHER,
                max_relaunches=max_relaunches,
-               owner=read_owner(sd), this_host=host)
+               owner=read_owner(sd), this_host=host,
+               unreachable=unreachable_env(launcher or LAUNCHER))
     d["relaunches_so_far"] = int(st.get("relaunches", 0))
     d["max_relaunches"] = max_relaunches
     d["this_host"] = host

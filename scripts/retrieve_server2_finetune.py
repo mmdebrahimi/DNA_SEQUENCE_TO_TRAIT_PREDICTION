@@ -192,6 +192,11 @@ def main(argv=None) -> int:
     print("  uv run python scripts/collect_unattended_runs.py")
     print("  uv run python scripts/record_successor_arm_results.py --apply")
     print("  uv run python scripts/successor_arms_memo.py")
+    print()
+    print("THEN RETIRE THE WATCHDOG. A scheduled task on %s relaunches the run every 30 min if it" % HOST)
+    print("stops without finishing (scripts/watchdog_finetune_arm.py). It stands down on its own")
+    print("once the artifact exists, but the task itself remains registered:")
+    print("  ssh %s \"schtasks /delete /tn dna_decode_finetune_watchdog /f\"" % HOST)
     return 0
 
 

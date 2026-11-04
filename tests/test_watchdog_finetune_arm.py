@@ -25,6 +25,7 @@ from scripts.watchdog_finetune_arm import (
     EXHAUSTED,
     NOT_OWNER,
     NO_LAUNCHER,
+    UNREACHABLE,
     RELAUNCH,
     RUNNING,
     decide,
@@ -330,3 +331,87 @@ def test_the_LIVE_repo_is_NOT_claimed_so_this_laptop_cannot_relaunch():
     assert W.read_owner() is None, (
         "this host has claimed the fine-tune run; it hard-powered-off three times in eighteen "
         "hours under exactly this load")
+
+
+# ------------------------------------------------------------------ the precondition check
+
+
+def _launcher_with_env(tmp_path, pa: str, mpra: str) -> Path:
+    """A launcher in the shape the generator emits: quoted `set` lines, outputs plus paths."""
+    p = tmp_path / "run_finetune_arm_detached.bat"
+    rows = [
+        "@echo off",
+        'set "LOG=%~dp0data/unattended/finetune_arm.log"',
+        'set "SENTINEL=%~dp0data/unattended/finetune_arm.sentinel"',
+        'set "LOCK=%~dp0data/unattended/finetune_arm.lock"',
+        'set "MPRA_CACHE=%s"' % mpra,
+        'set "PA_REPO=%s"' % pa,
+    ]
+    p.write_text("\n".join(rows) + "\n", encoding="ascii")
+    return p
+
+
+def test_declared_env_paths_reads_the_PATH_variables_from_the_launcher(tmp_path):
+    lp = _launcher_with_env(tmp_path, str(tmp_path), str(tmp_path))
+    assert W.declared_env_paths(lp) == {"PA_REPO": str(tmp_path), "MPRA_CACHE": str(tmp_path)}
+
+
+def test_declared_env_paths_EXCLUDES_the_launchers_own_outputs(tmp_path):
+    """LOG, SENTINEL and LOCK are created BY the launcher. Requiring them to pre-exist would make
+    the watchdog refuse every first launch."""
+    got = W.declared_env_paths(_launcher_with_env(tmp_path, str(tmp_path), str(tmp_path)))
+    for out in ("LOG", "SENTINEL", "LOCK"):
+        assert out not in got
+
+
+def test_unreachable_env_names_only_the_paths_that_do_not_resolve(tmp_path):
+    lp = _launcher_with_env(tmp_path, str(tmp_path), str(tmp_path / "gone"))
+    bad = W.unreachable_env(lp)
+    assert set(bad) == {"MPRA_CACHE"}
+
+
+def test_an_unreachable_declared_path_REFUSES_and_names_it(tmp_path):
+    d = decide(artifact=_artifact(tmp_path, False), lock_holder=None, relaunches=0,
+               launcher=_launcher(tmp_path), unreachable={"MPRA_CACHE": "D:/gone"}, **OWNED)
+    assert d["decision"] == UNREACHABLE
+    assert "MPRA_CACHE" in d["reason"]
+
+
+def test_an_unreachable_volume_does_NOT_spend_the_relaunch_budget(tmp_path, monkeypatch):
+    """The point of the check. A detached volume cannot be fixed by relaunching, so burning 12
+    attempts on it would leave nothing for the crash the budget exists for."""
+    calls = []
+    monkeypatch.setattr(W, "launch", lambda *a, **k: calls.append(1) or 1)
+    monkeypatch.setattr(W, "ARTIFACT", tmp_path / "absent.json")
+    monkeypatch.setattr(W, "LAUNCHER", _launcher_with_env(tmp_path, str(tmp_path / "gone"),
+                                                          str(tmp_path)))
+    W.main(["--claim", "--state-dir", str(tmp_path)])
+    for _ in range(4):
+        W.main(["--apply", "--state-dir", str(tmp_path)])
+    assert calls == []
+    st = read_state(tmp_path)
+    assert st["relaunches"] == 0, "an unreachable volume spent the budget"
+    assert st["last_decision"] == UNREACHABLE
+
+
+def test_a_LIVE_run_outranks_an_unreachable_path(tmp_path):
+    """Never disturb a running job over a path check -- the job already has what it opened."""
+    d = decide(artifact=_artifact(tmp_path, False), lock_holder=HOLDER, relaunches=0,
+               launcher=_launcher(tmp_path), unreachable={"MPRA_CACHE": "D:/gone"}, **OWNED)
+    assert d["decision"] == RUNNING
+
+
+def test_a_FINISHED_run_outranks_an_unreachable_path(tmp_path):
+    d = decide(artifact=_artifact(tmp_path, True), lock_holder=None, relaunches=0,
+               launcher=_launcher(tmp_path), unreachable={"MPRA_CACHE": "D:/gone"}, **OWNED)
+    assert d["decision"] == DONE
+
+
+def test_the_REAL_committed_launcher_declares_both_path_variables():
+    """Real-data check: if the generator stops emitting these, the precondition check would go
+    silently vacuous -- an empty unreachable set reads as 'everything resolves'."""
+    bat = W.REPO / "run_finetune_arm_detached.bat"
+    if not bat.is_file():
+        pytest.skip("launcher absent on this checkout")
+    got = W.declared_env_paths(bat)
+    assert set(got) == {"PA_REPO", "MPRA_CACHE"}, got
