@@ -313,8 +313,11 @@ def classify(job: str, *, state_dir: Path | None = None, now: float | None = Non
     if not alive:
         return JobStatus(
             state=STATE_DEAD, pid_is_alive=False,
-            reason="pid %s is gone and no sentinel was written -- the unexplained-death "
-                   "signature this host has twice. Last heartbeat was %ss ago."
+            reason="pid %s is gone and no sentinel was written. Last heartbeat was %ss ago. The "
+                   "CAUSE is not determined here -- check the event log before concluding "
+                   "anything: Kernel-Power 41 / EventLog 6008 means the HOST went down (this "
+                   "happened twice on 2026-11-03, from battery exhaustion), which is a different "
+                   "problem from a process dying on its own."
                    % (pid, age if age is not None else "?"), **common)
 
     cadence = hb.get("cadence_seconds") or DEFAULT_CADENCE_SECONDS

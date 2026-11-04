@@ -33,6 +33,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import time
 from pathlib import Path
 
@@ -93,6 +94,41 @@ def column_layout(head_names: list[str]) -> dict:
 
 def _sidecar_path(block_dir: Path) -> Path:
     return Path(block_dir) / SIDECAR_NAME
+
+
+def write_sidecar(block_dir: Path, payload: dict) -> Path:
+    """Write the sidecar ATOMICALLY and DURABLY. The resume anchor must survive a hard power loss.
+
+    MEASURED FAILURE, 2026-11-03. This function did not exist; the sidecar was written with a plain
+    `write_text`. The host lost AC power at 18:22:41 (Kernel-Power 41 + Event 6008) with the run at
+    43,328 of 44,106 tiles, and the sidecar came back as **1,193 NUL bytes** -- size committed, data
+    blocks never flushed. The heartbeat written alongside it, which DOES use tmp+replace, survived
+    and was readable. Same crash, same directory, two disciplines, two outcomes.
+
+    The consequence was not a lost file but a lost RUN: `read_sidecar` maps malformed to None,
+    `extract` reads None as "no prior block", and 3.8 hours of intact float64 on disk would have
+    been recomputed from row zero.
+
+    Three things, and the ORDER is the whole point:
+      1. write the new content to a temp file beside the target (same volume, so replace is a rename)
+      2. flush + `os.fsync` it, so the DATA is on the platter before anything points at it
+      3. `os.replace`, which is atomic -- the name flips to fully-written content or stays put
+
+    So a crash at any instant leaves either the previous good sidecar or the new one, never a
+    half-written one. fsync is what the plain write lacked: `write_text` returns once the data is in
+    the page cache, and a power loss discards the cache while keeping the metadata.
+    """
+    block_dir = Path(block_dir)
+    block_dir.mkdir(parents=True, exist_ok=True)
+    final = _sidecar_path(block_dir)
+    tmp = final.with_suffix(final.suffix + ".tmp")
+    data = json.dumps(payload, indent=1, sort_keys=True)
+    with open(tmp, "w", encoding="utf-8") as fh:
+        fh.write(data)
+        fh.flush()
+        os.fsync(fh.fileno())
+    os.replace(tmp, final)
+    return final
 
 
 def read_sidecar(block_dir: Path) -> dict | None:
@@ -168,7 +204,10 @@ def extract(*, tiles, heads, block_dir: Path, limit: int | None = None,
         del z
         done = hi
         arr.flush()
-        _sidecar_path(block_dir).write_text(json.dumps({
+        # ATOMIC + fsynced. A plain write_text here lost the whole resume anchor to a power cut at
+        # 43,328 of 44,106 tiles -- see write_sidecar's note. The array is flushed FIRST, so the
+        # sidecar never claims more rows than the block actually holds.
+        write_sidecar(block_dir, {
             "schema": "expression-heads-scalars-v1",
             "status": "COMPLETE" if done >= n_rows else "PARTIAL",
             "n_rows": n_rows, "n_done": done, "layout": layout,
@@ -178,7 +217,7 @@ def extract(*, tiles, heads, block_dir: Path, limit: int | None = None,
             "wall_seconds": round(time.time() - t0, 1),
             "why_streamed": ("the full-cohort latent would be 3.39 GB of float32; each batch "
                              "computes its latent once, applies every head, reduces, and discards"),
-        }, indent=1, sort_keys=True), encoding="utf-8")
+        })
         # The heartbeat is the surface an UNATTENDED reader checks. Without it a job running for
         # hours classifies NOT_STARTED, which is exactly the conflation the state set exists to
         # prevent. Written per batch; the Heartbeat object enforces its own cadence.

@@ -326,6 +326,18 @@ def test_state_DEAD_NO_SENTINEL_on_dead_pid_with_a_FRESH_heartbeat(tmp_path):
     assert st.needs_attention
 
 
+def test_the_DEAD_reason_does_NOT_assert_the_cause_is_unexplained(tmp_path):
+    """An earlier version read "the unexplained-death signature this host has twice", and on the
+    first real occurrence the cause was one event-log query away: the HOST went down (Kernel-Power
+    41 + EventLog 6008, battery exhaustion), twice on 2026-11-03. A diagnostic that tells the next
+    reader a cause is unknowable, when it is logged, sends them to the wrong place."""
+    _write_hb(tmp_path, "j", pid=_a_definitely_dead_pid())
+    reason = dl.classify("j", state_dir=tmp_path).reason
+    assert "unexplained-death signature" not in reason
+    assert "not determined here" in reason
+    assert "Kernel-Power 41" in reason, "it must say WHERE to look, not just that it doesn't know"
+
+
 def test_state_DEAD_NO_SENTINEL_on_dead_pid_with_a_stale_heartbeat(tmp_path):
     _write_hb(tmp_path, "j", pid=_a_definitely_dead_pid(), age=99999)
     assert dl.classify("j", state_dir=tmp_path).state == dl.STATE_DEAD
