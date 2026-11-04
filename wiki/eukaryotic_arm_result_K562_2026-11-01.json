@@ -1,0 +1,246 @@
+{
+  "arm": "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
+  "bacterial_anchor": {
+    "best_arm": 0.5076,
+    "conv": 0.3234,
+    "conv_minus_gc": 0.0122,
+    "corroborating_artifact": "wiki/glm_encoder_gate_result_2026-10-08.md",
+    "fraction_of_ceiling_captured_by_best": 0.5394,
+    "gc": 0.3112,
+    "headroom_best_minus_gc": 0.1964,
+    "replicate_ceiling": 0.941,
+    "why_this_is_the_anchor": "A within-substrate contrast is the only quantity that crosses a substrate boundary. Raw Spearman does not: the panels have different noise floors and different assays."
+  },
+  "bar": "wiki/eukaryotic_arm_acceptance_bar.json",
+  "cell": "K562",
+  "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+  "date": "2026-11-01",
+  "gain_bootstrap": {
+    "ci_hi": 0.31,
+    "ci_lo": 0.2916,
+    "mean": 0.3016,
+    "n_boot": 10000,
+    "n_folds": 10,
+    "seed": 606
+  },
+  "honest_limits": [
+    "THE BIGGEST ONE: this is ONE substrate change, not a substrate sweep. A human lentiMPRA panel differs from bacterial tiles in assay, in element length (230 bp vs 150 bp), in kingdom and in how the library was constructed. The arm cannot say WHICH of those differences carries any effect it finds.",
+    "The bacterial anchor 0.0122 is treated as a FIXED POINT; its own uncertainty is not propagated into the CI, so a verdict that lands near the boundary is weaker than the predicate makes it look.",
+    "The conv encoder's hyperparameters were chosen on the BACTERIAL rung. Reusing them on human sequence is the honest apples-to-apples choice for a method-class comparison, but it is NOT a tuned human model and must never be reported as one.",
+    "A constructed panel is the regime this project already knows learned methods work in (constructed -> molecular, Spearman 0.761 on TEM-1). So a SUBSTRATE_LIMITED result CORROBORATES an existing finding rather than discovering something; its value is that it bounds the tile-chain ceiling, not that it is news about constructed panels.",
+    "Nothing here licenses a claim about eukaryotic g->p generally. The project's organism-level eukaryotic embedding arm is a CLOSED NEGATIVE on natural populations (Arabidopsis, de-confounded) and this arm does not reopen it: constructed variation is a different regime, which is the whole reason this arm is scoped to a constructed panel."
+  ],
+  "medians": {
+    "conv": 0.5237,
+    "gc": 0.22
+  },
+  "per_fold": [
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5106,
+      "fold": 1,
+      "gain": 0.2662,
+      "gc_spearman": 0.2444,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5357,
+      "fold": 2,
+      "gain": 0.3193,
+      "gc_spearman": 0.2164,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5191,
+      "fold": 3,
+      "gain": 0.3053,
+      "gc_spearman": 0.2138,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5175,
+      "fold": 4,
+      "gain": 0.3123,
+      "gc_spearman": 0.2052,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5109,
+      "fold": 5,
+      "gain": 0.2987,
+      "gc_spearman": 0.2122,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5264,
+      "fold": 6,
+      "gain": 0.3033,
+      "gc_spearman": 0.2231,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5333,
+      "fold": 7,
+      "gain": 0.2979,
+      "gc_spearman": 0.2354,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5237,
+      "fold": 8,
+      "gain": 0.295,
+      "gc_spearman": 0.2287,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68833,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.533,
+      "fold": 9,
+      "gain": 0.3218,
+      "gc_spearman": 0.2112,
+      "n_test": 9833,
+      "n_train": 88499
+    },
+    {
+      "conv_protocol": {
+        "device": "cpu",
+        "early_stopped": true,
+        "n_train": 68831,
+        "widths": [
+          6,
+          20,
+          75
+        ]
+      },
+      "conv_spearman": 0.5166,
+      "fold": 10,
+      "gain": 0.2966,
+      "gc_spearman": 0.22,
+      "n_test": 9835,
+      "n_train": 88497
+    }
+  ],
+  "provisional_verdict_if_complete": null,
+  "refused": {
+    "published_incumbents_head_to_head": {
+      "what_is_done_instead": "they are recorded verbatim with metric_unstated: true, as context for what this panel supports, and they inform no predicate",
+      "why": "Table S6 publishes per-fold values for Enformer, MPRALegNet, Sei, MPRAnn and a biochemical feature set and NEVER STATES THE METRIC. Comparing our named Spearman to an unnamed quantity would be an assumption wearing a number's clothes."
+    }
+  },
+  "schema": "eukaryotic-arm-result-v1",
+  "substrate": {
+    "join_rate": 1.0,
+    "n_designed": 243778,
+    "n_folds_published": 10,
+    "n_joined": 98332,
+    "n_measured": 98332,
+    "n_rows": 98332,
+    "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+    "sequence_length": 230
+  },
+  "target_reparameterization": {
+    "applied": "expression = activity + 3.990495",
+    "computed_over": "the whole cell, once (never per fold, which would make folds incomparable)",
+    "evaluation_unaffected": "Spearman is invariant to monotone transforms of the target; only the fitting scale moves",
+    "why": "activity is log2(RNA/DNA) and goes negative; both incumbent fitters apply np.log1p to the target, which is undefined at <= -1, and spearman maps NaN to 0.0 -- so without this the failure would read as a clean null"
+  },
+  "verdict": "SUBSTRATE_LIMITED",
+  "verdict_detail": "the CI for the human gain lies entirely ABOVE the bacterial gain 0.0122",
+  "wall_seconds": 5469.3
+}

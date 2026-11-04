@@ -1,190 +1,239 @@
-"""Render the eukaryotic arm's memo FROM its artifacts. No number is hand-typed here.
+"""Render the K562 eukaryotic-arm result to a markdown memo.
 
-Every figure in the emitted markdown is read out of
-`wiki/eukaryotic_arm_result_<CELL>_2026-11-01.json` and the frozen bar, because a memo that restates
-a number from memory is how a figure and its artifact drift apart. The one piece of arithmetic this
-script does itself -- the gain decomposition -- is computed from those same artifacts and shown as
-its components so a reader can check it.
+WHY THIS NEEDS A GUARD AND NOT A STYLE NOTE. The artifact carries `verdict` and
+`provisional_verdict_if_complete` SIDE BY SIDE. A provisional verdict is what the arm WOULD have
+concluded had the substrate been complete; presenting it as the verdict is the single over-claim
+this artifact is unusually exposed to, because both fields are strings of the same shape sitting in
+the same object. So the rail is ENFORCED: `assert_provisional_not_headlined` re-reads the rendered
+text and REFUSES if the provisional value appears in any heading. A comment asking a future editor
+to be careful would not survive the edit it exists to prevent.
 
-**The decomposition is the honest core of the write-up.** A gain-over-baseline contrast is only
-substrate-normalized if the baseline means the same thing on both substrates, and it does not: GC is
-measurably WEAKER on human regulatory elements than on bacterial tiles. So a larger human gain has
-two possible sources and they must be separated:
+THE REFUSAL AND THE LIMITS ARE COPIED VERBATIM, NEVER SUMMARISED. Both exist because someone
+decided a comparison could not honestly be made; a paraphrase is a second author's reading of that
+decision, and the compression always runs the same direction -- toward sounding more settled. The
+`honest_limits` list is additionally CHECKED for completeness after rendering, so a future edit
+cannot quietly drop one.
 
-    gain_human - gain_bacterial = (conv_human - conv_bacterial) - (gc_human - gc_bacterial)
-                                   \\_____ encoder got better _____/   \\__ baseline got worse __/
+ORDERED BY WHAT THE READER MUST DO. The verdict first, then what the verdict does NOT license,
+then the limits, and only then the numbers and the method. A reader who stops after one screen
+should have the scope, not the method.
 
-Reporting only the left-hand side would let a weaker baseline masquerade as a stronger encoder.
+Usage:
+    python scripts/eukaryotic_arm_memo.py [--artifact PATH] [--out PATH]
 """
 
 from __future__ import annotations
 
 import argparse
 import json
+import re
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
-BAR = REPO / "wiki/eukaryotic_arm_acceptance_bar.json"
+ARTIFACT = REPO / "wiki/eukaryotic_arm_result_K562_2026-11-01.json"
+OUT = REPO / "wiki/eukaryotic_arm_result_K562_2026-11-01.md"
+
+SCHEMA = "eukaryotic-arm-result-v1"
+
+#: Any markdown heading line. Used by the enforced rail, so it must match every heading level.
+HEADING_RE = re.compile(r"(?m)^#{1,6}\s+(.*)$")
 
 
-def decompose(res: dict, bar: dict) -> dict:
-    """Split the gain difference into an encoder component and a baseline component."""
-    a = bar["anchors"]
-    conv_h, gc_h = res["medians"]["conv"], res["medians"]["gc"]
-    d_conv = conv_h - a["conv"]
-    d_gc = gc_h - a["gc"]
-    total = d_conv - d_gc
-    return {
-        "gain_human_median": round(conv_h - gc_h, 4),
-        "gain_bacterial": a["conv_minus_gc"],
-        "difference": round(total, 4),
-        "encoder_component": round(d_conv, 4),
-        "baseline_component": round(-d_gc, 4),
-        "encoder_share": round(d_conv / total, 4) if total else None,
-        "baseline_share": round(-d_gc / total, 4) if total else None,
-        "reading": (
-            "the encoder scores %+.4f differently and the baseline %+.4f, so %s of the widened gain "
-            "is the encoder doing better and %s is GC doing worse"
-            % (d_conv, d_gc,
-               ("%.0f%%" % (100 * d_conv / total)) if total else "n/a",
-               ("%.0f%%" % (100 * -d_gc / total)) if total else "n/a")
-        ),
-    }
+class MemoRefused(ValueError):
+    """The memo cannot be rendered honestly from this artifact."""
 
 
-def render(res: dict, bar: dict) -> str:
-    d = decompose(res, bar)
-    a = bar["anchors"]
-    g = res["gain_bootstrap"]
-    L = []
-    w = L.append
+def headings(text: str) -> list[str]:
+    return [m.group(1).strip() for m in HEADING_RE.finditer(text)]
 
-    w("# The eukaryotic arm: the tile-chain ceiling was the SUBSTRATE's, not the method's")
-    w("")
-    w("<!-- doc-status: active -->")
-    w("<!-- measured-on: %s -->" % res["date"])
-    w("")
-    w("Graded by `%s`, frozen before any number below existed." % res["bar"])
-    w("")
 
-    w("## DECISIONS NEEDED")
-    w("")
-    w("**One, and it is structural rather than about this result.** This arm's metric is a HUMAN")
-    w("lentiMPRA Spearman sitting in a criterion whose other ten metrics are BACTERIAL, and")
-    w("`ceiling_verdict` picks `best` as a max over metrics. It is harmless today — %.4f is below the"
-      % res["medians"]["conv"])
-    w("bacterial best %.4f, so `best` is unmoved — but a future human arm scoring above that would"
-      % bar["anchors"]["best_arm"])
-    w("silently become `best` on a bacterial criterion. The arm's real contribution is the CONTRAST,")
-    w("not the level. Moving it to its own criterion is a scope change to a criterion declared")
-    w("2026-10-09, so it is yours; a guard")
-    w("(`test_the_human_arms_metric_is_not_read_as_best`) now fires if it ever stops being harmless.")
-    w("")
-    w("**The ceiling criterion does NOT close, and that is correct rather than an oversight.** This")
-    w("was the last `planned` arm, but under R6 the positional (non-mean-pooled) PromoterAtlas arm")
-    w("that G-A candidate 8 names was declared at the moment this one ran — because an arm declared")
-    w("only once its cheap sibling succeeds is an arm that evaporates. So `ceiling_verdict` stays")
-    w("`blocked:untried-arm` on a genuine untried candidate: 11 measured, 1 planned, `best` unmoved.")
-    w("")
+def assert_provisional_not_headlined(text: str, art: dict) -> None:
+    """REFUSE if the provisional verdict reached a heading.
 
-    w("## CORRECTIONS")
-    w("")
-    w("**The standing handoff called this arm a funding decision. It was neither a funding nor an")
-    w("access problem.** The substrate was on an attached drive, MD5-verified, with a working loader,")
-    w("and the arm ran locally in %s minutes of wall clock. A prior session the same day had already"
-      % int(res["wall_seconds"] // 60))
-    w("established it was *not* drive-blocked and judged it cost-gated via a Kaggle fetch; the drive")
-    w("being attached makes even that unnecessary.")
-    w("")
+    `None` is the common case and the check is then vacuous ON THIS ARTIFACT -- which is exactly
+    why the test suite drives it with a synthetic artifact that carries a value. A guard whose only
+    exercise is against a null field has never been tested.
+    """
+    prov = art.get("provisional_verdict_if_complete")
+    if prov is None:
+        return
+    prov = str(prov).strip()
+    if not prov:
+        return
+    for h in headings(text):
+        if prov in h:
+            raise MemoRefused(
+                "the provisional verdict %r appears in the heading %r. A provisional verdict is "
+                "what the arm WOULD have concluded on a complete substrate; headlining it states "
+                "a result the arm did not reach." % (prov, h))
 
-    w("## The result")
-    w("")
-    w("| | GC-only ridge | conv encoder | gain |")
-    w("|---|---|---|---|")
-    w("| human %s (median over %d folds) | %.4f | %.4f | **%+.4f** |"
-      % (res["cell"], g["n_folds"], res["medians"]["gc"], res["medians"]["conv"],
-         d["gain_human_median"]))
-    w("| bacterial tiles (committed arms) | %.4f | %.4f | **%+.4f** |"
-      % (a["gc"], a["conv"], a["conv_minus_gc"]))
-    w("")
-    w("Paired bootstrap over the %d published folds: mean %+.4f, 95%% CI [%+.4f, %+.4f], against a"
-      % (g["n_folds"], g["mean"], g["ci_lo"], g["ci_hi"]))
-    w("bacterial anchor of %+.4f." % a["conv_minus_gc"])
-    w("")
-    w("**Verdict: `%s`** — %s" % (res["verdict"], res["verdict_detail"]))
-    w("")
 
-    w("## What the gain is actually made of")
-    w("")
-    w("A gain-over-baseline contrast only crosses a substrate boundary if the baseline means the same")
-    w("thing on both sides, and here it does not — GC is weaker on human regulatory elements than on")
-    w("bacterial tiles. Separating the two sources:")
-    w("")
-    w("- the conv encoder moves **%+.4f** (%.4f → %.4f)" % (d["encoder_component"], a["conv"],
-                                                            res["medians"]["conv"]))
-    w("- the GC baseline moves **%+.4f** in the direction that widens the gap (%.4f → %.4f)"
-      % (d["baseline_component"], a["gc"], res["medians"]["gc"]))
-    w("- together they account for the **%+.4f** difference in gain" % d["difference"])
-    w("")
-    w("So %s of the widened gain is the encoder doing better and %s is GC doing worse. **Both point the"
-      % (("%.0f%%" % (100 * d["encoder_share"])) if d["encoder_share"] else "n/a",
-         ("%.0f%%" % (100 * d["baseline_share"])) if d["baseline_share"] else "n/a"))
-    w("same way**, which is what makes the reading hold: on this substrate a learned encoder finds")
-    w("signal that a single composition feature cannot, and on bacterial tiles it essentially could")
-    w("not. Had the gain widened *only* because GC collapsed, the arm would say nothing about the")
-    w("encoder.")
-    w("")
+def assert_limits_complete(text: str, art: dict) -> None:
+    """Every declared limit must be present verbatim, so none can be dropped by a later edit."""
+    missing = [lim for lim in (art.get("honest_limits") or []) if lim not in text]
+    if missing:
+        raise MemoRefused(
+            "%d of %d honest limits are absent from the rendered memo: %r"
+            % (len(missing), len(art.get("honest_limits") or []), missing))
 
-    w("## What this does NOT establish")
-    w("")
-    w("**The published incumbents are NOT a comparator, and that was pre-committed.** Table S6 gives")
-    w("per-fold values for six methods on these exact folds and never states the metric; the sheet was")
-    w("checked directly, including the rows the parser skips (`unparsed_rows()` returns 0 for")
-    w("`Benchmarking results`, verified rather than trusted). What can be said is weaker and still")
-    w("useful: whatever those values measure, six independent methods cluster at roughly 0.72–0.87 and")
-    w("order the way a performance metric would. That is an inference about an unnamed quantity.")
-    w("")
-    for lim in res["honest_limits"]:
-        w("- %s" % lim)
-    w("")
 
-    w("## Reproduce")
-    w("")
-    w("```bash")
-    w("uv run python -m scripts.eukaryotic_arm_probe          # validity first: join, folds, degeneracy")
-    w("uv run python scripts/freeze_eukaryotic_arm_bar.py     # refuses if the anchors drift")
-    w("uv run python -m scripts.eukaryotic_arm_run --cell %s" % res["cell"])
-    w("uv run python -m scripts.eukaryotic_arm_memo --cell %s" % res["cell"])
-    w("```")
-    w("")
+def _fold_table(per_fold: list) -> list[str]:
+    rows = ["| fold | conv | GC | gain | n_train | n_test |",
+            "|---|---|---|---|---|---|"]
+    for f in per_fold:
+        rows.append("| %s | %.4f | %.4f | %+.4f | %s | %s |"
+                    % (f.get("fold"), f.get("conv_spearman"), f.get("gc_spearman"),
+                       f.get("gain"), f.get("n_train"), f.get("n_test")))
+    return rows
+
+
+def render_memo(art: dict) -> str:
+    """The memo text. Pure: no file access, so it is testable on a synthetic artifact."""
+    if art.get("schema") != SCHEMA:
+        raise MemoRefused("artifact schema is %r, expected %r" % (art.get("schema"), SCHEMA))
+    for required in ("verdict", "verdict_detail", "honest_limits"):
+        if art.get(required) in (None, ""):
+            raise MemoRefused("artifact carries no %r; the memo would state a result it does not "
+                              "have" % required)
+
+    verdict = str(art["verdict"])
+    cell = art.get("cell", "?")
+    b = art.get("gain_bootstrap") or {}
+    med = art.get("medians") or {}
+    anc = art.get("bacterial_anchor") or {}
+    sub = art.get("substrate") or {}
+    tr = art.get("target_reparameterization") or {}
+    prov = art.get("provisional_verdict_if_complete")
+
+    L: list[str] = []
+    L.append("# Eukaryotic arm, %s cell line -- %s" % (cell, verdict))
+    L.append("")
+    L.append("Artifact: `wiki/%s`  ·  bar: `%s`  ·  date: %s"
+             % (ARTIFACT.name, art.get("bar"), art.get("date")))
+    L.append("")
+
+    # ---- 1. the verdict
+    L.append("## Verdict: %s" % verdict)
+    L.append("")
+    L.append("%s." % str(art["verdict_detail"]).rstrip("."))
+    L.append("")
+    L.append("Criterion: %s" % art.get("criterion"))
+    L.append("")
+    L.append("- Human conv median Spearman **%s**, GC-only baseline **%s**"
+             % (med.get("conv"), med.get("gc")))
+    L.append("- Gain CI over %s folds: **[%+.4f, %+.4f]**, mean %+.4f"
+             % (b.get("n_folds"), b.get("ci_lo", float("nan")), b.get("ci_hi", float("nan")),
+                b.get("mean", float("nan"))))
+    L.append("- Bacterial anchor gain (the quantity it is compared against): **%s**"
+             % anc.get("conv_minus_gc"))
+    L.append("")
+
+    # ---- 2. what it does not say
+    L.append("## What this verdict does NOT say")
+    L.append("")
+    if prov is None:
+        L.append("- The artifact records **no** provisional verdict, so there is no "
+                 "would-have-been result to read here.")
+    else:
+        L.append("- A provisional verdict is recorded in the artifact's "
+                 "`provisional_verdict_if_complete` field. It is **not** this arm's result: it is "
+                 "what the arm would have concluded on a complete substrate, and it is "
+                 "deliberately not headlined.")
+    L.append("- The comparison that crosses the substrate boundary is the **within-substrate "
+             "gain**, not raw Spearman. %s" % anc.get("why_this_is_the_anchor", ""))
+    L.append("")
+
+    # ---- 3. the refusals, verbatim
+    ref = art.get("refused") or {}
+    if ref:
+        L.append("## Refused, and what was done instead")
+        L.append("")
+        for name, blk in ref.items():
+            L.append("### `%s`" % name)
+            L.append("")
+            L.append("**Why refused:** %s" % blk.get("why"))
+            L.append("")
+            L.append("**Done instead:** %s" % blk.get("what_is_done_instead"))
+            L.append("")
+
+    # ---- 4. the limits, verbatim and complete
+    L.append("## Honest limits")
+    L.append("")
+    for lim in art["honest_limits"]:
+        L.append("- %s" % lim)
+    L.append("")
+
+    # ---- 5. substrate and method
+    L.append("## Substrate")
+    L.append("")
+    L.append("- %s rows measured of %s designed (join rate %s)"
+             % (sub.get("n_measured"), sub.get("n_designed"), sub.get("join_rate")))
+    L.append("- sequence: %s bp -- %s" % (sub.get("sequence_length"), sub.get("sequence_column")))
+    L.append("- published folds: %s" % sub.get("n_folds_published"))
+    L.append("")
+    if tr:
+        L.append("## Target reparameterization")
+        L.append("")
+        L.append("- applied: `%s`" % tr.get("applied"))
+        L.append("- computed over: %s" % tr.get("computed_over"))
+        L.append("- why: %s" % tr.get("why"))
+        L.append("- evaluation unaffected: %s" % tr.get("evaluation_unaffected"))
+        L.append("")
+
+    L.append("## Bacterial anchor")
+    L.append("")
+    L.append("- best arm %s, conv %s, GC %s, replicate ceiling %s"
+             % (anc.get("best_arm"), anc.get("conv"), anc.get("gc"), anc.get("replicate_ceiling")))
+    L.append("- fraction of ceiling captured by best: %s"
+             % anc.get("fraction_of_ceiling_captured_by_best"))
+    L.append("- headroom (best minus GC): %s" % anc.get("headroom_best_minus_gc"))
+    L.append("- corroborating artifact: `%s`" % anc.get("corroborating_artifact"))
+    L.append("")
+
+    if art.get("per_fold"):
+        L.append("## Per fold")
+        L.append("")
+        L.extend(_fold_table(art["per_fold"]))
+        L.append("")
+
+    L.append("---")
+    L.append("")
+    L.append("Wall time %s s. Rendered by `scripts/eukaryotic_arm_memo.py` from the artifact "
+             "named above; every number here is read from it, none recomputed."
+             % art.get("wall_seconds"))
+    L.append("")
     return "\n".join(L)
 
 
+def build(art: dict) -> str:
+    """Render and then CHECK the rendered text against the artifact's own rails."""
+    text = render_memo(art)
+    assert_provisional_not_headlined(text, art)
+    assert_limits_complete(text, art)
+    return text
+
+
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--cell", default="HepG2")
-    args = ap.parse_args(argv)
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--artifact", default=str(ARTIFACT))
+    ap.add_argument("--out", default=str(OUT))
+    a = ap.parse_args(argv)
 
-    res_path = REPO / ("wiki/eukaryotic_arm_result_%s_2026-11-01.json" % args.cell)
-    res = json.loads(res_path.read_text(encoding="utf-8"))
-    bar = json.loads(BAR.read_text(encoding="utf-8"))
-
-    if res["verdict"].startswith("PARTIAL"):
-        print("REFUSING: the result is %s; a memo on a withheld verdict would read as a finding."
-              % res["verdict"])
+    p = Path(a.artifact)
+    if not p.is_file():
+        print("REFUSED: artifact absent: %s" % p)
+        return 2
+    try:
+        text = build(json.loads(p.read_text(encoding="utf-8")))
+    except MemoRefused as e:
+        print("REFUSED: %s" % e)
         return 2
 
-    out = REPO / ("wiki/eukaryotic_arm_result_%s_2026-11-01.md" % args.cell)
-    out.write_text(render(res, bar), encoding="utf-8")
-    d = decompose(res, bar)
-    print("verdict %s | gain %+.4f vs anchor %+.4f" % (res["verdict"], d["gain_human_median"],
-                                                       d["gain_bacterial"]))
-    print("decomposition: encoder %+.4f (%s) / baseline %+.4f (%s)"
-          % (d["encoder_component"],
-             ("%.0f%%" % (100 * d["encoder_share"])) if d["encoder_share"] else "n/a",
-             d["baseline_component"],
-             ("%.0f%%" % (100 * d["baseline_share"])) if d["baseline_share"] else "n/a"))
-    print("-> %s" % out)
+    out = Path(a.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(text, encoding="utf-8")
+    print("-> %s (%d lines)" % (out, len(text.splitlines())))
     return 0
 
 
