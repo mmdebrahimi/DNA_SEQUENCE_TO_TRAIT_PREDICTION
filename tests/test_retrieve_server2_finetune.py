@@ -100,3 +100,54 @@ def test_the_state_files_include_the_sentinel_first():
 def test_every_state_file_is_under_data_unattended():
     for rel in R.STATE_FILES:
         assert rel.startswith("data/unattended/"), rel
+
+
+# ----------------------------------------------------------------- the post-retrieval chain
+
+
+def test_the_chain_is_in_DEPENDENCY_order():
+    """Scoring writes the artifact the collector reads; the collector gates what the recorder may
+    write; the recorder sets the verdict the memo states. A reorder would silently produce a memo
+    over a ledger that had not been updated."""
+    assert [n for n, _ in R.chain_steps()] == ["score", "collect", "record", "memo"]
+
+
+def test_run_chain_runs_every_step_when_each_succeeds():
+    calls = []
+    steps = [(n, (lambda n=n: calls.append(n) or 0)) for n in ("a", "b", "c")]
+    res = R.run_chain(steps)
+    assert calls == ["a", "b", "c"]
+    assert res["failed_at"] is None
+    assert res["codes"] == {"a": 0, "b": 0, "c": 0}
+
+
+def test_run_chain_STOPS_at_the_first_refusal():
+    """The load-bearing behaviour: the scorer returns non-zero when a gate refuses, and walking
+    past that would record a number the gates rejected."""
+    calls = []
+    steps = [("a", lambda: calls.append("a") or 0),
+             ("b", lambda: calls.append("b") or 2),
+             ("c", lambda: calls.append("c") or 0)]
+    res = R.run_chain(steps)
+    assert calls == ["a", "b"], "the chain continued past a refusal"
+    assert res["failed_at"] == "b"
+    assert res["codes"]["b"] == 2
+    assert "c" not in res["ran"]
+
+
+def test_run_chain_reports_a_first_step_refusal_without_running_the_rest():
+    calls = []
+    steps = [("score", lambda: calls.append("score") or 2),
+             ("collect", lambda: calls.append("collect") or 0)]
+    res = R.run_chain(steps)
+    assert calls == ["score"] and res["failed_at"] == "score"
+
+
+def test_then_score_is_accepted_by_the_parser_and_defaults_off(tmp_path, monkeypatch):
+    """A dry run must not chain: the flag only acts after a VERIFIED retrieval."""
+    ran = []
+    monkeypatch.setattr(R, "run_chain", lambda *a, **k: ran.append(1) or {"failed_at": None})
+    monkeypatch.setattr(R, "remote_listing",
+                        lambda **k: {R.RUN_ARTIFACT: "ABSENT"})
+    assert R.main([]) == 1
+    assert ran == [], "a dry run with no artifact chained anyway"

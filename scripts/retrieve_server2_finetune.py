@@ -134,6 +134,63 @@ def verify_local(*, repo: Path | None = None) -> dict:
             "horizon_epochs": run.get("horizon_epochs"), "sentinel": text}
 
 
+def chain_steps() -> list:
+    """The post-retrieval chain, in dependency order, as (name, callable) pairs.
+
+    Declared as DATA and imported lazily so this module stays importable without torch, and so the
+    order is a thing a test can assert rather than a sequence buried in `main`. Scoring must precede
+    collection (the collector reads the result artifact), collection must precede recording (the
+    recorder refuses an arm the collector refused), and recording must precede the memo (which
+    states the recomputed verdict).
+    """
+    def _score():
+        from scripts.finetune_arm_score import main as m
+
+        return m([])
+
+    def _collect():
+        from scripts.collect_unattended_runs import main as m
+
+        return m([])
+
+    def _record():
+        from scripts.record_successor_arm_results import main as m
+
+        return m(["--apply"])
+
+    def _memo():
+        from scripts.successor_arms_memo import main as m
+
+        return m([])
+
+    return [("score", _score), ("collect", _collect),
+            ("record", _record), ("memo", _memo)]
+
+
+def run_chain(steps=None) -> dict:
+    """Run the chain, STOPPING at the first step that does not return 0.
+
+    Stopping matters more than completing: the scorer returns non-zero when a gate refuses, and
+    walking past that would record a metric the gates rejected. The collector's own non-zero means
+    an arm is still uncollected, which the recorder must not be handed.
+    """
+    out = {"ran": [], "failed_at": None, "codes": {}}
+    for name, fn in (steps if steps is not None else chain_steps()):
+        print()
+        print("==== %s ====" % name)
+        rc = int(fn())
+        out["ran"].append(name)
+        out["codes"][name] = rc
+        if rc != 0:
+            out["failed_at"] = name
+            print()
+            print("STOPPED at %r (exit %d). The remaining steps are NOT run: a non-zero here means "
+                  "a gate refused or an arm is uncollected, and continuing would record a number "
+                  "the gates rejected." % (name, rc))
+            break
+    return out
+
+
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -142,6 +199,9 @@ def main(argv=None) -> int:
     ap.add_argument("--remote-repo", default=REMOTE_REPO)
     ap.add_argument("--force", action="store_true",
                     help="replace a local run artifact that differs from the remote one")
+    ap.add_argument("--then-score", action="store_true",
+                    help="after a verified retrieval, run score -> collect -> record -> memo, "
+                         "stopping at the first step that refuses")
     a = ap.parse_args(argv)
 
     try:
@@ -185,6 +245,16 @@ def main(argv=None) -> int:
     print("VERIFIED  schema %s  status %s  seeds %s  horizon %s  sentinel %r"
           % (info["schema"], info["status"], info["n_seeds"], info["horizon_epochs"],
              info["sentinel"]))
+    if a.then_score:
+        res = run_chain()
+        print()
+        print("THEN RETIRE THE WATCHDOG. A scheduled task on %s relaunches the run every 30 min if"
+              % HOST)
+        print("it stops without finishing; it stands down once the artifact exists, but the task")
+        print("itself remains registered:")
+        print("  ssh %s \"schtasks /delete /tn dna_decode_finetune_watchdog /f\"" % HOST)
+        return 0 if res["failed_at"] is None else 1
+
     print()
     print("NEXT, in order:")
     print("  uv run python scripts/detached_launch.py status")
