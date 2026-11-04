@@ -106,10 +106,29 @@ NEW_ARM = "orthogonal-modality-stack-promcalc-plus-N-channels"
 #: cross-reference, which must keep pointing at it whatever its status.
 SUCCESSOR_MEASURED = "pyramid-4scale-2.22decades-499bp-fragments"
 
-#: Ran 2026-11-01 and closed ATLAS_BEATS_THERMODYNAMIC. It is now `best` on this criterion, which is
-#: why BEST_ARM below is a separate constant from NEW_ARM.
+#: Ran 2026-11-01 and closed ATLAS_BEATS_THERMODYNAMIC. It was `best` on this criterion until
+#: 2026-11-04, which is why BEST_ARM below is a separate constant from NEW_ARM.
 ATLAS_ARM = "promoteratlas-base-embeddings-frozen-150bp-padded-to-200"
-BEST_ARM = ATLAS_ARM
+
+#: RE-PINNED 2026-11-04, third firing of the leader guard, and the reason matters more than the move.
+#:
+#: The as-given arm was recorded MEASURED at 0.5086 against ATLAS_ARM's 0.5076, so the argmax moved
+#: by **+0.0010**. Per this guard's own instruction the constant is re-pinned naming the new leader
+#: rather than the assertion relaxed.
+#:
+#: **BUT THE LEAD IS NOT A DEMONSTRATED GAIN, AND NOTHING IN THE LEDGER CAN SAY SO.** The arm's own
+#: verdict is `ASGIVEN_TIES` with a paired CI of [-0.0068, +0.0004] -- an interval CONTAINING ZERO,
+#: and roughly seven times the margin by which it leads. The arm was pre-committed as expected to
+#: TIE, in those words, before it ran. So `best` here has become a bookkeeping argmax over point
+#: estimates that crosses two arms the evidence cannot separate: reading "the as-given arm beat the
+#: atlas arm" off this field would be exactly the over-claim the arm's own bar was written to
+#: prevent. Both are, on the measured evidence, the joint leaders at ~0.508.
+ASGIVEN_ARM = "asgiven-position-resolved-promoteratlas-150bp"
+BEST_ARM = ASGIVEN_ARM
+
+#: Recorded MEASURED 2026-11-04 alongside ASGIVEN_ARM. A clean interpretable negative, not a null
+#: result -- which is a distinction the metric alone does not carry; see its MEASURED note.
+HEADS_ARM = "shipped-expression-heads-zeroshot-150bp"
 
 #: RAN 2026-11-01 locally over 10 published folds of HepG2. Its metric is a HUMAN lentiMPRA
 #: Spearman while every sibling metric is a BACTERIAL tile Spearman, so it is pinned here for
@@ -151,6 +170,25 @@ MEASURED = {
     # level, and why it must never be read as `best`.
     EUK_ARM: 0.4853,
 }
+
+#: THE SUCCESSOR ARMS ARE DELIBERATELY NOT IN `MEASURED`, and this note exists because adding them
+#: is the obvious-looking move that breaks the non-vacuity harness.
+#:
+#: `MEASURED` is a HISTORICAL pin -- its contract is "a published number cannot change", not "this
+#: is every measured arm". `test_no_historical_measured_metric_has_moved` was converted to a SUBSET
+#: form precisely so the three successor arms could be measured without three more re-pins, and
+#: `tests/test_arms_invariant_guards_non_vacuous.py` proves the guards still fire by building
+#: synthetic states in which those same arms are `planned` with `metric=None`. An arm cannot be
+#: both a historical pin and a lever the harness flips to planned, so the two leader comparisons
+#: below read their metrics from the LIVE LEDGER instead -- which is also the stronger reading,
+#: since a hand-maintained constant can drift from the file it describes.
+#:
+#: Recorded 2026-11-04, for the record rather than as pins:
+#:   ASGIVEN_ARM 0.5086 -- ASGIVEN_TIES, paired CI [-0.0068, +0.0004] CONTAINING ZERO, ~7x the
+#:     +0.0010 by which it now leads. Pre-committed as expected to tie. Quote it as a TIE.
+#:   HEADS_ARM   0.1178 -- HEADS_NO_GAIN, gain -0.3922, CI [-0.4131, -0.3861], 0/10 seed wins,
+#:     3 of 5 heads ANTI-correlated. A clean INTERPRETABLE negative, not a null result: the
+#:     predictor-side permutation null passed at max|null| 0.0205 = 0.174x the real signal.
 
 #: HISTORICAL, and deliberately no longer asserted anywhere (converted 2026-11-02). This was the
 #: exact planned-set pin; three guards compared against it and all three went red every time an arm
@@ -355,7 +393,9 @@ def test_best_is_the_argmax_over_measured_and_a_leader_change_must_be_EXPLICIT()
         f"({measured.get(BEST_ARM)} -> {measured[verdict.best]}). This guard exists to make that "
         f"EXPLICIT: re-pin BEST_ARM with the reason, do not relax this assertion.")
     assert verdict.best != NEW_ARM, "the leader moved; this guard exists to make that explicit"
-    assert MEASURED[BEST_ARM] > MEASURED[NEW_ARM]
+    # Read from the LIVE ledger, not from MEASURED: BEST_ARM is now a successor arm, which is
+    # deliberately absent from that historical pin (see the note under MEASURED).
+    assert measured[BEST_ARM] > measured[NEW_ARM]
     assert SUCCESSOR_MEASURED in verdict.measured
     assert ATLAS_ARM in verdict.measured
 
@@ -463,7 +503,9 @@ def test_the_human_arms_metric_is_not_read_as_best():
     verdict = ledger.ceiling_verdict(_criterion(ledger))
 
     assert verdict.best == BEST_ARM, "`best` must stay the bacterial leader"
-    assert MEASURED[EUK_ARM] < MEASURED[BEST_ARM], (
+    # Both metrics read from the LIVE ledger: BEST_ARM is now a successor arm and so is
+    # deliberately absent from the historical MEASURED pin (see the note under it).
+    assert arms[EUK_ARM]["metric"] < arms[verdict.best]["metric"], (
         "a human-substrate metric now exceeds the bacterial best, so `best` is comparing across "
         "substrates; move the arm to its own criterion rather than relaxing this")
     # The incommensurability is RECORDED on the arm, not merely known here.
