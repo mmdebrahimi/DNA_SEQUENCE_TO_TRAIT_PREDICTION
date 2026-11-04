@@ -327,6 +327,47 @@ Instruments: `scripts/frame_plan_feasibility_probe.py` (committed artifact, cite
   raises rather than coercing. **This narrows what the exposure experiment can show** — the strongest
   positive control simply does not exist in the native-150 cell.
 
+## Successor arms — the two model-touching arms are barred but NOT run (2026-11-02)
+
+Three successor arms were declared under R6 on the ceiling criterion. One is complete; two are
+blocked on compute, and both of those have a decision attached that expires when their run starts.
+
+- **[DONE 2026-11-02] The as-given arm is scored: `ASGIVEN_TIES`, median 0.5086, gain −0.0042,
+  95% CI [−0.0068, +0.0004] containing zero, 4/10 seed wins.** It does not beat the mean pool; it
+  ties it. Its bar said so in advance at p=0.80 and recorded that the forecast was nearly free
+  because the number was already visible as the positional run's ineligible secondary.
+- **[OPEN] The expression-heads arm is barred but unrun — a 4.64 h local job.** The bar is frozen
+  and amended, the scorer is written and streams (the full-cohort latent would be 3.39 GB, so each
+  batch computes its latent once, applies all five heads, reduces to scalars and discards it).
+  Route is the FAITHFUL per-window recompute: the cheap full-latent route was rejected because one
+  head's rank agreement with it (0.9888) fell below the margin-derived tolerance (0.999), which
+  costs 19.3x and was accepted on principle.
+- **[OPEN] `scripts/expression_heads_score.py` has NO test file yet.** Written and committed
+  unrun. Needed before the scoring run is trusted: every `INDETERMINATE_*` branch driven to
+  reachability with stub heads, a constant-output head tripping the validity gate rather than
+  scoring near zero, a monotonically-transformed head scoring an identical Spearman, the
+  permutation null's two conditions shown BOTH to be required, and an interrupt/resume producing
+  bit-identical scalars.
+- **[OPEN] FOUR heads or FIVE, and therefore alpha/4 or alpha/5 — a USER scope call that expires.**
+  All five heads are geometry-locked to 86 bp and base-byte-identical, so five is defensible; but
+  `tslpred-kosuri2013` predicts TRANSLATION, not transcription, and taxing the four endpoint-matched
+  heads with a wider interval buys nothing. The alternative that satisfies both — four primaries at
+  alpha/4 plus the fifth as a pre-declared INELIGIBLE secondary — is available only until the
+  scoring run starts, after which it is a post-hoc bar edit.
+- **[OPEN] The fine-tune arm's bar is NOT frozen, and the route is the open question.** The
+  convergence probe returned `FEASIBLE_CURVE_TURNED` (best epoch 6 at 0.4309, eight non-improving
+  epochs after, frozen budget 7). Under the recorded 6 h ceiling the 23.82 h projection routes to a
+  Kaggle T4 by 4.0x; a ceiling derived from an actual unattended window routes it local. The ceiling
+  is documented as *operational, not statistical*, so the window changes its premise — **a USER call
+  answerable until the bar is frozen and not afterwards.**
+- **[OPEN] A long unattended run on this host needs the machine awake, and no code can enforce it.**
+  `powercfg` output was unreadable when checked, so the current sleep setting is UNVERIFIED rather
+  than assumed. A detached process does not run through standby.
+- **[OPEN] Recording all three arms will flip `ceiling_verdict` back to `met` and FIRE the `best`
+  pin.** Both are expected, not drift: the as-given arm's 0.5086 displaces 0.5076, so the leader
+  changes by 0.0010 on an arm whose own verdict is TIES with a zero-containing interval. Re-pin and
+  say so; do not relax the pin, and do not let `best` be read as "the best approach".
+
 ## Pre-existing known limitations (not bugs)
 
 - **Live BV-BRC API integration**: `pilot.fetch_bvbrc_drug_counts` raises `NotImplementedError` when no `--ast-tsv` flag / env var / config entry is provided. Live REST endpoint resolution deferred until first real-data run. Workaround: download an AST TSV/CSV from BV-BRC.
@@ -447,16 +488,23 @@ Instruments: `scripts/frame_plan_feasibility_probe.py` (committed artifact, cite
   methods x 10 folds x 3 cells and no metric name. Pearson vs Spearman changes whether our numbers
   are comparable at all; `published_incumbents()` returns `UNSPECIFIED_IN_SOURCE` and a test pins
   that so the gap cannot be quietly closed by a guess. One read of the paper's methods settles it.
-- **[OPEN] `promoteratlas-base-embeddings-frozen-150bp-padded-to-200` is the one untried arm runnable
-  today, and it is the on-position one.** Substrate present (10 local seed tables); the only gap is a
-  public weights fetch — `D:/hf_cache/hub` holds exactly one model and it is GENERator-v2. It is a
-  LEARNED representation on a CONSTRUCTED panel, which `regime.py` puts in the regime that WORKS, so
-  it speaks to the standing `learned-model-is-the-product` position. Not started. Prior: a frozen
-  embedding arm on this rung has a measured history of losing to promcalc.
+- **[DONE 2026-11-01] `promoteratlas-base-embeddings-frozen-150bp-padded-to-200` RAN and is now the
+  `best` measured arm on the ceiling criterion.** Status `measured`, metric **0.5076** — verify from
+  `soraya_runs/arms-ledger.json` rather than this line. The weights-fetch gap closed via an
+  MIT-licensed clone; the arm became the incumbent every later arm is measured against. **Read 0.5076
+  with its scale attached: it is 54% of the 0.941 replicate-derived ceiling, so becoming the leader
+  here is not the same as approaching what is achievable.** The prior recorded above — that a frozen
+  embedding arm on this rung has a history of losing to promcalc — was NOT borne out on this rung:
+  0.5076 beats the promcalc decomposition arm's 0.3925 and the biophysical arm's 0.3968.
 - **[OPEN] The three `planned` arms carry no reason, and the ledger has no field for one.**
   `evidence` is reserved for EXECUTED evidence (pinned for EVERY planned arm since 2026-10-27 by
   `tests/test_arms_ledger_stack_arm.py::test_every_PLANNED_arm_still_has_an_empty_evidence_string`;
-  it used to be one assertion on one arm) and the three arms carry no `rationale` key either, so
-  `blocked:untried-arm` can only ever name them without saying why. The wall classification went to
-  a memo instead of reshaping a ledger with four red rails. Whether `declare_arm` should take a
-  blocker/`rationale` argument is a schema question.
+  it used to be one assertion on one arm). **[PARTLY RESOLVED 2026-11-02] The `rationale` half is
+  answered in practice, not in schema: all three CURRENT `planned` arms carry a populated
+  `rationale` key** — verify with `soraya_runs/arms-ledger.json` rather than this line — written at
+  declaration time by `scripts/declare_successor_arms.py` via a direct dict write, because
+  `arms_ledger.measure_arm` ends in `Arm(**base)` with no field filter and raises `TypeError` on an
+  off-schema key *after* mutating the dict. So `blocked:untried-arm` can now say why for these three,
+  while `declare_arm` still has no `rationale` parameter and the next declaration could omit it
+  silently. **Still open: whether `declare_arm` should take a blocker/`rationale` argument, and
+  whether a test should require one** — that remains a schema question and a user call.
