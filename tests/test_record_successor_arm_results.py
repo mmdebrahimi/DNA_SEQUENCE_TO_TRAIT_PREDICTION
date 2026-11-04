@@ -42,8 +42,30 @@ FINETUNE = "finetuned-promoteratlas-encoder-150bp"
 pytestmark = pytest.mark.skipif(not LIVE.is_file(), reason="the arms ledger is absent here")
 
 
-def _live() -> dict:
+def _live_raw() -> dict:
+    """The ledger exactly as it is on disk."""
     return json.loads(LIVE.read_text(encoding="utf-8"))
+
+
+def _live() -> dict:
+    """The ledger with the three successor arms reset to `planned`.
+
+    WHY THE RESET. These tests exercise the act of RECORDING, which requires the arms to be
+    unrecorded. Two of the three were recorded on 2026-11-04, so reading the live file gave tests
+    whose fixtures conflicted with it -- `test_recording_is_IDEMPOTENT` began failing because
+    `plan_records` correctly REFUSED a fixture metric of 0.5 against a stored 0.5086. That is the
+    guard working, not a defect, but it made the suite's result depend on whether recording had
+    happened yet, which is not a property any of these tests is about.
+
+    Resetting in the deep copy makes them state-independent. `_live_raw` is there for the one test
+    that genuinely needs the file as it stands.
+    """
+    data = _live_raw()
+    arms = data["criteria"][_crit(data)]
+    for name in (ASGIVEN, HEADS, FINETUNE):
+        if name in arms:
+            arms[name].update(status="planned", metric=None, evidence="", resolved_at="")
+    return data
 
 
 def _crit(data: dict) -> str:
@@ -361,11 +383,11 @@ def test_recording_never_changes_another_arms_metric():
 
 
 def test_the_live_dry_run_records_the_two_finished_arms_and_refuses_the_third():
-    """Read-only against the real ledger and the real collector."""
+    """Read-only against the ledger AS IT STANDS and the real collector -- `_live_raw`, not the
+    reset copy, because this is the one test whose subject IS the current state."""
     from scripts.collect_unattended_runs import collect
 
-    data = _live()
-    decisions = plan_records(data, collect())
+    decisions = plan_records(_live_raw(), collect())
     assert decisions[HEADS]["action"] in ("record", "noop")
     assert decisions[ASGIVEN]["action"] in ("record", "noop")
     if decisions[FINETUNE]["action"] == "refused":

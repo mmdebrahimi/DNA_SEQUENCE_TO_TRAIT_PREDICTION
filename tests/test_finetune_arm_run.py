@@ -483,6 +483,52 @@ def test_the_job_is_VISIBLE_before_any_work_begins(tmp_path):
     assert classify("early", state_dir=state).state == STATE_RUNNING
 
 
+class _RecordingHeartbeat:
+    """Records every beat CALL, so intra-epoch liveness can be asserted without real timing."""
+
+    def __init__(self):
+        self.calls = []
+        self.path = None
+
+    def beat(self, units_done, *, force=False, **extra):
+        self.calls.append(dict(units_done=units_done, force=force, **extra))
+        return True
+
+
+def test_the_heartbeat_beats_WITHIN_an_epoch_not_only_between_epochs(tmp_path):
+    """The defect this pins, measured on the real server2 launch.
+
+    The heartbeat file DECLARES `cadence_seconds: 60`, but beats were emitted only per EPOCH -- and
+    an epoch is ~45 minutes on the full cohort. `classify` compares the heartbeat's age against
+    `cadence * STALE_MULTIPLE` (300 s), so a perfectly healthy run reported STALLED for roughly 40
+    of every 45 minutes. On a ten-day unattended job that destroys the single signal separating a
+    wedged run from a working one, and the earlier test here could not catch it: it used
+    `cadence_seconds=99_999` and a build that raises before any epoch, so no epoch ever ran.
+    """
+    hb = _RecordingHeartbeat()
+    R.train_one_seed(_tiles(), seed=0, horizon_epochs=2, lr=0.01, batch_size=8,
+                     split_frac=0.25, ckpt_dir=tmp_path, build=_build, heartbeat=hb,
+                     verbose=False)
+    mid = [c for c in hb.calls if "batches_done" in c]
+    assert mid, "no beat was emitted inside an epoch; the declared cadence is unkeepable"
+    assert len(mid) > 2, "expected one beat per batch, got %d" % len(mid)
+    assert all(c["batches_total"] >= 1 for c in mid)
+    assert [c["batches_done"] for c in mid][:2] == [1, 2], "batch counter must advance"
+
+
+def test_a_mid_epoch_beat_does_NOT_advance_the_completed_epoch_count(tmp_path):
+    """units_done means COMPLETED epochs. Inflating it mid-epoch would make the ETA lie, which is
+    worse than a stale beat: a reader would be given a finish time derived from work not done."""
+    hb = _RecordingHeartbeat()
+    R.train_one_seed(_tiles(), seed=0, horizon_epochs=2, lr=0.01, batch_size=8,
+                     split_frac=0.25, ckpt_dir=tmp_path, build=_build, heartbeat=hb,
+                     verbose=False)
+    first_epoch_mid = [c for c in hb.calls if "batches_done" in c and c["epoch"] == 1]
+    assert first_epoch_mid, "no mid-epoch beats for epoch 1"
+    assert {c["units_done"] for c in first_epoch_mid} == {0}, (
+        "a mid-epoch beat advanced units_done; progress is epochs, this beat is liveness")
+
+
 def test_the_REQUIRED_NULLS_run_BEFORE_the_ineligible_tail(tmp_path):
     """The critical ordering fix.
 

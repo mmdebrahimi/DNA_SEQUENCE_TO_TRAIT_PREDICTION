@@ -377,13 +377,30 @@ def train_one_seed(tiles, *, seed: int, horizon_epochs: int, lr: float, batch_si
         # The resume contract: the permutation is a function of (seed, epoch) alone.
         g = torch.Generator().manual_seed(epoch_generator_seed(seed, epoch))
         perm = torch.randperm(len(tr), generator=g)
-        for b0 in range(0, len(tr), batch_size):
+        n_batches = (len(tr) + batch_size - 1) // batch_size
+        for bi, b0 in enumerate(range(0, len(tr), batch_size)):
             sel = perm[b0:b0 + batch_size]
             opt.zero_grad()
             z = enc(Xtr[sel], return_latent=True)[2]
             loss = ((head(z.mean(dim=2)).squeeze(-1) - ytr[sel]) ** 2).mean()
             loss.backward()
             opt.step()
+            # MID-EPOCH LIVENESS. The heartbeat file DECLARES a 60s cadence, but beats were only
+            # emitted per EPOCH -- and an epoch is ~45 min on the full cohort. So `classify` read
+            # `age > cadence * STALE_MULTIPLE` and reported STALLED over a perfectly healthy run
+            # for ~40 of every 45 minutes: the writer was promising a cadence it did not keep, and
+            # a false STALLED on a ten-day job is the one signal that distinguishes a wedged run
+            # from a working one.
+            #
+            # `units_done` deliberately stays the COMPLETED-epoch count. Progress is measured in
+            # epochs and inflating it mid-epoch would make the ETA lie; what this beat carries is
+            # LIVENESS, plus batch counters for a human reading the file.
+            if heartbeat is not None:
+                heartbeat.beat(heartbeat_units(seed, len(curve), horizon_epochs),
+                               seed=seed, epoch=len(curve) + 1, kind=kind, phase="training",
+                               batches_done=bi + 1, batches_total=n_batches,
+                               note="mid-epoch liveness beat; units_done counts COMPLETED epochs, "
+                                    "so it does not advance until this epoch finishes")
         pv = predict_in_chunks(enc, head, Xva)
         if not np.isfinite(pv).all():
             raise RunRefused(

@@ -37,9 +37,32 @@ LEDGER = REPO / "soraya_runs/arms-ledger.json"
 POS = REPO / "wiki/positional_arm_result_2026-11-01.json"
 
 
-def _copies(tmp_path: Path):
+def _as_at_freeze_time(led: dict) -> dict:
+    """The ledger as it stood when this bar was frozen: the arm declared but NOT yet measured.
+
+    WHY THIS IS NEEDED AND WHY IT IS NOT A RELAXATION. `verify()` refuses to freeze a bar for an
+    arm that already carries a number -- correctly, since a bar written after the result is not a
+    pre-registration. The arm was recorded MEASURED on 2026-11-04, so every test that called
+    `verify()` against the LIVE ledger began failing with "the arm's status is 'measured', not
+    'planned'", and no amount of waiting would fix it: the question `verify()` asks was answered at
+    freeze time and cannot be re-asked of a later ledger.
+
+    So the tests pin it against a SNAPSHOT of that moment instead. The guard itself is untouched
+    and still fires -- `test_verify_refuses_an_arm_that_already_carries_a_metric` proves that by
+    adding a metric back to this snapshot and requiring the refusal.
+    """
+    led = json.loads(json.dumps(led))
+    arms, _crit = ceiling_arms_and_criterion(led)
+    if ARM in arms:
+        arms[ARM].update(status="planned", metric=None, evidence="", resolved_at="")
+    return led
+
+
+def _copies(tmp_path: Path, *, at_freeze_time: bool = True):
     rec = json.loads(RECONCILE.read_text(encoding="utf-8"))
     led = json.loads(LEDGER.read_text(encoding="utf-8"))
+    if at_freeze_time:
+        led = _as_at_freeze_time(led)
     pos = json.loads(POS.read_text(encoding="utf-8"))
     rp, lp, pp = tmp_path / "rec.json", tmp_path / "led.json", tmp_path / "pos.json"
     for p, o in ((rp, rec), (lp, led), (pp, pos)):
@@ -112,10 +135,21 @@ def test_classify_is_total_and_every_outcome_is_in_the_closed_set(lo, hi):
 # --------------------------------------------------------------------------------------------------
 # verify -- the refusals
 # --------------------------------------------------------------------------------------------------
-def test_verify_passes_on_the_committed_anchors():
-    v = verify()
+def test_verify_passes_on_the_committed_anchors(tmp_path):
+    """Against the ledger AS AT FREEZE TIME -- see `_as_at_freeze_time`. The arm has since been
+    recorded measured, and `verify()` refuses that by design."""
+    _rec, _led, _pos, rp, lp, pp = _copies(tmp_path)
+    v = verify(reconcile_path=rp, ledger_path=lp, positional_result=pp)
     assert v["reconcile"]["verdict"] == "RECONCILED"
-    assert v["arms"][ARM]["status"] in ("planned", "measured")
+    assert v["arms"][ARM]["status"] == "planned"
+
+
+def test_verify_REFUSES_against_the_LIVE_ledger_now_that_the_arm_is_measured():
+    """The other half, asserted rather than left implicit: the guard is still live on the real
+    file. This is what makes the snapshot above a scoping decision and not a way to dodge a red
+    test -- if the live ledger ever read `planned` again, this would fail and say so."""
+    with pytest.raises(BarRefused, match="not 'planned'"):
+        verify()
 
 
 def test_verify_refuses_a_mutated_comparator(tmp_path):
@@ -243,7 +277,9 @@ def test_the_bar_names_the_1_bit_orientation_inference_as_a_limit():
     assert "0.941" in limits
 
 
-def test_build_bar_is_a_pure_function_of_the_verified_anchors():
-    a, b = build_bar(verify()), build_bar(verify())
+def test_build_bar_is_a_pure_function_of_the_verified_anchors(tmp_path):
+    _rec, _led, _pos, rp, lp, pp = _copies(tmp_path)
+    kw = dict(reconcile_path=rp, ledger_path=lp, positional_result=pp)
+    a, b = build_bar(verify(**kw)), build_bar(verify(**kw))
     a.pop("frozen"), b.pop("frozen")
     assert a == b

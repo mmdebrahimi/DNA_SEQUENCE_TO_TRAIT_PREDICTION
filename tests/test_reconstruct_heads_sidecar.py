@@ -219,19 +219,34 @@ def test_the_payload_is_readable_by_the_scorers_own_reader(tmp_path):
 REAL_BLOCK = S.BLOCK_DIR / S.BLOCK_NAME
 
 
-@pytest.mark.skipif(not REAL_BLOCK.is_file(), reason="the real block is absent on this checkout")
-def test_the_REAL_damaged_block_corroborates_at_43328():
-    """The actual recovery case, pinned.
+def test_the_recovered_count_43328_is_a_clean_batch_MULTIPLE():
+    """One of the three sources that agreed during the recovery, and the only one that is pure
+    arithmetic rather than a property of a file: 43,328 is exactly 677 x 64. Kept as a standing
+    fact because the other two sources no longer exist -- see the test below."""
+    assert 43328 % S.BATCH == 0
+    assert 43328 // S.BATCH == 677
 
-    Three independent sources agreed: the block stops at 43,328, the surviving heartbeat recorded
-    43,328, and 43,328 is exactly 677 x 64. If any future edit breaks that agreement this test says
-    so rather than letting a reconstruction quietly assert a different number.
+
+@pytest.mark.skipif(not REAL_BLOCK.is_file(), reason="the real block is absent on this checkout")
+def test_the_REAL_block_is_now_COMPLETE_and_no_longer_the_damaged_one():
+    """CONVERTED 2026-11-04 from `test_the_REAL_damaged_block_corroborates_at_43328`.
+
+    The original pinned a TRANSIENT state: the block stopped at 43,328 after a power cut, which
+    three independent sources agreed on (the first all-zero row, the surviving heartbeat, and the
+    batch arithmetic). The heads run has since finished -- `expression_heads` reads COMPLETE at
+    44,106/44,106 -- so the block is fully written, `first_all_zero_row` returns the row count
+    meaning "no zero tail", and the old assertion failed as `44106 == 43328`.
+
+    That is the recovery having SUCCEEDED, not a regression, and the damaged block cannot be
+    recreated. So this now pins the repaired state, and the recovery LOGIC stays pinned where it
+    belongs: on the synthetic blocks above, which cover the boundary finder, holes, non-finite
+    regions, non-multiple counts and a disagreeing heartbeat. A pin on a file that was damaged for
+    one afternoon could never have survived, and keeping it red would have taught a reader to
+    discount a red suite.
     """
     block = R.filled_rows_from_block(REAL_BLOCK)
     assert block["n_rows"] == 44106
-    assert block["first_all_zero_row"] == 43328
-    assert block["tail_is_contiguously_zero"] is True
+    assert block["first_all_zero_row"] == 44106, "the block has a zero tail again"
     assert block["filled_region_is_finite"] is True
-    assert 43328 % S.BATCH == 0, "43,328 must be a clean batch multiple"
-    agreed = R.corroborate(block, 43328, batch=S.BATCH)
-    assert agreed["n_done"] == 43328 and agreed["status"] == "PARTIAL"
+    agreed = R.corroborate(block, 44106, batch=S.BATCH)
+    assert agreed["n_done"] == 44106 and agreed["status"] == "COMPLETE"

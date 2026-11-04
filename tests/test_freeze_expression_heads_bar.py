@@ -51,14 +51,43 @@ LEDGER = REPO / "soraya_runs/arms-ledger.json"
 PROBE = REPO / "wiki/expression_heads_feasibility_2026-11-02.json"
 
 
-def _copies(tmp_path: Path):
+def _as_at_freeze_time(led: dict) -> dict:
+    """The ledger as it stood when this bar was frozen: the arm declared but NOT yet measured.
+
+    WHY THIS IS NEEDED AND WHY IT IS NOT A RELAXATION. `verify()` refuses to freeze a bar for an
+    arm that already carries a number -- correctly, because a bar written after the result is not a
+    pre-registration. The arm was recorded MEASURED on 2026-11-04 at 0.1178, so every test calling
+    `verify()` against the LIVE ledger began failing with "the arm's status is 'measured', not
+    'planned'", and waiting would never fix it: the question `verify()` asks was answered at freeze
+    time and cannot be re-asked of a later ledger.
+
+    The guard is untouched and still fires on the real file -- see
+    `test_verify_REFUSES_against_the_LIVE_ledger_now_that_the_arm_is_measured`, which is what makes
+    this a scoping decision rather than a way to dodge a red test.
+    """
+    led = json.loads(json.dumps(led))
+    arms, _crit = ceiling_arms_and_criterion(led)
+    if ARM in arms:
+        arms[ARM].update(status="planned", metric=None, evidence="", resolved_at="")
+    return led
+
+
+def _copies(tmp_path: Path, *, at_freeze_time: bool = True):
     rec = json.loads(RECONCILE.read_text(encoding="utf-8"))
     led = json.loads(LEDGER.read_text(encoding="utf-8"))
+    if at_freeze_time:
+        led = _as_at_freeze_time(led)
     pr = json.loads(PROBE.read_text(encoding="utf-8"))
     rp, lp, pp = tmp_path / "rec.json", tmp_path / "led.json", tmp_path / "probe.json"
     for p, o in ((rp, rec), (lp, led), (pp, pr)):
         p.write_text(json.dumps(o), encoding="utf-8")
     return rec, led, pr, rp, lp, pp
+
+
+def _verified(tmp_path: Path):
+    """`verify()` against the freeze-time snapshot, for the tests that used a bare call."""
+    _r, _l, _p, rp, lp, pp = _copies(tmp_path)
+    return verify(reconcile_path=rp, ledger_path=lp, probe_path=pp)
 
 
 def _w(p: Path, o) -> Path:
@@ -209,11 +238,20 @@ def test_choose_route_refuses_a_probe_with_no_routes_or_no_agreement_figure():
 # --------------------------------------------------------------------------------------------------
 # verify -- the refusals
 # --------------------------------------------------------------------------------------------------
-def test_verify_passes_on_the_committed_anchors():
-    v = verify()
+def test_verify_passes_on_the_committed_anchors(tmp_path):
+    """Against the ledger AS AT FREEZE TIME -- see `_as_at_freeze_time`. The arm has since been
+    recorded measured at 0.1178, and `verify()` refuses that by design."""
+    v = _verified(tmp_path)
     assert v["reconcile"]["verdict"] == "RECONCILED"
     assert v["n_heads"] == 5
-    assert v["arms"][ARM]["status"] in ("planned", "measured")
+    assert v["arms"][ARM]["status"] == "planned"
+
+
+def test_verify_REFUSES_against_the_LIVE_ledger_now_that_the_arm_is_measured():
+    """The other half, asserted rather than left implicit: the guard is still live on the real
+    file. If the live ledger ever read `planned` for this arm again, this fails and says so."""
+    with pytest.raises(BarRefused, match="not 'planned'"):
+        verify()
 
 
 def test_verify_refuses_a_mutated_comparator(tmp_path):
@@ -307,14 +345,14 @@ def test_verify_refuses_an_absent_anchor(tmp_path):
 # --------------------------------------------------------------------------------------------------
 # purity + the divisor
 # --------------------------------------------------------------------------------------------------
-def test_build_bar_is_a_pure_function_of_the_verified_anchors():
-    a, b = build_bar(verify()), build_bar(verify())
+def test_build_bar_is_a_pure_function_of_the_verified_anchors(tmp_path):
+    a, b = build_bar(_verified(tmp_path)), build_bar(_verified(tmp_path))
     a.pop("frozen"), b.pop("frozen")
     assert a == b
 
 
-def test_the_bonferroni_divisor_EQUALS_the_number_of_declared_heads():
-    v = verify()
+def test_the_bonferroni_divisor_EQUALS_the_number_of_declared_heads(tmp_path):
+    v = _verified(tmp_path)
     bar = build_bar(v)
     m = bar["multiplicity"]
     assert m["n_primaries"] == v["n_heads"] == 5
@@ -336,8 +374,8 @@ def test_the_divisor_FOLLOWS_the_head_count_so_it_cannot_go_stale(tmp_path):
     assert "alpha/4" in bar["multiplicity"]["correction"]
 
 
-def test_the_correction_is_over_heads_and_NOT_over_heads_times_reductions():
-    m = build_bar(verify())["multiplicity"]
+def test_the_correction_is_over_heads_and_NOT_over_heads_times_reductions(tmp_path):
+    m = build_bar(_verified(tmp_path))["multiplicity"]
     assert m["n_primaries"] == 5, "ten would be heads x reductions"
     assert "costume" in m["why_not_heads_times_reductions"]
 
