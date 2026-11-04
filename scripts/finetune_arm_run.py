@@ -538,6 +538,20 @@ def run(*, bar: dict, tiles, ckpt_dir: Path, build=None, wall_ceiling_hours: flo
                                     "budget secured first)"
                                     % (n_seeds, int(horizon_epochs), frozen_epochs))
 
+    # BEAT IMMEDIATELY, BEFORE ANY WORK. Measured on the real launch: a beat placed before the
+    # first EPOCH still left ~8 minutes of NOT_STARTED, because one-hot encoding 32,908 training
+    # sequences and then the untrained-baseline validation pass (a full ~343 s) all happen first.
+    #
+    # The window matters for one specific chain, not for tidiness: after a reboot someone relaunches,
+    # checks `status`, sees NOT_STARTED, concludes the launch failed and relaunches again -- the run
+    # lock then refuses with exit 9 and the sentinel records REFUSED_LOCK_HELD, so the surface shows
+    # a failed-looking state for a job that was healthy all along. Over a ten-day absence that is a
+    # real trap, so the job announces itself before it does anything.
+    if heartbeat is not None:
+        heartbeat.beat(0, force=True, phase="starting",
+                       note=("process is up; encoding the cohort and measuring the untrained "
+                             "baseline before epoch 1. No epoch has completed."))
+
     deadline = t0 + ceiling * 3600.0
     seeds_rec, nulls_rec, bounded = {}, {}, False
     phases = []

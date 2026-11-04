@@ -453,6 +453,36 @@ def test_THIS_FIXTURE_CANNOT_SETTLE_WHETHER_THE_NULL_IS_VACUOUS(tmp_path):
         % rec["untrained_val_spearman"])
 
 
+def test_the_job_is_VISIBLE_before_any_work_begins(tmp_path):
+    """Measured on the real launch: a beat before the first EPOCH still left ~8 minutes reading
+    NOT_STARTED, because one-hot encoding 32,908 sequences and the untrained-baseline validation
+    pass both precede it. The chain that makes the window dangerous is a post-reboot relaunch --
+    reader sees NOT_STARTED, relaunches, the lock refuses with exit 9, and the surface shows a
+    failed-looking state for a healthy run.
+
+    Driven with a build that raises immediately, so nothing can beat except the announcement.
+    """
+    from scripts.detached_launch import Heartbeat, classify, read_heartbeat, STATE_RUNNING
+
+    # state_dir is tmp_path on purpose: a test must never write into the project's real
+    # data/unattended, which would leave a phantom job on the status surface forever.
+    state = tmp_path / "st"
+    hb = Heartbeat("early", units_total=6, state_dir=state, cadence_seconds=99_999)
+
+    def boom():
+        raise RuntimeError("no work should happen before the job announces itself")
+
+    with pytest.raises(RuntimeError, match="announces itself"):
+        R.run(bar=BAR, tiles=_tiles(), ckpt_dir=Path(tmp_path / "ck"), build=boom,
+              n_seeds=1, horizon_epochs=6, n_null_seeds=0, verbose=False, heartbeat=hb)
+
+    rec = read_heartbeat(hb.path)
+    assert rec is not None, "the job never announced itself"
+    assert rec["phase"] == "starting"
+    assert rec["units_done"] == 0, "the announcement must not imply progress"
+    assert classify("early", state_dir=state).state == STATE_RUNNING
+
+
 def test_the_REQUIRED_NULLS_run_BEFORE_the_ineligible_tail(tmp_path):
     """The critical ordering fix.
 
