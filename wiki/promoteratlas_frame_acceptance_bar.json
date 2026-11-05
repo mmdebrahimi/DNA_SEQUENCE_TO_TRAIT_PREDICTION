@@ -1,0 +1,188 @@
+{
+  "anchors": {
+    "committed_atlas_native150_median": 0.5076,
+    "committed_gc_median": 0.3112,
+    "headroom_at_risk_atlas_minus_gc": 0.1964
+  },
+  "arm": "promoteratlas tile rung, native 150 bp",
+  "check_order_rationale": "VALIDITY FIRST, and the ordering is not cosmetic. Run 1 of the parent arm emitted its STRONGEST verdict while a validity gate was failing, because that gate's predicate could never fire. Every indeterminate is evaluated before every substantive outcome, and the grader's test asserts the reachable set EQUALS this order rather than being contained in it, so no branch can be dead.",
+  "controls_required_before_grading": {
+    "matched_strength_series": {
+      "feeds_outcome": "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE",
+      "what": "The atlas margin is reported over baselines of increasing standalone strength: gc, gc + dinucleotide, gc + kmer4, and gc + frame.",
+      "why": "Adding any informative feature to GC strengthens it, which MECHANICALLY shrinks the atlas margin whether or not the advantage is positional. Shrinkage is not absorption unless it exceeds what a matched-informativeness NON-positional feature produces. The subtractive experiment had a random-direction control for exactly this; without this series the additive one has no analogue."
+    },
+    "per_stratum_expression_spread": {
+      "what": "Each stratum's expression spread is reported beside its margin.",
+      "why": "Without the spread beside the margin a reader cannot tell range restriction from absorption."
+    },
+    "size_matched_random_stratification": {
+      "feeds_outcome": "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE",
+      "what": "Tiles are split into strata of the SAME SIZES at random and the within-stratum margins measured, giving the null for how much stratification alone moves the margin.",
+      "why": "The real strata are measurably NOT exchangeable -- in-window interquartile range 0.4735 with standard deviation 3.380 against out-of-window 0.2710 with 5.535, so the shapes differ and not merely the scales. A rank correlation inside a compressed stratum is attenuated for BOTH channels, so a smaller within-stratum margin is expected for reasons unrelated to absorption."
+    }
+  },
+  "criterion": "Does CORPUS-WINDOW POSITION explain the frozen PromoterAtlas encoder's 0.5076 on the peak-tile rung?",
+  "deviation_from_the_technical_plan": {
+    "status": "Recorded for the user to ratify or reject. Not treated as settled, and the plan file is left unedited.",
+    "what": "The technical plan names SEVEN outcomes; this bar and its grader carry EIGHT. The addition is INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE.",
+    "why": "The plan's own pre-execution review found that shrinkage is not absorption unless it exceeds a matched non-positional control, and that the bar cannot be frozen without that control and the random-stratification null. A control that cannot change the verdict is not a control: with only seven outcomes the grader would be forced to report FRAME_EXPLAINS over a measurement it knows is confounded."
+  },
+  "feasibility_established_first": {
+    "bases_covered_sorted": 625255,
+    "cds_rows_with_locus_tag": 4340,
+    "contig": "NC_000913.3",
+    "excluded_accounting": {
+      "feature_names": [
+        "in_window_any",
+        "in_window_full",
+        "overlap_fraction",
+        "signed_distance_to_next_cds_start",
+        "inside_cds"
+      ],
+      "in_window_any_min_overlap_bases": 1,
+      "in_window_full_definition": "fully covered by the UNION of corpus windows",
+      "n_emitted": 43061,
+      "n_excluded": 356,
+      "n_excluded_ambiguous": 325,
+      "n_excluded_not_found": 31,
+      "n_input_distinct": 43417
+    },
+    "feature_rows_emitted": 43061,
+    "frame_feature_variance": {
+      "in_window_any": {
+        "is_constant": false,
+        "mean": 0.664685,
+        "n_distinct_values": 2
+      },
+      "in_window_full": {
+        "is_constant": false,
+        "mean": 0.191333,
+        "n_distinct_values": 2
+      },
+      "inside_cds": {
+        "is_constant": false,
+        "mean": 0.50461,
+        "n_distinct_values": 2
+      },
+      "overlap_fraction": {
+        "is_constant": false,
+        "mean": 0.469001,
+        "n_distinct_values": 151
+      },
+      "signed_distance_to_next_cds_start": {
+        "is_constant": false,
+        "mean": -17.474884,
+        "n_distinct_values": 6355
+      }
+    },
+    "genome_fraction_covered": 0.134705,
+    "genome_length": 4641652,
+    "locate": {
+      "frame_claim_permitted": true,
+      "genome_length": 4641652,
+      "locate_floor": 0.95,
+      "located_rate": 0.999286,
+      "n_ambiguous": 325,
+      "n_distinct": 43417,
+      "n_located": 43386,
+      "n_not_found": 31,
+      "n_unique": 43061,
+      "tile_length": 150,
+      "unique_rate": 0.9918,
+      "verdict": "LOCATE_OK"
+    },
+    "locate_floor": 0.95,
+    "n_tiles_scored_by_the_arm": 44106,
+    "tiles_in_window_any": 28622,
+    "tiles_in_window_full": 8239,
+    "windows_file_order": 3490,
+    "windows_sorted": 3496
+  },
+  "forecast": {
+    "note": "Scored after the run. My forecast record in this project is 2 of 7 and the errors have been PESSIMISTIC -- the measured bias is that I talk the project out of runs that then succeed. Recorded to be scored, not to be deferred to.",
+    "p_FRAME_EXCLUDED_CONDITIONAL": 0.44,
+    "p_FRAME_EXPLAINS": 0.08,
+    "p_FRAME_PARTIAL": 0.25,
+    "p_INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE": 0.08,
+    "p_INDETERMINATE_BASELINE_NOT_STRENGTHENED": 0.03,
+    "p_INDETERMINATE_FRAME_UNINFORMATIVE": 0.1,
+    "p_INDETERMINATE_HARNESS_DRIFT": 0.015,
+    "p_INDETERMINATE_LOCATE_RATE": 0.005,
+    "reasoning": "Five crude positional features -- two binaries, a coverage fraction, a signed distance and a CDS flag -- are being asked to absorb a 0.1964 margin that a 128-dimensional learned representation produces. The subtractive half already found the detection direction worth only 0.0080 of the atlas channel, so the gain is not obviously the detection axis in any simple form. The likeliest outcomes are therefore that the margin survives, or that it takes a measurable but partial discount. FRAME_EXPLAINS is given real weight anyway because the encoder was pretrained on exactly these windows and 66% of tiles touch one."
+  },
+  "frozen": "2026-11-05",
+  "frozen_before": [
+    "any ridge was fitted on frame features",
+    "any atlas-versus-frame margin was computed",
+    "any within-stratum number existed"
+  ],
+  "granularity_rationale": "in_window_any fires on 28622 of 43061 uniquely-located tiles and in_window_full on 8239, so the two differ sharply in variance and neither is obviously the right resolution. The primary is NAMED here, before any conditioning number exists, so the choice cannot be made after seeing which one answers better. in_window_full means FULLY COVERED BY THE UNION of windows, which is the definition the committed figure was measured with.",
+  "honest_limits_fixed_in_advance": [
+    "The replica is scoped to the corpus rule AS SPECIFIED (200 bp, 5 bp gate, sorted ordering), never 'as the authors ran it': the upstream function threads its gate in FILE order over a GenBank file this repo does not have, and the two orderings differ by 26 windows.",
+    "One organism, one annotation build, one encoder, one rung.",
+    "Ambiguous (325) and not-found (31) tile sequences are excluded and counted, so the scored set is the uniquely-located subset and not the full 44,106 rows.",
+    "689 of the 44,106 scored rows share a sequence with another row, so a sequence duplicated across two peaks can land on both sides of a leave-peak-out split. This is a property of the substrate and of every arm on this rung, reported rather than fixed here.",
+    "The frame features are crude by construction; failing to absorb the margin bounds THESE features, not every possible positional encoding.",
+    "Strata are not exchangeable in outcome distribution, which is why the random stratification null and the per-stratum spreads are mandatory rather than optional."
+  ],
+  "in_window_any_threshold_bases": 1,
+  "inherited_margin": 0.02,
+  "inherited_margin_source": "wiki/promoteratlas_arm_acceptance_bar.json margin.value, read at freeze time and asserted equal to 0.02 rather than restated. Reached here via wiki/promoteratlas_exposure_acceptance_bar.json, which inherited the same number.",
+  "not_a_new_arm": "This measures a LIMIT on the existing measured arm. A positional or fine-tuned PromoterAtlas variant is a NEW ARM under R6 and is candidate 8, not this. This run must not move arms.native150 or the ceiling verdict whatever it finds.",
+  "outcomes": {
+    "FRAME_EXCLUDED_CONDITIONAL": {
+      "meaning": "The gain survives the frame-strengthened baseline and BOTH strata. BOUNDED BY CONSTRUCTION: this excludes THE CORPUS-WINDOW RULE AS REPLICATED -- 200 bp upstream of an annotated gene start with a 5 bp intergenic gate, under sorted ordering, on ONE organism's annotation. A sharper or differently-granular positional feature is NOT excluded, and it may never be written up as 'position excluded'.",
+      "predicate": "frame absorption <= 0.02 AND atlas - (gc + frame) >= 0.02 AND both strata margins >= 0.02"
+    },
+    "FRAME_EXPLAINS": {
+      "meaning": "Corpus-window position was carrying the gain. arms.native150 keeps its measured value; the honest limit becomes a quantified positional discount.",
+      "predicate": "(C2: atlas - (gc + frame) < 0.02 AND frame absorption exceeds the matched non-positional control) OR (C3: the weaker stratum's within-stratum margin < 0.02 AND the random-stratification null leaves its minimum margin >= 0.02)"
+    },
+    "FRAME_PARTIAL": {
+      "meaning": "A material, quantified positional discount rather than a refutation.",
+      "predicate": "frame absorption (margin over gc minus margin over gc+frame) > 0.02 AND atlas - (gc + frame) >= 0.02 AND the weaker stratum margin >= 0.02"
+    },
+    "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE": {
+      "meaning": "A cell fired, but the absorption is confounded. Either the frame took no more of the margin than an equally strong NON-positional feature did, or the size-matched random stratification null already collapses a stratum margin by itself. Shrinkage is not absorption. Pre-committed response: a sharper positional feature or a better-matched control, never dropping the control.",
+      "predicate": "(C2 or C3 fired) AND NOT ((C2 fired AND frame absorption - matched absorption > 0) OR (C3 fired AND random-stratification minimum stratum margin >= 0.02))"
+    },
+    "INDETERMINATE_BASELINE_NOT_STRENGTHENED": {
+      "meaning": "The baseline never received the frame. Adding a column cannot lower a least-squares TRAINING fit, so this is a plumbing fault and 'no absorption' would be a statement about the harness. Checked BEFORE informativeness, because a feed this broken can itself make the frame look uninformative.",
+      "predicate": "median training fit of (gc + frame) < median training fit of gc"
+    },
+    "INDETERMINATE_FRAME_UNINFORMATIVE": {
+      "meaning": "The frame carries less expression signal than the gap under test, so 'adding it did not absorb the gain' is VACUOUSLY true. Pre-committed response: a better positional feature, never a weaker test.",
+      "predicate": "abs(median held-out Spearman of frame features alone) < 0.02"
+    },
+    "INDETERMINATE_HARNESS_DRIFT": {
+      "meaning": "The cached embedding pass no longer reproduces the committed arms.native150, so no frame claim may rest on it. Diagnose the harness; do NOT widen the tolerance.",
+      "predicate": "the local anchor fails to reproduce arms.native150 median within 0.02"
+    },
+    "INDETERMINATE_LOCATE_RATE": {
+      "meaning": "The frame is unknown for too much of the cohort, so the scored subset is no longer the cohort the arm measured.",
+      "predicate": "unique-locate rate over distinct tile sequences < 0.95"
+    }
+  },
+  "pre_commitments": [
+    "The frame must be shown INFORMATIVE before any absorption claim is read, and the response to an uninformative frame is a better positional feature, never a weaker test.",
+    "FRAME_EXCLUDED_CONDITIONAL is BOUNDED: it excludes the corpus-window rule as replicated, at 200 bp with a 5 bp intergenic gate, under sorted ordering, on one organism's annotation. It may NEVER be written as 'position excluded'.",
+    "The stratified cell's baseline must be re-measured ON THE SAME STRATUM, never compared to the full-cohort 0.5076, because stratifying changes both n and the peak composition.",
+    "arms.native150 keeps its measured value whatever the outcome, and the ceiling verdict is not touched by this run.",
+    "Absorption is judged against the matched non-positional series and the size-matched random stratification null. Neither control may be dropped to reach a cleaner verdict."
+  ],
+  "primary_frame_granularity": "in_window_any",
+  "question": "The subtractive half removed the control-vs-tile detection direction and the atlas channel barely moved. This is the ADDITIVE half: hand a cheap baseline the exact positional rule that generated the pretraining corpus and see whether the margin is absorbed.",
+  "reported_also": "in_window_full",
+  "schema": "promoteratlas-frame-acceptance-bar-v1",
+  "verdict_check_order": [
+    "INDETERMINATE_HARNESS_DRIFT",
+    "INDETERMINATE_LOCATE_RATE",
+    "INDETERMINATE_BASELINE_NOT_STRENGTHENED",
+    "INDETERMINATE_FRAME_UNINFORMATIVE",
+    "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE",
+    "FRAME_EXPLAINS",
+    "FRAME_PARTIAL",
+    "FRAME_EXCLUDED_CONDITIONAL"
+  ]
+}
