@@ -219,6 +219,19 @@ to find in the first case.
   to: *exposure is confirmed as a live mechanism (the corpus IS 200 bp upstream regions) and is
   measured not to explain the gain under linear removal up to a 32-dim subspace, attributable cost
   0.0080 against a 0.02 margin; it remains unexcluded NONLINEARLY.*
+  **AMENDED 2026-11-05 with a POSITIONAL clause, the original wording above preserved.** The
+  additive half ran (`wiki/promoteratlas_frame_result_2026-11-01.md`, verdict `FRAME_PARTIAL`) and
+  it does not leave the limit where this bullet left it. Handing a GC baseline the replicated
+  corpus-window rule absorbs **0.0687** of the **0.1950** margin on the located subset, leaving
+  0.1262. More sharply, the cell the plan pre-committed as the STRONGER design -- stratifying on
+  window membership, which controls for it by construction rather than by regression -- finds the
+  advantage over GC is **0.2689 inside** corpus windows and **0.0230 outside**, where 4 of 10 seeds
+  are NEGATIVE and the seed range is [-0.0492, +0.1081]. A size-matched random stratification leaves
+  0.1860, so the collapse outside windows is not an artifact of stratifying. So the honest limit
+  gains: *the gain is CONCENTRATED in corpus-window tiles, and outside them it is not
+  distinguishable from zero on a statistic that run could not resolve.* This does NOT make the
+  linear-removal finding above wrong -- removing a detection DIRECTION and conditioning on window
+  MEMBERSHIP are different interventions, and the second is the one that bites.
 - **The ceiling criterion is untouched.** `ceiling_verdict` stays `blocked:untried-arm` on the
   eukaryotic arm. Nothing here is a new arm: this is a limit on an existing measured arm, not a
   re-read of it and not a variant of it. A positional or fine-tuned PromoterAtlas variant remains a

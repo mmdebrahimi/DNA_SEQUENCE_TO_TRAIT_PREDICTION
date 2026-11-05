@@ -41,6 +41,59 @@
     ],
     "bar": "wiki/promoteratlas_exposure_acceptance_bar.json",
     "date": "2026-11-01",
+    "frame_conditioning": {
+      "anchor_delta_against_the_committed_metric": 0.0,
+      "artifact": "wiki/promoteratlas_frame_conditioning_2026-11-01.json",
+      "bar": "wiki/promoteratlas_frame_acceptance_bar.json",
+      "date": "2026-11-05",
+      "forecast_scored": {
+        "error_direction": "The modal prediction was that the margin would survive cleanly (FRAME_EXCLUDED_CONDITIONAL, p=0.44). It did not: the frame took a material discount and the stratified cell nearly collapsed. The standing bias on record is PESSIMISM about whether a run will succeed; this error runs the other way -- over-confidence that the arm's gain would hold up -- so it is a new data point rather than another instance of the recorded bias.",
+        "hit": false,
+        "modal_prediction": "FRAME_EXCLUDED_CONDITIONAL",
+        "outcome": "FRAME_PARTIAL",
+        "p_assigned_to_outcome": 0.25,
+        "p_modal": 0.44,
+        "standing_record_after": "2 of 8",
+        "standing_record_before": "2 of 7"
+      },
+      "may_NEVER_be_written_as": "'position excluded', and equally not 'position explains it'. The bounded form is: the corpus-window rule AS REPLICATED -- 200 bp upstream of an annotated gene start with a 5 bp intergenic gate, under sorted ordering, on ONE organism's annotation -- absorbs a material part of the margin, and the advantage outside those windows is indistinguishable from zero on a statistic this run could not resolve.",
+      "measured": {
+        "attributable_absorption": 0.0949,
+        "c1_auroc_embedding_predicting_corpus_membership": 0.8346,
+        "c1_auroc_gc_only": 0.5342,
+        "frame_absorption": 0.0687,
+        "frame_alone": 0.317,
+        "margin_in_window": 0.2689,
+        "margin_in_window_seed_range": [
+          0.2361,
+          0.3213
+        ],
+        "margin_out_window": 0.023,
+        "margin_out_window_seed_range": [
+          -0.0492,
+          0.1081
+        ],
+        "margin_over_gc": 0.195,
+        "margin_over_gc_plus_frame": 0.1262,
+        "n_seeds_out_window_below_bar": 5,
+        "n_seeds_out_window_negative": 4,
+        "n_tiles_excluded": 408,
+        "n_tiles_with_a_frame": 43698,
+        "random_stratification_null_min_margin": 0.186,
+        "subset_atlas": 0.5108,
+        "subset_gc": 0.3159,
+        "subset_gc_plus_frame": 0.3846
+      },
+      "memo": "wiki/promoteratlas_frame_result_2026-11-01.md",
+      "metric_is_NOT_retro_edited": "arms.native150 = 0.5076 keeps its measured value, per the frame bar's pre-commitment (d). The local anchor reproduced it to 0.0000 on the committed splits before any new number was read. What changes is the honest limit.",
+      "not_a_new_arm": "This is a LIMIT on an existing measured arm. The ceiling verdict is untouched and a positional or fine-tuned PromoterAtlas variant remains a NEW ARM under R6.",
+      "reading": "The encoder plainly CARRIES corpus membership (AUROC 0.8346 against GC's 0.5342). What the gain is made of is the harder question, and the two cells answer it with different strength. C2, a LINEAR model on five crude positional features, absorbs 0.0687 of the 0.1950 margin and leaves 0.1262 standing. C3, which controls for membership BY CONSTRUCTION and which the plan pre-committed as the STRONGER design, finds the advantage over GC is 0.2689 inside corpus windows and 0.0230 outside -- and the size-matched random stratification null leaves 0.1860, so the collapse outside windows is not an artifact of stratifying.",
+      "resolved_by_this_run": false,
+      "status": "MEASURED_BUT_THE_PARTIAL_VS_EXPLAINS_DISTINCTION_IS_UNRESOLVED",
+      "the_attribution_control_did_not_hold_its_own_premise": "`attributable_absorption` +0.0949 is only WEAKLY controlled. The control's premise is matched informativeness, and the non-positional comparators are WEAKER standalone than the frame (dinucleotide 0.2895, k-mer4 0.2811, against the frame's 0.3170), so part of that figure may measure the frame being a BETTER feature rather than a POSITIONAL one. What the series does establish is directional and still useful: adding non-positional composition columns did not shrink the atlas margin at all -- it WIDENED it, because both k-mer baselines lost held-out ground against plain GC -- while adding the frame shrank it.",
+      "the_strongest_cell_points_HARDER_at_position_than_the_verdict_does": "Outside corpus windows the atlas advantage over GC is NOT DISTINGUISHABLE FROM ZERO: 5 of 10 seeds fall below the 0.02 bar and 4 are NEGATIVE, over a seed range of [-0.0492, 0.1081]. The point median landed 0.0004 above the bar, which is what selected FRAME_PARTIAL instead of FRAME_EXPLAINS. That is a coin flip, so this run does not resolve which of the two is right, and FRAME_PARTIAL may NOT be quoted as though the stratified cell came out clean.",
+      "verdict": "FRAME_PARTIAL"
+    },
     "harness_cross_device_reconcile": {
       "atlas_per_seed_exact_matches": "10/10",
       "gc_per_seed_exact_matches": "10/10",
