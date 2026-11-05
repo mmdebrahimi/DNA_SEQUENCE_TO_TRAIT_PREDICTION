@@ -863,6 +863,7 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 ## [plan_file: Frame_Conditioning_Does_Corpus_Window_Position_Explain_PromoterAtlas_0_5076_Plan/] 2026-11-01
+**Status:** as-built - all 7 steps executed 2026-11-05; verdict FRAME_PARTIAL, unresolved against FRAME_EXPLAINS. Result `wiki/promoteratlas_frame_result_2026-11-01.md`. DIVERGED from the plan in two recorded ways: the grader carries an eighth outcome (INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE) the plan did not name, pending user ratification; and `in_window_full` is implemented as UNION coverage, which is the definition the plan's own pinned 8,239 figure was measured with rather than the "entirely inside one" its prose says. NOT yet moved to executed_plans/: tests/test_frame_window_ordering.py hardcodes the plans/ path, and the pending ratification would amend this plan.
 **Summary:** The linear experiments showed that removing the detection direction does not cost the atlas channel; this asks the same question from the other side — hand the baseline the exact positional rule that built the pretraining corpus, and see whether the gain survives.
 **Key decisions:**
 - Three cells in increasing strength: C1 asks whether the encoder KNOWS corpus membership, C2 whether handing the frame to the GC baseline absorbs the atlas margin, and C3 -- the strongest -- stratifies on in-window vs out-of-window tiles, which controls for frame membership BY CONSTRUCTION and so does not require the frame to be linearly modellable.

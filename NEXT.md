@@ -661,3 +661,39 @@ with splicing and chromatin fully present — decoded **12/12 traits at r 0.46-0
 embeddings on natural populations are 0-for-5. So eukaryotic machinery is NOT what blocks the climb;
 natural-population confounding is. The rung after bacteria may therefore be a CONSTRUCTED EUKARYOTE rather
 than "animals". Not changed here — re-ordering a roadmap is a user call.
+
+
+## CORRECTION 2026-11-05 - CLAUDE.md says `.claude/execute-plan-state/` is gone from this host. It is not.
+
+CLAUDE.md's Project-workflow section reads: *"Execution state was tracked at
+`.claude/execute-plan-state/Ecoli_G2P_Platform_Technical_Plan.json` (that directory no longer
+exists on this host - the ledger + git history are the live record)"*. **The directory exists and
+holds nine state files, the newest dated 2026-11-02.** It is gitignored (`.gitignore:89`), which is
+why it is invisible to `git status` and easy to believe absent.
+
+**This cost a real step.** `/execute-plan`'s Step 0 is "check for in-flight execution", and I
+skipped it on the strength of that sentence. There WAS a state file for the frame-conditioning plan
+(opened 2026-11-01, all steps pending, stopped before Step 1 because the review found three
+blockers). My run happened to resume it correctly - same sequential mode, same recorded order
+[1,2,4,3,5,6,7] - by independent agreement rather than by reading the file. An orientation claim
+that is false in the "nothing is there" direction silently converts a resume into a fresh start.
+CLAUDE.md cannot be edited (35,459 of 35,460 words; USER AUTHORITY), so this is the correction of
+record.
+
+## OPEN - four user-authority calls from the frame-conditioning run (2026-11-05)
+
+All four are in the first screen of `wiki/promoteratlas_frame_result_2026-11-01.md`.
+
+1. **The frozen bar grades a POINT MEDIAN where the statistic is unstable.** C3's weaker stratum
+   margin splits 5-5 across the 0.02 bar with four NEGATIVE seeds, range [-0.0492, +0.1081], and the
+   median landed 0.0004 above it - which is what selected `FRAME_PARTIAL` over `FRAME_EXPLAINS`.
+   Should the bar require an interval? I did NOT re-size it after seeing the result.
+2. **Ratify or reject the grader's eighth outcome**, `INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE`.
+3. **Build the shuffled-window control?** The matched-strength series failed its own premise: the
+   non-positional comparators are weaker standalone (0.2895 / 0.2811) than the frame (0.3170).
+4. **Candidate 8 is stale** - the G-A table says pending, the arms ledger says its arm is measured.
+   Untouched, because it is another session's work.
+
+Unchanged and still blocking Steps 6 and 9 of the vacation plan: **server2 is not on this L2
+network** (no ARP entry, four independent routes). Recovery stays armed via
+`scripts/retrieve_server2_finetune.py --apply --then-score`.
