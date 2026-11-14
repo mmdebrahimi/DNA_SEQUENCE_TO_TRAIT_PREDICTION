@@ -680,19 +680,57 @@ that is false in the "nothing is there" direction silently converts a resume int
 CLAUDE.md cannot be edited (35,459 of 35,460 words; USER AUTHORITY), so this is the correction of
 record.
 
-## OPEN - four user-authority calls from the frame-conditioning run (2026-11-05)
+## OPEN - four user-authority calls from the frame-conditioning run (2026-11-05, measured 11-14)
 
-All four are in the first screen of `wiki/promoteratlas_frame_result_2026-11-01.md`.
+All four are in the first screen of `wiki/promoteratlas_frame_result_2026-11-01.md`, whose
+MEASURED UPDATE 2026-11-14 block carries the detail and the revised recommendations. Still four
+authority calls; two of them now rest on measurement rather than judgement. Nothing frozen was
+edited: the pinned five, `uv.lock`, the bar, the conditioning artifact and the arm artifact are
+byte-unchanged and `FRAME_PARTIAL` still reads `resolved: false`.
 
-1. **The frozen bar grades a POINT MEDIAN where the statistic is unstable.** C3's weaker stratum
-   margin splits 5-5 across the 0.02 bar with four NEGATIVE seeds, range [-0.0492, +0.1081], and the
-   median landed 0.0004 above it - which is what selected `FRAME_PARTIAL` over `FRAME_EXPLAINS`.
-   Should the bar require an interval? I did NOT re-size it after seeing the result.
+1. **The frozen bar grades a POINT MEDIAN where the statistic is unstable.** Unchanged as a fact:
+   C3's weaker stratum margin splits 5-5 across the 0.02 bar with four NEGATIVE seeds, range
+   [-0.0492, +0.1081], median 0.0004 above it. **My earlier "require an interval" recommendation is
+   WITHDRAWN as stated - it is unachievable.** The 95% t-interval is [-0.0149, 0.0517], half-width
+   0.0333, WIDER than the 0.02 threshold it must discriminate; ~21 seeds to get the half-width under
+   the bar, ~3,253 to separate the estimate from it. The mean is 0.0184, BELOW the bar, while both
+   reported estimators (0.0230, 0.0204) are above - the defensible point estimates already straddle
+   it. Sign test 5/10, p = 1.000. Also under-specified: the grader reads a DIFFERENCE OF MEDIANS
+   (0.0204) while the stability block reports PER-SEED PAIRED margins (0.0230). **Revised: edit no
+   frozen artifact. Freeze a NEW bar for the successor run** (23 per-arm bars already live in
+   `wiki/`) naming one statistic, grading it with a bootstrap interval, making `UNRESOLVED`
+   first-class, and adding the gate in item 2. Drafted, NOT frozen - the criteria are yours.
 2. **Ratify or reject the grader's eighth outcome**, `INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE`.
-3. **Build the shuffled-window control?** The matched-strength series failed its own premise: the
-   non-positional comparators are weaker standalone (0.2895 / 0.2811) than the frame (0.3170).
+   **Still ratify, but it was INERT here** - re-grading from the artifact gives
+   `absorbs_unattributably = False`; with seven outcomes the grader would still have said
+   `FRAME_PARTIAL`, not `FRAME_EXPLAINS`. Ratify on prospective grounds (it precedes every
+   substantive outcome in `CHECK_ORDER`, so it can only demote), not as having caught this confound.
+   **The gate that would have caught it does not exist:** the artifact records
+   `control_is_at_least_as_strong_as_the_frame = False` and grep proves it feeds NOTHING in
+   `frame_verdict.py` or `freeze_frame_bar.py`. The missing one is
+   `INDETERMINATE_CONTROL_PREMISE_UNMET`, reading a boolean already computed.
+3. **ANSWERED BY MEASUREMENT - the shuffled-window control is DEAD and the replacement is built,
+   run and passing.** `frame_features` takes windows only as the union mask, so a window shuffle
+   leaves the two `cds_rows`-derived columns byte-identical; those two ALONE score 0.3183 vs the
+   full table's 0.3170 (at least the full table on 6/10 seeds; the window columns below it on
+   10/10) and absorb +0.0705 vs the frame's +0.0687 - the "control" would have absorbed MORE than
+   the treatment and fired a spurious indeterminate
+   (`wiki/promoteratlas_frame_column_split_2026-11-05.json`). Replacement is a CIRCULAR ROTATION of
+   the whole annotation (`dna_decode/glm/annotation_shift.py`), matched exactly on gene count,
+   gene-length multiset, strand composition, covered bases and density. Run over 5 offsets
+   (`wiki/promoteratlas_frame_shift_null_2026-11-14.json`): rotated absorption -0.0009 vs true
+   +0.0687, so **attributable_absorption = +0.0696 against a control whose premise holds by
+   construction**; rotated frame table predictively dead (0.0114 vs 0.3170); and the in/out collapse
+   does NOT reproduce (+0.2459 true vs -0.0164 rotated, both rotated strata ~0.19, agreeing with
+   the committed size-matched null's 0.1860). REPORTED, NOT GRADED - the bar does not name it, so it
+   settles ATTRIBUTION and does not resolve PARTIAL-vs-EXPLAINS. Your call is now between a
+   measured-dead option and a measured-working one.
 4. **Candidate 8 is stale** - the G-A table says pending, the arms ledger says its arm is measured.
-   Untouched, because it is another session's work.
+   Untouched, because it is another session's work; that reasoning is unchanged and correct. **The
+   real gap is that nothing DETECTS the divergence:** 7 test files reference `arms_ledger` and none
+   reconciles a candidate row against it, while `advance_ranker`'s `next_action` is `table[0]`
+   unconditionally - so a stale `pending` row actively misdirects the next `--advance` run, which
+   already happened once in this arc. A report-only reconciliation check is the addition.
 
 Unchanged and still blocking Steps 6 and 9 of the vacation plan: **server2 is not on this L2
 network** (no ARP entry, four independent routes). Recovery stays armed via

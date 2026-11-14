@@ -64,6 +64,119 @@ the result needs your call.
 and silently marking someone else's candidate done is the opposite of what the journal is for. Only
 candidate 7 was retired.
 
+### MEASURED UPDATE 2026-11-14 -- two of the four decisions now rest on measurement, not judgement
+
+Everything above is the original 2026-11-01 text and is unchanged. This block is additive. Nothing
+frozen was edited to produce it: the five pinned files, `uv.lock`, the acceptance bar, the
+conditioning artifact and the arm artifact are all byte-unchanged, the published `FRAME_PARTIAL`
+still carries `resolved: false`, and the 20 tests that rebuild the grader's input from the
+committed artifact and re-grade it still pass.
+
+**DECISION 3 is answered, and BOTH halves of the answer are measured.** The recommendation above --
+a shuffled-window control -- is **dead, and would have produced a confident wrong answer.**
+`frame_features(located, mask, cds_rows, *, tile_length)` takes window information ONLY as the
+union mask, so relocating windows changes three of its five columns and leaves the two
+`cds_rows`-derived columns byte-identical between treatment and control. Measured on the same ten
+committed folds (`wiki/promoteratlas_frame_column_split_2026-11-05.json`): those two CDS columns
+**alone** score `0.3183` standalone against the full five-column table's `0.3170`, and the
+comparison has to be paired within seed to mean anything because the seed spread exceeds the gap --
+the CDS pair is at least the full table on **6 of 10** seeds, while the three window columns are
+below it on **10 of 10**. Handed to the GC baseline the CDS columns absorb `+0.0705` against the
+frame's `+0.0687`, so the control would have absorbed MORE than the treatment, driven
+`attributable_absorption` negative, and fired `INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE` for a
+reason that is an artifact of shared columns rather than a fact about position. Cost of finding
+that out: about seven seconds of compute.
+
+The replacement is a **circular rotation of the whole annotation**
+(`dna_decode/glm/annotation_shift.py`), which regenerates BOTH halves of the table from the rotated
+rows so nothing is invariant. It is matched by construction on gene count, the gene-length
+multiset, strand composition, total CDS-covered bases and coding density -- exactly, not
+approximately, and the runner refuses any offset that fails to preserve them. Independent
+per-window relocation cannot do this: at `0.8626` coding density most relocated windows land inside
+genes, so `in_window_any` would start tracking "inside a gene body" instead of "upstream of a gene
+start", substituting a different confound for the one being removed.
+
+**It was run, and the attribution survives it** (`wiki/promoteratlas_frame_shift_null_2026-11-14.json`,
+five offsets, the same ten folds for every arm, true arm recomputed in the same run and reproducing
+`0.3170` and `+0.0687` exactly):
+
+| quantity | true annotation | rotated (5 offsets) |
+|---|---|---|
+| frame absorption | `+0.0687` | `-0.0009` (`-0.0050` to `+0.0015`) |
+| frame features standalone | `0.3170` | `0.0114` |
+| in-window margin | `0.2689` | `0.1774` |
+| out-of-window margin | `0.0230` | `0.1938` |
+| in/out collapse | `+0.2459` | `-0.0164` (`-0.0751` to `+0.0003`) |
+
+So the absorption is **specific to true annotation positions**, not a property of handing a ridge
+five annotation-shaped columns: `attributable_absorption = +0.0696` against a control whose premise
+holds by construction instead of by hope. The rotated table being predictively dead on its own
+(`0.0114`) is the sanity check that the rotation does what it claims. And the in/out collapse does
+**not** reproduce under rotation -- both rotated strata sit near `0.19`, which independently agrees
+with the committed size-matched random null's `0.1860` and with the located subset's own margin
+over GC of `0.1950`. Two differently-built nulls landing in the same place is worth more than
+either alone, and the rotation is the stronger of the two because it matches the spatial clustering
+of the strata and not merely their size.
+
+**This is REPORTED, not graded, and it does not resolve the verdict.** The frozen bar does not name
+this control; letting a control added after the fact select a verdict is the move the bar exists to
+prevent. PARTIAL-versus-EXPLAINS still turns on the out-of-window stratum margin sitting `0.0004`
+from its bar, which this control does not address. What it settles is the ATTRIBUTION half.
+
+**DECISION 1: my recommendation above is now withdrawn as stated, because it is unachievable.**
+"Require an interval, and until then treat PARTIAL-vs-EXPLAINS as open" means *permanently* open on
+this design. On the ten per-seed values the 95 percent t-interval is `[-0.0149, 0.0517]`, a
+half-width of `0.0333` -- **wider than the `0.02` threshold it must discriminate**, and containing
+both zero and the bar. Reaching a half-width below the bar needs about **21** seeds; separating the
+point estimate from the bar needs about **3,253**. Worse, the arithmetic mean is `0.0184`, **below**
+the bar, while both estimators reported above (`0.0230`, `0.0204`) are above it -- so the spread of
+defensible point estimates already straddles the threshold, which is a stronger statement than
+"0.0004 away". A sign test is `5` of `10`, two-sided `p = 1.000`. More seeds is therefore the wrong
+lever: the design is the limit, and "until then" would be never.
+
+There is also a statistic mismatch that makes "an interval" under-specified until it is resolved:
+the grader reads a **difference of medians** (`min_stratum_margin = 0.0204`) while the stability
+block reports the spread of **per-seed paired margins** (median `0.0230`). An interval built from
+the second does not bound the first.
+
+**Revised recommendation: edit no frozen artifact.** Bars here are per-run pre-registrations --
+there are 23 `*_acceptance_bar.json` files in `wiki/`, one per arm -- and this one has already
+discharged its function. Freezing a NEW bar for the successor run, which names ONE statistic and
+grades it, carries a bootstrap interval on that statistic, names `UNRESOLVED` as a first-class
+outcome rather than forcing a choice between two substantive ones, and adds the missing gate below,
+requires no outcome-neutrality proof and no revert pre-commitment, because nothing is edited. The
+frame bar would take at most a non-grading `superseded_by` pointer, which touches no predicate. That
+dissolves the problem instead of satisfying it. **Drafted, not frozen** -- the acceptance criteria
+are yours.
+
+**DECISION 2: still ratify, but not for the reason given above, and the record should say so.** The
+eighth outcome was **INERT on this run's data**: re-grading from the committed artifact gives
+`absorbs_unattributably = False` (C2 never fired -- `margin_over_gc_plus_frame 0.1262` is not below
+`0.02` -- and C3's random null cleared the bar at `0.186`). With seven outcomes the grader would
+still have reported `FRAME_PARTIAL`, **not** `FRAME_EXPLAINS`. So it should be ratified on
+prospective grounds -- it sits before every substantive outcome in `CHECK_ORDER`, so it can only
+ever demote, which satisfies the narrow checkable rule that a post-hoc outcome may only be an
+abstention inserted ahead of all substantive outcomes -- and it should not be credited with having
+caught this run's confound, because it did not.
+
+**The gate that WOULD have caught it does not exist.** The artifact records
+`matched_control_premise.control_is_at_least_as_strong_as_the_frame = False`, and a grep for that
+field across `dna_decode/glm/frame_verdict.py` and `scripts/freeze_frame_bar.py` returns **zero**
+hits: it is computed and discarded. The eighth outcome guards *"absorption did not exceed the
+matched control"*; nothing guards *"the control was not matched"*. The missing gate is an
+`INDETERMINATE_CONTROL_PREMISE_UNMET` reading a boolean the pipeline already produces. That is this
+repo's own inert-control pattern in a new place, and it belongs in the successor bar rather than in
+the frozen one.
+
+**DECISION 4: leaving the row alone is right; the gap is that nothing DETECTS the divergence.**
+Seven test files reference `arms_ledger` and none reconciles a candidate row's `pending` against the
+arms ledger's `measured`. Meanwhile `advance_ranker`'s `next_action` is `table[0]` unconditionally,
+so a stale `pending` row actively misdirects the next `--advance` run -- which already happened once
+in this arc. The ownership argument against marking another session's candidate done is unchanged
+and correct. A reconciliation check that reports divergence without editing either side is the
+addition, and it belongs to no single session.
+
+
 ---
 
 ## CORRECTIONS
