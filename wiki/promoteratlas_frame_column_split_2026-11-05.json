@@ -1,0 +1,273 @@
+{
+  "schema": "promoteratlas-frame-column-split-v1",
+  "date": "2026-11-05",
+  "question": "How much of the frame table's standalone signal is carried by the two CDS-derived columns, which a WINDOW SHUFFLE leaves byte-identical between treatment and control?",
+  "why_this_runs_before_the_control_is_built": "The proposed shuffled-window control relocates windows, which changes only the three mask-derived columns. If the two cds_rows-derived columns carry the signal, the control is a near-copy of the treatment, attributable_absorption collapses toward zero, and the grader fires INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE for a reason that is an artifact of shared columns rather than a fact about position.",
+  "anchor": {
+    "committed_native150_median": 0.5076,
+    "reproduced_full_cohort_median": 0.5076,
+    "abs_delta": 0.0,
+    "tolerance": 0.02,
+    "ok": true
+  },
+  "locate": {
+    "n_distinct": 43417,
+    "n_unique": 43061,
+    "n_ambiguous": 325,
+    "n_not_found": 31,
+    "tile_length": 150,
+    "genome_length": 4641652
+  },
+  "column_partition": {
+    "window_derived": [
+      "in_window_any",
+      "in_window_full",
+      "overlap_fraction"
+    ],
+    "cds_derived": [
+      "signed_distance_to_next_cds_start",
+      "inside_cds"
+    ],
+    "window_indices": [
+      0,
+      1,
+      2
+    ],
+    "cds_indices": [
+      3,
+      4
+    ],
+    "asserted_against_live_feature_names": [
+      "in_window_any",
+      "in_window_full",
+      "overlap_fraction",
+      "signed_distance_to_next_cds_start",
+      "inside_cds"
+    ],
+    "note": "frame_features() receives window information ONLY as the union mask. The cds_derived columns are computed from cds_rows and are INVARIANT under any relocation of the window set."
+  },
+  "standalone_medians": {
+    "frame_alone_all_five": 0.317,
+    "window_alone_three_cols": 0.2583,
+    "cds_alone_two_cols": 0.3183
+  },
+  "handed_to_gc_medians": {
+    "gc": 0.3159,
+    "gc_plus_frame": 0.3846,
+    "gc_plus_window_cols": 0.3797,
+    "gc_plus_cds_cols": 0.3864
+  },
+  "absorption": {
+    "frame": 0.0687,
+    "window_cols_only": 0.0638,
+    "cds_cols_only": 0.0705,
+    "cds_share_of_frame_absorption": 1.0262,
+    "note": "Absorption here is the GAIN a baseline receives from the columns (gc+X minus gc), NOT the margin-shrinkage figure the frozen bar grades. It is reported because a shuffled-window control's absorption is what the grader would compare against."
+  },
+  "decisive_ratio": {
+    "cds_share_of_standalone": 1.0041,
+    "window_share_of_standalone": 0.8151,
+    "note": "Shares do not sum to 1: the two halves overlap, because corpus windows are defined as the 200 bp upstream of annotated gene starts, so signed_distance_to_next_cds_start is a continuous restatement of in_window_any."
+  },
+  "paired_within_seed": {
+    "n_seeds": 10,
+    "cds_minus_frame_median": 0.0043,
+    "cds_minus_frame_mean": 0.0013,
+    "n_seeds_cds_at_least_frame": 6,
+    "window_minus_frame_median": -0.0591,
+    "n_seeds_window_at_least_frame": 0,
+    "note": "Paired within seed. If cds_minus_frame straddles zero with roughly half the seeds on each side, the two CDS columns ALONE match the full five-column table, so the three window columns carry no unique standalone signal and a window shuffle cannot remove the frame table's predictive content."
+  },
+  "verdict": "WINDOW_SHUFFLE_INVALID_CDS_COLUMNS_CARRY_THE_SIGNAL",
+  "per_seed": {
+    "anchor_atlas_full": [
+      0.5461,
+      0.5499,
+      0.4983,
+      0.4986,
+      0.5075,
+      0.5163,
+      0.5078,
+      0.4933,
+      0.5016,
+      0.521
+    ],
+    "atlas": [
+      0.5475,
+      0.553,
+      0.5045,
+      0.4981,
+      0.5098,
+      0.5176,
+      0.5118,
+      0.4988,
+      0.5066,
+      0.518
+    ],
+    "gc": [
+      0.3059,
+      0.325,
+      0.3115,
+      0.2993,
+      0.3239,
+      0.3429,
+      0.3138,
+      0.3214,
+      0.3179,
+      0.2828
+    ],
+    "frame_alone": [
+      0.3181,
+      0.3385,
+      0.2741,
+      0.3116,
+      0.3158,
+      0.3293,
+      0.3075,
+      0.289,
+      0.319,
+      0.3387
+    ],
+    "window_alone": [
+      0.2484,
+      0.2633,
+      0.2387,
+      0.229,
+      0.2618,
+      0.2844,
+      0.2699,
+      0.2772,
+      0.2549,
+      0.2506
+    ],
+    "cds_alone": [
+      0.3341,
+      0.3185,
+      0.2789,
+      0.3057,
+      0.331,
+      0.3331,
+      0.3293,
+      0.2975,
+      0.3085,
+      0.318
+    ],
+    "gc_frame": [
+      0.386,
+      0.4115,
+      0.3484,
+      0.3678,
+      0.3877,
+      0.4028,
+      0.3693,
+      0.3658,
+      0.393,
+      0.3832
+    ],
+    "gc_window": [
+      0.3739,
+      0.3929,
+      0.3727,
+      0.3609,
+      0.3859,
+      0.4091,
+      0.379,
+      0.3879,
+      0.3803,
+      0.3547
+    ],
+    "gc_cds": [
+      0.3921,
+      0.4091,
+      0.3599,
+      0.3648,
+      0.3937,
+      0.4079,
+      0.381,
+      0.3724,
+      0.3918,
+      0.3784
+    ]
+  },
+  "spreads": {
+    "anchor_atlas_full": {
+      "n": 10,
+      "median": 0.5076,
+      "mean": 0.514,
+      "min": 0.4933,
+      "max": 0.5499,
+      "sd": 0.0198
+    },
+    "atlas": {
+      "n": 10,
+      "median": 0.5108,
+      "mean": 0.5166,
+      "min": 0.4981,
+      "max": 0.553,
+      "sd": 0.019
+    },
+    "gc": {
+      "n": 10,
+      "median": 0.3159,
+      "mean": 0.3144,
+      "min": 0.2828,
+      "max": 0.3429,
+      "sd": 0.0163
+    },
+    "frame_alone": {
+      "n": 10,
+      "median": 0.317,
+      "mean": 0.3142,
+      "min": 0.2741,
+      "max": 0.3387,
+      "sd": 0.0204
+    },
+    "window_alone": {
+      "n": 10,
+      "median": 0.2583,
+      "mean": 0.2578,
+      "min": 0.229,
+      "max": 0.2844,
+      "sd": 0.0171
+    },
+    "cds_alone": {
+      "n": 10,
+      "median": 0.3183,
+      "mean": 0.3155,
+      "min": 0.2789,
+      "max": 0.3341,
+      "sd": 0.018
+    },
+    "gc_frame": {
+      "n": 10,
+      "median": 0.3846,
+      "mean": 0.3815,
+      "min": 0.3484,
+      "max": 0.4115,
+      "sd": 0.0189
+    },
+    "gc_window": {
+      "n": 10,
+      "median": 0.3797,
+      "mean": 0.3797,
+      "min": 0.3547,
+      "max": 0.4091,
+      "sd": 0.0157
+    },
+    "gc_cds": {
+      "n": 10,
+      "median": 0.3864,
+      "mean": 0.3851,
+      "min": 0.3599,
+      "max": 0.4091,
+      "sd": 0.0168
+    }
+  },
+  "honest_limits": [
+    "This measures the COLUMN partition only. It does not measure a shuffled control; it measures what such a control could not change.",
+    "It does NOT re-grade the frame arm and consults no acceptance bar. The frame verdict FRAME_PARTIAL and its resolved=false status are untouched.",
+    "The share is a ratio of medians over 10 seeds on 25 percent peak-disjoint held-out splits; the two halves overlap, so the shares are not a variance decomposition.",
+    "A viable verdict on this axis would NOT make a window shuffle matched on gene density. Independent per-window relocation still breaks density; a circular shift of the whole annotation preserves it."
+  ],
+  "seconds": 6.9
+}
