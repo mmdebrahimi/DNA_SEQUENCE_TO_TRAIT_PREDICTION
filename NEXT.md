@@ -1,3 +1,38 @@
+## ANSWERED 2026-11-14 - re-route to kaggle_t4 (user), kernel BUILT and verified, NOT yet pushed
+
+**The user chose option (A), re-route to `kaggle_t4`.** Done, and the bar edit carries its proof:
+all **19** non-route keys are byte-identical before and after, `check_order` and the
+FINETUNE_ADDS/TIES/NO_GAIN decision untouched, every threshold and all of
+`frozen_hyperparameters` unchanged. The 129.6 h ceiling is **left exactly as frozen** and simply
+stops binding, because it bounds a LOCAL projection -- re-deriving it for a Kaggle route would be
+inventing a second number under cover of the first.
+
+`scripts/kaggle/build_promoteratlas_finetune_kernel.py` is built and self-tests clean. It calls the
+repo's `run()`, NOT `main()`: the route gate lives in `main()` and correctly refuses a non-local
+route, so it is left alone rather than patched. The embed set is resolved by **AST**, not
+hand-listed -- it found **21** modules including transitive ones a hand-list would have missed
+(`expression_heads_probe`, `positional_readout`, `detached_launch`), and a regex sweep had returned
+a docstring line `from the` as if it were an import. `PA_REPO` and `MPRA_CACHE` are both
+env-overridable, so nothing is forked to run on Kaggle.
+
+**Verified against real data, not stubs:** the emitted kernel unpacks, imports `run()` **from the
+unpacked payload rather than the repo** (asserted -- otherwise the test is vacuous), and loads the
+real **44,106**-tile x 150 bp cohort through the embedded loader, with the documented tuple
+contract of `load_peak_tiles` re-checked. The sibling tile-arm kernel's first Kaggle run died
+because its dry run stubbed exactly that boundary.
+
+**NOT yet pushed, and this is the remaining step.** Push is free-tier (no money gate) and
+reversible; use a FRESH slug, never one holding retrieved output:
+`uv run python scripts/kaggle_push_poll.py push <kernel.py> pa-finetune-arm-v1 --gpu`. Two honest
+unknowns remain until it runs on the real device: the T4 per-epoch cost (the kernel MEASURES one
+real epoch rather than carrying the meaningless local 1568.1 s/epoch) and whether 38 epochs x 10
+seeds fits one 12 h session. A session cut is survivable by design -- `run()` orders its phases
+budget -> nulls -> extend, so an early stop still yields a gradeable verdict and loses only the
+ineligible 8-to-38 diagnostic, stamping BOUNDED_BY_WALL_CLOCK. Chaining is supported via
+`$FT_CKPT_IN`, and `FT_SMOKE_ONLY=1` measures the rate without scoring anything.
+
+Original decision text follows, kept because it is the record of why the route was re-decidable.
+
 ## DECISION NEEDED 2026-11-14 - the one untried ambitious arm is ready to run and BOTH of its route premises have expired
 
 **It did not fail. The host lost power.** `finetuned-promoteratlas-encoder-150bp` has read `planned`
