@@ -1,0 +1,86 @@
+{
+  "anchors_verified_live": {
+    "bar": "wiki/finetune_arm_acceptance_bar.json",
+    "events": "Windows System log, Ids 41/6005/6008/1074/109",
+    "lock": "data/unattended/finetune_arm.lock",
+    "log": "data/unattended/finetune_arm.log",
+    "probe": "wiki/finetune_arm_feasibility_2026-11-02.json",
+    "probe_host_free_ram_bytes": 8384045056,
+    "rule": "every number here is re-read from one of these at emit time."
+  },
+  "arm": "finetuned-promoteratlas-encoder-150bp",
+  "consequences": {
+    "arm_status_unchanged": "planned",
+    "resume_cost": "one epoch, and in this case zero -- no epoch had completed, so there is no partial trajectory to honour or discard.",
+    "runner_docstring_now_one_death_better_explained": "the module states 'six recorded long-run deaths, two of them unexplained'. This was one of them.",
+    "why_unchanged": "a death explains nothing about predictive merit. The arm was never run, so this says nothing for or against a fine-tuned encoder beating 0.5076."
+  },
+  "date": "2026-11-14",
+  "diagnosis": {
+    "boot_after": "2026-11-04T12:15:05 (Event 41) / 12:15:19 (Event 6008, 6005)",
+    "cause": "the host lost power. The process did not fail; the operating system stopped.",
+    "corroboration": "the user independently reported a power outage in this period, which is why server1 and server2 were offline. Three kernel-recorded dirty shutdowns and an independently reported outage agree.",
+    "event_6008_recorded_shutdown": "2026-11-04T12:00:57",
+    "evidence_source": "Windows System event log, this host (SHNEITZER)",
+    "how_far_the_run_got": "past the bar's route check and past the cohort load (the log's one substantive line reports 44,106 tiles x 150 bp), and not as far as epoch 1. The runner beats the heartbeat before any epoch precisely so this window is visible, and no heartbeat file exists for this job.",
+    "lock_acquired": "2026-11-04T12:01:25",
+    "not_an_isolated_event": "three unexpected shutdowns in ~42 h on this host",
+    "timestamp_caveat_stated_not_hidden": "Event 6008's shutdown time (12:00:57) PRECEDES the lock (12:01:25) by 28 s, which cannot be literally true. That field is not a measured instant -- Windows reports the last periodically-written clock checkpoint, which lags a hard power loss. The defensible bound is therefore: the host went down between 12:01:25 (lock acquired, cohort loaded) and 12:15:05 (boot). The exact second is NOT resolvable from this evidence and is not claimed.",
+    "unexpected_shutdowns": [
+      {
+        "logged_at": "2026-11-03T19:50:40",
+        "recorded_shutdown": "2026-11-03T18:22:41"
+      },
+      {
+        "logged_at": "2026-11-04T09:05:56",
+        "recorded_shutdown": "2026-11-03T22:00:22"
+      },
+      {
+        "logged_at": "2026-11-04T12:15:19",
+        "recorded_shutdown": "2026-11-04T12:00:57"
+      }
+    ]
+  },
+  "expired_premises_blocking_relaunch": {
+    "ceiling_derivation_quoted": "216.00 h of window x 0.60 committable = 129.60 h. The fraction is derived from this host's MEASURED throughput variance: two timings disagreed by 34%, so a horizon sized on today's rate can take 1.34x as long, which alone permits at most 0.",
+    "consequence_for_the_ceiling": "the planned run is 129.3 h at the bar's rate and 165.5 h at the measured rate, against a ceiling derived from a window that no longer exists.",
+    "consequence_for_the_route": "the disqualifier against kaggle_t4 was retrievability, not compute. With the session attended, a Kaggle chain CAN be retrieved, so the route is re-decidable on its own stated logic.",
+    "premise": "an authorised unattended window of 216.0 h",
+    "route_rationale_quoted": "the measured local projection 23.82 h FITS the window-derived ceiling 129.60 h (18% of it), so the arm runs locally and needs no mid-flight attendance. This is the decisive property, not the compute: a Kaggle chain requires an invocation to retrieve its output and nothing will invoke me inside this window.",
+    "status": "SURFACED_FOR_USER_AUTHORITY_not_acted_on",
+    "what_changed": "the 10-day absence that supplied the 216 h window has ended; the user is present and invoking this session. Two frozen bar fields rest on that window: the 129.6 h CEILING (216.0 x 0.60) and the local_cpu ROUTE, whose stated decisive reason is that 'nothing will invoke me inside this window' -- which is now false.",
+    "why_this_is_not_mine_to_change": "both are fields of a FROZEN pre-registration. Re-sizing one after seeing a result is the move the freeze exists to prevent, and this project has already withdrawn one recommendation for proposing exactly that. A multi-day run on the user's active machine is also their call, not a technical detail."
+  },
+  "hazard_recorded_rather_than_tripped": {
+    "what": "do NOT smoke-run the arm into its real --ckpt-dir",
+    "what_was_done_instead": "nothing was run. The launch path needs no new evidence: the dead launch itself proves the route check and cohort load pass, and the feasibility probe already trained 15 real epochs on this host.",
+    "why": "the resume contract reads any existing per-seed checkpoint and NEVER recomputes it ('Already at or past this depth: READ, never recomputed'). A short verification run writing a seed-0 checkpoint under different hyperparameters would therefore be SILENTLY ADOPTED as the real run's trajectory prefix. Verify with a throwaway --ckpt-dir or not at all."
+  },
+  "question": "why does the project's one untried ambitious arm still read `planned` when a launch was recorded on 2026-11-04?",
+  "schema": "finetune-arm-launch-death-v1",
+  "unrecorded_deviation_found": {
+    "bar_multiple_of_frozen_budget": 5.4,
+    "bar_value_epochs": 38,
+    "frozen_budget_epochs": 7,
+    "launch_multiple_of_frozen_budget": 3.86,
+    "launch_value_epochs": 27,
+    "parameter": "horizon",
+    "rule_quoted_from_the_bar": "a deviation is allowed; an UNRECORDED deviation raises. Every key that differs from the checkpoint's own config carries its reason here.",
+    "why_it_still_matters": "the bar's stated purpose for the extra epochs is to rule out 'more budget would have helped' by measurement at 5.4x the frozen budget. At horizon 27 that multiple is 3.86x. The budget-limited reading would therefore be closed WEAKER than the bar specifies -- still substantial, but not what was frozen. Recording it is what the bar's own deviation rule requires; it is NOT a re-sizing of the bar.",
+    "why_the_launch_was_internally_coherent": "the bar sizes 38 epochs at 20.4 min/epoch = 129.3 h. The launch passed a MEASURED 1568.100 s/epoch (26.13 min), at which the bar's own 38 epochs would cost 165.5 h and OVERRUN the 129.6 h ceiling. Horizon 27 costs 117.6 h and fits. So the reduction was a re-size to the measured rate, not carelessness."
+  },
+  "verdict": "EXTERNAL_POWER_LOSS_NOT_A_CODE_DEFECT",
+  "what_the_surface_showed": {
+    "acquired": "2026-11-04T12:01:25",
+    "argv": "run C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\unattended\\finetune_arm.lock --label finetune_arm -- uv run python -m scripts.finetune_arm_run --horizon 27 --seconds-per-epoch 1568.1",
+    "checkpoint_dir_present": false,
+    "lock_state": "DEAD_NO_SENTINEL",
+    "log_bytes": 194,
+    "log_last_line": "COHORT   44106 tiles x 150 bp from C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\mpra\\GSE144621_peak_tile_expression_formatted_std.txt.gz",
+    "n_checkpoints": 0,
+    "pid": 4428,
+    "run_artifacts_present": [],
+    "sentinel_present": false,
+    "why_this_looked_like_a_defect": "no traceback, no sentinel, no checkpoint and no run artifact. The runner catches Exception and prints 'RUN FAILED (<type>): <msg>', so a Python-level failure would have LEFT A LINE. The absence of one is what makes an in-process defect the WRONG reading."
+  }
+}

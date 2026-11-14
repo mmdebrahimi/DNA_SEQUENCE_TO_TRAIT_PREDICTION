@@ -1,3 +1,61 @@
+## DECISION NEEDED 2026-11-14 - the one untried ambitious arm is ready to run and BOTH of its route premises have expired
+
+**It did not fail. The host lost power.** `finetuned-promoteratlas-encoder-150bp` has read `planned`
+since 2026-11-02, which looked like an arm nobody had got to. A launch WAS recorded: pid 4428,
+`2026-11-04T12:01:25`, `--horizon 27 --seconds-per-epoch 1568.1`, state `DEAD_NO_SENTINEL`, no
+checkpoint, no artifact, a 194-byte log ending at the cohort load. **The missing traceback is the
+tell** - the runner catches `Exception` and prints `RUN FAILED (<type>): <msg>`, so a Python failure
+leaves a line. The Windows System log reports the previous shutdown UNEXPECTED at boot
+`2026-11-04T12:15:05`, the THIRD dirty shutdown in ~42 h, matching the power outage you reported.
+Full diagnosis + the timestamp caveat: `wiki/finetune_arm_launch_death_2026-11-14.json`. Nothing
+about predictive merit changed; the arm is still `planned` and the ceiling criterion still reads
+`blocked:untried-arm`.
+
+**Why this is yours and not mine.** Two load-bearing fields of the FROZEN
+`wiki/finetune_arm_acceptance_bar.json` derive from a 216.0 h authorised UNATTENDED window, and that
+window was your 10-day absence, which has ended:
+
+- the **ceiling** is `216.0 x 0.60 = 129.6 h`;
+- the **route** chose `local_cpu` over `kaggle_t4` on the stated decisive ground that *"a Kaggle
+  chain requires an invocation to retrieve its output and nothing will invoke me inside this
+  window."* You are here, so that sentence is now false.
+
+The run is **129.3 h** at the bar's 20.4 min/epoch and **165.5 h** at the measured 26.1 min/epoch
+(which is why the dead launch used horizon 27, costing 117.6 h and fitting, rather than the frozen
+38). Re-sizing or re-routing a frozen pre-registration is user authority, and a multi-day run on the
+machine you are using is your call too. Registered so it cannot go silently closed:
+constraint `finetune-arm-local-route-rests-on-an-ended-216h-window`.
+
+**DRAFTED RECOMMENDATION: re-route to `kaggle_t4`, and it is the cheap option in every sense.** The
+route's own disqualifier was RETRIEVABILITY, not compute - and retrieval is exactly what has become
+possible. A T4 collapses a multi-day CPU run into a fraction of it, removes the power-cut exposure
+that already killed one launch, and leaves your machine free. **Crucially it is outcome-neutral on
+the bar's predicates:** `check_order` and the `FINETUNE_ADDS / FINETUNE_TIES / FINETUNE_NO_GAIN`
+decision are untouched, no threshold moves, and the 129.6 h ceiling simply stops binding because it
+bounds a LOCAL projection. That satisfies this project's own rule that a frozen-bar edit needs no
+new threshold plus a diff showing no measured verdict moves. Cost to me: the Kaggle kernel for this
+arm does not exist yet (`scripts/kaggle/` has the frozen-embeddings tile arm, not the fine-tune), so
+it is real but reversible local work, and `scripts/finetune_arm_run.py` REFUSES any route but
+`local_cpu` and would need the route read, not hardcoded.
+
+The alternatives, so the set is explicit: **(B)** authorise a new unattended window of known length
+and re-derive the ceiling from it, keeping `local_cpu`; **(C)** accept a multi-day attended local run
+as-is; **(D)** leave the arm unmeasured, which keeps the ceiling criterion at `blocked:untried-arm`
+and is a real choice, not a non-answer - the arm's own declaration warns that a budget-limited null
+is not a representation-limited one.
+
+**One hazard recorded rather than tripped:** do NOT smoke-test this arm into its real `--ckpt-dir`.
+The resume contract READS any existing per-seed checkpoint and never recomputes it, so a short
+verification run under different hyperparameters would be silently adopted as the real run's
+trajectory prefix. Use a throwaway `--ckpt-dir`, or nothing. I ran nothing - the dead launch already
+proves the route check and cohort load pass, and the feasibility probe already trained 15 real epochs
+on this host.
+
+**The stale lock is deliberately still there.** `data/unattended/finetune_arm.lock` is copied to
+`wiki/unattended_evidence/` (a tracked path, so the delete is now git-restorable) and left live, so a
+local relaunch still hits `REFUSED_LOCK_HELD` (exit 9) by design until this decision is made.
+Clearing it is one line and belongs to whoever decides to relaunch.
+
 ## CORRECTION 2026-11-01 — CLAUDE.md's "14 failures, none a code defect" is wrong on the COUNT, and the one code defect is now FIXED
 
 **Live count, grounded on a full run 2026-11-01 (9m48s): 13 failed / 7,238 passed / 180 skipped.**

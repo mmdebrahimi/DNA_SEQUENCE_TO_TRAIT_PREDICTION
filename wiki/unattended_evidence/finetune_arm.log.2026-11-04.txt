@@ -1,0 +1,2 @@
+==== start Wed 11/04/2026 12:01:25.63 ==== 
+COHORT   44106 tiles x 150 bp from C:\Users\Laptop Portable\pythonprojects\dna_decode\data\mpra\GSE144621_peak_tile_expression_formatted_std.txt.gz

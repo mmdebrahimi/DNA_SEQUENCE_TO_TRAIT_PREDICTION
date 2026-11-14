@@ -154,6 +154,17 @@
       "last_checked": "2026-10-30T02:30:56Z",
       "last_verdict": "needs-runner",
       "resolved": false
+    },
+    "finetune-arm-local-route-rests-on-an-ended-216h-window": {
+      "cid": "finetune-arm-local-route-rests-on-an-ended-216h-window",
+      "blocked": "relaunching the finetuned-promoteratlas-encoder-150bp arm on its frozen local_cpu route at the frozen 129.6 h ceiling (38 epochs x 10 seeds = 129.3 h at the bar rate, 165.5 h at the measured rate). Giving this up for now means the project ceiling criterion keeps ONE declared arm unmeasured, so it stays blocked:untried-arm.",
+      "rationale": "Both load-bearing fields of wiki/finetune_arm_acceptance_bar.json derive from a 216.0 h authorised UNATTENDED window: the ceiling is 216.0 x 0.60 = 129.6 h, and the local_cpu route was chosen over kaggle_t4 on the stated decisive ground that \"a Kaggle chain requires an invocation to retrieve its output and nothing will invoke me inside this window\". That window was the user 10-day absence and it has ENDED -- the user is present and invoking the session, so the route premise is FALSE and the Kaggle disqualifier (retrievability, not compute) is gone. Re-sizing or re-routing a FROZEN pre-registration is user authority, and a multi-day run on the user active machine is their call too, so this is surfaced rather than acted on. Diagnosis: wiki/finetune_arm_launch_death_2026-11-14.json.",
+      "expiry_kind": "manual",
+      "expiry_arg": "a new authorised unattended window of known length (re-derive the ceiling from it), OR a user decision to re-route this arm to kaggle_t4 now that retrieval is possible, OR a user decision to accept a multi-day attended local run.",
+      "registered_at": "2026-11-14T15:58:59Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
     }
   }
 }

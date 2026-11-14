@@ -1,0 +1,1 @@
+{"pid": 4428, "label": "finetune_arm", "acquired": "2026-11-04T12:01:25", "argv": "run C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\unattended\\finetune_arm.lock --label finetune_arm -- uv run python -m scripts.finetune_arm_run --horizon 27 --seconds-per-epoch 1568.1"}
