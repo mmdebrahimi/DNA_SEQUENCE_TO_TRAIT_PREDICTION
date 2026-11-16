@@ -410,7 +410,7 @@ within actives, margin +0.1820. So the bacterial +0.0122 is two opposite effects
 an absence of learnable signal. This does NOT refute the human result -- the decisive check,
 whether the human label is similarly bimodal, is UNMEASURED (detached volume + an uninstalled
 dependency). Read the ratio as unresolved, not as 20-25x. Detail and limits:
-[](wiki/glm_bacterial_scoring_frame_2026-11-16.md).
+[`wiki/glm_bacterial_scoring_frame_2026-11-16.md`](wiki/glm_bacterial_scoring_frame_2026-11-16.md).
 
 Note what this does and does not support. It is a **molecular** readout — regulatory activity of a DNA
 fragment in a cell line — on **constructed** variation, which is exactly the regime the paragraph above
