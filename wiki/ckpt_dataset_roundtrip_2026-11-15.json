@@ -1,0 +1,82 @@
+{
+  "schema": "finetune-arm-ckpt-roundtrip-v1",
+  "measured_at": "2026-11-15",
+  "why_this_exists": "Step 7 of the bounded-chain plan resumes a Kaggle session from checkpoints mounted as a Kaggle dataset. Nothing had ever confirmed that round trip. The plan marked it [unverified] and required this probe to distinguish two outcomes -- `mount_preserved_directory_name` and `guard_fired` -- because they call for opposite responses. BOTH happened, and then a THIRD failure the plan did not anticipate appeared underneath them.",
+
+  "the_plan_s_two_named_outcomes": {
+    "guard_fired": true,
+    "mount_preserved_directory_name": false,
+    "how_to_read_that_pair": "The Step 2 guard did exactly its job: it refused instead of letting a chained session recompute every seed while looking normal. The assumption it was guarding was wrong. A guard passing and an assumption failing are not in tension -- that pair is the designed-for outcome, and it is why the guard was built before the probe rather than after."
+  },
+
+  "finding_1_the_directory_level_does_not_survive_the_upload": {
+    "status": "FALSIFIED_THE_ASSUMPTION",
+    "the_assumption": "`seed_checkpoints()` copied a file only when `p.parent.name == \"finetune_checkpoints\"`, which requires the mounted dataset to contain a directory of that exact name.",
+    "what_was_measured": [
+      "`kaggle datasets create` defaults to `--dir-mode skip`: directories are IGNORED. A staging folder containing `finetune_checkpoints/seed_99_curve.json` uploads NOTHING and yields an empty dataset.",
+      "`--dir-mode zip` uploads one archive per directory. The CLI reported: `Starting upload for file finetune_checkpoints.zip` / `Upload successful: finetune_checkpoints.zip (230B)`.",
+      "Kaggle then EXTRACTED that archive and FLATTENED it. `kaggle datasets files emanueleebrahimi/ft-ckpt-roundtrip-probe` reports exactly one stored path: `seed_99_curve.json`, 110 bytes, at the dataset ROOT. The `finetune_checkpoints/` level is gone."
+    ],
+    "consequence": "The parent-name rule could never have seeded a correctly-built dataset. Under the mount the parent directory is the dataset slug, so every chained session would have seeded zero and refused.",
+    "fix": "Select checkpoints by FILENAME. The names are fixed by `_ckpt_path` and `_curve_path` in scripts/finetune_arm_run.py: `<kind>_<seed>.pt` and `<kind>_<seed>_curve.json`, written flat.",
+    "the_fix_is_STRICTER_not_looser": "The pattern `^(seed|null)_\\d+(_curve\\.json|\\.pt)$` accepts seed and null files and REFUSES `smoke_*` and `.tmp`. The smoke exclusion is load-bearing: the Kaggle rate measurement trains a throwaway epoch at seed 0 with the real hyperparameters, split and builder, so `smoke_0_curve.json` is indistinguishable in SHAPE from `seed_0_curve.json` -- and `advance()` READS any curve that already reaches the requested depth rather than recomputing it. Accepting smoke output would make a discarded measurement epoch the arm's trajectory prefix, silently. The old parent-name rule had that protection by ACCIDENT, because the smoke writes to a different directory; a filename rule has to state it."
+  },
+
+  "finding_2_the_mount_path_is_not_predictable": {
+    "status": "FALSIFIED_THE_ASSUMPTION_A_SECOND_WAY",
+    "probe": "pa-finetune-ckpt-probe and pa-finetune-ckpt-probe2, both CPU sessions so neither consumed GPU quota",
+    "what_was_measured": "A dataset attached via `dataset_sources` did NOT appear at `/kaggle/input/<slug>`. The pushed kernel-metadata.json carries `\"dataset_sources\": [\"emanueleebrahimi/ft-ckpt-roundtrip-probe\"]` verbatim, Kaggle accepted the push, and `kaggle datasets status` reported `ready` -- yet the kernel found no such path. The refusal reported: `Present under the mount: <the mount path does not exist at all>, /kaggle/input contains: datasets/`.",
+    "how_it_was_located": "Probe 1 could only say the mount path was absent, not what existed instead, because the refusal listed the mount's OWN contents and a nonexistent directory has none. Adding a parent listing to the refusal and re-pushing located it in one attempt. That one-line guard change converted an unexplained ERROR into a named cause; it is the single highest-value edit in this step.",
+    "consequence": "The mount layout is not ours to choose or predict, and a baked absolute path is a guess.",
+    "fix": "The baked path became a HINT. If it exists, search it; if it does not and a dataset WAS baked, fall back to `/kaggle/input` and recurse. The FILENAMES identify a checkpoint; the path never did -- which is why finding 1's name-based rule was the right correction rather than merely a convenient one.",
+    "the_fallback_widens_WHERE_not_WHETHER": "The zero-count refusal still fires. The fallback changes where the kernel looks and never whether a zero is a fault, so a genuinely absent dataset is still caught. Pinned by test."
+  },
+
+  "finding_3_a_dataset_must_be_attachable_before_the_push": {
+    "status": "OPEN_BUT_BOUNDED",
+    "observation": "The dataset was created at 17:42:05 and the first probe pushed at ~17:48 saw no mount at all. Whether that was a readiness race or purely the layout issue in finding 2 is NOT separated by these measurements, because the second probe -- pushed later, against a dataset reporting `ready` -- ALSO saw no mount at `/kaggle/input/<slug>`. So finding 2 fully explains both, and a readiness race is neither demonstrated nor excluded.",
+    "what_was_done_about_it": "The uploader prints an explicit instruction to wait for `kaggle datasets status <owner>/<slug>` to report ready before pushing. That is cheap insurance against an unexcluded hypothesis, not a claim that the race is real.",
+    "do_not_over_read": "Do NOT record this as a measured Kaggle behaviour. It is an unexcluded alternative kept visible so a future session does not re-derive it from scratch."
+  },
+
+  "what_was_changed_as_a_result": {
+    "scripts/finetune_arm_run.py": "Gained `CKPT_NAME_RE`, the SINGLE definition of which filenames are real prior work. It lives here because `_ckpt_path` and `_curve_path` in this module are what produce the names.",
+    "scripts/kaggle/build_promoteratlas_finetune_kernel.py": "`seed_checkpoints()` imports that pattern instead of carrying a copy, selects by filename, falls back to `/kaggle/input` when the baked mount is absent, announces the fallback, refuses on a duplicate basename, and on zero lists what IS present under the search root together with the pattern it matched on.",
+    "scripts/kaggle/upload_finetune_checkpoints.py": "New. Stages a pulled checkpoint directory FLAT as a dataset, importing the same pattern so the two ends of the round trip cannot disagree. Reports every exclusion with its reason, refuses an empty selection, and summarises the resumable state.",
+    "why_single_sourcing_mattered_here_specifically": "Two copies of a selection rule on opposite ends of a round trip fail by PASSING: the uploader stages a file the kernel ignores, the kernel seeds zero, and its refusal blames the mount. That is exactly the wrong diagnosis, and it is the diagnosis this step spent two probe pushes correcting."
+  },
+
+  "end_to_end_confirmation": {
+    "status": "CONFIRMED",
+    "probe": "pa-finetune-ckpt-probe3",
+    "what_it_tested": "The fixed kernel against the same dataset. The stored file `seed_99_curve.json` matches the new pattern, so a non-zero seeded count plus a reported source directory confirms the round trip and simultaneously reveals the real mount layout.",
+    "how_to_read_the_outcome": "A non-zero count with a named source directory = the round trip works and the fallback found it. A zero = the dataset is not reachable from `/kaggle/input` at all, which would be a third distinct fault and would block Step 7 until resolved.",
+    "verbatim_log": [
+      "the baked mount /kaggle/input/ft-ckpt-roundtrip-probe does not exist; searching /kaggle/input recursively instead, because Kaggle's mount layout is not ours to predict",
+      "seeded 1 prior checkpoint file(s) for the BAKED dataset /kaggle/input/ft-ckpt-roundtrip-probe (searched /kaggle/input); found in: /kaggle/input/datasets/emanueleebrahimi/ft-ckpt-roundtrip-probe"
+    ],
+    "seeded_count": 1,
+    "THE_REAL_MOUNT_PATH": "/kaggle/input/datasets/<owner>/<slug>",
+    "why_the_baked_path_is_STILL_not_changed_to_it": "Baking the now-known path would work today and would re-introduce exactly the thing that failed twice: a prediction about Kaggle's layout. The fallback is layout-independent -- it searches /kaggle/input recursively and identifies checkpoints by NAME -- so it survives a further change to the mount scheme, which a baked literal would not. The baked value is retained as the HINT it now is, and it is also what makes a zero a fault rather than an absence.",
+    "what_this_does_and_does_not_establish": "It establishes that a dataset built by the uploader is READABLE by the kernel: upload -> store -> mount -> filename match -> copy into the real checkpoint directory. It does NOT establish that a resumed run SKIPS the seeded epochs, because the probe is a --smoke build and never calls run(). That is the property session two tests, and the reconciler's epochs_added_by_this_link is what will report it."
+  },
+
+  "incidental_measurement_worth_keeping": {
+    "what": "This probe ran on CPU and measured 1758.7 s/epoch; the T4 smoke measured 1276.04 s/epoch.",
+    "so": "The T4 is about 1.38x faster than a Kaggle CPU session for this workload. The earlier local comparison put it at 1.23x against four CPU threads on this laptop, so the two agree on the shape: the GPU barely helps this model at this size.",
+    "do_not_act_on_this_here": "It is an argument about ROUTE, and the route is a frozen field of the acceptance bar (kaggle_t4) that was re-decided on user authority. Changing it is an authority call, not a scheduling one. It is recorded because it is cheap evidence that nobody had, and because a CPU route would not consume the GPU quota that is the binding constraint -- which makes it worth a look later, not now.",
+    "caveat": "Two different devices on two different days, each measured once, with no repeat. Do not quote 1.38x as a stable ratio."
+  },
+
+  "cost": {
+    "gpu_quota_consumed_by_this_step": "0.00 h",
+    "how": "Every probe ran as a CPU session. The thing being tested -- whether a dataset mount preserves a directory name and where it appears -- has nothing to do with the accelerator, and the weekly GPU quota is the binding constraint on this arm (30.00 h against a 32.26 h gradeable prefix). Measured: GPU quota went 0.41 h -> 0.88 h across this step, and the entire 0.47 h increment is attributable to the concurrently-running GPU session pa-finetune-chain-s1."
+  },
+
+  "honest_limits": [
+    "One dataset, built one way (`--dir-mode zip` on a single small JSON). A larger dataset, a multi-directory upload, or `--dir-mode tar` were not tested. The uploader sidesteps all of them by staging flat, so they are not on the path Step 7 takes -- but nothing here bounds them.",
+    "The flattening was read from `kaggle datasets files`, i.e. from how Kaggle STORED the upload, plus the kernel's own observation that no `finetune_checkpoints` directory existed under the mount. Those agree, but the stored-path listing is the stronger evidence and the mount-side evidence is indirect.",
+    "Finding 2 says the mount is not at `/kaggle/input/<slug>` and that `/kaggle/input` contained `datasets/`. It does NOT establish the full real path -- the refusal listing was one level deep. The fixed kernel recurses, so the exact path is not needed to proceed, and the confirmation probe will report it.",
+    "No real checkpoint has made the round trip yet. Every file in this probe was synthetic (110 bytes). A real `.pt` is roughly 20 MB and a full link is of order 260 MB across 13 files; upload time and any size limit are untested."
+  ]
+}

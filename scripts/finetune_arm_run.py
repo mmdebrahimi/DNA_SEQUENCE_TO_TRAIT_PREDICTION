@@ -45,6 +45,7 @@ import argparse
 import json
 import math
 import os
+import re
 import time
 from pathlib import Path
 
@@ -262,6 +263,23 @@ def _ckpt_path(ckpt_dir: Path, seed: int, *, kind: str = "seed") -> Path:
 
 def _curve_path(ckpt_dir: Path, seed: int, *, kind: str = "seed") -> Path:
     return Path(ckpt_dir) / ("%s_%d_curve.json" % (kind, seed))
+
+
+#: Which filenames in a checkpoint directory are REAL prior work, for consumers that must select
+#: them without knowing the seeds in advance -- the Kaggle kernel seeding a chained session from a
+#: mounted dataset, and the uploader that stages that dataset. Defined HERE because `_ckpt_path` and
+#: `_curve_path` above are what produce the names; a second copy on either side of that round trip
+#: would fail by PASSING, staging files the reader silently ignores.
+#:
+#: `smoke` is excluded ON PURPOSE and it is the load-bearing part. The Kaggle rate measurement trains
+#: one throwaway epoch at seed 0 with the real hyperparameters, split and builder, so
+#: `smoke_0_curve.json` is indistinguishable in SHAPE from `seed_0_curve.json` -- and `advance()`
+#: READS any curve that already reaches the requested depth rather than recomputing it. Accepting
+#: smoke output would make a discarded measurement epoch the arm's trajectory prefix, silently.
+#:
+#: The `.tmp` forms are excluded too: `_write_curve` and the checkpoint save write `.json.tmp` and
+#: `.pt.tmp` then `os.replace`, so a `.tmp` left on disk is a write that did not land.
+CKPT_NAME_RE = re.compile(r"^(seed|null)_\d+(_curve\.json|\.pt)$")
 
 
 def read_curve(ckpt_dir: Path, seed: int, *, kind: str = "seed") -> dict | None:
