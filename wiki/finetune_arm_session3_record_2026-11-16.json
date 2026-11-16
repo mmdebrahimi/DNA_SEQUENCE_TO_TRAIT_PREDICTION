@@ -1,0 +1,347 @@
+{
+  "arm": "finetuned-promoteratlas-encoder-150bp",
+  "bar": "wiki/finetune_arm_acceptance_bar.json",
+  "frozen_budget_epochs": 7,
+  "horizon_divergence": {
+    "horizon_epochs_supplied": 38,
+    "plan_run_would_have_refused_saying": "after reserving N epochs for K null replicates, the C h ceiling leaves H epochs per seed across S seeds -- fewer than the frozen budget of B. The arm's own verdict would not fit, so this run must not start.",
+    "planning_bypassed": true,
+    "schema": "finetune-arm-horizon-divergence-v1",
+    "seconds_per_epoch_measured": 1299.0733859539032,
+    "wall_ceiling_hours": 8.0,
+    "what_was_bypassed": "run() calls plan_run only when horizon_epochs is None. This session supplied it, so no ceiling-derived horizon was computed and wall_ceiling_hours alone decided when the session stopped.",
+    "why_a_bounded_stop_is_still_gradeable": "run() orders the phases budget -> nulls -> diagnostic extension precisely so a stop after the first two yields a verdict. A stop INSIDE the budget phase does not, and the scorer says so by returning INDETERMINATE_BUDGET_EXHAUSTED rather than a substantive verdict.",
+    "why_that_refusal_does_not_apply": "plan_run asks whether ONE session can hold the whole run. It cannot, which is why this is a CHAINED sequence: each session self-bounds at wall_ceiling_hours, writes every completed epoch to the checkpoint directory, and the next session READS those curves instead of recomputing them. The verdict is assembled across sessions, so it does not have to fit inside one."
+  },
+  "horizon_epochs": 38,
+  "ineligible_diagnostics_note": "every epoch beyond 7 is an INELIGIBLE diagnostic, pre-declared in the frozen bar. frozen_budget_value reads only the prefix, so a spectacular late epoch cannot reach the verdict.",
+  "n_seeds_done": 9,
+  "n_seeds_requested": 10,
+  "null": {
+    "how_to_read_a_HIGH_null": "a high null has TWO causes that look identical in the number: the fine-tune learned something the labels did not justify, or a RANDOM READOUT of an already-informative representation retains signal on its own. Compare against untrained_baseline_per_replicate -- a null that merely matches the untrained baseline is the second, benign case and says nothing about the fine-tune. The frozen bar's null gate does not make this distinction, so it would return INDETERMINATE_NULL_FAIL either way, which is the correct pre-committed outcome; this field is what makes the failure DIAGNOSABLE rather than ambiguous.",
+    "kind": "shuffled_training_labels",
+    "max_abs": null,
+    "median": null,
+    "n_replicates": 0,
+    "n_requested": 3,
+    "scope_limit": "0 replicates is enough to show the fit collapses when the labels are destroyed, which is the claim. It is NOT enough to estimate a null distribution.",
+    "untrained_baseline_per_replicate": [],
+    "values_at_frozen_budget": []
+  },
+  "per_seed": {
+    "0": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6557,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 6,
+        "detail": "best of the first 7 epochs is 0.6557 at epoch 6; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": false,
+        "value": 0.6557
+      },
+      "n_train": 32908,
+      "n_val": 11198,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.1123,
+      "val_spearman_by_epoch": [
+        0.5995,
+        0.6101,
+        0.6402,
+        0.6477,
+        0.6548,
+        0.653,
+        0.6557
+      ]
+    },
+    "1": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6453,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 5,
+        "detail": "best of the first 7 epochs is 0.6453 at epoch 5; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": false,
+        "value": 0.6453
+      },
+      "n_train": 33088,
+      "n_val": 11018,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.0481,
+      "val_spearman_by_epoch": [
+        0.5204,
+        0.6309,
+        0.6363,
+        0.63,
+        0.6439,
+        0.6453,
+        0.6438
+      ]
+    },
+    "2": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6307,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 5,
+        "detail": "best of the first 7 epochs is 0.6307 at epoch 5; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": false,
+        "value": 0.6307
+      },
+      "n_train": 32733,
+      "n_val": 11373,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.153,
+      "val_spearman_by_epoch": [
+        0.3385,
+        0.6021,
+        0.6139,
+        0.5981,
+        0.6277,
+        0.6307,
+        0.6249
+      ]
+    },
+    "3": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6879,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 6,
+        "detail": "best of the first 7 epochs is 0.6879 at epoch 6; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": false,
+        "value": 0.6879
+      },
+      "n_train": 33223,
+      "n_val": 10883,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": 0.0968,
+      "val_spearman_by_epoch": [
+        0.6652,
+        0.6669,
+        0.6499,
+        0.6602,
+        0.674,
+        0.6689,
+        0.6879
+      ]
+    },
+    "4": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6442,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 4,
+        "detail": "best of the first 7 epochs is 0.6442 at epoch 4; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": true,
+        "value": 0.6442
+      },
+      "n_train": 33081,
+      "n_val": 11025,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": 0.0704,
+      "val_spearman_by_epoch": [
+        0.4219,
+        0.6189,
+        0.6377,
+        0.6416,
+        0.6442,
+        0.6416,
+        0.6281
+      ]
+    },
+    "5": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6102,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 5,
+        "detail": "best of the first 7 epochs is 0.6102 at epoch 5; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": false,
+        "value": 0.6102
+      },
+      "n_train": 33199,
+      "n_val": 10907,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.1176,
+      "val_spearman_by_epoch": [
+        0.2826,
+        0.3646,
+        0.473,
+        0.5647,
+        0.5848,
+        0.6102,
+        0.6095
+      ]
+    },
+    "6": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6214,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 5,
+        "detail": "best of the first 7 epochs is 0.6214 at epoch 5; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": false,
+        "value": 0.6214
+      },
+      "n_train": 33516,
+      "n_val": 10590,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.191,
+      "val_spearman_by_epoch": [
+        0.3003,
+        0.2668,
+        0.4978,
+        0.6056,
+        0.5999,
+        0.6214,
+        0.6105
+      ]
+    },
+    "7": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6196,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 6,
+        "detail": "best of the first 7 epochs is 0.6196 at epoch 6; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": false,
+        "value": 0.6196
+      },
+      "n_train": 32857,
+      "n_val": 11249,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.174,
+      "val_spearman_by_epoch": [
+        0.5521,
+        0.5921,
+        0.6139,
+        0.6046,
+        0.6004,
+        0.616,
+        0.6196
+      ]
+    },
+    "8": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.707,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 4,
+        "detail": "best of the first 7 epochs is 0.7070 at epoch 4; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 7,
+        "n_epochs_read": 7,
+        "stopped_early": true,
+        "value": 0.707
+      },
+      "n_train": 33445,
+      "n_val": 10661,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.0786,
+      "val_spearman_by_epoch": [
+        0.5997,
+        0.6865,
+        0.6748,
+        0.6976,
+        0.707,
+        0.6971,
+        0.7026
+      ]
+    }
+  },
+  "phase_order_rationale": "seeds-to-budget, then NULLS, then extend. The null is a GATE in the frozen bar, so running it last meant a ceiling overrun destroyed the verdict rather than the tail -- and at the measured per-epoch cost the overrun was the expected outcome, not a risk. The reordering is free because the (seed, epoch)-derived shuffle makes a 7-then-27 run bit-identical to a straight-to-27 run.",
+  "phases": [
+    {
+      "bounded_here": true,
+      "n_completed": 9,
+      "phase": "1-seeds-to-frozen-budget",
+      "to_epochs": 7
+    }
+  ],
+  "plan": {
+    "frozen_budget_epochs": 7,
+    "horizon_epochs": 38,
+    "n_null_seeds": 3,
+    "n_seeds": 10,
+    "note": "horizon supplied by the caller, not planned from the ceiling",
+    "seconds_per_epoch_source": "caller-supplied MEASURED per-epoch cost",
+    "seconds_per_epoch_used": 1299.1
+  },
+  "schema": "finetune-arm-run-v1",
+  "status": "BOUNDED_BY_WALL_CLOCK",
+  "target_transform": "log1p",
+  "verdict_secured": false,
+  "wall_ceiling_hours": 8.0,
+  "wall_seconds": 29511.3,
+  "what_verdict_secured_means": "all 10 seeds reached the frozen 7-epoch budget AND all 3 null replicates completed, so the arm is scoreable regardless of how much of the ineligible diagnostic tail was collected.",
+  "why_status": "the run stopped at an epoch boundary before finishing; a bounded run is NOT readable as a complete one"
+}

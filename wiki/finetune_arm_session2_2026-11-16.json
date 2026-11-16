@@ -1,0 +1,131 @@
+{
+  "schema": "finetune-arm-chain-session-v1",
+  "session": "pa-finetune-chain-s2",
+  "measured_at": "2026-11-16",
+  "link_index": 2,
+  "verbatim_record": "wiki/finetune_arm_session2_record_2026-11-16.json",
+  "verbatim_curves": [
+    "wiki/finetune_arm_session2_seed_0_curve_2026-11-16.json",
+    "wiki/finetune_arm_session2_seed_1_curve_2026-11-16.json",
+    "wiki/finetune_arm_session2_seed_2_curve_2026-11-16.json",
+    "wiki/finetune_arm_session2_seed_3_curve_2026-11-16.json",
+    "wiki/finetune_arm_session2_seed_4_curve_2026-11-16.json"
+  ],
+  "kernel_log": "wiki/finetune_arm_kaggle_logs/session2_pa-finetune-chain-s2_2026-11-16.log.json",
+  "reconcile_artifact": "wiki/finetune_arm_chain_link2_2026-11-16.json",
+
+  "what_this_session_was_for": "Session one proved that run() EXECUTES on Kaggle and self-terminates gracefully, but it was the FIRST link and therefore had nothing to resume from -- seed_checkpoints() ran on an empty input and correctly seeded zero in silence. So the chain's load-bearing property was still untested: whether a later session READS the prior link's epochs rather than recomputing them. If it recomputes, the chain is not a chain, it is five independent 4-epoch runs and the arm can never finish. This session tested exactly that, at the plan's full 8.0 h ceiling rather than session one's deliberately short 1.0 h.",
+
+  "headline": "RESUME IS DEMONSTRATED. The chain accumulates, and four seeds now stand complete at the frozen 7-epoch budget.",
+
+  "resume_is_now_PROVEN_and_by_two_independent_routes": {
+    "held": true,
+    "route_1_the_reconciler": "epochs_added_by_this_link = 29 against previous_total_epochs = 4, for a total of 33. Had the session recomputed seed 0's four epochs, the added count would have been 33 and the total 33 -- the two routes would agree numerically while describing different worlds, which is why the reconciler reports the DELTA and the prior total separately rather than only the total.",
+    "route_2_the_kernel_log_itself": "Two lines, neither derived from the reconciler: `seeded 2 prior checkpoint file(s) for the BAKED dataset /kaggle/input/ft-ckpt-s1 (searched /kaggle/input); found in: /kaggle/input/datasets/emanueleebrahimi/ft-ckpt-s1` at t=50.3 s, then `seed 0: resuming at epoch 4 (4 recorded)` at t=1417.0 s. The session read the dataset, found two files, and entered seed 0 at epoch 5 rather than epoch 1.",
+    "why_two_routes_matter_here": "The reconciler is MY code and it passed vacuously once already on session one's record (it read a top-level `seeds` key that run() does not write). A property this load-bearing should not rest on the instrument that has already failed at this exact task. The log is written by the kernel, parsed by nothing, and says the same thing.",
+    "the_baked_path_was_WRONG_AGAIN_and_the_fallback_absorbed_it": "The baked hint `/kaggle/input/ft-ckpt-s1` did not exist; the recursive INPUT_ROOT search found the real mount at `/kaggle/input/datasets/emanueleebrahimi/ft-ckpt-s1`. This is the SECOND consecutive session in which the predicted mount path was wrong and the fallback saved the run -- which retrospectively justifies the Step 5 decision NOT to bake the now-known path, because baking it would have re-introduced the prediction that has now failed twice."
+  },
+
+  "measured_result_SCOPED": {
+    "seeds_at_frozen_budget": "4 of 10 (seeds 0, 1, 2, 3)",
+    "seeds_partial": "1 (seed 4, at 5 of 7 epochs)",
+    "nulls_done": "0 of 3",
+    "epochs_this_session": 29,
+    "epochs_cumulative": 33,
+    "per_seed_frozen_budget_value": {
+      "seed_0": 0.6557,
+      "seed_1": 0.6453,
+      "seed_2": 0.6307,
+      "seed_3": 0.6879,
+      "seed_4_TRUNCATED_NOT_COMPARABLE": 0.6442
+    },
+    "per_seed_best_epoch": {"seed_0": 6, "seed_1": 5, "seed_2": 5, "seed_3": 6, "seed_4": 4},
+    "untrained_val_spearman_by_seed": {
+      "seed_0": -0.1123, "seed_1": -0.0481, "seed_2": -0.153, "seed_3": 0.0968, "seed_4": 0.0704
+    },
+    "median_over_the_FOUR_COMPLETE_seeds": 0.6505,
+    "range_over_the_four_complete_seeds": [0.6307, 0.6879],
+    "verdict_secured": false,
+    "DO_NOT_COMPARE_THIS_TO_THE_COMPARATOR_YET": "The comparator is 0.5076, the MEDIAN over TEN seeds of the frozen-embedding arm at split_frac 0.25. Three of session one's four objections are UNCHANGED and remain disqualifying: it is four seeds not ten; ZERO of the three required shuffled-label nulls have run and the null is a GATE in the frozen bar, so nothing yet bounds how much of this is a random readout of an already-informative representation; and the bar's verdict is a PAIRED BOOTSTRAP against the committed per-seed comparator values, which needs all ten. One objection HAS been discharged -- these four seeds each reached their full 7-epoch budget, so frozen_budget.value is no longer computed over a truncated curve. The arm's status is still `planned` and its ceiling_verdict still `blocked:untried-arm`, correctly.",
+    "what_it_IS_evidence_for": "Four INDEPENDENT seeds each ran their full frozen budget and all four landed in a narrow band, 0.6307 to 0.6879, a spread of 0.0572. Every one of them starts from an untrained baseline near or below zero (-0.153 to +0.0968) and rises monotonically-ish to the 0.63-0.69 band. That the band is narrow across four seeds is a reproducibility result about the TRAINING PROCEDURE, not a verdict about the arm. It is also, for the first time in this arm, a number that could in principle be compared to 0.5076 -- it simply cannot be compared yet, because the null gate has not run."
+  },
+
+  "the_rate_RE_MEASURED_and_session_ones_figure_was_7_percent_LOW": {
+    "what": "Session one's artifact ended with an explicit instruction: `Re-read the logs rather than quoting 923.6 s`, because that figure rested on THREE steady-state epochs of ONE seed in ONE session. Re-read, it was low.",
+    "session_1_steady_state_mean": 923.6,
+    "session_1_basis": "3 epochs, 1 seed",
+    "session_2_steady_state_mean": 990.0,
+    "session_2_basis": "25 epochs, 5 seeds",
+    "session_2_steady_min_max": [955.0, 1029.4],
+    "delta": "+7.2%",
+    "session_2_encode_bearing_first_epoch_mean": 1176.3,
+    "session_2_encode_bearing_basis": "4 seed-openings (seeds 1-4); seed 0's opening epoch belongs to session one",
+    "session_2_in_session_rate_measurement_epoch": 1323.3,
+    "why_the_in_session_measurement_is_STILL_high": "1323.3 s is again a ONE-EPOCH cold figure carrying CUDA context setup and the initial tile encoding, exactly as the smoke's 1276.7 s was. It overstates this session's own steady state by 33.7%. The measurement is not wrong; it answers `how long does a cold epoch take` and is being read as `how long does an epoch take`. That is the same measurement-SHAPE error the session-one artifact named, and it recurs every session because the routine is unchanged.",
+    "how_much_to_trust_990": "Far more than 923.6. It is 25 epochs across 5 independent seeds on one device, and the within-session spread is tight (955-1029, a 7.8% band). The residual risk is that it is still ONE session on ONE T4 instance, and Kaggle T4s are not identical; session three re-measures it again."
+  },
+
+  "the_schedule_REBUILT_from_this_session": {
+    "method": "Two independent derivations, deliberately. The first uses only the QUOTA LEDGER and assumes nothing about epoch structure; the second builds from the per-epoch model. They agree to within 0.1%, which is the check.",
+    "derivation_1_quota_only": {
+      "quota_consumed_by_this_session_hours": 8.57,
+      "how_derived": "quota went 1.86 h -> 10.43 h across the session, and no other GPU session ran in that window",
+      "epochs_bought": 29,
+      "all_in_hours_per_epoch": 0.2955,
+      "note": "This figure absorbs pre-run overhead, the throwaway rate epoch, the encode-bearing openings, steady state and the boundary overshoot, all of it. It is the only rate that needs no model."
+    },
+    "derivation_2_per_epoch_model": {
+      "seed_4_resume_2_steady_epochs_s": 1980,
+      "seeds_5_to_9_five_seeds_s": 35580,
+      "three_nulls_s": 21348,
+      "training_total_hours": 16.36,
+      "two_more_sessions_of_pre_run_overhead_hours": 0.79,
+      "total_hours": 17.15,
+      "the_null_assumption_named": "The three nulls are costed at the same 1176 + 6x990 shape as a real seed. A shuffled-label null trains the same architecture on the same tensor shapes, so this should hold -- but it has never been measured on this device and is an ASSUMPTION, not a measurement."
+    },
+    "epochs_remaining": 58,
+    "epochs_remaining_breakdown": "seed 4 needs 2; seeds 5-9 need 7 each = 35; three nulls need 7 each = 21",
+    "hours_remaining_needed": 17.14,
+    "quota_remaining_hours": 19.57,
+    "quota_refresh": "2026-11-21T00:00:00+00:00",
+    "verdict": "THE GRADEABLE PREFIX STILL FITS INSIDE THIS QUOTA WEEK, with roughly 2.4 h of margin -- down from the 4 h that session one projected, because the rate is 7.2% higher than that projection assumed.",
+    "sessions_remaining": 2,
+    "the_margin_is_THINNER_than_it_was_and_that_is_the_honest_reading": "Session one resolved the plan's top risk NEGATIVE with ~4 h of slack. One more 7% rate drift would take the need to ~18.3 h against 19.57 h, leaving ~1.2 h -- still fitting, but no longer comfortably. The risk is not re-opened; it is narrowed. If session three's re-measured rate drifts up again, re-derive before pushing session four rather than assuming this week still holds."
+  },
+
+  "cost": {
+    "gpu_hours_consumed_by_this_session": 8.57,
+    "quota_before": 1.86,
+    "quota_after": 10.43,
+    "quota_remaining_after": 19.57,
+    "ceiling_hours": 8.0,
+    "epochs_bought": 29,
+    "wall_vs_ceiling": "The session's own run clock reports 30828 s of advance() time against a 28800 s ceiling, so it overshot its deadline by 2028 s -- about two epochs rather than session one's partial one, because at 990 s/epoch the deadline fell early in a pair of in-flight epochs across the seed-4 boundary. The practical rule from session one (`ceiling + 0.36 h + up to one epoch`) UNDERSTATES this; the overshoot is bounded by one epoch PER PHASE BOUNDARY crossed, not one per session.",
+    "redundant_cost_recurred_as_predicted": "The in-session rate-measurement epoch cost 1323.3 s (0.368 h) and changed no behaviour, the horizon having been supplied. That is the ~21 min/session redundancy identified before session one and deliberately left in place. Over the two sessions run so far it has cost 0.723 h; over the two remaining it will cost ~0.74 h more, which is 30% of the remaining 2.4 h margin. If the margin becomes binding, THIS is the first thing to cut -- it is a known-safe deletion and the only reason it survived was that it sat immediately before run()'s first-ever execution, which is no longer the situation."
+  },
+
+  "defects_found_this_session": {
+    "none_in_my_own_code": "The reconciler, rebuilt after session one's vacuity defect, read `per_seed` correctly, compared 5 record-side seeds against 5 disk curves, found zero mismatches, and reported `n_record_seeds_compared: 5` so the non-vacuity is visible in the output rather than assumed. The both-directions check found no disk curve the record failed to mention. This is the first time that instrument has done real work.",
+    "one_plan_level_observation": "`top_level_bounded_field_present` is again `false`, as expected -- the plan's Verification item 5 names a field that does not exist. The property is recorded twice at the run level (`status` and `phases[0].bounded_here`) and both are present. Unchanged from session one; recorded so the absence does not read as a new problem."
+  },
+
+  "next_link": {
+    "session": "pa-finetune-chain-s3",
+    "pushed": "2026-11-16",
+    "url": "https://www.kaggle.com/code/emanueleebrahimi/pa-finetune-chain-s3",
+    "built_with": "--horizon-epochs 38 --wall-hours 8.0 --ckpt-dataset ft-ckpt-s2",
+    "pushed_with": "--gpu --dataset ft-ckpt-s2",
+    "dataset": "emanueleebrahimi/ft-ckpt-s2, 10 files stored FLAT (seed_0..4 .pt + _curve.json), status ready before the push",
+    "expected_to_complete": "seed 4's remaining 2 epochs, then seeds 5, 6, 7 and most of 8 -- roughly 29 more epochs",
+    "what_it_tests_beyond_making_progress": "Nothing new structurally -- resume is now proven and this is the first link that is purely productive. The one thing worth reading from it is the THIRD independent measurement of the per-epoch rate, since the schedule's margin is now thin enough that the rate is the live risk."
+  },
+
+  "honest_limits": [
+    "Four seeds of ten and ZERO of the three required nulls. Nothing here is a result about the arm, and the ledger correctly still reads `planned` / `blocked:untried-arm`. The null is a gate, not a formality.",
+    "The 0.6505 median is over four seeds. The comparator's 0.5076 is over ten. Medians over different n are not two estimates of one quantity.",
+    "The 990.0 s rate is one session on one T4 instance. It is much better powered than session one's 923.6 but is not a device-independent constant; Kaggle T4 instances vary.",
+    "The three nulls' cost is modelled on the real seeds' shape and has never been measured.",
+    "The schedule's 2.4 h margin assumes the rate does not drift further. It drifted +7.2% between sessions one and two.",
+    "Seed 3 has both the highest untrained baseline (+0.0968) and the highest final value (0.6879), and seed 2 has the lowest of each (-0.153, 0.6307). With n=4 that is a coincidence worth noticing and nothing more -- do NOT report it as a relationship."
+  ]
+}

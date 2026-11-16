@@ -1,0 +1,25 @@
+{
+ "complete": true,
+ "epochs_done": 7,
+ "horizon_epochs": 7,
+ "kind": "seed",
+ "n_peaks_train": 1825,
+ "n_peaks_val": 608,
+ "n_train": 33223,
+ "n_val": 10883,
+ "peaks_shared_between_splits": 0,
+ "seed": 3,
+ "shuffled_labels": false,
+ "target_transform": "log1p",
+ "untrained_val_spearman": 0.0968,
+ "val_spearman_by_epoch": [
+  0.6652,
+  0.6669,
+  0.6499,
+  0.6602,
+  0.674,
+  0.6689,
+  0.6879
+ ],
+ "wall_seconds_this_process": 6810.3
+}

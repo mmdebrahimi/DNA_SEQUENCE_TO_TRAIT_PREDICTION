@@ -1,0 +1,117 @@
+{
+  "arm": "finetuned-promoteratlas-encoder-150bp",
+  "bar": {
+    "ceiling_hours": 129.6,
+    "ceiling_status": "left exactly as frozen and NO LONGER BINDING -- it bounds a LOCAL projection and the run is no longer local",
+    "diagnostic_horizon_epochs": 38,
+    "frozen": "2026-11-03",
+    "multiplicity_correction": "none",
+    "n_declared_comparisons": 1,
+    "n_epochs_budget": 7,
+    "n_seeds": 10,
+    "outcomes": [
+      "FINETUNE_ADDS",
+      "FINETUNE_TIES",
+      "FINETUNE_NO_GAIN",
+      "INDETERMINATE_RUN_DIED",
+      "INDETERMINATE_BUDGET_EXHAUSTED",
+      "INDETERMINATE_SPLIT_MISMATCH",
+      "INDETERMINATE_NULL_FAIL"
+    ],
+    "route_chosen": "kaggle_t4",
+    "route_rerouted_by": "explicit user authority",
+    "route_rerouted_on": "2026-11-14",
+    "source": "wiki/finetune_arm_acceptance_bar.json"
+  },
+  "comparator": {
+    "atlas_median": 0.5076,
+    "gc_median_reference": 0.3112,
+    "n_seeds": 10,
+    "reconcile_verdict": "RECONCILED",
+    "source": "data/promoteratlas/local_reconcile_2026-11-01.json",
+    "split_frac": 0.25,
+    "why_this_source": "the PRIMARY. The heads bar carries a byte-identical derived copy; reading the derived copy would make a drift between them invisible."
+  },
+  "emitted_at": "2026-11-15T02:38:39.050216+00:00",
+  "frozen_surface_sha256": {
+    "dna_decode/data/calibrated_amr_rules.json": "0435b0e44b4a991830c770400f0f3677ab3521a0379f2e2caa37b1b11fb84428",
+    "dna_decode/data/mic_tiers.py": "47d6c70103673736580c510cf1484b09917665981c6f8594c3b8521e850bc283",
+    "dna_decode/data/shipped_decoder_surface.py": "9a10b198afdf6b9016f57d94ccbbed8a94badfe552b18dfe7274a8cd43569f52",
+    "dna_decode/eval/amr_rules.py": "8007129fe9c617ed0a943061bc661c977c93792ba2ea7c71853cac704cf40b90",
+    "dna_decode/eval/cohort_manifest.py": "74a3459402ecdebd45c80a4eb7468cbf8bc72d38fe6c5b76b426bb41a44a8005",
+    "uv.lock": "32f1e4fe1aa6578a27453f03db0bdfefc5f12c02754da530c1b46063a3289144",
+    "wiki/finetune_arm_acceptance_bar.json": "b4694a26bad98c08a5883fd589461f79133d0ca874f3d3224cf94bac51ada26e"
+  },
+  "git_head": "5849524ba995323603480166fb143b5135e6c5e6",
+  "ledger_state_before": {
+    "arm_entry": {
+      "evidence": "",
+      "metric": null,
+      "resolved_at": "",
+      "status": "planned"
+    },
+    "best": "asgiven-position-resolved-promoteratlas-150bp",
+    "ceiling_verdict": "blocked:untried-arm",
+    "criterion": "ceiling: best achievable prediction of bacterial promoter activity from sequence, reported against the replicate-derived 0.941 ceiling",
+    "detail": "1 arm(s) declared but never run: finetuned-promoteratlas-encoder-150bp",
+    "n_killed": 1,
+    "n_measured": 14,
+    "n_planned": 1,
+    "planned": [
+      "finetuned-promoteratlas-encoder-150bp"
+    ],
+    "source": "soraya_runs/arms-ledger.json"
+  },
+  "no_run_artifact_yet": {
+    "checkpoint_dir_exists": false,
+    "why_recorded": "a pre-existing run artifact or checkpoint dir would mean the arm is not actually untried, and the resume contract would adopt the checkpoints as this run's trajectory prefix.",
+    "wiki_finetune_arm_run_glob": []
+  },
+  "prospective_lock": {
+    "lock_date": "2026-08-31",
+    "resolution_method": "resolve_active_lock() -- the manifest that still VERIFIES against the live surface. Nothing restates a cutoff in prose.",
+    "resolved_manifest": "wiki/prospective_lock_manifest_2026-08-31.json",
+    "surface_hashes_match_live": true
+  },
+  "push_surface": {
+    "auth_method": "OAUTH",
+    "chosen_slug": "pa-finetune-arm-v1",
+    "in_flight_batch_gpu_sessions": 0,
+    "in_flight_evidence": "kernels_list(mine=True, sort_by=dateRun) most-recent run is promoteratlas-tile-arm at 2026-11-01 04:42:59; status on the three most recent slugs is COMPLETE/COMPLETE/COMPLETE. Kaggle permits 2 concurrent batch GPU sessions, so both slots are free.",
+    "reauth_note": "kaggle auth login --force is INTERACTIVE and belongs in the user's own terminal. A credential is never routed through a session.",
+    "slug_evidence": "kernels_status raised 'Cannot access kernel emanueleebrahimi/pa-finetune-arm-v1 (Permission kernels.get was denied)'. HONEST LIMIT: that error cannot by itself separate ABSENT from EXISTS-BUT-INACCESSIBLE. It is read as absent because the account owns its own private kernels and status resolves for them (verified on three existing private slugs in the same session).",
+    "slug_is_fresh": true,
+    "username": "emanueleebrahimi",
+    "verified_by": "uv run kaggle config view (non-interactive, read-only)",
+    "why_a_fresh_slug": "never re-push a slug that holds retrieved output."
+  },
+  "rule": "every number here is re-read from its own source file at emit time. A baseline anchored to retyped numbers is anchored to nothing, and Step 8 would then diff against a fiction rather than against the pre-run state.",
+  "schema": "finetune-arm-prerun-baseline-v1",
+  "step2_defect_this_run_fixed": {
+    "consequence": "smoke-first sizing and cross-session chaining were both unreachable.",
+    "evidence": "the metadata dict in scripts/kaggle_push_poll.py carries exactly code_file, enable_gpu, enable_internet, id, is_private, kernel_type, language, title (read off its AST, not from prose), plus a conditional machine_shape and dataset_sources. There is no env field.",
+    "finding": "a Kaggle SCRIPT kernel receives NO environment variables, so the kernel's FT_SMOKE_ONLY / FT_WALL_HOURS / FT_CKPT_IN reads could only ever return their own defaults there.",
+    "fix": "--smoke / --wall-hours / --ckpt-dataset bake the values at build time."
+  },
+  "suite_baseline": {
+    "command": "uv run pytest tests/ -q",
+    "failed_tests": [
+      "tests/test_claude_md_growth_ceiling.py::test_the_transient_store_stays_transient[NEXT.md]",
+      "tests/test_cyp4f2_getrm_concordance.py::test_af_audit_catches_the_cyp4f2_eas_claim",
+      "tests/test_cyp4f2_getrm_concordance.py::test_af_audit_flags_the_complement_signature",
+      "tests/test_cyp4f2_getrm_concordance.py::test_af_audit_is_non_vacuous_every_other_claim_is_accurate",
+      "tests/test_cyp4f2_getrm_concordance.py::test_af_audit_now_covers_every_claim_with_a_local_panel",
+      "tests/test_cyp4f2_getrm_concordance.py::test_af_audit_refuses_when_the_variant_is_absent_from_a_present_vcf",
+      "tests/test_cyp4f2_getrm_concordance.py::test_af_audit_reports_unmeasurable_rather_than_passing",
+      "tests/test_cyp4f2_getrm_concordance.py::test_the_previously_unchecked_abcg2_eur_claim_is_accurate",
+      "tests/test_essentiality_report_card_ladder.py::test_the_committed_card_kept_its_two_original_rows_field_identical",
+      "tests/test_essentiality_report_card_ladder.py::test_the_diff_check_is_NON_VACUOUS_a_simulated_merge_bug_is_detected",
+      "tests/test_essentiality_report_card_ladder.py::test_the_shared_auroc_reproduces_the_committed_human_number",
+      "tests/test_pneumo_selection_probe.py::test_probe_refuses_when_no_assembly_produced_a_call",
+      "tests/test_readme_quickstart_output.py::test_readme_quickstart_lines_are_really_produced[uv"
+    ],
+    "n_failed": 13,
+    "summary_line": "==== 13 failed, 8564 passed, 204 skipped, 21 warnings in 567.86s (0:09:27) ====",
+    "why_a_set_not_a_count": "Step 8 asserts the post-run failure set is a strict SUBSET of this set. An absolute count would pass if one failure were traded for a different one."
+  }
+}

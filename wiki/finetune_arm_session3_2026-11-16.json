@@ -1,0 +1,175 @@
+{
+  "schema": "finetune-arm-session-v1",
+  "session": 3,
+  "slug": "pa-finetune-chain-s3",
+  "url": "https://www.kaggle.com/code/emanueleebrahimi/pa-finetune-chain-s3",
+  "date": "2026-11-16",
+  "link_artifact": "wiki/finetune_arm_chain_link3_2026-11-16.json",
+  "reconcile_verdict": "LINK_OK",
+  "reconcile_exit_code": 0,
+  "what_this_session_settled": "Nine of ten seeds now stand complete at the frozen 7-epoch budget, and the per-epoch rate has a THIRD independent measurement that lands BELOW the second. The arm is still NOT gradeable: zero of the three required null replicates have run, and the null is a GATE in the frozen bar.",
+  "configuration": {
+    "horizon_epochs_supplied": 38,
+    "wall_ceiling_hours": 8.0,
+    "ckpt_dataset": "emanueleebrahimi/ft-ckpt-s2",
+    "status": "BOUNDED_BY_WALL_CLOCK",
+    "verdict_secured": false,
+    "phases_reached": [
+      {
+        "bounded_here": true,
+        "n_completed": 9,
+        "phase": "1-seeds-to-frozen-budget",
+        "to_epochs": 7
+      }
+    ],
+    "note_on_phases": "only phase 1 was reached. The runner orders seeds-to-budget -> NULLS -> extend-to-horizon, so the nulls are unreachable until every seed is at the budget. That ordering is why a ceiling overrun costs the ineligible tail rather than the verdict."
+  },
+  "resume_proven_by_two_independent_routes": {
+    "route_1_reconciler_delta": {
+      "previous_total_epochs": 33,
+      "epochs_added_by_this_link": 30,
+      "total_epochs": 63,
+      "n_record_seeds_compared": 9,
+      "record_vs_disk_mismatches": 0
+    },
+    "route_2_kernel_log": "the log records seeding 10 prior checkpoint files and `seed 4: resuming at epoch 5 (5 recorded)`, parsed by nothing and sharing no code with the reconciler.",
+    "why_two_routes": "the reconciler is my own code and it has a RECORDED vacuous pass on this exact measurement (it read a top-level `seeds` key that run() does not write). A property this load-bearing is not left resting on the one instrument with a failure at precisely this task.",
+    "third_consecutive_baked_path_miss": "the baked hint /kaggle/input/ft-ckpt-s2 did not exist; the recursive INPUT_ROOT fallback found the real mount at /kaggle/input/datasets/emanueleebrahimi/ft-ckpt-s2. That prediction has now failed three sessions running and the fallback has absorbed it three times, which retrospectively justifies leaving the baked path as a HINT."
+  },
+  "seeds_complete_at_frozen_budget": {
+    "n_complete": 9,
+    "of": 10,
+    "per_seed_frozen_budget_value": {
+      "0": 0.6557,
+      "1": 0.6453,
+      "2": 0.6307,
+      "3": 0.6879,
+      "4": 0.6442,
+      "5": 0.6102,
+      "6": 0.6214,
+      "7": 0.6196,
+      "8": 0.707
+    },
+    "per_seed_untrained_baseline": {
+      "0": -0.1123,
+      "1": -0.0481,
+      "2": -0.153,
+      "3": 0.0968,
+      "4": 0.0704,
+      "5": -0.1176,
+      "6": -0.191,
+      "7": -0.174,
+      "8": -0.0786
+    },
+    "median": 0.6442,
+    "min": 0.6102,
+    "max": 0.707,
+    "spread": 0.0968,
+    "n_patience_stopped_early": 2,
+    "note_on_patience": "the patience rule fired on 2 of 9 seeds, meaning those two peaked earlier and declined. The bar's value is still best-of-the-first-7, so nothing is lost.",
+    "these_are_the_bar_s_OWN_values": "read from per_seed[*].frozen_budget.value in the run record, NOT recomputed as a maximum over the curve. They agree, which is the check."
+  },
+  "why_this_is_still_not_comparable_to_the_comparator": {
+    "comparator_median": 0.5076,
+    "disqualifiers": [
+      "nine seeds of ten -- the bar's verdict is a PAIRED bootstrap against committed per-seed comparator values and needs all ten",
+      "ZERO of three required null replicates have run, and the null is a GATE, not a formality: without it nothing bounds how much of this is a random readout of an already-informative representation",
+      "verdict_secured is false in the run record"
+    ],
+    "what_may_honestly_be_said": "every one of the nine seeds exceeds the comparator median, the lowest (0.6102) by 0.1026. That is a directional observation about nine unpaired seeds, NOT the bar's verdict.",
+    "arm_state": "planned / blocked:untried-arm -- correctly, the null gate being unmet"
+  },
+  "rate_re_measured_from_this_log_s_own_timestamps": {
+    "steady_state_mean_s": 960.0,
+    "steady_state_median_s": 961.5,
+    "steady_state_n_epochs": 26,
+    "steady_state_range_s": [
+      925.2,
+      988.9
+    ],
+    "encode_bearing_first_epoch_mean_s": 1127.0,
+    "encode_bearing_n": 4,
+    "in_session_rate_epoch_s": 1299.0,
+    "three_measurements_of_one_quantity": {
+      "session_1": {
+        "mean_s": 923.6,
+        "n_epochs": 3,
+        "n_seeds": 1
+      },
+      "session_2": {
+        "mean_s": 990.0,
+        "n_epochs": 25,
+        "n_seeds": 5
+      },
+      "session_3": {
+        "mean_s": 960.0,
+        "n_epochs": 26,
+        "n_seeds": 5
+      }
+    },
+    "pooled_best_estimate_s": 974.7,
+    "pooled_over_n_epochs": 51,
+    "what_this_corrects": "session two's 990.0 s was carried as the live rate and used to narrow the margin to ~2.4 h. Session three measures 960.0 s over 26 epochs -- BELOW it. The pooled estimate over 51 epochs across 9 seeds is 974.7 s, so 990.0 was the high side of a roughly 960-990 s band rather than a new level. The practical consequence is small and in the FAVOURABLE direction; the previous correction slightly over-shot."
+  },
+  "overshoot": {
+    "wall_seconds": 29511.3,
+    "wall_hours": 8.198,
+    "ceiling_hours": 8.0,
+    "overshoot_s": 711.3,
+    "phase_boundaries_crossed": 0,
+    "confirms": "session two overshot its 8.0 h ceiling by 2028 s having crossed a seed boundary; this session stayed inside phase 1 and overshot by only 711 s, which is LESS than one steady epoch. The revised bound -- one epoch per phase boundary crossed, not one per session -- holds on an independent session."
+  },
+  "quota": {
+    "used_before_h": 10.43,
+    "used_after_h": 19.0,
+    "consumed_by_this_session_h": 8.57,
+    "remaining_h": 11.0,
+    "total_h": 30.0,
+    "refresh_at": "2026-11-21T00:00:00+00:00",
+    "note": "this session consumed 8.57 h, IDENTICAL to session two's 8.57 h, while delivering 30 epochs against 29."
+  },
+  "remaining_work_and_whether_it_fits": {
+    "epochs_done": 63,
+    "epochs_remaining": 28,
+    "breakdown": "seed 9 needs 7 epochs; the three nulls need 21. Phase 3 horizon extension is pre-declared INELIGIBLE by the bar and is not counted.",
+    "derivation_a_quota_ledger_only": {
+      "all_in_h_per_epoch_session_2": 0.2955,
+      "all_in_h_per_epoch_session_3": 0.2857,
+      "all_in_h_per_epoch_pooled": 0.2905,
+      "hours_needed": 8.13,
+      "why_it_is_worth_having": "it needs no model of epoch structure at all -- just hours consumed over epochs delivered."
+    },
+    "derivation_b_per_epoch_structure": {
+      "pooled_steady_s": 974.7,
+      "encode_bearing_s": 1127.0,
+      "per_fresh_unit_s": 6975.3,
+      "n_fresh_units": 4,
+      "training_h": 7.75,
+      "plus_rate_epoch_h": 0.361,
+      "hours_needed": 8.11
+    },
+    "two_derivations_agree_to_pct": 0.28,
+    "hours_available": 11.0,
+    "margin_h": 2.87,
+    "verdict": "FITS -- one session finishes the arm",
+    "THE_DOMINANT_UNCERTAINTY_IS_NOW_THE_NULL": "21 of the 28 remaining epochs (75%) are NULL epochs, and a null epoch has NEVER been timed. The model assumes it costs what a real epoch costs. That is mechanistically reasonable -- permuting training labels is a relabelling, not extra compute, with the same model, the same steps and the same data volume -- but it is an ASSUMPTION, not a measurement, and it now governs three quarters of the remaining work."
+  },
+  "session_4_configuration_and_why": {
+    "slug": "pa-finetune-chain-s4",
+    "url": "https://www.kaggle.com/code/emanueleebrahimi/pa-finetune-chain-s4",
+    "ckpt_dataset": "emanueleebrahimi/ft-ckpt-s3",
+    "horizon_epochs": 7,
+    "wall_hours": 9.5,
+    "why_horizon_7_not_38": "verdict_secured requires horizon_epochs >= frozen_epochs, and phase 3 runs only when horizon_epochs > frozen_epochs. Setting the horizon EQUAL to the frozen budget therefore secures the verdict while SKIPPING the ineligible extension phase entirely, so the run terminates on COMPLETION rather than on the wall clock. Read from the runner's own predicates, not assumed.",
+    "why_the_ceiling_rose_from_8_0_to_9_5": "because phase 3 is skipped, ceiling headroom is FREE when unused -- the run stops when the gradeable work is done. So the ceiling buys insurance against the one unmeasured quantity (the null rate) at no cost if the rate holds. At 9.5 h the run tolerates roughly a 22%% rate drift before a null truncates, and the worst case still fits the week.",
+    "why_not_higher": "the GPU session cap remains UNRESOLVED. 9.5 h sits below the kernel builder's own unflagged default of 10.5 h (itself derived from an assumed 12.0 h cap) and above our twice-proven 8.57 h, so it is more conservative than the builder's default. The residual risk is a hard kill, which unlike a graceful wall-clock stop may not commit the output; it requires BOTH a >15%% rate drift AND a cap between 8.6 and 9.9 h.",
+    "stop_condition": "every seed at the frozen budget and all three nulls complete -> status COMPLETE and verdict_secured true, at which point the arm is gradeable for the first time."
+  },
+  "honest_limits": [
+    "the arm is NOT gradeable and no verdict is claimed: the null gate is unmet.",
+    "the nine-seed median 0.6442 is NOT the arm's number -- it is nine of ten seeds with no null control, and it moved DOWN from the 0.6505 that four seeds showed.",
+    "a null epoch's cost is modelled on real-seed shape and has never been measured.",
+    "the GPU session cap is still unresolved; the empirical floor is 8.57 h, now observed twice at the same value.",
+    "nothing in this arc has been pushed to any remote."
+  ]
+}

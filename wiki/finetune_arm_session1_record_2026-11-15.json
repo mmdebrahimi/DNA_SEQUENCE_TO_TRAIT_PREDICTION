@@ -1,0 +1,88 @@
+{
+  "arm": "finetuned-promoteratlas-encoder-150bp",
+  "bar": "wiki/finetune_arm_acceptance_bar.json",
+  "frozen_budget_epochs": 7,
+  "horizon_divergence": {
+    "horizon_epochs_supplied": 38,
+    "plan_run_would_have_refused_saying": "after reserving N epochs for K null replicates, the C h ceiling leaves H epochs per seed across S seeds -- fewer than the frozen budget of B. The arm's own verdict would not fit, so this run must not start.",
+    "planning_bypassed": true,
+    "schema": "finetune-arm-horizon-divergence-v1",
+    "seconds_per_epoch_measured": 1276.6828887462616,
+    "wall_ceiling_hours": 1.0,
+    "what_was_bypassed": "run() calls plan_run only when horizon_epochs is None. This session supplied it, so no ceiling-derived horizon was computed and wall_ceiling_hours alone decided when the session stopped.",
+    "why_a_bounded_stop_is_still_gradeable": "run() orders the phases budget -> nulls -> diagnostic extension precisely so a stop after the first two yields a verdict. A stop INSIDE the budget phase does not, and the scorer says so by returning INDETERMINATE_BUDGET_EXHAUSTED rather than a substantive verdict.",
+    "why_that_refusal_does_not_apply": "plan_run asks whether ONE session can hold the whole run. It cannot, which is why this is a CHAINED sequence: each session self-bounds at wall_ceiling_hours, writes every completed epoch to the checkpoint directory, and the next session READS those curves instead of recomputing them. The verdict is assembled across sessions, so it does not have to fit inside one."
+  },
+  "horizon_epochs": 38,
+  "ineligible_diagnostics_note": "every epoch beyond 7 is an INELIGIBLE diagnostic, pre-declared in the frozen bar. frozen_budget_value reads only the prefix, so a spectacular late epoch cannot reach the verdict.",
+  "n_seeds_done": 1,
+  "n_seeds_requested": 10,
+  "null": {
+    "how_to_read_a_HIGH_null": "a high null has TWO causes that look identical in the number: the fine-tune learned something the labels did not justify, or a RANDOM READOUT of an already-informative representation retains signal on its own. Compare against untrained_baseline_per_replicate -- a null that merely matches the untrained baseline is the second, benign case and says nothing about the fine-tune. The frozen bar's null gate does not make this distinction, so it would return INDETERMINATE_NULL_FAIL either way, which is the correct pre-committed outcome; this field is what makes the failure DIAGNOSABLE rather than ambiguous.",
+    "kind": "shuffled_training_labels",
+    "max_abs": null,
+    "median": null,
+    "n_replicates": 0,
+    "n_requested": 3,
+    "scope_limit": "0 replicates is enough to show the fit collapses when the labels are destroyed, which is the claim. It is NOT enough to estimate a null distribution.",
+    "untrained_baseline_per_replicate": [],
+    "values_at_frozen_budget": []
+  },
+  "per_seed": {
+    "0": {
+      "diagnostic_tail": {
+        "best_beyond_budget": null,
+        "best_inside_budget": 0.6477,
+        "eligible_as_the_arms_result": false,
+        "improvement_beyond_budget": null,
+        "n_epochs": 0,
+        "purpose": "answering 'would more budget have helped?' and nothing else. A curve flat from the frozen budget out to many times it closes the budget-limited reading by MEASUREMENT instead of by inference from a subsample curve.",
+        "status": "INELIGIBLE diagnostic, pre-declared in the frozen bar"
+      },
+      "frozen_budget": {
+        "best_epoch": 3,
+        "detail": "best of the first 4 epochs is 0.6477 at epoch 3; 0 epochs beyond the budget were recorded and are INELIGIBLE",
+        "n_epochs_available": 4,
+        "n_epochs_read": 4,
+        "stopped_early": false,
+        "value": 0.6477
+      },
+      "n_train": 32908,
+      "n_val": 11198,
+      "peaks_shared_between_splits": 0,
+      "untrained_val_spearman": -0.1123,
+      "val_spearman_by_epoch": [
+        0.5995,
+        0.6101,
+        0.6402,
+        0.6477
+      ]
+    }
+  },
+  "phase_order_rationale": "seeds-to-budget, then NULLS, then extend. The null is a GATE in the frozen bar, so running it last meant a ceiling overrun destroyed the verdict rather than the tail -- and at the measured per-epoch cost the overrun was the expected outcome, not a risk. The reordering is free because the (seed, epoch)-derived shuffle makes a 7-then-27 run bit-identical to a straight-to-27 run.",
+  "phases": [
+    {
+      "bounded_here": true,
+      "n_completed": 1,
+      "phase": "1-seeds-to-frozen-budget",
+      "to_epochs": 7
+    }
+  ],
+  "plan": {
+    "frozen_budget_epochs": 7,
+    "horizon_epochs": 38,
+    "n_null_seeds": 3,
+    "n_seeds": 10,
+    "note": "horizon supplied by the caller, not planned from the ceiling",
+    "seconds_per_epoch_source": "caller-supplied MEASURED per-epoch cost",
+    "seconds_per_epoch_used": 1276.7
+  },
+  "schema": "finetune-arm-run-v1",
+  "status": "BOUNDED_BY_WALL_CLOCK",
+  "target_transform": "log1p",
+  "verdict_secured": false,
+  "wall_ceiling_hours": 1.0,
+  "wall_seconds": 3908.0,
+  "what_verdict_secured_means": "all 10 seeds reached the frozen 7-epoch budget AND all 3 null replicates completed, so the arm is scoreable regardless of how much of the ineligible diagnostic tail was collected.",
+  "why_status": "the run stopped at an epoch boundary before finishing; a bounded run is NOT readable as a complete one"
+}

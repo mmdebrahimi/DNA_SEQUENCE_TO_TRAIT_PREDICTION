@@ -1,0 +1,41 @@
+{
+  "bounded": true,
+  "bounded_signals": {
+    "phases_reporting_bounded_here": [
+      "1-seeds-to-frozen-budget"
+    ],
+    "status_is_bounded": true,
+    "top_level_bounded_field_present": false
+  },
+  "epochs_added_by_this_link": 30,
+  "from_curves": {
+    "epochs_by_null": {},
+    "epochs_by_seed": {
+      "seed_0_curve.json": 7,
+      "seed_1_curve.json": 7,
+      "seed_2_curve.json": 7,
+      "seed_3_curve.json": 7,
+      "seed_4_curve.json": 7,
+      "seed_5_curve.json": 7,
+      "seed_6_curve.json": 7,
+      "seed_7_curve.json": 7,
+      "seed_8_curve.json": 7
+    },
+    "n_null_curves": 0,
+    "n_seed_curves": 9,
+    "total_epochs": 63
+  },
+  "horizon_divergence_recorded": true,
+  "horizon_epochs_supplied": 38,
+  "n_record_seeds_compared": 9,
+  "previous_total_epochs": 33,
+  "pulled_from": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\claude\\f0f4ede77745879a\\95959058-844a-462a-87f2-f7fc265c5b06\\scratchpad\\s3_pull",
+  "reconciles": true,
+  "record_vs_disk_mismatches": [],
+  "run_artifact_present": true,
+  "schema": "finetune-arm-chain-link-v1",
+  "status": "BOUNDED_BY_WALL_CLOCK",
+  "verdict": "LINK_OK",
+  "why": "The record reconciles with the curves on disk.",
+  "why_status": "the run stopped at an epoch boundary before finishing; a bounded run is NOT readable as a complete one"
+}

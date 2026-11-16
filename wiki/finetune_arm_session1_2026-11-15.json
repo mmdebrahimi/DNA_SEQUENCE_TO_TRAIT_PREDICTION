@@ -1,0 +1,125 @@
+{
+  "schema": "finetune-arm-chain-session-v1",
+  "session": "pa-finetune-chain-s1",
+  "measured_at": "2026-11-15",
+  "verbatim_record": "wiki/finetune_arm_session1_record_2026-11-15.json",
+  "verbatim_curve": "wiki/finetune_arm_session1_seed_0_curve_2026-11-15.json",
+  "kernel_log": "wiki/finetune_arm_kaggle_logs/session1_pa-finetune-chain-s1_2026-11-15.log.json",
+
+  "what_this_session_was_for": "Two things at once. It is the FIRST EXECUTION OF run() ON KAGGLE -- the plan's highest-severity technical risk, since every prior push was a --smoke build that stopped after the rate measurement and never entered the real entry point. And it is the first link of the bounded chain, so its epochs are real progress rather than a rehearsal. It was deliberately given a SHORT 1.0 h ceiling rather than the plan's 8.0 h: a late failure in a long session would cost hours of the binding quota, and a short link proves the same properties while also MEASURING the per-session overhead that the plan could only estimate.",
+
+  "headline": "run() EXECUTED CORRECTLY ON KAGGLE, SELF-TERMINATED GRACEFULLY, AND LEFT A RECONCILABLE ARTIFACT.",
+
+  "the_properties_the_chain_rests_on_all_held": {
+    "graceful_self_termination": {
+      "held": true,
+      "evidence": "status BOUNDED_BY_WALL_CLOCK, phases[0].bounded_here true, and a written finetune_arm_run_kaggle.json. The session stopped at an epoch boundary of its own accord and then wrote its artifact; it was not killed by Kaggle. That is the property the whole chain depends on, because a killed session's output may not be preserved."
+    },
+    "per_epoch_persistence": {
+      "held": true,
+      "evidence": "seed_0_curve.json on disk carries all 4 completed epochs, written inside the per-epoch loop rather than at seed completion. The seed never reached its 7-epoch budget, so a per-seed write would have persisted nothing."
+    },
+    "the_planning_bypass_is_recorded": {
+      "held": true,
+      "evidence": "plan.note reads \"horizon supplied by the caller, not planned from the ceiling\" and the artifact carries the horizon_divergence block with horizon_epochs_supplied 38. A reader who sees the bypass also sees why it does not violate the bar."
+    },
+    "resume_is_NOT_yet_demonstrated": {
+      "held": null,
+      "why": "This was the FIRST link, so there was nothing to resume from -- seed_checkpoints() ran on an empty input and correctly seeded zero in silence. Whether a later session READS these 4 epochs instead of recomputing them is what session 2 tests, and the reconciler's epochs_added_by_this_link is what will report it. Do not read this session as evidence for resume."
+    }
+  },
+
+  "measured_result_SCOPED": {
+    "seeds_done": "1 of 10",
+    "nulls_done": "0 of 3",
+    "epochs_completed": 4,
+    "seed_0_val_spearman_by_epoch": [0.5995, 0.6101, 0.6402, 0.6477],
+    "seed_0_untrained_val_spearman": -0.1123,
+    "seed_0_frozen_budget_value": 0.6477,
+    "seed_0_frozen_budget_best_epoch": 3,
+    "n_train": 32908,
+    "n_val": 11198,
+    "peaks_shared_between_splits": 0,
+    "verdict_secured": false,
+    "DO_NOT_COMPARE_THIS_TO_THE_COMPARATOR": "The comparator is 0.5076, the MEDIAN over 10 seeds of the frozen-embedding arm at split_frac 0.25. This is 0.6477 from ONE seed that reached 4 of its 7 frozen budget epochs, with ZERO of the 3 required null replicates run. Four separate reasons make the comparison invalid right now: it is one seed not a median of ten; the seed is below its own frozen budget so frozen_budget.value is computed over a truncated curve; the shuffled-label null is a GATE in the frozen bar and has not run, so nothing yet bounds how much of this is a random readout of an already-informative representation; and the bar's verdict is a PAIRED BOOTSTRAP against the committed per-seed comparator values, which needs all ten seeds. The arm's status is still `planned` and ceiling_verdict is still `blocked:untried-arm`, correctly.",
+    "what_it_IS_evidence_for": "That the pipeline trains and that the metric moves in the right direction from a strongly negative untrained baseline (-0.1123 -> +0.6477 over four epochs). That is a plumbing and sanity result, not a result about the arm."
+  },
+
+  "THE_FINDING_THAT_CHANGES_THE_PLAN": {
+    "what": "The per-epoch rate the entire plan is sized from is an OVERSTATEMENT of steady-state cost by about 28%.",
+    "how_it_was_found": "The kernel log timestamps every epoch, so the session reports its own per-epoch costs rather than requiring a separate measurement.",
+    "measured_seconds_per_epoch": {
+      "smoke_single_epoch": 1276.7,
+      "run_epoch_1_including_untrained_baseline_and_encoding": 1137.0,
+      "run_epoch_2": 938.7,
+      "run_epoch_3": 886.7,
+      "run_epoch_4": 945.5,
+      "steady_state_mean_of_epochs_2_to_4": 923.6
+    },
+    "why_the_smoke_overstates": "It times ONE epoch, which therefore carries all of the first-epoch warmup -- CUDA context setup, the initial tile encoding, allocator growth. That is the correct number for the question the smoke asked (can one epoch run on this device, and how long does a cold one take) and the wrong number for sizing a run of 91 epochs.",
+    "the_consequence": {
+      "prefix_cost_at_the_old_rate": "32.26 h, which EXCEEDED the 30.00 h weekly quota -- the plan's highest-severity risk",
+      "prefix_cost_rebuilt_from_the_measured_rates": "24.18 h remaining after this session (seed 0's 3 further epochs, 9 more seeds, 3 nulls, plus three sessions of pre-run overhead)",
+      "quota_remaining_when_computed": "28.14 h",
+      "verdict": "THE GRADEABLE PREFIX NOW FITS INSIDE THIS QUOTA WEEK, with roughly 4 h of margin. The plan's top risk resolves NEGATIVE, and the multi-week schedule it forced is no longer necessary -- though it remains available and still costs no frozen pre-registration if the margin evaporates."
+    },
+    "how_much_to_trust_it": "THREE steady-state epochs, one seed, one session, one device. The per-seed model used for the projection (one encode-bearing epoch at ~1137 s then ~924 s each) is fitted to exactly one seed's shape. If the true steady rate were the smoke's 1276 s the prefix would again be 32.26 h and would NOT fit, so this conclusion is load-bearing on a small sample. It is also SELF-CORRECTING: every session logs its own per-epoch times, so each link re-measures this and the schedule can be re-derived rather than re-assumed. Re-read the logs rather than quoting 923.6 s."
+  },
+
+  "measured_per_session_overhead": {
+    "pre_run_seconds": 1306.7,
+    "pre_run_hours": 0.363,
+    "what_it_covers": "shallow PromoterAtlas clone, GEO cohort download, cohort build, and the one-epoch rate measurement, all of which happen BEFORE run() starts its own clock",
+    "boundary_overshoot_seconds": 307.9,
+    "why_there_is_an_overshoot": "advance() checks its deadline at EPOCH BOUNDARIES, so a session runs past its ceiling by however much of the in-flight epoch remains -- up to one full epoch. Here the deadline fell part-way through epoch 4.",
+    "total_session_wall_seconds": 5214.7,
+    "ceiling_hours": 1.0,
+    "practical_rule": "session wall time is approximately ceiling + 0.36 h + up to one epoch. An 8.0 h ceiling therefore means roughly 8.4 to 8.6 h of real session time, which is why the ceiling is held below every candidate value of the still-unresolved session cap."
+  },
+
+  "TWO_DEFECTS_THIS_SESSION_EXPOSED_IN_MY_OWN_WORK": {
+    "defect_1_the_reconciler_passed_VACUOUSLY": {
+      "what": "scripts/kaggle/reconcile_finetune_session.py read the record's per-seed curves from a top-level `seeds` key. run() writes `per_seed`. So on this record it compared ZERO record-side seeds against the curves on disk, found no mismatches, and reported `reconciles: true` having examined nothing.",
+      "why_the_tests_did_not_catch_it": "Every fixture in tests/test_reconcile_finetune_session.py wrote the `seeds` key -- a key I invented. Thirteen tests validated a schema no producer emits. A fixture you author can only tell you the reader matches your invention.",
+      "severity": "A reconciler that passes vacuously is worse than no reconciler, because it manufactures confidence in precisely the claim the chain rests on -- that progress accumulates and that the record describes it.",
+      "fixed_by": [
+        "reading `per_seed`",
+        "reporting `n_record_seeds_compared`, and returning the verdict RECONCILIATION_VACUOUS when curves exist on disk but nothing on the record side could be compared -- a check that examined nothing must not be able to report success",
+        "checking the OTHER direction too: a curve on disk the record never mentions is now a mismatch",
+        "evaluating vacuity BEFORE the direction check, because an unreadable per-seed section also makes every disk curve 'unmentioned' and would otherwise yield the right refusal with the wrong diagnosis",
+        "setting the verdict inside reconcile() rather than in main(), which had left the happy path without one",
+        "adding a test that reads the VERBATIM committed record from this session -- the only test in that file whose input I did not invent, and the one that would have caught the original defect"
+      ]
+    },
+    "defect_2_the_plan_named_a_field_that_does_not_exist": {
+      "what": "Verification item 5 of the plan requires that the session artifact report `bounded_by_wall_clock: true`. run()'s record has no such top-level field.",
+      "where_the_field_actually_lives": "train_one_seed sets `bounded_by_wall_clock` on a PER-SEED record. When the plan was written I read that line and attributed it to run()'s record, conflating two levels.",
+      "the_property_is_still_proven": "Boundedness is recorded twice at the run level -- `status == \"BOUNDED_BY_WALL_CLOCK\"` and `phases[i].bounded_here == true` -- and both are present here. So the criterion's INTENT is satisfied and only its field name was wrong.",
+      "fixed_by": "The reconciler derives `bounded` from both signals and reports `bounded_signals.top_level_bounded_field_present: false`, so the plan's error is recorded in the output rather than rendering as a bare null that a reader might mistake for an unverified property."
+    }
+  },
+
+  "cost": {
+    "gpu_hours_consumed_by_this_session": 1.45,
+    "how_derived": "quota went 0.41 h -> 1.86 h across the session, and no other GPU session ran in that window",
+    "quota_remaining_after": 28.14,
+    "epochs_bought": 4,
+    "note": "0.363 h of the 1.45 h was pre-run overhead and 0.355 h of that was the rate-measurement epoch, which with a horizon supplied changes no behaviour and feeds only three record fields. That redundancy was identified before this push and deliberately left in place rather than patched immediately before run()'s first-ever execution; see wiki/kaggle_session_limits_2026-11-15.json."
+  },
+
+  "next_link": {
+    "session": "pa-finetune-chain-s2",
+    "built_with": "--horizon-epochs 38 --wall-hours 8.0 --ckpt-dataset ft-ckpt-s1",
+    "pushed_with": "--gpu --dataset ft-ckpt-s1",
+    "dataset": "emanueleebrahimi/ft-ckpt-s1, stored FLAT as seed_0.pt + seed_0_curve.json, status ready before the push",
+    "what_it_tests_beyond_making_progress": "Whether a chained session READS the 4 epochs rather than recomputing them. The reconciler's epochs_added_by_this_link answers it, and a seeded count of zero would make the kernel refuse rather than silently redo the work."
+  },
+
+  "honest_limits": [
+    "One seed of ten and none of the three required nulls. Nothing here is a result about the arm, and the ledger correctly still reads `planned` / `blocked:untried-arm`.",
+    "The 28% rate correction rests on three steady-state epochs in one session. It is the best evidence available and it is thin; each later link re-measures it.",
+    "Resume across the dataset boundary is UNTESTED as of this artifact. Session 1 had nothing to resume from.",
+    "The session cap is still unresolved. This session ran 1.45 h, which bounds nothing about an 8 h ceiling.",
+    "The per-session overhead figure is from one session. Clone and GEO download times vary with network conditions on Kaggle's side."
+  ]
+}

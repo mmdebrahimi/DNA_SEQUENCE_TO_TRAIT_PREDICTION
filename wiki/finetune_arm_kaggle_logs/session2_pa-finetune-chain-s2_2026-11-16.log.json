@@ -1,0 +1,61 @@
+[{"stream_name":"stdout","time":10.364623748,"data":"torch 2.11.0+cu130  cuda=True\n"}
+,{"stream_name":"stdout","time":10.401036995,"data":"device: Tesla T4  capability sm_75\n"}
+,{"stream_name":"stdout","time":10.401064971,"data":"KNOBS smoke_only=False wall_hours=8.00 ckpt_in=/kaggle/input/ft-ckpt-s1 (baked: smoke=None wall=8.0 ckpt='/kaggle/input/ft-ckpt-s1')\n"}
+,{"stream_name":"stderr","time":10.40490411,"data":"/kaggle/src/script.py:141: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.\n"}
+,{"stream_name":"stderr","time":10.40495065,"data":"  tf.extractall(SRC)\n"}
+,{"stream_name":"stdout","time":10.40879761,"data":"embedded 21 module(s): dna_decode/__init__.py, dna_decode/data/__init__.py, dna_decode/data/external_root.py, dna_decode/glm/__init__.py, dna_decode/glm/atlas_embed.py, dna_decode/glm/atlas_heads.py, dna_decode/glm/corpus.py, dna_decode/glm/edit.py, dna_decode/glm/genomewide.py, dna_decode/glm/positional_readout.py, scripts/__init__.py, scripts/detached_launch.py, scripts/expression_heads_probe.py, scripts/finetune_arm_probe.py, scripts/finetune_arm_run.py, scripts/freeze_expression_heads_bar.py, scripts/freeze_finetune_arm_bar.py, scripts/freeze_positional_arm_bar.py, scripts/positional_arm_extract.py, scripts/positional_arm_probe.py, scripts/positional_arm_score.py\n"}
+,{"stream_name":"stdout","time":10.409625363,"data":"BAR SHAPE ok -- all 7 required path(s) present\n"}
+,{"stream_name":"stdout","time":10.409644541,"data":"BAR route=kaggle_t4  horizon=38  seeds=10  budget=7 epochs\n"}
+,{"stream_name":"stdout","time":10.409951866,"data":"$ git clone --depth 1 https://github.com/LucasCoppens/PromoterAtlas.git /kaggle/working/PromoterAtlas\n"}
+,{"stream_name":"stderr","time":10.460915626,"data":"Cloning into '/kaggle/working/PromoterAtlas'...\n"}
+,{"stream_name":"stderr","time":33.283772727,"data":"Updating files:  32% (24/74)\rUpdating files:  33% (25/74)\rUpdating files:  35% (26/74)\rUpdating files:  36% (27/74)\rUpdating files:  37% (28/74)\rUpdating files:  39% (29/74)\rUpdating files:  40% (30/74)\rUpdating files:  41% (31/74)\rUpdating files:  43% (32/74)\rUpdating files:  44% (33/74)\rUpdating files:  45% (34/74)\rUpdating files:  47% (35/74)\rUpdating files:  48% (36/74)\rUpdating files:  50% (37/74)\rUpdating files:  51% (38/74)\rUpdating files:  52% (39/74)\rUpdating files:  54% (40/74)\rUpdating files:  55% (41/74)\rUpdating files:  56% (42/74)\rUpdating files:  58% (43/74)\rUpdating files:  59% (44/74)\rUpdating files:  60% (45/74)\rUpdating files:  62% (46/74)\rUpdating files:  63% (47/74)\rUpdating files:  64% (48/74)\rUpdating files:  66% (49/74)\rUpdating files:  67% (50/74)\rUpdating files:  68% (51/74)\rUpdating files:  70% (52/74)\rUpdating files:  71% (53/74)\rUpdating files:  72% (54/74)\rUpdating files:  74% (55/74)\rUpdating files:  75% (56/74)\rUpdating files:  77% (57/74)\rUpdating files:  78% (58/74)\rUpdating files:  79% (59/74)\rUpdating files:  81% (60/74)\rUpdating files:  82% (61/74)\rUpdating files:  83% (62/74)\rUpdating files:  85% (63/74)\rUpdating files:  86% (64/74)\rUpdating files:  87% (65/74)\rUpdating files:  89% (66/74)\rUpdating files:  90% (67/74)\rUpdating files:  91% (68/74)\rUpdating files:  93% (69/74)\rUpdating files:  94% (70/74)\rUpdating files:  95% (71/74)\rUpdating files:  97% (72/74)\rUpdating files:  98% (73/74)\rUpdating files: 100% (74/74)\rUpdating files: 100% (74/74), done.\n"}
+,{"stream_name":"stdout","time":33.290606483,"data":"$ git rev-parse HEAD\n"}
+,{"stream_name":"stdout","time":33.292522956,"data":"771d8c07bd5b9f97ada1c551371d5c11ef8d8655\n"}
+,{"stream_name":"stdout","time":49.311217648,"data":"COHORT   44106 tiles x 150 bp from /kaggle/working/mpra/GSE144621_peak_tile_expression_formatted_std.txt.gz\n"}
+,{"stream_name":"stdout","time":49.337901075,"data":"the baked mount /kaggle/input/ft-ckpt-s1 does not exist; searching /kaggle/input recursively instead, because Kaggle's mount layout is not ours to predict\n"}
+,{"stream_name":"stdout","time":50.258632288,"data":"seeded 2 prior checkpoint file(s) for the BAKED dataset /kaggle/input/ft-ckpt-s1 (searched /kaggle/input); found in: /kaggle/input/datasets/emanueleebrahimi/ft-ckpt-s1\n"}
+,{"stream_name":"stdout","time":1373.573270756,"data":"  seed 0 epoch   1/1  val rho +0.5995\n"}
+,{"stream_name":"stdout","time":1373.585459375,"data":"MEASURED 1323.3 s/epoch on this device (one real epoch, throwaway ckpt)\n"}
+,{"stream_name":"stdout","time":1373.58547657,"data":"PROJECTION 139.68 h for 10 seeds x 38 epochs at the measured rate; wall ceiling 8.00 h\n"}
+,{"stream_name":"stdout","time":1416.986643582,"data":"  seed 0: resuming at epoch 4 (4 recorded)\n"}
+,{"stream_name":"stdout","time":2399.824353265,"data":"  seed 0 epoch   5/7  val rho +0.6548\n"}
+,{"stream_name":"stdout","time":3426.152007959,"data":"  seed 0 epoch   6/7  val rho +0.6530\n"}
+,{"stream_name":"stdout","time":4447.963284771,"data":"  seed 0 epoch   7/7  val rho +0.6557\n"}
+,{"stream_name":"stdout","time":5630.250623737,"data":"  seed 1 epoch   1/7  val rho +0.5204\n"}
+,{"stream_name":"stdout","time":6614.727270803,"data":"  seed 1 epoch   2/7  val rho +0.6309\n"}
+,{"stream_name":"stdout","time":7617.770524468,"data":"  seed 1 epoch   3/7  val rho +0.6363\n"}
+,{"stream_name":"stdout","time":8632.087602857,"data":"  seed 1 epoch   4/7  val rho +0.6300\n"}
+,{"stream_name":"stdout","time":9632.478731034,"data":"  seed 1 epoch   5/7  val rho +0.6439\n"}
+,{"stream_name":"stdout","time":10630.498743612,"data":"  seed 1 epoch   6/7  val rho +0.6453\n"}
+,{"stream_name":"stdout","time":11648.065309163,"data":"  seed 1 epoch   7/7  val rho +0.6438\n"}
+,{"stream_name":"stdout","time":12823.200789317,"data":"  seed 2 epoch   1/7  val rho +0.3385\n"}
+,{"stream_name":"stdout","time":13802.118382595,"data":"  seed 2 epoch   2/7  val rho +0.6021\n"}
+,{"stream_name":"stdout","time":14766.364782302,"data":"  seed 2 epoch   3/7  val rho +0.6139\n"}
+,{"stream_name":"stdout","time":15742.191295228,"data":"  seed 2 epoch   4/7  val rho +0.5981\n"}
+,{"stream_name":"stdout","time":16725.324950305,"data":"  seed 2 epoch   5/7  val rho +0.6277\n"}
+,{"stream_name":"stdout","time":17697.342819971,"data":"  seed 2 epoch   6/7  val rho +0.6307\n"}
+,{"stream_name":"stdout","time":18681.425304248,"data":"  seed 2 epoch   7/7  val rho +0.6249\n"}
+,{"stream_name":"stdout","time":19846.774413873,"data":"  seed 3 epoch   1/7  val rho +0.6652\n"}
+,{"stream_name":"stdout","time":20820.077662608,"data":"  seed 3 epoch   2/7  val rho +0.6669\n"}
+,{"stream_name":"stdout","time":21791.653685265,"data":"  seed 3 epoch   3/7  val rho +0.6499\n"}
+,{"stream_name":"stdout","time":22771.307082983,"data":"  seed 3 epoch   4/7  val rho +0.6602\n"}
+,{"stream_name":"stdout","time":23742.084739558,"data":"  seed 3 epoch   5/7  val rho +0.6740\n"}
+,{"stream_name":"stdout","time":24713.132905332,"data":"  seed 3 epoch   6/7  val rho +0.6689\n"}
+,{"stream_name":"stdout","time":25677.101202,"data":"  seed 3 epoch   7/7  val rho +0.6879\n"}
+,{"stream_name":"stdout","time":26859.362710087,"data":"  seed 4 epoch   1/7  val rho +0.4219\n"}
+,{"stream_name":"stdout","time":27888.80278764,"data":"  seed 4 epoch   2/7  val rho +0.6189\n"}
+,{"stream_name":"stdout","time":28843.793856623,"data":"  seed 4 epoch   3/7  val rho +0.6377\n"}
+,{"stream_name":"stdout","time":29845.271683287,"data":"  seed 4 epoch   4/7  val rho +0.6416\n"}
+,{"stream_name":"stdout","time":30828.293122229,"data":"  seed 4 epoch   5/7  val rho +0.6442\n"}
+,{"stream_name":"stdout","time":30828.296063257,"data":"  [phase 1-seeds-to-frozen-budget] 5/10 at 7 epochs  (BOUNDED)\n"}
+,{"stream_name":"stdout","time":30828.29690356,"data":"\n"}
+,{"stream_name":"stdout","time":30828.296914332,"data":"STATUS   BOUNDED_BY_WALL_CLOCK\n"}
+,{"stream_name":"stdout","time":30828.296918852,"data":"         the run stopped at an epoch boundary before finishing; a bounded run is NOT readable as a complete one\n"}
+,{"stream_name":"stdout","time":30828.296922564,"data":"WROTE    /kaggle/working/finetune_arm_run_kaggle.json\n"}
+,{"stream_name":"stderr","time":30834.519621112,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":30834.519656643,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":30834.83306506,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":30834.833094101,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":30835.68969927,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":30836.753564062,"data":"[NbConvertApp] Writing 529395 bytes to __results__.html\n"}
+]

@@ -1,0 +1,40 @@
+[{"stream_name":"stdout","time":17.250762604,"data":"torch 2.11.0+cu130  cuda=True\n"}
+,{"stream_name":"stdout","time":17.292586137,"data":"device: Tesla T4  capability sm_75\n"}
+,{"stream_name":"stdout","time":17.292612197,"data":"KNOBS smoke_only=True wall_hours=10.50 ckpt_in=/kaggle/input (baked: smoke=True wall=None ckpt=None)\n"}
+,{"stream_name":"stderr","time":17.29666292,"data":"/kaggle/src/script.py:125: DeprecationWarning: Python 3.14 will, by default, filter extracted tar archives and reject files or modify their metadata. Use the filter argument to control this behavior.\n"}
+,{"stream_name":"stderr","time":17.296679399,"data":"  tf.extractall(SRC)\n"}
+,{"stream_name":"stdout","time":17.300165205,"data":"embedded 21 module(s): dna_decode/__init__.py, dna_decode/data/__init__.py, dna_decode/data/external_root.py, dna_decode/glm/__init__.py, dna_decode/glm/atlas_embed.py, dna_decode/glm/atlas_heads.py, dna_decode/glm/corpus.py, dna_decode/glm/edit.py, dna_decode/glm/genomewide.py, dna_decode/glm/positional_readout.py, scripts/__init__.py, scripts/detached_launch.py, scripts/expression_heads_probe.py, scripts/finetune_arm_probe.py, scripts/finetune_arm_run.py, scripts/freeze_expression_heads_bar.py, scripts/freeze_finetune_arm_bar.py, scripts/freeze_positional_arm_bar.py, scripts/positional_arm_extract.py, scripts/positional_arm_probe.py, scripts/positional_arm_score.py\n"}
+,{"stream_name":"stdout","time":17.301064316,"data":"BAR SHAPE ok -- all 7 required path(s) present\n"}
+,{"stream_name":"stdout","time":17.301084013,"data":"BAR route=kaggle_t4  horizon=38  seeds=10  budget=7 epochs\n"}
+,{"stream_name":"stdout","time":17.301099873,"data":"$ git clone --depth 1 https://github.com/LucasCoppens/PromoterAtlas.git /kaggle/working/PromoterAtlas\n"}
+,{"stream_name":"stderr","time":17.378698308,"data":"Cloning into '/kaggle/working/PromoterAtlas'...\n"}
+,{"stream_name":"stderr","time":47.979399513,"data":"Updating files:  32% (24/74)\rUpdating files:  33% (25/74)\rUpdating files:  35% (26/74)\rUpdating files:  36% (27/74)\rUpdating files:  37% (28/74)\rUpdating files:  39% (29/74)\rUpdating files:  40% (30/74)\rUpdating files:  41% (31/74)\rUpdating files:  43% (32/74)\rUpdating files:  44% (33/74)\rUpdating files:  45% (34/74)\rUpdating files:  47% (35/74)\rUpdating files:  48% (36/74)\rUpdating files:  50% (37/74)\rUpdating files:  51% (38/74)\rUpdating files:  52% (39/74)\rUpdating files:  54% (40/74)\rUpdating files:  55% (41/74)\rUpdating files:  56% (42/74)\rUpdating files:  58% (43/74)\rUpdating files:  59% (44/74)\rUpdating files:  60% (45/74)\rUpdating files:  62% (46/74)\rUpdating files:  63% (47/74)\rUpdating files:  64% (48/74)\rUpdating files:  66% (49/74)\rUpdating files:  67% (50/74)\rUpdating files:  68% (51/74)\rUpdating files:  70% (52/74)\rUpdating files:  71% (53/74)\rUpdating files:  72% (54/74)\rUpdating files:  74% (55/74)\rUpdating files:  75% (56/74)\rUpdating files:  77% (57/74)\rUpdating files:  78% (58/74)\rUpdating files:  79% (59/74)\rUpdating files:  81% (60/74)\rUpdating files:  82% (61/74)\rUpdating files:  83% (62/74)\rUpdating files:  85% (63/74)\rUpdating files:  86% (64/74)\rUpdating files:  87% (65/74)\rUpdating files:  89% (66/74)\rUpdating files:  90% (67/74)\rUpdating files:  91% (68/74)\rUpdating files:  93% (69/74)\rUpdating files:  94% (70/74)\rUpdating files:  95% (71/74)\rUpdating files:  97% (72/74)\rUpdating files:  98% (73/74)\rUpdating files: 100% (74/74)\rUpdating files: 100% (74/74), done.\n"}
+,{"stream_name":"stdout","time":47.986863576,"data":"$ git rev-parse HEAD\n"}
+,{"stream_name":"stdout","time":47.9887769,"data":"771d8c07bd5b9f97ada1c551371d5c11ef8d8655\n"}
+,{"stream_name":"stdout","time":49.407061755,"data":"COHORT   44106 tiles x 150 bp from /kaggle/working/mpra/GSE144621_peak_tile_expression_formatted_std.txt.gz\n"}
+,{"stream_name":"stderr","time":94.282577148,"data":"Traceback (most recent call last):\n"}
+,{"stream_name":"stderr","time":94.283904345,"data":"  File \"/kaggle/src/script.py\", line 292, in \u003cmodule\u003e\n"}
+,{"stream_name":"stderr","time":94.28392779,"data":"    raise SystemExit(main())\n"}
+,{"stream_name":"stderr","time":94.283933139,"data":"                     ~~~~^^\n"}
+,{"stream_name":"stderr","time":94.283937527,"data":"  File \"/kaggle/src/script.py\", line 247, in main\n"}
+,{"stream_name":"stderr","time":94.28394217,"data":"    spe = measure_seconds_per_epoch(bar, tiles)\n"}
+,{"stream_name":"stderr","time":94.283947353,"data":"  File \"/kaggle/src/script.py\", line 207, in measure_seconds_per_epoch\n"}
+,{"stream_name":"stderr","time":94.283952199,"data":"    train_one_seed(tiles, seed=0, horizon_epochs=1, lr=hp[\"learning_rate\"],\n"}
+,{"stream_name":"stderr","time":94.283956459,"data":"    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":94.283960434,"data":"                   batch_size=hp[\"batch_size\"],\n"}
+,{"stream_name":"stderr","time":94.283964482,"data":"                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":94.283968437,"data":"                   split_frac=float(inh[\"comparator\"][\"split_frac\"]),\n"}
+,{"stream_name":"stderr","time":94.28397277,"data":"                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":94.283976953,"data":"                   ckpt_dir=SMOKE_CKPT, build=None, kind=\"smoke\", verbose=True)\n"}
+,{"stream_name":"stderr","time":94.283987635,"data":"                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n"}
+,{"stream_name":"stderr","time":94.283990811,"data":"  File \"/kaggle/working/src/scripts/finetune_arm_run.py\", line 325, in train_one_seed\n"}
+,{"stream_name":"stderr","time":94.283993773,"data":"    enc, head = build()\n"}
+,{"stream_name":"stderr","time":94.283996435,"data":"                ~~~~~^^\n"}
+,{"stream_name":"stderr","time":94.283999107,"data":"TypeError: 'NoneType' object is not callable\n"}
+,{"stream_name":"stderr","time":102.782572437,"data":"/usr/local/lib/python3.13/dist-packages/mistune.py:435: SyntaxWarning: invalid escape sequence '\\|'\n"}
+,{"stream_name":"stderr","time":102.782620538,"data":"  cells[i][c] = re.sub('\\\\\\\\\\|', '|', cell)\n"}
+,{"stream_name":"stderr","time":103.265009252,"data":"/usr/local/lib/python3.13/dist-packages/nbconvert/filters/filter_links.py:36: SyntaxWarning: invalid escape sequence '\\_'\n"}
+,{"stream_name":"stderr","time":103.265059514,"data":"  text = re.sub(r'_', '\\_', text) # Escape underscores in display text\n"}
+,{"stream_name":"stderr","time":104.180044138,"data":"[NbConvertApp] Converting notebook __script__.ipynb to html\n"}
+,{"stream_name":"stderr","time":105.685932552,"data":"[NbConvertApp] Writing 509319 bytes to __results__.html\n"}
+]
