@@ -17,13 +17,23 @@ every single seed* by +0.18.
 
 ## Why: GC is a detector, not a strength predictor
 
-The `active` flag is a **pure threshold on the label itself** -- `expn_med >= 0.5778`, with **zero
-overlap** on either side. The label is strongly bimodal: 29,193 tiles sit in a narrow band `[0, 0.578]`
-and 14,913 in a wide one `[0.578, 158.3]`. A single binary split of the label recovers **0.8194** of
-the 0.941 ceiling -- **87% of the achievable ranking signal**. So the pooled Spearman is overwhelmingly
-a *detection* metric (is this window a promoter at all), not a *strength* metric.
+> **RETRACTION, same day.** This section originally argued that *"a single binary split of the label
+> recovers 0.8194 of the 0.941 ceiling -- 87% of the achievable ranking signal"*. **That statistic is
+> vacuous and the inference is withdrawn.** Spearman is Pearson on ranks, and a threshold indicator is 1
+> on exactly the top *k* ranks, so the quantity is a closed form in the split proportion alone:
+> `rho = sqrt(3k(n-k)/(n^2-1))`, which for `n=44,106`, `k=14,913` equals **0.8194 exactly**. Four
+> unrelated distributions at that split -- uniform, Gaussian, heavy-tailed, and a deliberately bimodal
+> mixture -- all return 0.8194 to four decimals, and the maximum is 0.866 at any median split of any
+> continuous label. It measured the split, never the label. **The finding below does not depend on it**
+> (see "what survives"). A valid replacement would be a quantile-binned reproducibility curve, which is
+> distribution-sensitive and threshold-free; it has not been run.
 
-GC content is good at exactly that and nothing else. Pooled it scores +0.311; **within actives it
+The `active` flag is a **pure threshold on the label itself** -- `expn_med >= 0.5778`, with **zero
+overlap** on either side. The label is split 29,193 tiles in a narrow band `[0, 0.578]` against 14,913 in
+a wide one `[0.578, 158.3]`.
+
+**What survives, and it is the part that was always doing the work.** GC content separates those two
+groups and does nothing else. Pooled it scores +0.311; **within actives it
 scores -0.046, i.e. nothing.** The mechanism is unremarkable: AT-rich DNA melts more easily, so GC
 predicts whether a window can form an open complex -- a threshold property -- and says nothing about
 how strong a real promoter is.

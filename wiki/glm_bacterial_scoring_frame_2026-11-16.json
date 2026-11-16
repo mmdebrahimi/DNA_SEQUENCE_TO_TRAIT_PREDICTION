@@ -51,9 +51,9 @@
     ],
     "active_median": 1.002,
     "inactive_median": 0.3585,
-    "spearman_of_a_single_threshold_on_the_label_against_the_label": 0.8194,
-    "that_as_fraction_of_the_0941_ceiling": 0.8708,
-    "HOW_TO_READ_THIS_AND_HOW_NOT_TO": "This is NOT 'a model that learns nothing scores 0.82' -- the threshold is computed FROM the label, so the number is circular as a model score. It is a statement about the LABEL's SHAPE: 87% of the achievable ranking signal is recoverable from one binary split, so the pooled Spearman is overwhelmingly a DETECTION metric (is this window a promoter at all) rather than a STRENGTH metric (how strong is this promoter)."
+    "RETRACTED_2026_11_16_the_single_threshold_spearman_was_VACUOUS": "This block originally reported `spearman_of_a_single_threshold_on_the_label_against_the_label: 0.8194` and `that_as_fraction_of_the_0941_ceiling: 0.8708`, and inferred from them that the pooled Spearman is overwhelmingly a DETECTION metric. THE STATISTIC IS VACUOUS and the inference drawn from it is WITHDRAWN. Spearman is Pearson on RANKS, and a threshold indicator is 1 on exactly the top k ranks, so the joint distribution of (indicator, rank) depends only on k and n: rho = sqrt(3k(n-k)/(n^2-1)). For n=44106, k=14913 that closed form equals 0.8194 EXACTLY, and four unrelated distributions at the same split proportion (uniform, Gaussian, heavy-tailed Pareto, and a deliberately bimodal mixture) all return 0.8194 to four decimals. The maximum is 0.8660 at ANY median split of ANY continuous label. So the number measured the SPLIT PROPORTION, never the label's shape. Same error class as the repo's recorded vacuous-control instances: a filter that removes nothing, a restriction that excludes nothing, a zero-missed identity read as a broadened glob.",
+    "what_the_retraction_does_NOT_touch": "The conclusion stands on two DIRECT measurements that need no derived statistic: (1) the unanimous sign flip -- GC pooled +0.3112 vs within-active -0.0464, 4-mer ridge pooled +0.1438 vs within-active +0.1320, learned losing 0/10 seeds pooled and winning 10/10 within actives; and (2) GC's collapse to -0.046 within actives, which IS the evidence that GC is a detector rather than a strength predictor. The plain count (29,193 of 44,106 tiles inactive) and the replicate decomposition also stand. What is lost is a third, independent line of support -- not the finding.",
+    "the_replacement_statistic_that_would_be_valid": "A quantile-binned reproducibility curve: bin the label into equal-sized bins BY RANK and measure replicate agreement within each bin. Distribution-sensitive, free of any absolute threshold, needs no `active` flag so it transfers to the human label as-is, and it measures the intended quantity -- how much of the label's range carries reproducible signal. NOT YET RUN."
   },
   "finding_2_reproducibility_is_not_uniform": {
     "replicate_spearman": {
@@ -108,5 +108,8 @@
     "Re-score the bacterial BEST arm (PromoterAtlas embeddings, 0.5076 pooled) on actives only. Its pooled margin over GC is already +0.1964, so its active-frame margin is the realistic upper bound on this substrate."
   ],
   "frozen_surface_touched": false,
-  "arm_artifacts_or_verdicts_edited": false
+  "arm_artifacts_or_verdicts_edited": false,
+  "correction_log": [
+    "2026-11-16: retracted the single-threshold-Spearman statistic (0.8194) and the '87% of the achievable ranking signal is detection' inference built on it. Vacuous: the quantity is a closed-form function of the split proportion alone. Found while drafting the follow-up plan's implementation, before any of it ran. The sign-flip finding is unaffected."
+  ]
 }
