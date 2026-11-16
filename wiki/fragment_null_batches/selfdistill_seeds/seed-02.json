@@ -1,0 +1,187 @@
+{
+  "seed": 2,
+  "held_out_peaks": 608,
+  "n_train": 32733,
+  "n_test": 11373,
+  "n_sampled_for_perturbation": 8000,
+  "teacher_rho": {
+    "ridge_positional_onehot": 0.2694,
+    "conv_encoder": 0.3293
+  },
+  "conv_refit_drift_on_shared_rows": {
+    "0.02": "0.000e+00",
+    "0.05": "0.000e+00",
+    "0.1": "0.000e+00"
+  },
+  "conv_refit_drift_tolerance": 0.0001,
+  "conv_meta": {
+    "epochs_ran": 10,
+    "early_stopped": true,
+    "n_parameters": 13217,
+    "device": "cpu"
+  },
+  "rows": [
+    {
+      "mutation_rate": 0.02,
+      "teacher": "ridge_positional_onehot",
+      "n_perturbed": 8000,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.2694,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": 0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.2611,
+          "agreement_with_teacher": 0.9468,
+          "delta_rho_vs_teacher": -0.0083
+        },
+        "student_shuffled": {
+          "rho_vs_measured": 0.0218,
+          "agreement_with_teacher": 0.0885,
+          "delta_rho_vs_teacher": -0.2476
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.3073,
+          "agreement_with_teacher": 0.7339,
+          "delta_rho_vs_teacher": 0.0379
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.02,
+      "teacher": "conv_encoder",
+      "n_perturbed": 8000,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.2432,
+          "agreement_with_teacher": 0.3843,
+          "delta_rho_vs_teacher": -0.0861
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.125,
+          "agreement_with_teacher": 0.1862,
+          "delta_rho_vs_teacher": -0.2043
+        },
+        "student_shuffled": {
+          "rho_vs_measured": 0.0065,
+          "agreement_with_teacher": -0.0163,
+          "delta_rho_vs_teacher": -0.3228
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.3073,
+          "agreement_with_teacher": 0.4415,
+          "delta_rho_vs_teacher": -0.022
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.05,
+      "teacher": "ridge_positional_onehot",
+      "n_perturbed": 8000,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.2694,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": 0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.1359,
+          "agreement_with_teacher": 0.4758,
+          "delta_rho_vs_teacher": -0.1335
+        },
+        "student_shuffled": {
+          "rho_vs_measured": 0.0274,
+          "agreement_with_teacher": 0.0756,
+          "delta_rho_vs_teacher": -0.242
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.3073,
+          "agreement_with_teacher": 0.7339,
+          "delta_rho_vs_teacher": 0.0379
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.05,
+      "teacher": "conv_encoder",
+      "n_perturbed": 8000,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.2483,
+          "agreement_with_teacher": 0.4005,
+          "delta_rho_vs_teacher": -0.081
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.12,
+          "agreement_with_teacher": 0.1919,
+          "delta_rho_vs_teacher": -0.2093
+        },
+        "student_shuffled": {
+          "rho_vs_measured": 0.0194,
+          "agreement_with_teacher": 0.0048,
+          "delta_rho_vs_teacher": -0.3099
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.3073,
+          "agreement_with_teacher": 0.4415,
+          "delta_rho_vs_teacher": -0.022
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.1,
+      "teacher": "ridge_positional_onehot",
+      "n_perturbed": 8000,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.2694,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": 0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.2602,
+          "agreement_with_teacher": 0.9501,
+          "delta_rho_vs_teacher": -0.0092
+        },
+        "student_shuffled": {
+          "rho_vs_measured": 0.0208,
+          "agreement_with_teacher": 0.0894,
+          "delta_rho_vs_teacher": -0.2486
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.3073,
+          "agreement_with_teacher": 0.7339,
+          "delta_rho_vs_teacher": 0.0379
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.1,
+      "teacher": "conv_encoder",
+      "n_perturbed": 8000,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.2534,
+          "agreement_with_teacher": 0.4065,
+          "delta_rho_vs_teacher": -0.0759
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.1246,
+          "agreement_with_teacher": 0.2054,
+          "delta_rho_vs_teacher": -0.2047
+        },
+        "student_shuffled": {
+          "rho_vs_measured": -0.0054,
+          "agreement_with_teacher": -0.0117,
+          "delta_rho_vs_teacher": -0.3346
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.3073,
+          "agreement_with_teacher": 0.4415,
+          "delta_rho_vs_teacher": -0.022
+        }
+      }
+    }
+  ]
+}
