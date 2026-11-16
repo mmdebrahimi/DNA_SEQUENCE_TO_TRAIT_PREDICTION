@@ -1,0 +1,112 @@
+{
+  "record": "bacterial-scoring-frame-diagnosis-v1",
+  "date": "2026-11-16",
+  "question": "Why does a conv encoder add +0.2471/+0.3016 over GC on human lentiMPRA but only +0.0122 on bacterial promoter tiles? Is the root cause biological, or is it the scoring frame?",
+  "substrate": {
+    "file": "data/mpra/GSE144621_peak_tile_expression_formatted_std.txt.gz",
+    "n_tiles_length_150_category_tile": 44106,
+    "n_active": 14913,
+    "n_inactive": 29193,
+    "split": "leave_peak_out(frac=0.25), 10 seeds, the same splitter the published arms used"
+  },
+  "pipeline_validation": {
+    "why": "The decomposition is only worth reading if the pipeline can hit the published anchors first. The script REFUSES the decomposition on any mismatch, and that refusal fired once on a real bug of mine (the active column holds the literal strings active/inactive, not 0/1, so every tile landed in one bucket).",
+    "n_tiles": {
+      "got": 44106,
+      "published": 44106
+    },
+    "n_active": {
+      "got": 14913,
+      "published": 14913
+    },
+    "n_inactive": {
+      "got": 29193,
+      "published": 29193
+    },
+    "single_replicate_spearman": {
+      "got": 0.7945,
+      "published": 0.7945
+    },
+    "replicate_ceiling": {
+      "got": 0.941,
+      "published": 0.941
+    },
+    "gc_spearman": {
+      "got": 0.311,
+      "published": 0.3112
+    },
+    "all_matched": true
+  },
+  "finding_1_the_label_is_strongly_bimodal": {
+    "active_flag_is_a_pure_threshold_on_the_label": true,
+    "threshold": 0.5778,
+    "overlap_either_side": 0,
+    "active_range": [
+      0.5778,
+      158.3076
+    ],
+    "inactive_range": [
+      0.0,
+      0.5778
+    ],
+    "active_median": 1.002,
+    "inactive_median": 0.3585,
+    "spearman_of_a_single_threshold_on_the_label_against_the_label": 0.8194,
+    "that_as_fraction_of_the_0941_ceiling": 0.8708,
+    "HOW_TO_READ_THIS_AND_HOW_NOT_TO": "This is NOT 'a model that learns nothing scores 0.82' -- the threshold is computed FROM the label, so the number is circular as a model score. It is a statement about the LABEL's SHAPE: 87% of the achievable ranking signal is recoverable from one binary split, so the pooled Spearman is overwhelmingly a DETECTION metric (is this window a promoter at all) rather than a STRENGTH metric (how strong is this promoter)."
+  },
+  "finding_2_reproducibility_is_not_uniform": {
+    "replicate_spearman": {
+      "all": 0.7945,
+      "active": 0.8849,
+      "inactive": 0.3927
+    },
+    "implied_ceiling": {
+      "all": 0.941,
+      "active": 0.969,
+      "inactive": 0.751
+    },
+    "note": "Two-thirds of the pooled scoring set (29,193 of 44,106) carries a label whose own two replicates agree at 0.393. CAVEAT: both subsets are defined by a threshold on the label, so range restriction attenuates these within-group figures; they are not directly comparable to the pooled 0.7945."
+  },
+  "finding_3_THE_SIGN_FLIPS": {
+    "learned_proxy": "4-mer ridge (alpha=1.0). A stand-in for 'a learned representation', NOT the conv.",
+    "pooled_frame": {
+      "n": 44106,
+      "gc_median": 0.3112,
+      "kmer_median": 0.1438,
+      "margin_median": -0.1793,
+      "kmer_wins": "0 of 10 seeds",
+      "mean_margin": -0.1737
+    },
+    "active_frame": {
+      "n": 14913,
+      "gc_median": -0.0464,
+      "kmer_median": 0.132,
+      "margin_median": 0.182,
+      "kmer_wins": "10 of 10 seeds",
+      "mean_margin": 0.1775
+    },
+    "reading": "A complete and unanimous sign flip. On the published frame a learned representation is WORSE than one GC number on 0 of 10 seeds; restricted to active tiles the same representation BEATS GC on 10 of 10 by +0.18. GC's pooled signal is detection signal and nothing else -- within actives it is -0.046, i.e. absent. The learned representation has the opposite profile: a weaker detector (0.144 vs GC 0.311), the only carrier of within-active strength signal (+0.132 vs GC -0.046).",
+    "why_range_restriction_does_not_explain_it": "Restricting to actives conditions on the outcome, which attenuates correlations. But it attenuates BOTH predictors identically, and these move in opposite directions: GC collapses from +0.311 to -0.046 while the 4-mer ridge holds at 0.144 -> 0.132, a drop of 8%. A shared range restriction cannot produce a differential of that shape unless the two predictors carry different KINDS of signal, which is the conclusion."
+  },
+  "root_cause": {
+    "claim": "The bacterial and human numbers measure different TASKS. The bacterial peak-tile metric is detection-dominated and GC is a strong detector; the published conv-vs-GC margin of +0.0122 is the near-cancellation of two opposite effects (GC much better at detection, learned features much better at strength), not an absence of learnable sequence signal.",
+    "mechanism_for_gc_being_a_detector_not_a_strength_predictor": "AT-rich DNA melts more easily, so GC content predicts whether a window can form an open complex at all -- a threshold property. It says nothing about how strong a real promoter is, which is what the within-active -0.046 measures.",
+    "supporting_context_already_in_repo": "The Tile docstring records that the project ALREADY identified this failure mode and moved from random fragments to peak tiles to escape it, noting a random-fragment library asks a rare-event DETECTION question while the designed grid asked a STRENGTH question. The step was taken and was incomplete: nobody measured the active fraction WITHIN peak tiles, and it is 34%.",
+    "what_this_does_to_the_20_to_25x_headline": "It makes it SUSPECT for a specific, nameable, testable reason -- it does NOT refute it. The eukaryotic arm's own first honest limit says it cannot say which of four differences (assay, element length, kingdom, library construction) carries the effect. This decomposition says library construction is a live candidate carrying part of it, because the bacterial side is a genome-wide detection-heavy scan and the human side is a designed library of candidate elements with a continuous readout and no binary active flag in the pipeline. Corroborating but weak: the human GC baselines (0.2362, 0.2200) are well BELOW the bacterial pooled GC (0.3112), which is what less detection-dominance would look like."
+  },
+  "honest_limits": [
+    "THE DECISIVE MISSING MEASUREMENT: whether the human lentiMPRA label is similarly bimodal. It could not be checked -- the data sits at D:/dna_decode_cache/mpra_human (volume detached) and the loader needs openpyxl, which this project deliberately does not install. Until that is measured, how much of the 20-25x is a frame artifact is UNKNOWN.",
+    "The learned proxy is a 4-mer ridge, NOT the conv the published arms used. The conv scored 0.3234 pooled, ABOVE GC's 0.3112, while the 4-mer ridge scored 0.1438, well below -- so the conv is a materially better detector than this proxy. The conv's ACTIVE-ONLY score is unmeasured and is the cheapest next run.",
+    "The active frame conditions on the outcome. It is a legitimate way to ask the strength question rather than the detection question, but it is NOT 'the correct frame' and its absolute numbers are not comparable to pooled ones.",
+    "Even on the active frame, +0.132 against a 0.969 ceiling is a small fraction. Bacterial promoter strength remains hard to predict. This corrects the DIAGNOSIS, not the difficulty.",
+    "One substrate, one organism, one assay series (GSE144621). Nothing here generalises to bacterial regulation at large."
+  ],
+  "cheapest_next_measurements_in_order": [
+    "Re-run the published conv (widths 6/20/75, 13,217 params) on the 14,913 active tiles with the same 10 registered seeds. Architecture-matched, local data, CPU. This is the number that would settle whether the bacterial substrate supports a human-sized learned gain.",
+    "Measure the human lentiMPRA activity distribution for bimodality (needs the Zenodo tables + openpyxl). Settles the frame-artifact share of the 20-25x.",
+    "Re-score the bacterial BEST arm (PromoterAtlas embeddings, 0.5076 pooled) on actives only. Its pooled margin over GC is already +0.1964, so its active-frame margin is the realistic upper bound on this substrate."
+  ],
+  "frozen_surface_touched": false,
+  "arm_artifacts_or_verdicts_edited": false
+}
