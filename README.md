@@ -359,7 +359,7 @@ destination is the writing half. Four steps:
 3. **Act in bacteria** — make a minor edit so an organism produces a protein we want. `dna-decode
    inverse` is the first real step (effect → edit), and it **ranks, it does not dose**: it proposes
    candidate edits, it cannot tell you the magnitude.
-4. **Climb to higher organisms** — eventually animal traits.
+4. **Climb to higher organisms** — eventually animal traits. *First measured step taken 2026-11-01 on human regulatory DNA; see below.*
 
 **AMR was substrate #1, not the subject.** It was chosen because it is the one place a free, independent,
 measured phenotype label exists at scale; the method generalises, the labels are the bottleneck.
@@ -374,7 +374,104 @@ variation, not through pointing a bigger model at wild-type diversity. See
 and `dna_decode/eval/regime.py` encodes the boundary as code that **refuses** to certify a regime with a
 recorded negative.
 
+**The first measured step up landed 2026-11-01, and it argues for climbing sooner rather than later.**
+Agarwal 2025 human lentiMPRA — 159,795 `(sequence, activity, fold)` triples across two human cell
+lines, using the authors' own published 10-fold assignment, so the split is leakage-safe *by
+publication* rather than by our own construction. Same convolutional encoder and same GC baseline as on
+the bacterial tiles:
+
+| Substrate | Learned (median) | GC (median) | Gain over GC (paired bootstrap) |
+|---|---|---|---|
+| Human liver, HepG2 — n=61,463 | 0.4853 | 0.2362 | **+0.2471** `[+0.2399, +0.2536]` |
+| Human blood, K562 — n=98,332 | 0.5237 | 0.2200 | **+0.3016** `[+0.2916, +0.3100]` |
+| Bacterial promoter tiles | 0.3234 | 0.3112 | +0.0122 |
+
+Learning from sequence buys roughly **20–25x more on human regulatory DNA than on bacterial
+promoters** — all ten folds agree within ±0.02, and both paired-bootstrap CIs lie entirely above the
+bacterial gain. Both cell lines returned the verdict `SUBSTRATE_LIMITED` against a bar frozen before
+the run: the *bacterial substrate* was holding the method back, not the method. That is the opposite of
+what this project assumed for months, and it is the single strongest argument for moving up the tree.
+
+**Do not compare 0.4853 against the bacterial 0.5086.** Different substrate, different noise floor,
+different ceiling; the comparable quantity is each one's gain over its *own* GC baseline, which is what
+that arm's frozen bar used. Conflating them is explicitly forbidden by the bar and is now annotated in
+`soraya_runs/arms-ledger.json` so the mistake is machine-visible. See
+[`wiki/eukaryotic_arm_result_HepG2_2026-11-01.json`](wiki/eukaryotic_arm_result_HepG2_2026-11-01.json)
+and its K562 sibling.
+
+Note what this does and does not support. It is a **molecular** readout — regulatory activity of a DNA
+fragment in a cell line — on **constructed** variation, which is exactly the regime the paragraph above
+says works. It is *not* evidence about predicting an organism-level trait of an animal from its natural
+genetic variation, which remains 0-for-5.
+
 This is a long shot and is held as one. Nothing above is a promise about step 4.
+
+## The generative arm — where it actually stands
+
+The sections above describe the **reading** half, which ships. This section describes the **writing**
+half, which does not yet work well enough to ship, and says exactly how badly.
+
+To write DNA that produces a wanted outcome you must first be able to predict what a piece of DNA
+does. The narrowest useful version of that is: **given a 150 bp bacterial promoter, how strongly does
+it transcribe?** That question has a free, large, measured answer set, so it is where the generative
+arm is being tested.
+
+**Substrate.** GEO `GSE144621` bacterial peak tiles — 44,106 tiles of 150 bp, scored by Spearman rank
+correlation under a leave-peak-out split.
+
+**The ceiling is 0.941, and it is derived from the data, not assumed.** Every tile was measured twice.
+Two independent measurements of the *same* sequence agree at **0.7945**. The standard reliability
+correction for a two-measurement average gives `sqrt(2 x 0.7945 / 1.7945) = 0.9410` — the most any
+predictor could score against this label before it is only fighting measurement noise. **Read every
+number below against 0.941, never against 1.0.**
+
+**Sixteen approaches declared, fourteen measured, one killed on its own feasibility check, one in
+flight.** The best captures **54.0% of the ceiling**:
+
+| Approach | Spearman |
+|---|---|
+| Position-resolved PromoterAtlas embeddings, as given | **0.5086** |
+| PromoterAtlas base embeddings, frozen | 0.5076 |
+| Positional, non-mean-pooled PromoterAtlas | 0.4893 |
+| Orthogonal-modality stack (biophysical + N channels) | 0.4404 |
+| Biophysical + conv, rank-average hybrid | 0.4254 |
+| Promoter Calculator — 346-parameter biophysical model | 0.3968 |
+| Promoter Calculator, full decomposition into ridge | 0.3925 |
+| Convolutional encoder, 3-width, 13k params | 0.3234 |
+| Multi-resolution pyramid, 4 scales / 1.70 decades | 0.3167 |
+| **GC content — a single number** | **0.3112** |
+| Shipped expression heads, zero-shot | 0.1178 |
+| Pyramid, 4 scales / 2.22 decades, 499 bp fragments | 0.1001 |
+
+**The honest reading, and it is uncomfortable.** The whole field above is bunched between *count the Gs
+and Cs* (0.3112) and *barely better than that* (0.5086). A 346-parameter mechanistic model of how RNA
+polymerase binds DNA beats GC content by 0.086. A frozen DNA language model beats it by 0.196. Nothing
+reaches 60% of what the assay allows.
+
+**This is a model finding, not a data finding, and the replicate structure is what proves it.** A
+tempting explanation is that a promoter is only one part of a gene, so sequence alone cannot predict
+the outcome. That explanation does not survive the assay design: every tile sits in front of the
+*same* reporter gene, in the *same* cells, in the *same* condition, so everything downstream of the
+promoter is held constant and cannot explain why one tile reads high and another low. And if the
+answer did require information outside those 150 bases, two measurements of the *same* tile would
+disagree as badly as the models do. They agree at 0.7945. **The signal is inside the sequence; we
+cannot read it.**
+
+**What does break these models is context, measured directly.** On a fully-crossed *designed* grid —
+known promoter elements at fixed offsets — a positional one-hot model scores 0.5914. Moved to real
+genomic promoter tiles it falls to **0.2691**, and GC content beats every learned feature. Real
+promoters sit at arbitrary offsets inside arbitrary flanking sequence, so position-specific weights
+have nothing stable to attach to. See
+[`wiki/glm_genomewide_oracle_result_2026-10-07.md`](wiki/glm_genomewide_oracle_result_2026-10-07.md).
+
+**Two metrics in the ledger are NOT comparable with the table above** and are annotated as such in
+`soraya_runs/arms-ledger.json` rather than only in prose: the 321k-row fragment rung (0.185), and the
+human lentiMPRA arm (0.4853) — a different substrate with a different noise floor and its own ceiling.
+Comparing across substrates is exactly what that arm's own frozen acceptance bar forbids.
+
+Arm-by-arm provenance lives in `soraya_runs/arms-ledger.json`; every metric there names the artifact it
+was read from.
+
 
 ## Setup
 
