@@ -399,6 +399,19 @@ that arm's frozen bar used. Conflating them is explicitly forbidden by the bar a
 [`wiki/eukaryotic_arm_result_HepG2_2026-11-01.json`](wiki/eukaryotic_arm_result_HepG2_2026-11-01.json)
 and its K562 sibling.
 
+**CAVEAT ADDED 2026-11-16, and it is load-bearing: the bacterial side of that contrast is
+measured on a DETECTION-dominated frame, so the 20-25x ratio is suspect.** The bacterial pooled
+label is strongly bimodal -- 29,193 of 44,106 tiles sit below an activity threshold, and a single
+binary split of the label recovers 0.8194 of the 0.941 ceiling. GC content is a good detector and
+a non-predictor of strength (pooled +0.3112, **within actives -0.046**), while a learned
+representation is the mirror image. Restricted to the 14,913 active tiles the comparison **flips
+sign unanimously**: a 4-mer ridge loses to GC on 0 of 10 seeds pooled and beats it on 10 of 10
+within actives, margin +0.1820. So the bacterial +0.0122 is two opposite effects cancelling, not
+an absence of learnable signal. This does NOT refute the human result -- the decisive check,
+whether the human label is similarly bimodal, is UNMEASURED (detached volume + an uninstalled
+dependency). Read the ratio as unresolved, not as 20-25x. Detail and limits:
+[](wiki/glm_bacterial_scoring_frame_2026-11-16.md).
+
 Note what this does and does not support. It is a **molecular** readout — regulatory activity of a DNA
 fragment in a cell line — on **constructed** variation, which is exactly the regime the paragraph above
 says works. It is *not* evidence about predicting an organism-level trait of an animal from its natural
