@@ -1,0 +1,120 @@
+{
+  "schema": "kaggle-accelerator-limits-v1",
+  "measured_at": "2026-11-15",
+  "why_this_exists": "The bounded-chain plan's highest-severity risk was that the gradeable prefix (91 epochs = 32.3 h at the T4-measured 1276.04 s/epoch) might exceed one week's entire GPU allowance. That is a scheduling fact the chain's design depends on, and it was [unverified]. The session cap and the weekly quota are DIFFERENT limits and only one of them turned out to be binding.",
+  "weekly_gpu_quota": {
+    "status": "RESOLVED",
+    "total_hours": 30.0,
+    "used_hours_at_read": 0.41,
+    "remaining_hours_at_read": 29.59,
+    "refreshes_at": "2026-11-21T00:00:00+00:00",
+    "source": "kaggle CLI `kaggle quota`, the authenticated first-party account endpoint",
+    "source_kind": "first-party authenticated API, not documentation and not a blog",
+    "cli_version_path": "uv run kaggle quota (auth_method OAUTH, username emanueleebrahimi)",
+    "verbatim_output": "resource  used   remaining  total   refreshAt\nGPU       0.41h  29.59h     30.00h  2026-11-21T00:00:00+00:00\nTPU       0.00h  20.00h     20.00h  2026-11-21T00:00:00+00:00",
+    "read_date": "2026-11-15",
+    "cross_check": "The 0.41 h already consumed is independently consistent with this project's own three pushes: pa-finetune-arm-v1 died at 42 s, v2 at 94 s, and v3 ran one real epoch measured at 1276.04 s plus clone/download/setup. That sums to roughly 0.4 h, so the meter is tracking the same thing the smoke measured.",
+    "note_on_floating_quota": "Kaggle has publicly described the GPU allowance as 'floating', i.e. more than the baseline may be granted in a given week depending on demand. That is a reason the figure above can only be read as of its read_date, not as a constant. The number used for planning is the one the account endpoint actually reported: 30.00 h total."
+  },
+  "gpu_session_cap": {
+    "status": "UNRESOLVED",
+    "what_was_tried": [
+      "WebFetch https://www.kaggle.com/docs/efficient-gpu-usage -- returns the page TITLE only; the body is client-rendered and no text is served to a fetcher.",
+      "WebFetch https://www.kaggle.com/docs/notebooks -- same, body empty.",
+      "WebFetch https://www.kaggle.com/product-feedback/173129 (Kaggle's own 'floating GPU quota' product announcement) -- same, body empty.",
+      "WebSearch restricted to kaggle.com -- returns titles and URLs but the underlying pages are the same client-rendered documents; the search summary reported community posts disagreeing (9 h vs 12 h for GPU, 9 h for TPU, a Pro-only 24 h setting), which is exactly the ambiguity this file exists to resolve and therefore cannot settle it.",
+      "kaggle CLI surface inspection -- `kaggle quota` exists and reports the WEEKLY quota (resolved above) but reports no per-session execution cap.",
+      "grep of the preserved Kaggle logs wiki/finetune_arm_kaggle_logs/*.json for any limit/cap/timeout string -- no matches; the kernel is never told its own wall limit."
+    ],
+    "not_tried_and_why": [
+      "The Kaggle account settings page would display it, but it requires an interactive login. Routing the user's credentials through this session is forbidden, so this is a human-only route by policy, not by technical impossibility.",
+      "Secondary sources (blogs, forum posts) do report figures, but the plan explicitly required Kaggle's own documentation or the account page. Community figures disagree with each other and with the repo's own pusher comment, so adopting one would be choosing a number rather than resolving it."
+    ],
+    "unverified_claims_in_this_repo": {
+      "scripts/kaggle/build_promoteratlas_finetune_kernel.py": "A comment above WALL_HOURS asserts 'Kaggle's batch GPU session cap is 12.0 h' and derives the 10.5 h default as 12.0 minus 1.5 h of margin. That assertion is the [unverified] figure; it is left in place and flagged here rather than edited to a different unverified number.",
+      "scripts/kaggle_push_poll.py": "Attributes 'up to 12 h' to CPU specifically, which is not the same claim as a 12 h GPU cap."
+    },
+    "why_it_does_not_block": "The chain runs at an 8.0 h ceiling, which is below EVERY candidate value in the disagreement (9 h, 12 h, 24 h). An unresolved cap therefore keeps the conservative ceiling and costs only throughput, never the artifact. Raising it would require resolving this; lowering it is unnecessary.",
+    "how_it_resolves_empirically": "Session one either self-terminates at its own 8.0 h deadline with bounded_by_wall_clock true and a written artifact -- which proves 8.0 h is inside the cap -- or it is killed earlier, which would place the cap below 8.0 h. Either outcome is decisive for the value that actually matters here."
+  },
+  "cost_arithmetic_at_the_measured_rate": {
+    "seconds_per_epoch_measured": 1276.0449104309082,
+    "device": "Tesla T4 sm_75, t4_pin_honoured true, torch 2.11.0+cu130",
+    "source_of_rate": "wiki/finetune_arm_kaggle_logs + the pa-finetune-arm-v3 smoke artifact",
+    "budget_phase_epochs": 70,
+    "budget_phase_hours": 24.81,
+    "null_phase_epochs": 21,
+    "null_phase_hours": 7.44,
+    "gradeable_prefix_epochs": 91,
+    "gradeable_prefix_hours": 32.26,
+    "training_only_epochs": 380,
+    "training_only_hours": 134.69,
+    "full_run_including_nulls_epochs": 401,
+    "full_run_including_nulls_hours": 142.14,
+    "a_correction_to_the_plan_body_and_to_an_earlier_draft_of_this_file": "The smoke's `projected_hours_at_horizon` of 134.69 h is computed as spe * n_seeds * diagnostic_horizon_epochs / 3600 = 1276.04 * 10 * 38 / 3600, i.e. 380 epochs of TRAINING ONLY with the 21 null epochs EXCLUDED. The plan body states 'Full horizon adds 10 x 31 further ineligible epochs for 134.7 h total', which pairs the 401-epoch count with the 380-epoch cost; an earlier draft of this file repeated that pairing. The full run including the required nulls is 401 epochs = 142.14 h. Caught by reconciling every figure against the measured per-epoch rate rather than re-quoting the smoke artifact, and the reconciliation is now a test. This does NOT move any decision: the chain targets the 91-epoch prefix, whose 32.26 h was correct throughout.",
+    "epochs_reachable_with_remaining_quota_this_week": 83,
+    "how_that_was_computed": "29.59 h remaining x 3600 / 1276.04 s per epoch = 83.5 epochs, before per-session overhead (shallow clone, GEO download, cohort build, artifact write), so call it ~82.",
+    "sessions_at_an_8h_ceiling": "29.59 / 8.0 = 3.7, i.e. three full 8 h sessions plus one of about 5.6 h."
+  },
+  "SUPERSEDED_LATER_THE_SAME_DAY": {
+    "what_changed": "The per-epoch rate every figure in this file is built from -- 1276.04 s, the smoke's single-epoch measurement -- OVERSTATES steady-state cost by about 28%. Session pa-finetune-chain-s1 logged its own per-epoch times: run() epoch 1 took 1137.0 s (it carries the untrained baseline and the tile encoding) and epochs 2, 3 and 4 took 938.7, 886.7 and 945.5 s, a steady-state mean of 923.6 s.",
+    "why_the_smoke_overstated_it": "It times ONE epoch and therefore carries all of the first-epoch warmup: CUDA context setup, initial encoding, allocator growth. That is the right number for 'can one epoch run on this device' and the wrong number for sizing 91 of them.",
+    "the_conclusion_INVERTS": "Rebuilt from the measured rates, the gradeable prefix costs about 24.18 h of the remaining quota rather than 32.26 h, against 28.14 h remaining. THE PREFIX FITS INSIDE THIS QUOTA WEEK, with roughly 4 h of margin.",
+    "what_that_does_to_the_finding_below": "It does not make it wrong -- the arithmetic below is correct AT the rate then known, which was the only rate measured at the time, and the finding is preserved unedited for that reason. It makes the multi-week schedule UNNECESSARY rather than mistaken. That option remains available and still costs no frozen pre-registration if the margin evaporates.",
+    "what_does_NOT_change": "The weekly quota is still the binding constraint rather than the session cap, and the session cap is still UNRESOLVED. Only the size of the demand against that constraint moved.",
+    "how_much_to_trust_it": "Three steady-state epochs, one seed, one session, one device. If the true steady rate were the smoke's 1276 s the prefix would again be 32.26 h and would NOT fit, so this inversion is load-bearing on a small sample. It is self-correcting: every session logs its own per-epoch times, so each link re-measures the rate and the schedule can be re-derived rather than re-assumed.",
+    "detail": "wiki/finetune_arm_session1_2026-11-15.json",
+    "SUPERSEDED_BY": "SUPERSEDED_AGAIN_BY_SESSION_TWO_2026_11_16 -- never quote this layer's 923.6 s rate or its 'roughly 4 h of margin' alone. Session two re-measured the same quantity over 25 epochs and 5 seeds at 990.0 s, which narrows the margin to roughly 2.4 h. This layer's arithmetic is correct at the rate IT measured and is preserved unedited for that reason; it is no longer the live schedule."
+  },
+  "SUPERSEDED_AGAIN_BY_SESSION_TWO_2026_11_16": {
+    "what_changed": "The 923.6 s/epoch steady-state rate in the block above is itself about 7% LOW. Session pa-finetune-chain-s2 logged 25 steady-state epochs across 5 independent seeds and the mean is 990.0 s (range 955.0-1029.4). The session-one figure rested on THREE epochs of ONE seed, and its own text instructed a reader to re-read the logs rather than quote it. Re-read, it was low.",
+    "why_the_session_one_figure_was_low": "Three consecutive epochs of one seed is a small sample from a distribution with real within-session spread (955-1029 s here, a 7.8% band), and session one happened to catch its low end -- two of its three steady epochs (886.7, 938.7) sit at or below this session's minimum. This is ordinary sampling, NOT a new measurement-shape error: the shape error was the single-epoch smoke, and that diagnosis stands.",
+    "the_conclusion_NARROWS_rather_than_inverting_again": "The prefix STILL FITS inside this quota week, but the margin falls from roughly 4 h to roughly 2.4 h. Derived two ways that agree to within 0.1%: from the quota ledger alone, session two bought 29 epochs for 8.57 h = 0.2955 h/epoch all-in, and the 58 epochs remaining cost 17.14 h against 19.57 h left; from the per-epoch model, 16.36 h of training plus 0.79 h of overhead over two more sessions = 17.15 h.",
+    "why_the_rate_keeps_needing_re_measurement": "Three measurements now exist for the same quantity and no two agree: the smoke's 1276.7 s (one cold epoch), session one's 923.6 s (3 epochs, 1 seed) and session two's 990.0 s (25 epochs, 5 seeds). Each session also re-runs its own in-session rate epoch and session two's read 1323.3 s -- again a cold figure, again 33.7% above its own session's steady state. The routine is unchanged, so this recurs every link by construction.",
+    "what_does_NOT_change": "The weekly quota is still the binding constraint rather than the session cap, and the session cap is STILL UNRESOLVED -- session two ran 8.57 h against an 8.0 h ceiling without being killed, which raises the empirical floor on the cap from 1.45 h to 8.57 h but does not resolve it. The multi-week option remains available and still costs no frozen pre-registration.",
+    "the_first_thing_to_cut_if_the_margin_becomes_binding": "The in-session rate-measurement epoch, which costs ~0.37 h per session, changes no behaviour when a horizon is supplied, and has now consumed 0.723 h across two sessions with ~0.74 h more to come -- about 30% of the remaining margin. It was deliberately left in place before run()'s first-ever execution; that reason has expired.",
+    "how_much_to_trust_990": "Much more than 923.6: 25 epochs across 5 independent seeds, with a tight within-session band. The residual risk is that it is still ONE session on ONE T4 instance and Kaggle T4s are not identical. Session three re-measures it a third time, and the margin is now thin enough that the rate is the live risk rather than a curiosity.",
+    "detail": "wiki/finetune_arm_session2_2026-11-16.json",
+    "SUPERSEDED_BY": "SUPERSEDED by SUPERSEDED_AGAIN_BY_SESSION_THREE_2026_11_16. This layer's 990.0 s/epoch was measured over 25 steady epochs across 5 seeds and was the best estimate available when it was written. Session three measured 960.0 s over 26 epochs across 5 more seeds -- BELOW it -- so the pooled estimate over 51 epochs is 974.7 s and 990.0 reads as the HIGH SIDE of a roughly 960-990 s band rather than a new level. Every figure in this layer is arithmetically correct at 990.0 s and is preserved unedited; the ~2.4 h margin it states is NOT the live margin."
+  },
+  "the_outcome_determinative_finding": {
+    "SUPERSEDED_BY": "SUPERSEDED_LATER_THE_SAME_DAY, above. The verdict string below is preserved verbatim because it was the correct reading of the only rate that had been measured when it was written; read it together with the supersession, never alone.",
+    "verdict": "THE WEEKLY QUOTA IS THE BINDING CONSTRAINT, NOT THE SESSION CAP, AND THE PREFIX DOES NOT FIT IN ONE WEEK.",
+    "detail": "The gradeable prefix costs 32.26 h and the weekly allowance is 30.00 h, of which 29.59 h remain. The prefix is therefore short by about 2.7 h -- roughly 8 epochs -- in the current quota week.",
+    "but_this_is_not_a_wall": "The quota refreshes 2026-11-21T00:00:00+00:00. Running the remaining ~8 epochs after that refresh completes the prefix.",
+    "crucially_it_changes_no_frozen_pre_registration": "The plan's Open Question 1 offered three responses to this case -- run across multiple weeks, drop to a smaller n_seeds, or re-route the arm -- and called the choice an authority call. That is true of TWO of the three. Dropping n_seeds edits the frozen acceptance bar, and re-routing edits its route field; both are authority calls. Running across a quota boundary edits NOTHING: the bar declares n_seeds 10 and a 7-epoch frozen budget, and 91 epochs produce byte-identically the same per-seed curves whether they are computed inside one quota week or across two. The resume contract reads prior curves rather than recomputing them, and each epoch's shuffle is seeded from (seed, epoch) rather than accumulated global RNG, so a run split across the boundary reproduces an uninterrupted one exactly.",
+    "therefore": "The chain proceeds on the multi-week schedule. No frozen artifact is touched and no authority call is consumed. The two authority-call options stay available and unexercised if the schedule turns out to be unacceptable."
+  },
+  "per_session_overhead_finding": {
+    "found_while": "reading the kernel before pushing session one, to check what a chained session spends before training starts",
+    "finding": "`measure_seconds_per_epoch` trains ONE REAL EPOCH and it runs BEFORE the SMOKE_ONLY branch, so it fires on every chained session, not only on a smoke.",
+    "what_it_costs": "about 1276 s = 21.3 min = 0.354 h of the binding weekly quota per session, so roughly 1.77 h across the five sessions the prefix needs -- about 6% of the 29.59 h remaining, or five epochs of real work.",
+    "why_it_is_redundant_in_the_chained_path": "With a horizon supplied, `spe` changes NO behaviour. `deadline = t0 + ceiling * 3600.0` is derived from the wall ceiling alone, `plan_run` is never called, and `spe` reaches only three RECORD fields: plan.seconds_per_epoch_used, plan.seconds_per_epoch_source, and the bar-horizon divergence projection. The rate is already measured, committed and quoted throughout this plan.",
+    "decision": "LEFT IN PLACE, deliberately.",
+    "why_not_fixed_now": "`run()` has never executed on Kaggle; session one is its first real execution. Adding a skip-path to the one routine that exercises the device and the builder, immediately before that first execution, trades a known 6% cost for an unknown risk in exactly the code the session depends on. The measurement also still earns part of its keep: it is the only thing that confirms the provisioned device trains at the rate this whole plan is sized from, which a `torch.cuda.get_device_name` check cannot tell you.",
+    "what_a_fix_would_look_like_if_it_is_ever_worth_it": "Skip the measurement when BAKED_HORIZON_EPOCHS is not None and bake the committed rate instead, so the record field keeps a real measured number rather than falling back to the bar's `minutes_per_epoch` -- which is ROUNDED and TRAINING-ONLY and would understate the cost.",
+    "what_was_considered_and_rejected": "Reusing the measurement epoch as seed 0's epoch 1 rather than discarding it. It is computed with the same seed, split_frac, hyperparameters and builder, so it looks like free progress -- but it is written with kind='smoke' and promoting it to kind='seed' would relabel a throwaway curve as the arm's result. That is a provenance edit dressed as an optimisation.",
+    "consequence_for_the_session_cap": "The measurement happens BEFORE `run()` starts its clock, so an 8.0 h ceiling means roughly 8.5-8.7 h of actual session wall time once clone, GEO download, cohort build and this epoch are counted. That is still inside every candidate session cap, which is a second independent reason not to raise the ceiling while the cap is unresolved."
+  },
+  "honest_limits": [
+    "The weekly quota is a point reading as of 2026-11-15 from an account endpoint Kaggle has described as floating; it is not a constant and a later week may report differently. Re-read `kaggle quota` rather than quoting 30.00 h from this file.",
+    "The session cap is genuinely unresolved, not merely inconvenient to fetch. Six routes are logged above with their failure modes; that is evidence about six routes, not proof the figure is unobtainable, and the account settings page remains a human-only route that would settle it in seconds.",
+    "The epoch counts above assume the per-epoch cost measured in ONE smoke epoch on ONE provisioned T4 holds across sessions. Kaggle provisions a device per session; a differently-performing T4, or a P100 if the pin were ever not honoured, changes every hour figure here.",
+    "Per-session overhead (clone, GEO download, cohort build, artifact write) is estimated, not measured per session. It is charged against the same quota as training."
+  ],
+  "SUPERSEDED_AGAIN_BY_SESSION_THREE_2026_11_16": {
+    "what_changed": "a THIRD independent measurement of the per-epoch rate, and it lands BELOW the second. Session three's log gives 960.0 s/epoch over 26 steady-state epochs across 5 seeds, against session two's 990.0 s over 25 epochs across 5 seeds and session one's 923.6 s over 3 epochs of 1 seed. Pooling sessions two and three -- 51 steady epochs across 9 seeds -- gives 974.7 s.",
+    "the_conclusion_does_not_invert_or_narrow_it_LOOSENS_SLIGHTLY": "layer two narrowed the margin from ~4 h to ~2.4 h on the strength of 990.0 s. That narrowing slightly OVER-shot. With 28 epochs remaining and 11.00 h of quota left, two independent derivations agree the remaining work costs ~8.1 h, leaving a margin of ~2.87 h. The arm still fits this quota week, in ONE more session.",
+    "the_honest_reading_of_three_measurements": "this is NOT a sequence of corrections marching in one direction -- 923.6 -> 990.0 -> 960.0 is ordinary small-sample variation on a quantity with a real within-session band (session three's own 26 epochs span 925.2-988.9 s). The right summary is a BAND of roughly 960-990 s with a pooled point estimate of 974.7 s, not a latest value. A fourth session would be expected to land inside that band, not to continue a trend.",
+    "what_does_NOT_change": [
+      "the measurement-SHAPE diagnosis from layer one STANDS and is a different kind of error from this one: the smoke's 1276.7 s was wrong because of HOW it was taken (one epoch carrying all the first-iteration warmup), not because of sample size. Relabelling it as 'just a small sample' would retire a diagnosis that still applies -- the in-session rate epoch read 1299.1 s this session, 35.3% above its own session's steady state, and will do so every link because the routine is unchanged.",
+      "the weekly GPU quota of 30.00 h, source `kaggle quota`.",
+      "the gradeable prefix still fits the week."
+    ],
+    "the_session_cap_gains_a_SECOND_identical_observation": "sessions two and three each consumed 8.57 h of quota -- the same figure to two decimals -- while delivering 29 and 30 epochs respectively. The cap remains UNRESOLVED; the empirical floor is now 8.57 h observed TWICE, and nothing above that has been tested. Session four raises the wall ceiling to 9.5 h, which is the first probe above the floor.",
+    "the_overshoot_bound_is_CONFIRMED_on_an_independent_session": "layer two's correction was that session wall time overruns the ceiling by one epoch per PHASE BOUNDARY crossed, not one per session (session two overshot 8.0 h by 2028 s having crossed a seed boundary). Session three stayed inside phase 1, crossed no boundary, and overshot by 711 s -- LESS than one steady epoch. The revised bound holds.",
+    "the_first_thing_to_cut_was_NOT_cut_and_the_reason_is_now_different": "the in-session rate-measurement epoch cost 1299.1 s (0.361 h) again this session, about 13% of the ~2.87 h margin. It was retained for a NEW reason, not the lapsed one: session three's re-measurement is precisely what caught layer two's over-correction, so the epoch that looks redundant is the instrument that keeps this artifact honest. It remains the first cut if the margin ever binds, and with one session left it no longer can.",
+    "how_much_to_trust_974_7": "pooled over 51 steady-state epochs across 9 independent seeds in 2 sessions on the same device class. It is the best estimate this arc has produced. It is still a T4 figure and transfers to nothing else, and a null epoch's cost -- which governs 75% of the remaining work -- has NEVER been measured at all.",
+    "detail": "wiki/finetune_arm_session3_2026-11-16.json"
+  }
+}
