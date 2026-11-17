@@ -82,7 +82,35 @@ ALLOWED_MENTIONS: dict[str, frozenset[str]] = {
     # one mention, which is the evidence that this exemption does real work rather than covering
     # a live reader. The RESIDUAL named above applies here identically -- per-MODULE, so
     # substrate-reading code added to tile_controls.py later will not be caught.
-    "GSE144621": frozenset({"glm/encoder.py", "glm/lentimpra.py", "glm/tile_controls.py"}),
+    # glm/active_frame.py: 2 prose mentions (module docstring + one function docstring), added
+    # 2026-11-16 when that module was CORRECTED from reading the peak-tile file itself to calling
+    # the owner -- the SAME correction tile_controls.py took above, and the same shape: the
+    # sentence that trips this detector is the sentence saying the OWNER parses the file.
+    # VERIFIED BY READING THE HITS, per this file's own standard: exactly 2 `GSE144621`
+    # occurrences, both inside docstrings; zero `gzip` occurrences of any kind (pinned at the
+    # SYNTAX level by tests/test_glm_active_frame.py, because a substring search would match a
+    # docstring); it imports SUB_REPLICATE_COLUMNS / KEY_COLUMNS / sub_replicate_key /
+    # SubReplicateReadStats / read_sub_replicates_with_stats FROM genomewide, so it is a consumer
+    # of the owner rather than a second reader; it opens no file.
+    # WHY THE MOVE, and it was measured not assumed: the old in-module reader hardcoded
+    # `split("	")` where the owner has `sniff_delimiter` for exactly this deposit's
+    # space-vs-tab trap, AND its row-admission predicate differed from `load_peak_tiles` (no
+    # upper-casing, no ACGT rejection) while `join_sub_replicates` requires the two key sets to
+    # match EXACTLY. Both divergences were measured NO-OPS on today's file (0 non-uppercase and
+    # 0 non-ACGT rows of 44,106 kept; the owner's sniff independently picks tab) -- i.e. two
+    # predicates that agreed today with nothing enforcing that they keep agreeing, which is this
+    # guard's whole subject. The move was verified behaviour-preserving on the REAL substrate:
+    # identical 44,106-key set, identical sha256 d7f9de2f.. over the sorted key/value pairs, and
+    # every row-accounting counter unchanged.
+    # Measured before this row was added: with the reader moved out, the guard STILL failed on
+    # the 2 remaining prose mentions -- the evidence that this exemption does real work rather
+    # than covering a live reader.
+    # The RESIDUAL named on the rows above applies here identically -- per-MODULE, so
+    # substrate-reading code added back to active_frame.py later will not be caught by THIS
+    # test; the syntax-level gzip pin is what covers that.
+    "GSE144621": frozenset(
+        {"glm/encoder.py", "glm/lentimpra.py", "glm/tile_controls.py", "glm/active_frame.py"}
+    ),
 }
 
 #: Accession -> (owning module relative to dna_decode/, the trap that owner's loader encodes).

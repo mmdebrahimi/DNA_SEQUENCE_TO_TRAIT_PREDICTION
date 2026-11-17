@@ -557,3 +557,157 @@ def kmer_features(seqs: list[str], k: int = 4) -> list[list[float]]:
 def gc_features(seqs: list[str]) -> list[list[float]]:
     """GC content alone. The mandatory crude baseline."""
     return [[(s.count("G") + s.count("C")) / len(s)] for s in seqs]
+
+
+# --------------------------------------------------------------------------------------
+# the NESTED sub-replicate columns -- this module owns them because it owns the substrate
+# --------------------------------------------------------------------------------------
+# Added 2026-11-16. `glm/active_frame.py` had its own reader of the peak-tile file, which the
+# ownership guard correctly flagged: it hardcoded `split("\t")` where `sniff_delimiter` exists,
+# and its row-admission predicate differed from `load_peak_tiles` (no upper-casing, no ACGT
+# rejection) while `join_sub_replicates` requires the two key sets to match EXACTLY. Both
+# divergences were measured no-ops on today's file and neither was enforced by anything, so the
+# reader moved HERE and `active_frame` now calls it.
+
+SUB_REPLICATE_COLUMNS = (
+    "RNA_exp_sum_1_1",
+    "RNA_exp_sum_1_2",
+    "RNA_exp_sum_2_1",
+    "RNA_exp_sum_2_2",
+)
+
+#: Columns needed to rebuild the join key, which is the tuple the loader already keeps.
+KEY_COLUMNS = ("variant", "peak_start", "peak_end", "strand")
+
+
+def sub_replicate_key(variant: str, peak_start: str, peak_end: str, strand: str) -> tuple[str, str]:
+    """The join key, built the way ``load_peak_tiles`` builds ``Tile.seq`` and ``Tile.peak``.
+
+    MEASURED 2026-11-16: this 4-tuple is UNIQUE over the ``category=="tile"`` + ``len==150``
+    set -- 44,106 distinct keys, zero duplicates. The sequence ALONE is **not** a key: 688
+    sequences recur, up to 3x, so a join written on ``variant`` would silently mis-pair 688
+    tiles' replicates and still produce a plausible-looking curve.
+    """
+    return (variant.upper(), f"{peak_start}_{peak_end}_{strand}")
+
+
+
+@dataclass
+class SubReplicateReadStats:
+    """Row accounting, so a reader that silently drops rows is visible."""
+
+    path: str = ""
+    n_data_rows: int = 0
+    n_wrong_field_count: int = 0
+    n_filtered_category: int = 0
+    n_filtered_length: int = 0
+    n_unparseable: int = 0
+    n_non_acgt: int = 0
+    delimiter: str = ""
+    n_kept: int = 0
+    duplicate_keys: list = field(default_factory=list)
+
+    def as_dict(self) -> dict:
+        return {
+            "path": self.path,
+            "n_data_rows": self.n_data_rows,
+            "n_wrong_field_count": self.n_wrong_field_count,
+            "n_filtered_category": self.n_filtered_category,
+            "n_filtered_length": self.n_filtered_length,
+            "n_unparseable": self.n_unparseable,
+            "n_non_acgt": self.n_non_acgt,
+            "delimiter": self.delimiter,
+            "n_kept": self.n_kept,
+            "n_duplicate_keys": len(self.duplicate_keys),
+            "conditions_on_the_outcome": False,
+        }
+
+
+def read_sub_replicates_with_stats(
+    path: str | Path, *, category: str = "tile", length: int = 150,
+) -> tuple[dict[tuple[str, str], tuple[float, float, float, float]], SubReplicateReadStats]:
+    """Read ONLY the four sub-replicate columns, keyed by the verified-unique tuple.
+
+    Applies the caller's filter predicate verbatim so the key set can be compared for EXACT
+    equality against a tile list loaded under the same predicate. Returns no label and cannot
+    be used to re-derive one: ``expn_med`` is not read.
+
+    Refuses on a duplicated key rather than letting the last row win, because a silent
+    last-wins would mis-pair replicates for exactly the 688 recurring sequences this key
+    exists to disambiguate.
+    """
+    p = Path(path)
+    st = SubReplicateReadStats(path=str(p))
+    out: dict[tuple[str, str], tuple[float, float, float, float]] = {}
+    seen: dict[tuple[str, str], int] = {}
+
+    with gzip.open(p, "rt", errors="replace") as fh:
+        first = fh.readline()
+        delim = sniff_delimiter(first)
+        st.delimiter = "tab" if delim == "\t" else "whitespace"
+        header = _split(first, delim)
+        ix = {c: i for i, c in enumerate(header)}
+        need = tuple(KEY_COLUMNS) + ("category",) + SUB_REPLICATE_COLUMNS
+        missing = [c for c in need if c not in ix]
+        if missing:
+            raise GenomeWideDataError(
+                f"{p.name} lacks required columns {missing}; the nested sub-replicate design "
+                f"is what makes a selection-independent curve possible, so its absence is a "
+                f"hard stop rather than a degraded mode"
+            )
+        for line in fh:
+            st.n_data_rows += 1
+            q = _split(line, delim)
+            if len(q) != len(header):
+                st.n_wrong_field_count += 1
+                continue
+            if q[ix["category"]] != category:
+                st.n_filtered_category += 1
+                continue
+            seq = q[ix["variant"]].upper()
+            if set(seq) - set("ACGT"):
+                st.n_non_acgt += 1
+                continue
+            if len(seq) != length:
+                st.n_filtered_length += 1
+                continue
+            try:
+                vals = tuple(float(q[ix[c]]) for c in SUB_REPLICATE_COLUMNS)
+            except ValueError:
+                st.n_unparseable += 1
+                continue
+            if any(v != v for v in vals):
+                st.n_unparseable += 1
+                continue
+            key = sub_replicate_key(
+                seq, q[ix["peak_start"]], q[ix["peak_end"]], q[ix["strand"]],
+            )
+            seen[key] = seen.get(key, 0) + 1
+            if seen[key] > 1:
+                st.duplicate_keys.append(key)
+                continue
+            out[key] = vals  # type: ignore[assignment]
+            st.n_kept += 1
+
+    if st.duplicate_keys:
+        raise GenomeWideDataError(
+            f"{p.name} yielded {len(st.duplicate_keys)} DUPLICATED join key(s) under the "
+            f"category={category!r} / length={length} predicate, e.g. {st.duplicate_keys[0]}. "
+            f"The key is measured unique on this substrate, so a duplicate means the predicate "
+            f"or the file changed; pairing replicates on an ambiguous key is how 688 recurring "
+            f"sequences get silently mis-paired"
+        )
+    if not out:
+        raise GenomeWideDataError(
+            f"{p.name} yielded ZERO rows under category={category!r} / length={length}; a "
+            f"curve computed on an empty table would report a plumbing failure as a finding"
+        )
+    return out, st
+
+
+def read_sub_replicates(
+    path: str | Path, *, category: str = "tile", length: int = 150,
+) -> dict[tuple[str, str], tuple[float, float, float, float]]:
+    """``read_sub_replicates_with_stats`` without the accounting. Same refusals."""
+    table, _st = read_sub_replicates_with_stats(path, category=category, length=length)
+    return table
