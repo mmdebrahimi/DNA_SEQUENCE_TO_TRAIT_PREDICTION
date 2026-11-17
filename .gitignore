@@ -174,3 +174,10 @@ soraya_runs/*
 wiki/fragment_null_batches/overnight_log.txt
 wiki/fragment_null_batches/overnight_stdout.txt
 wiki/fragment_null_batches/MORNING_REPORT.md
+
+# transient per-run artifacts (the tracked sibling .sentrux/baseline.json is the durable one)
+.sentrux/.last-compare.txt
+
+# local hand-made backups; the live file is what is tracked
+*.v1bak
+*.bak

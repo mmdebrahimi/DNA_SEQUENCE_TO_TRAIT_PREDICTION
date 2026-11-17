@@ -1,95 +1,43 @@
-## ANSWERED 2026-11-14 - re-route to kaggle_t4 (user), kernel BUILT and verified, NOT yet pushed
+## LIVE STATE 2026-11-16 — the finetune arm chain, and the slugs that must NEVER be re-pushed
 
-**The user chose option (A), re-route to `kaggle_t4`.** Done, and the bar edit carries its proof:
-all **19** non-route keys are byte-identical before and after, `check_order` and the
-FINETUNE_ADDS/TIES/NO_GAIN decision untouched, every threshold and all of
-`frozen_hyperparameters` unchanged. The 129.6 h ceiling is **left exactly as frozen** and simply
-stops binding, because it bounds a LOCAL projection -- re-deriving it for a Kaggle route would be
-inventing a second number under cover of the first.
+**NEVER re-push these Kaggle slugs — every one holds retrieved output** (verified file-by-file against
+`wiki/finetune_arm_kaggle_logs/`): `pa-finetune-arm-v1` / `v2` / `v3`, `pa-finetune-ckpt-probe` /
+`probe2` / `probe3`, `pa-finetune-chain-s1` / `s2` / `s3`. The next link needs a FRESH slug.
 
-`scripts/kaggle/build_promoteratlas_finetune_kernel.py` is built and self-tests clean. It calls the
-repo's `run()`, NOT `main()`: the route gate lives in `main()` and correctly refuses a non-local
-route, so it is left alone rather than patched. The embed set is resolved by **AST**, not
-hand-listed -- it found **21** modules including transitive ones a hand-list would have missed
-(`expression_heads_probe`, `positional_readout`, `detached_launch`), and a regex sweep had returned
-a docstring line `from the` as if it were an import. `PA_REPO` and `MPRA_CACHE` are both
-env-overridable, so nothing is forked to run on Kaggle.
+**This supersedes the 2026-11-14 section that said to push to `pa-finetune-arm-v1`, which was
+DANGEROUS.** That slug holds `attempt1_pa-finetune-arm-v1_2026-11-14.log.json`, so following the
+instruction would have overwritten retrieved output — and `plan_run` would have refused the launch
+anyway, for the reason below. Recorded rather than quietly deleted, because the instruction was written
+in good faith from a route decision that a later measurement killed.
 
-**Verified against real data, not stubs:** the emitted kernel unpacks, imports `run()` **from the
-unpacked payload rather than the repo** (asserted -- otherwise the test is vacuous), and loads the
-real **44,106**-tile x 150 bp cohort through the embedded loader, with the documented tuple
-contract of `load_peak_tiles` re-checked. The sibling tile-arm kernel's first Kaggle run died
-because its dry run stubbed exactly that boundary.
+**Where the arm actually stands** (`wiki/decisions-log.md`, chained sessions 1-3, 2026-11-15/16):
 
-**NOT yet pushed, and this is the remaining step.** Push is free-tier (no money gate) and
-reversible; use a FRESH slug, never one holding retrieved output:
-`uv run python scripts/kaggle_push_poll.py push <kernel.py> pa-finetune-arm-v1 --gpu`. Two honest
-unknowns remain until it runs on the real device: the T4 per-epoch cost (the kernel MEASURES one
-real epoch rather than carrying the meaningless local 1568.1 s/epoch) and whether 38 epochs x 10
-seeds fits one 12 h session. A session cut is survivable by design -- `run()` orders its phases
-budget -> nulls -> extend, so an early stop still yields a gradeable verdict and loses only the
-ineligible 8-to-38 diagnostic, stamping BOUNDED_BY_WALL_CLOCK. Chaining is supported via
-`$FT_CKPT_IN`, and `FT_SMOKE_ONLY=1` measures the rate without scoring anything.
+- **9 of 10 seeds complete at the frozen budget** — 0.6557 / 0.6453 / 0.6307 / 0.6879 / 0.6442 /
+  0.6102 / 0.6214 / 0.6196 / 0.7070, **median 0.6442**, read from `per_seed[*].frozen_budget.value`
+  (the field the verdict reads) rather than recomputed from the curves.
+- **It is NOT a result, and the blocker is a GATE not a sample size.** ZERO of the three required
+  shuffled-label nulls have run; `verdict_secured` is false; the bar's verdict is a PAIRED bootstrap
+  needing all ten seeds. The arm correctly reads `planned` / `blocked:untried-arm`. **Do not quote
+  0.6442 as a verdict** — without the null, nothing bounds how much of it is a random readout of an
+  already-informative representation.
+- Per-epoch rate pooled over 51 steady epochs / 9 seeds is **974.7 s**. The three session figures
+  (923.6 / 990.0 / 960.0) are a **BAND, not a trend**. **21 of the 28 remaining epochs are NULL epochs
+  and a null epoch has never been timed** — three quarters of the remaining work rests on that
+  assumption, which is now the dominant uncertainty rather than the rate.
+- Link 4 is sized at a **9.5 h** ceiling with `horizon_epochs == frozen_epochs == 7`, which secures the
+  verdict while skipping the pre-declared-INELIGIBLE horizon-extension phase, so the run terminates on
+  completion rather than on the clock and unused ceiling costs nothing.
 
-Original decision text follows, kept because it is the record of why the route was re-decidable.
+**Two platform questions the older resume checkpoint still lists as UNVERIFIED are RESOLVED — do not
+re-litigate them:** the checkpoint-mount directory name
+(`ckpt_mount_probe3_CONFIRMED_2026-11-15.log.json`) and cross-session resume, proven in all three
+chained links by the reconciler AND independently by the kernel log — two routes sharing no code,
+insisted on because the reconciler has a recorded vacuous pass on exactly that measurement.
 
-## DECISION NEEDED 2026-11-14 - the one untried ambitious arm is ready to run and BOTH of its route premises have expired
-
-**It did not fail. The host lost power.** `finetuned-promoteratlas-encoder-150bp` has read `planned`
-since 2026-11-02, which looked like an arm nobody had got to. A launch WAS recorded: pid 4428,
-`2026-11-04T12:01:25`, `--horizon 27 --seconds-per-epoch 1568.1`, state `DEAD_NO_SENTINEL`, no
-checkpoint, no artifact, a 194-byte log ending at the cohort load. **The missing traceback is the
-tell** - the runner catches `Exception` and prints `RUN FAILED (<type>): <msg>`, so a Python failure
-leaves a line. The Windows System log reports the previous shutdown UNEXPECTED at boot
-`2026-11-04T12:15:05`, the THIRD dirty shutdown in ~42 h, matching the power outage you reported.
-Full diagnosis + the timestamp caveat: `wiki/finetune_arm_launch_death_2026-11-14.json`. Nothing
-about predictive merit changed; the arm is still `planned` and the ceiling criterion still reads
-`blocked:untried-arm`.
-
-**Why this is yours and not mine.** Two load-bearing fields of the FROZEN
-`wiki/finetune_arm_acceptance_bar.json` derive from a 216.0 h authorised UNATTENDED window, and that
-window was your 10-day absence, which has ended:
-
-- the **ceiling** is `216.0 x 0.60 = 129.6 h`;
-- the **route** chose `local_cpu` over `kaggle_t4` on the stated decisive ground that *"a Kaggle
-  chain requires an invocation to retrieve its output and nothing will invoke me inside this
-  window."* You are here, so that sentence is now false.
-
-The run is **129.3 h** at the bar's 20.4 min/epoch and **165.5 h** at the measured 26.1 min/epoch
-(which is why the dead launch used horizon 27, costing 117.6 h and fitting, rather than the frozen
-38). Re-sizing or re-routing a frozen pre-registration is user authority, and a multi-day run on the
-machine you are using is your call too. Registered so it cannot go silently closed:
-constraint `finetune-arm-local-route-rests-on-an-ended-216h-window`.
-
-**DRAFTED RECOMMENDATION: re-route to `kaggle_t4`, and it is the cheap option in every sense.** The
-route's own disqualifier was RETRIEVABILITY, not compute - and retrieval is exactly what has become
-possible. A T4 collapses a multi-day CPU run into a fraction of it, removes the power-cut exposure
-that already killed one launch, and leaves your machine free. **Crucially it is outcome-neutral on
-the bar's predicates:** `check_order` and the `FINETUNE_ADDS / FINETUNE_TIES / FINETUNE_NO_GAIN`
-decision are untouched, no threshold moves, and the 129.6 h ceiling simply stops binding because it
-bounds a LOCAL projection. That satisfies this project's own rule that a frozen-bar edit needs no
-new threshold plus a diff showing no measured verdict moves. Cost to me: the Kaggle kernel for this
-arm does not exist yet (`scripts/kaggle/` has the frozen-embeddings tile arm, not the fine-tune), so
-it is real but reversible local work, and `scripts/finetune_arm_run.py` REFUSES any route but
-`local_cpu` and would need the route read, not hardcoded.
-
-The alternatives, so the set is explicit: **(B)** authorise a new unattended window of known length
-and re-derive the ceiling from it, keeping `local_cpu`; **(C)** accept a multi-day attended local run
-as-is; **(D)** leave the arm unmeasured, which keeps the ceiling criterion at `blocked:untried-arm`
-and is a real choice, not a non-answer - the arm's own declaration warns that a budget-limited null
-is not a representation-limited one.
-
-**One hazard recorded rather than tripped:** do NOT smoke-test this arm into its real `--ckpt-dir`.
-The resume contract READS any existing per-seed checkpoint and never recomputes it, so a short
-verification run under different hyperparameters would be silently adopted as the real run's
-trajectory prefix. Use a throwaway `--ckpt-dir`, or nothing. I ran nothing - the dead launch already
-proves the route check and cohort load pass, and the feasibility probe already trained 15 real epochs
-on this host.
-
-**The stale lock is deliberately still there.** `data/unattended/finetune_arm.lock` is copied to
-`wiki/unattended_evidence/` (a tracked path, so the delete is now git-restorable) and left live, so a
-local relaunch still hits `REFUSED_LOCK_HELD` (exit 9) by design until this decision is made.
-Clearing it is one line and belongs to whoever decides to relaunch.
+**The live authority fork is unchanged and is still the user's.** The frozen bar cannot complete in one
+Kaggle session, so finishing it means chaining (~4 links against a ~30 h weekly quota). The options stay
+(a) chain, (b) re-size or re-scope the bar, (c) re-route, (d) accept a gradeable prefix — **each one
+edits a frozen pre-registration**, which is why no executor run may pick for you.
 
 ## CORRECTION 2026-11-01 — CLAUDE.md's "14 failures, none a code defect" is wrong on the COUNT, and the one code defect is now FIXED
 
@@ -430,59 +378,12 @@ audit — it is otherwise a second adjudication system.)
 
 ## DONE — GLM G-A + G-C v2 build plan (all 9 steps, 2026-10-08)
 
-`plans/GLM_G_A_And_G_C_V2_Build_Plan/technical-plan.md`. Commits `e2aaf54` → `f015cff`.
-**Both families answered, both negative, both VALID negatives** (clean nulls + registered protocols,
-stamped machine-readably so a broken run could not satisfy the bar). Derivations in the two memos; this
-entry is the pointer.
-
-| step | outcome |
-|---|---|
-| 3 — G-A stop gate | **`NO_POSITIONAL_HEADROOM`.** Position gain **−0.0068** against +0.02. One GC feature (0.3112) beat the 11-, 17- and 26-feature arms. Reconcile anchor **0.3000 exactly**. `wiki/glm_tile_headroom_2026-10-08.json`. |
-| 8 — G-C verdict | **`NO_GAIN`.** partial_pooling +0.2033 vs two_model +0.2032 = **+0.0001** against 0.02. `wiki/glm_condition_conditioning_result_2026-10-08.md`. |
-| 9 — G-A gate | **`WEAK` by the frozen median rule, NOT distinguishable from zero when paired.** `wiki/glm_encoder_gate_result_2026-10-08.md`. |
-
-**The user resolved the ratification fork as BUILD ANYWAY, and that was the right call even though the
-gate's prediction held.** A real conv encoder (13,217 params, widths 6/20/75) reached median +0.3234 vs
-gc +0.3112 — margin +0.0122 against a 0.05 bar — but **paired on identical splits it wins only 6/10
-seeds, sign-test p=0.754, CI95 [−0.0099, +0.0349] INCLUDING ZERO**; the single-width arm is a literal
-coin flip (5/10, p=1.000). **Do not quote the +0.0122 median as the encoder beating the baseline** — the
-first two seeds looked like a clean win (+0.024, +0.038) and ten seeds plus a paired test are what
-resolved it. The null's own CI *excludes* zero (p=0.002), so the instrument can resolve a real difference
-and simply does not resolve one here.
-
-**Why building it was still worth it:** Step 3's proxy was positional GC in 10 bins under a **linear**
-ridge, so it could neither see a precise-offset motif nor represent a composition×position interaction.
-An encoder escapes both limits and still does not win — which converts a predicted-negative from a weak
-proxy into a **measured** one from the model class the proxy stood in for. The encoder is demonstrably
-not broken: it learns a planted fixed-offset motif to 0.84 against a computed ceiling of 1.0, its null
-collapses 10/10, and both framings agree (AUROC 0.6774 vs 0.6672).
-
-**Scope, do not over-read:** this is THIS encoder at THIS size on THIS substrate. Capacity has already
-hurt here (6-mers scored worst at 0.2022), so a larger encoder is a *different* experiment — and it says
-nothing about G-B. GA-H1 falsified · GA-H3 confirmed · **GA-H2 under-investigation because two
-instruments disagree** (multi-vs-w20 7/10 wins, normal-approx CI barely excludes zero at +0.0007, sign
-test p=0.344) · GA-H4 open (the run shows the conclusion is framing-ROBUST, which is not the same as
-showing classification is the better framing).
-
-**Two of the G-C arms were degenerate and the tests, not the run, caught it.** A full `seq × medium`
-interaction over a BINARY medium spans the same hypothesis space as two per-medium models (corr
-0.9999998), and the partial-pooling scale that was supposed to fix that was a **silent no-op** — applied
-before `StandardScaler`, which divides out a constant column factor (r 0.9999970, same to 7 decimals).
-All three conditioned arms were secretly one model. Fixed by applying the penalty AFTER standardisation
-(`alpha/c²`); pinned by a test asserting a pre-scaler scale is inert and a post-scaler one is not.
-**Reusable:** a per-feature weight placed before a standardiser does nothing, and the failure is
-invisible — every arm still runs and returns a plausible number.
-
-**Do not re-propose "just scale the interaction block" or a wider pooling grid.** The pooling curve is
-FLAT (0.0001 spread; argmax wanders 0.03/0.1/1.0 across seeds), so the selected scale is NOISE. Partial
-mechanistic account, measured: CENTERING the unit-sum 3-mer block makes the design exactly **rank 63 of
-64** (cond 9.3e14), so ridge alpha is already load-bearing and a per-block penalty has little room.
-
-**Cheap and already banked:** 3-mer extraction was **97% of the sweep's cost** (181 s/arm vs 4 s for the
-ridge fit) and the features are a pure function of the sequence — identical across arms and seeds. One
-cached pass per medium took the 10-seed × 7-arm sweep from ~3.5 h to ~35 min, bit-faithfully
-(`two_model` +0.2013/+0.1916 on seeds 0/1, reproduced on 3 runs). Any future arm on this substrate should
-reuse `feature_matrix`, not recompute.
+Pointer only — this section always said its derivations lived elsewhere, so it is reduced to the
+pointers themselves. Plan `plans/GLM_G_A_And_G_C_V2_Build_Plan/technical-plan.md`, commits `e2aaf54`
+to `f015cff`. Both families answered, both **VALID negatives** (clean nulls + registered protocols,
+stamped machine-readably so a broken run could not satisfy the bar):
+`wiki/glm_encoder_gate_result_2026-10-08.md` and `wiki/glm_condition_conditioning_result_2026-10-08.md`.
+Pruned 2026-11-16 to bring NEXT.md back under its declared transient-store ceiling.
 
 ## The system design — drafted, awaiting ratification
 
