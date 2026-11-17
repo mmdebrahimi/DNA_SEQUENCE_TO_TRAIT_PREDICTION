@@ -1,0 +1,85 @@
+{
+  "schema": "glm-active-frame-regrade-v1",
+  "date": "2026-11-17",
+  "what_changed": "only the BAR. The per-seed margins and nulls are read verbatim from the recorded 2026-11-16 artifact; nothing was retrained.",
+  "original_verdict_PRESERVED": {
+    "verdict": "INDETERMINATE_NULL_NOT_CLEAN",
+    "detail": "shuffled-label arm reached |0.0674| against a ceiling of 0.05",
+    "note": "kept because a re-grade that overwrote it would be indistinguishable from having only ever run the second grading"
+  },
+  "independence_unit": {
+    "name": "peak",
+    "n_rows": 3822,
+    "n_units": 462,
+    "icc": 0.6931,
+    "design_effect": 6.0407,
+    "n_effective": 632.7,
+    "se_spearman_null": 0.03979,
+    "measured_from": "one-way ANOVA ICC of rep1 within peak over the 14,913-tile active frame (t.active == 'active'; 1,848 peaks, mean 8.07 tiles/peak)",
+    "why_it_matters": "3822 tiles are about 633 independent units, so the sampling noise of every correlation here is about 2.46x wider than a row count suggests"
+  },
+  "null_arm": {
+    "frozen_bar": 0.05,
+    "frozen_bar_validation": {
+      "ok": false,
+      "clean_failure_rate": 0.9043,
+      "reasons": [
+        "CLEAN-FAILURE RATE 0.904 exceeds 0.050: a clean pipeline fails this bar 90% of the time, so its verdict carries little information about the hazard. The design-derived bar is 0.1116 against a declared 0.0500",
+        "INHERITED from \"scripts/glm_encoder_gate.py::PREREGISTERED['null_max_abs'], a pooled 44,106-row design\". A bar transfers between designs only when the effective n, the aggregation and the sidedness all match; state why they do, or re-derive it at this design (effective n 633)",
+        "no `derived_from`: a bar must record what produced it",
+        "HAZARD is 'two-sided' -- confirm that is deliberate. A leakage or contamination hazard runs in ONE direction, and taking abs() turns a one-sided test into a two-sided one, which is what made three negative null draws read as a failure"
+      ]
+    },
+    "THE_LOAD_BEARING_NUMBER": "a CLEAN pipeline fails the frozen 0.05 bar 90% of the time, so the original INDETERMINATE verdict carried almost no information about leakage",
+    "derived_bar_one_sided_hazard_matched": 0.1022,
+    "derived_bar_two_sided": 0.1116,
+    "observed_max_positive_null": 0.0287,
+    "observed_max_abs_null": 0.0674,
+    "n_nulls_breaching_frozen_bar": 3,
+    "n_breaches_that_are_negative": 3,
+    "n_positive_nulls_above_frozen_bar": 0,
+    "clean_one_sided": true,
+    "clean_two_sided": true,
+    "reading": "leakage can only inflate a null upward. Every breach of the frozen bar is NEGATIVE and the largest positive null is far below the hazard-matched bar, so the null arm is clean under either reading"
+  },
+  "margin_arm": {
+    "frozen_bar": 0.15,
+    "frozen_bar_validation": {
+      "ok": false,
+      "clean_failure_rate": 0.0001,
+      "reasons": [
+        "INHERITED from \"the pooled 44,106-row run's +0.1820 margin\". A bar transfers between designs only when the effective n, the aggregation and the sidedness all match; state why they do, or re-derive it at this design (effective n 633)",
+        "no `derived_from`: a bar must record what produced it"
+      ]
+    },
+    "the_correction_runs_the_OTHER_way": "the frozen +0.15 has a clean-failure rate of 0.000 against a design-derived 0.0657: it was over-CONSERVATIVE, not lax. A bar-shopping exercise does not return this finding",
+    "derived_bar_5pct_clean_failure": 0.0657,
+    "derived_bar_1pct_clean_failure": 0.0922,
+    "per_seed_margins": [
+      0.2409,
+      0.2563,
+      0.228,
+      0.2487,
+      0.2099,
+      0.2013,
+      0.2491,
+      0.1738,
+      0.151,
+      0.1075
+    ],
+    "median_margin": 0.228,
+    "seeds_clearing_derived_bar": 10,
+    "seeds_clearing_1pct_bar": 10,
+    "n_seeds": 10,
+    "aggregation_note": "the margin is judged PER SEED, so its null is a SINGLE draw and not a max-of-k. Comparing a per-seed margin against a max-of-10 threshold is the same wrong-statistic error the null arm suffered"
+  },
+  "verdict": "FRAME_EXPLAINS_THE_GAP",
+  "verdict_detail": "null arm clean against the hazard-matched derived bar (+0.0287 < 0.1022); 10 of 10 seeds clear the design-derived margin bar 0.0657",
+  "honest_limits": [
+    "The ICC is measured on the label (rep1) within peaks, which is the right quantity for the sampling noise of a correlation over those tiles, but it is ONE estimate of the design effect and a residual-based estimate could differ.",
+    "The null model is asymptotic: Spearman under H0 treated as N(0, 1/(n_eff - 1)). At about 630 effective units that is standard, but it is an approximation and an exact permutation null on the real peak grouping would be stronger.",
+    "The 5% clean-failure allowance is a convention, stated as one. It is a commitment about the bar's error rate, not a derived property of the data.",
+    "This re-grades the FRAME question only. It says nothing about the finetune arm, and the 0.941 pooled ceiling remains an average over deciles running 0.5013 to 0.9823.",
+    "Adopting this verdict in place of the original is a USER decision. Both are recorded and the original artifact is untouched."
+  ]
+}
