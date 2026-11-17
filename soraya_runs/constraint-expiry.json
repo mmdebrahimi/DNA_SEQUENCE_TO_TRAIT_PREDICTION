@@ -165,6 +165,17 @@
       "last_checked": "",
       "last_verdict": "",
       "resolved": true
+    },
+    "finetune-arm-link4-kaggle-gpu-quota-exhausted": {
+      "cid": "finetune-arm-link4-kaggle-gpu-quota-exhausted",
+      "blocked": "LINK 4 of the PromoterAtlas finetune arm -- the LAST link, 28 epochs (seed 9's 7 plus three shuffled-label nulls at 7 each) which would COMPLETE the frozen bar and retire the only `planned` arm blocking the GLM ceiling criterion. Everything else is ready: the ft-ckpt-s3 dataset exists on Kaggle (186,587,892 bytes, 2026-11-16 13:18), so link 4 can resume from seed 9 rather than redoing work, and cross-session resume is proven in all three prior links by two routes sharing no code.",
+      "rationale": "MEASURED 2026-11-17 by `uv run kaggle quota`: GPU 27.30h used / 2.70h remaining of 30.00h. The work needs ~8.1h at the pooled measured rate of 974.7 s/epoch over 51 steady epochs. It does NOT fit in 2.70h. This is a HARD EXTERNAL wall with a date, not an authority fork and not a code-closable gap. IT ALSO CORRECTS A STALE NUMBER I QUOTED: wiki/kaggle_session_limits_2026-11-15.json records 29.59h remaining as of 2026-11-15 and that file's own honest_limits says to RE-READ `kaggle quota` rather than quote it. I subtracted the three chained sessions' logged wall time from it (29.59 - 18.59) and reported '~11h left with a ~2.9h margin'. The live meter says 2.70h, so something consumed ~16h more than the session logs account for -- unexplained and worth knowing before sizing link 4. A point-in-time reading is not a standing fact, and arithmetic on a stale reading inherits its staleness.",
+      "expiry_kind": "manual",
+      "expiry_arg": "Run `uv run kaggle quota`. The GPU allowance refreshes 2026-11-21T00:00:00+00:00. When remaining >= 9.0h, link 4 is runnable: push the kernel to a FRESH slug (never pa-finetune-arm-v1/v2/v3, pa-finetune-ckpt-probe/2/3, or pa-finetune-chain-s1/s2/s3 -- every one holds retrieved output), mount emanueleebrahimi/ft-ckpt-s3, and size the wall ceiling at 9.5h with horizon_epochs == frozen_epochs == 7. The Kaggle per-session cap is still UNRESOLVED (community reports disagree, 9h vs 12h), but that is not a risk to the work: a session cut at the cap resumes from checkpoint and loses at most one partial epoch. Launching is the USER's call -- it is outward-facing and spends their quota.",
+      "registered_at": "2026-11-17T16:36:45Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
     }
   }
 }

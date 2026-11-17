@@ -53,8 +53,32 @@
       ]
     },
     "the_correction_runs_the_OTHER_way": "the frozen +0.15 has a clean-failure rate of 0.000 against a design-derived 0.0657: it was over-CONSERVATIVE, not lax. A bar-shopping exercise does not return this finding",
-    "derived_bar_5pct_clean_failure": 0.0657,
-    "derived_bar_1pct_clean_failure": 0.0922,
+    "PRIMARY_empirical_null": {
+      "what_it_is": "the SAME difference the margin measures -- encoder minus GC -- recomputed with the encoder trained on SHUFFLED labels, on the same splits and the same 10 seeds. Already present in the recorded artifact as encoder_shuffled - gc, so it costs nothing to compute",
+      "why_it_is_primary": "it needs NO variance model and NO design effect, so it sidesteps both named modelling gaps: a difference of two dependent correlations has no closed-form null here (G2), and the design effect from the label's ICC alone is an overstatement (G1)",
+      "per_seed_margin_nulls": [
+        -0.0059,
+        0.0484,
+        0.0386,
+        0.1009,
+        0.0836,
+        0.0385,
+        0.0051,
+        -0.021,
+        -0.0561,
+        0.0552
+      ],
+      "margin_null_max": 0.1009,
+      "seeds_exceeding_the_empirical_null_max": 10,
+      "n_seeds": 10,
+      "weakest_margin_over_null_max": 1.07,
+      "median_margin_over_null_max": 2.26,
+      "honest_reading": "all 10 of 10 observed margins exceed the empirical null's MAXIMUM, but the weakest clears it by only 1.07x -- thin, and reported as thin. The median clears by 2.26x"
+    },
+    "simulated_bars_are_a_PROXY_not_primary": "the kind is `difference-of-spearman`, which has no variance model in dna_decode.eval.preregistration.VARIANCE_MODELS. The two simulated bars below borrow Spearman's SD via an explicit allow_proxy_variance_model opt-in and are carried as a CROSS-CHECK only",
+    "derived_bar_5pct_clean_failure_PROXY": 0.0657,
+    "derived_bar_1pct_clean_failure_PROXY": 0.0922,
+    "seeds_clearing_proxy_1pct_bar": 10,
     "per_seed_margins": [
       0.2409,
       0.2563,
@@ -69,14 +93,24 @@
     ],
     "median_margin": 0.228,
     "seeds_clearing_derived_bar": 10,
-    "seeds_clearing_1pct_bar": 10,
+    "seeds_clearing_proxy_5pct_bar": 10,
     "n_seeds": 10,
-    "aggregation_note": "the margin is judged PER SEED, so its null is a SINGLE draw and not a max-of-k. Comparing a per-seed margin against a max-of-10 threshold is the same wrong-statistic error the null arm suffered"
+    "aggregation_note": "the margin is judged PER SEED, so its null is a SINGLE draw and not a max-of-k. Comparing a per-seed margin against a max-of-10 threshold is the same wrong-statistic error the null arm suffered -- and it is one I committed while diagnosing it, which is why the distinction is recorded here"
+  },
+  "robustness_does_the_verdict_need_the_ICC_at_all": {
+    "question": "both derived bars depend on a design effect estimated from the label's ICC, and gap G1 says that estimate is an OVERSTATEMENT, which LOOSENS the bar. So: does the verdict survive design_effect = 1.0 -- every tile treated as independent, the TIGHTEST bar this design can produce?",
+    "deff_1_null_bar_one_sided": 0.0416,
+    "deff_1_margin_bar_PROXY": 0.0267,
+    "observed_max_positive_null": 0.0287,
+    "weakest_margin": 0.1075,
+    "verdict_holds_at_deff_1": true,
+    "why_this_matters": "if the verdict holds at deff = 1 it does NOT rest on the ICC modelling choice, which removes the single most contestable input to the re-grade"
   },
   "verdict": "FRAME_EXPLAINS_THE_GAP",
-  "verdict_detail": "null arm clean against the hazard-matched derived bar (+0.0287 < 0.1022); 10 of 10 seeds clear the design-derived margin bar 0.0657",
+  "verdict_detail": "null arm clean against the hazard-matched derived bar (+0.0287 < 0.1022); 10 of 10 seeds exceed the EMPIRICAL margin-null maximum +0.1009; and the verdict still holds at design_effect = 1.0 (True), so it does not depend on the ICC",
   "honest_limits": [
-    "The ICC is measured on the label (rep1) within peaks, which is the right quantity for the sampling noise of a correlation over those tiles, but it is ONE estimate of the design effect and a residual-based estimate could differ.",
+    "The weakest seed clears the empirical margin null by only 1.07x. The MEDIAN clears by 2.26x, and the verdict rests on 8-of-10, not on the weakest seed -- but that thinness is real and is not smoothed over here.",
+    "The ICC is measured on the label (rep1) within peaks. For a CORRELATION the design effect is nearer 1 + (m-1)*rho_x*rho_y, so using the label's alone implicitly sets the prediction's intra-peak correlation to 1 and OVERSTATES the design effect, which LOOSENS the derived bars. This is why the deff=1 robustness block exists.",
     "The null model is asymptotic: Spearman under H0 treated as N(0, 1/(n_eff - 1)). At about 630 effective units that is standard, but it is an approximation and an exact permutation null on the real peak grouping would be stronger.",
     "The 5% clean-failure allowance is a convention, stated as one. It is a commitment about the bar's error rate, not a derived property of the data.",
     "This re-grades the FRAME question only. It says nothing about the finetune arm, and the 0.941 pooled ceiling remains an average over deciles running 0.5013 to 0.9823.",

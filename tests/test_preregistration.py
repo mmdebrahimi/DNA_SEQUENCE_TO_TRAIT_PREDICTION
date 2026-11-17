@@ -145,11 +145,14 @@ def test_validate_flags_a_two_sided_bar_for_confirmation() -> None:
 def test_an_inherited_bar_is_refused_even_when_its_value_would_pass() -> None:
     """A generous inherited bar still hides a design mismatch, so inheritance is flagged
     independently of the clean-failure rate."""
+    # the proxy opt-in is passed because this test is about the INHERITANCE flag, not the
+    # variance model; without it the G2 refusal fires first and the test checks nothing.
     stat = Statistic("m", "difference-of-spearman", "single", 1, "upward")
     v = validate_bar(
         stat,
         active_frame_unit(),
         Bar(0.9, derived_from="simulation", inherited_from="the pooled 44,106-row run"),
+        allow_proxy_variance_model=True,
     )
     assert v.clean_failure_rate == pytest.approx(0.0, abs=1e-6)
     assert not v.ok
@@ -170,6 +173,53 @@ def test_a_bar_without_provenance_is_refused() -> None:
     unit = active_frame_unit()
     v = validate_bar(stat, unit, Bar(derive_bar(stat, unit), derived_from=""))
     assert any("derived_from" in r for r in v.reasons)
+
+
+# --------------------------------------------------------------------------------------
+# G2 -- `kind` is load-bearing: a difference of two correlations has no closed-form null here
+# --------------------------------------------------------------------------------------
+def test_a_kind_with_no_variance_model_is_refused() -> None:
+    """A margin is a difference of two DEPENDENT correlations on one test set, so Spearman's SD is
+    not its SD. Borrowing it silently is the failure; the module must refuse."""
+    diff = Statistic("encoder_minus_gc", "difference-of-spearman", "single", 1, "upward")
+    with pytest.raises(PreregistrationRefused, match="no variance model"):
+        derive_bar(diff, active_frame_unit())
+    with pytest.raises(PreregistrationRefused, match="no variance model"):
+        clean_failure_rate(diff, active_frame_unit(), 0.1)
+
+
+def test_the_refusal_points_at_the_empirical_null_as_the_fix() -> None:
+    """A refusal that does not say what to do instead leaves the next reader to re-derive it."""
+    diff = Statistic("m", "difference-of-spearman", "single", 1, "upward")
+    with pytest.raises(PreregistrationRefused) as exc:
+        derive_bar(diff, active_frame_unit())
+    assert "EMPIRICAL" in str(exc.value)
+    assert "shuffled" in str(exc.value)
+
+
+def test_the_proxy_opt_in_is_explicit_and_works() -> None:
+    """The escape hatch must exist (a proxy cross-check is legitimate) but must be asked for."""
+    diff = Statistic("m", "difference-of-spearman", "single", 1, "upward")
+    bar = derive_bar(diff, active_frame_unit(), allow_proxy_variance_model=True)
+    assert bar > 0
+
+
+def test_a_kind_with_a_variance_model_needs_no_opt_in() -> None:
+    assert derive_bar(
+        Statistic("s", "spearman", "single", 1, "upward"), active_frame_unit()
+    ) > 0
+
+
+# --------------------------------------------------------------------------------------
+# G1 -- the design effect from the label's ICC alone LOOSENS the bar, so deff=1 is the probe
+# --------------------------------------------------------------------------------------
+def test_a_larger_design_effect_always_loosens_the_bar() -> None:
+    """Why G1 matters: overstating the design effect cannot make a bar stricter, so an
+    overstatement errs toward PASSING, which is the dangerous direction."""
+    stat = Statistic("s", "spearman", "max-of-k", 10, "upward")
+    tight = IndependenceUnit("tile", 3822, 3822, 1.0, "deff=1 probe")
+    loose = active_frame_unit()
+    assert derive_bar(stat, loose) > derive_bar(stat, tight)
 
 
 # --------------------------------------------------------------------------------------

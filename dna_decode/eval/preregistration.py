@@ -47,6 +47,24 @@ honest claim is "a code-owned refusal over a model-declared design", never "a ba
 mis-specified here". The null model is asymptotic: Spearman under H0 is treated as
 N(0, 1/(n_eff - 1)), standard for large n_eff and unreliable below roughly 20 units, where
 ``derive_bar`` refuses rather than extrapolating.
+
+TWO NAMED MODELLING GAPS, recorded because each loosens a derived bar rather than tightening it,
+and a gap that errs toward passing is the dangerous direction:
+
+G1  ``from_icc`` USES THE LABEL'S ICC ALONE. For a CORRELATION the design effect is closer to
+    1 + (m-1)*rho_x*rho_y, where rho_y is the label's intra-cluster correlation and rho_x is the
+    PREDICTION's. Passing only rho_y implicitly sets rho_x = 1, which OVERSTATES the design
+    effect, understates the effective n, and therefore LOOSENS the derived bar. Treat a bar
+    derived this way as an upper bound on the threshold, and prefer a verdict that also survives
+    ``design_effect=1.0`` -- the tightest bar available -- so the conclusion does not rest on an
+    ICC modelling choice at all.
+G2  ``kind`` IS NOW LOAD-BEARING, because it was not. A DIFFERENCE of two correlations measured on
+    the same test set is not one Spearman: the two are dependent, so its null variance is not
+    1/(n_eff - 1). ``VARIANCE_MODELS`` lists the kinds this module can actually simulate, and
+    ``derive_bar`` REFUSES anything else unless the caller passes ``allow_proxy_variance_model``
+    and records that it did. For a difference, prefer an EMPIRICAL null -- re-measure the same
+    difference with the labels shuffled, on the same splits -- which needs no variance model and
+    no design effect.
 """
 from __future__ import annotations
 
@@ -82,6 +100,15 @@ DEFAULT_MAX_CLEAN_FAILURE = 0.05
 
 _HAZARDS = ("upward", "downward", "two-sided")
 _AGGREGATIONS = ("single", "max-of-k", "median-of-k", "min-of-k")
+
+#: Statistic kinds this module can actually simulate a null for, and the model it uses. A kind
+#: absent from here has NO variance model, and ``derive_bar`` refuses it rather than silently
+#: borrowing Spearman's. See gap G2 in the module docstring: a DIFFERENCE of two correlations on
+#: one test set is not one correlation, because the two are dependent.
+VARIANCE_MODELS = {
+    "spearman": "asymptotic normal, SD = 1/sqrt(n_eff - 1)",
+    "pearson": "asymptotic normal, SD = 1/sqrt(n_eff - 1)",
+}
 
 
 class PreregistrationRefused(Exception):
@@ -213,6 +240,20 @@ class BarVerdict:
         )
 
 
+def _require_variance_model(stat: Statistic, allow_proxy: bool) -> None:
+    """Refuse a kind this module cannot simulate (gap G2), unless the caller opts in explicitly."""
+    if stat.kind in VARIANCE_MODELS or allow_proxy:
+        return
+    raise PreregistrationRefused(
+        f"no variance model for kind {stat.kind!r}; this module can simulate only "
+        f"{sorted(VARIANCE_MODELS)}. Borrowing Spearman's SD for a DIFFERENCE of two correlations "
+        f"measured on one test set is wrong, because the two are dependent. Prefer an EMPIRICAL "
+        f"null -- re-measure the same difference with the labels shuffled, on the same splits, "
+        f"which needs no variance model and no design effect. To proceed anyway with Spearman's SD "
+        f"as an acknowledged PROXY, pass allow_proxy_variance_model=True and record that you did"
+    )
+
+
 def _simulate(stat: Statistic, unit: IndependenceUnit, *, trials: int, seed: int) -> np.ndarray:
     """Sampling distribution of the AGGREGATE statistic under H0."""
     rng = np.random.default_rng(seed)
@@ -239,12 +280,14 @@ def clean_failure_rate(
     *,
     trials: int = 40_000,
     seed: int = 1117,
+    allow_proxy_variance_model: bool = False,
 ) -> float:
     """P(a perfectly clean pipeline FAILS this bar).
 
     The number that separates a test from a formality: near 0.90 the verdict says nothing about
     the hazard it was written to detect.
     """
+    _require_variance_model(stat, allow_proxy_variance_model)
     return float((_simulate(stat, unit, trials=trials, seed=seed) >= bar_value).mean())
 
 
@@ -255,12 +298,14 @@ def derive_bar(
     max_clean_failure: float = DEFAULT_MAX_CLEAN_FAILURE,
     trials: int = 40_000,
     seed: int = 1117,
+    allow_proxy_variance_model: bool = False,
 ) -> float:
     """The smallest bar a clean pipeline clears with probability >= 1 - max_clean_failure.
 
     Derived from the DESIGN -- effective n, aggregation, sidedness -- and never from the observed
     result. That is what distinguishes this from bar-shopping.
     """
+    _require_variance_model(stat, allow_proxy_variance_model)
     if unit.n_units < MIN_UNITS:
         raise PreregistrationRefused(
             f"{unit.n_units} independent units is below MIN_UNITS={MIN_UNITS}; the normal "
@@ -281,15 +326,20 @@ def validate_bar(
     max_clean_failure: float = DEFAULT_MAX_CLEAN_FAILURE,
     trials: int = 40_000,
     seed: int = 1117,
+    allow_proxy_variance_model: bool = False,
 ) -> BarVerdict:
     """Validate a DECLARED bar against the design.
 
     Returns a verdict rather than raising, because the reasons are the product.
     """
     derived = derive_bar(
-        stat, unit, max_clean_failure=max_clean_failure, trials=trials, seed=seed
+        stat, unit, max_clean_failure=max_clean_failure, trials=trials, seed=seed,
+        allow_proxy_variance_model=allow_proxy_variance_model,
     )
-    cfr = clean_failure_rate(stat, unit, bar.value, trials=trials, seed=seed)
+    cfr = clean_failure_rate(
+        stat, unit, bar.value, trials=trials, seed=seed,
+        allow_proxy_variance_model=allow_proxy_variance_model,
+    )
     reasons: list[str] = []
 
     if cfr > max_clean_failure:
