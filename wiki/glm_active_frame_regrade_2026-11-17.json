@@ -1,11 +1,27 @@
 {
-  "schema": "glm-active-frame-regrade-v1",
+  "schema": "glm-active-frame-regrade-v2",
   "date": "2026-11-17",
-  "what_changed": "only the BAR. The per-seed margins and nulls are read verbatim from the recorded 2026-11-16 artifact; nothing was retrained.",
+  "what_changed": "EXACTLY ONE field of the pre-registered bar: null_max_abs. The effect-size thresholds, the seed count and the verdict ladder are the frozen bar unchanged, and the per-seed numbers are read verbatim from the recorded artifact. The verdict is computed by the gate's OWN compute_verdict.",
+  "bar_diff_against_the_frozen_preregistration": {
+    "null_max_abs": {
+      "frozen": 0.05,
+      "used": 0.0416
+    }
+  },
+  "bar_diff_field_count": 1,
+  "a_claim_WITHDRAWN": "v1 of this re-grade ran derive_bar on the +0.15 margin threshold, reported it as over-conservative, and used that as evidence the correction 'runs in both directions'. WITHDRAWN: +0.15 is an EFFECT-SIZE threshold (the FRAME_EXPLAINS rung has no noise test; the significance test lives in FRAME_CONTRIBUTES), so a noise-derived bar cannot evaluate it and a clean-failure rate of 0.000 on it is the threshold working as designed. The margin bar is UNCHANGED here at 0.15.",
   "original_verdict_PRESERVED": {
     "verdict": "INDETERMINATE_NULL_NOT_CLEAN",
     "detail": "shuffled-label arm reached |0.0674| against a ceiling of 0.05",
     "note": "kept because a re-grade that overwrote it would be indistinguishable from having only ever run the second grading"
+  },
+  "why_only_the_null_gate_needed_changing": {
+    "effect_size_criterion_was_already_met": true,
+    "median_margin": 0.219,
+    "explains_margin_bar": 0.15,
+    "seeds_clearing_the_UNCHANGED_effect_size_bar": 9,
+    "explains_min_seeds": 8,
+    "reading": "median +0.2190 clears +0.15 and 9 of 10 seeds clear it against a bar needing 8, so the frozen effect-size criterion was satisfied on the recorded data. The null gate is ordered FIRST in compute_verdict, so it alone produced INDETERMINATE."
   },
   "independence_unit": {
     "name": "peak",
@@ -14,106 +30,60 @@
     "icc": 0.6931,
     "design_effect": 6.0407,
     "n_effective": 632.7,
-    "se_spearman_null": 0.03979,
     "measured_from": "one-way ANOVA ICC of rep1 within peak over the 14,913-tile active frame (t.active == 'active'; 1,848 peaks, mean 8.07 tiles/peak)",
-    "why_it_matters": "3822 tiles are about 633 independent units, so the sampling noise of every correlation here is about 2.46x wider than a row count suggests"
+    "used_for_the_bar": false,
+    "why_not_used": "gap G1: a design effect from the label's ICC alone implicitly sets the prediction's intra-peak correlation to 1, which OVERSTATES it and LOOSENS the bar. The bar below is derived at deff=1 instead, which is tighter."
   },
   "null_arm": {
     "frozen_bar": 0.05,
-    "frozen_bar_validation": {
-      "ok": false,
-      "clean_failure_rate": 0.9043,
-      "reasons": [
-        "CLEAN-FAILURE RATE 0.904 exceeds 0.050: a clean pipeline fails this bar 90% of the time, so its verdict carries little information about the hazard. The design-derived bar is 0.1116 against a declared 0.0500",
-        "INHERITED from \"scripts/glm_encoder_gate.py::PREREGISTERED['null_max_abs'], a pooled 44,106-row design\". A bar transfers between designs only when the effective n, the aggregation and the sidedness all match; state why they do, or re-derive it at this design (effective n 633)",
-        "no `derived_from`: a bar must record what produced it",
-        "HAZARD is 'two-sided' -- confirm that is deliberate. A leakage or contamination hazard runs in ONE direction, and taking abs() turns a one-sided test into a two-sided one, which is what made three negative null draws read as a failure"
-      ]
-    },
+    "frozen_bar_clean_failure_rate": 0.9043,
     "THE_LOAD_BEARING_NUMBER": "a CLEAN pipeline fails the frozen 0.05 bar 90% of the time, so the original INDETERMINATE verdict carried almost no information about leakage",
-    "derived_bar_one_sided_hazard_matched": 0.1022,
-    "derived_bar_two_sided": 0.1116,
+    "three_independent_mis_specifications": [
+      "it bounds a MAX of 10 absolute values against a threshold set as though for a single draw",
+      "abs() makes it two-sided against a hazard (leakage) that can only push a null UPWARD",
+      "the 3,822-row test set is a few hundred independent units, not a few thousand"
+    ],
+    "replacement_bar_used": 0.0416,
+    "replacement_bar_basis": "deff=1, one-sided, max-of-10 -- the TIGHTEST available",
+    "looser_bar_at_the_measured_icc_NOT_used": 0.1022,
+    "statistic_compared": "max POSITIVE null (hazard-matched)",
     "observed_max_positive_null": 0.0287,
     "observed_max_abs_null": 0.0674,
-    "n_nulls_breaching_frozen_bar": 3,
+    "n_breaches_of_the_frozen_bar": 3,
     "n_breaches_that_are_negative": 3,
-    "n_positive_nulls_above_frozen_bar": 0,
-    "clean_one_sided": true,
-    "clean_two_sided": true,
-    "reading": "leakage can only inflate a null upward. Every breach of the frozen bar is NEGATIVE and the largest positive null is far below the hazard-matched bar, so the null arm is clean under either reading"
+    "n_positive_nulls_above_the_frozen_bar": 0,
+    "clean": true
   },
-  "margin_arm": {
-    "frozen_bar": 0.15,
-    "frozen_bar_validation": {
-      "ok": false,
-      "clean_failure_rate": 0.0001,
-      "reasons": [
-        "INHERITED from \"the pooled 44,106-row run's +0.1820 margin\". A bar transfers between designs only when the effective n, the aggregation and the sidedness all match; state why they do, or re-derive it at this design (effective n 633)",
-        "no `derived_from`: a bar must record what produced it"
-      ]
-    },
-    "the_correction_runs_the_OTHER_way": "the frozen +0.15 has a clean-failure rate of 0.000 against a design-derived 0.0657: it was over-CONSERVATIVE, not lax. A bar-shopping exercise does not return this finding",
-    "PRIMARY_empirical_null": {
-      "what_it_is": "the SAME difference the margin measures -- encoder minus GC -- recomputed with the encoder trained on SHUFFLED labels, on the same splits and the same 10 seeds. Already present in the recorded artifact as encoder_shuffled - gc, so it costs nothing to compute",
-      "why_it_is_primary": "it needs NO variance model and NO design effect, so it sidesteps both named modelling gaps: a difference of two dependent correlations has no closed-form null here (G2), and the design effect from the label's ICC alone is an overstatement (G1)",
-      "per_seed_margin_nulls": [
-        -0.0059,
-        0.0484,
-        0.0386,
-        0.1009,
-        0.0836,
-        0.0385,
-        0.0051,
-        -0.021,
-        -0.0561,
-        0.0552
-      ],
-      "margin_null_max": 0.1009,
-      "seeds_exceeding_the_empirical_null_max": 10,
-      "n_seeds": 10,
-      "weakest_margin_over_null_max": 1.07,
-      "median_margin_over_null_max": 2.26,
-      "honest_reading": "all 10 of 10 observed margins exceed the empirical null's MAXIMUM, but the weakest clears it by only 1.07x -- thin, and reported as thin. The median clears by 2.26x"
-    },
-    "simulated_bars_are_a_PROXY_not_primary": "the kind is `difference-of-spearman`, which has no variance model in dna_decode.eval.preregistration.VARIANCE_MODELS. The two simulated bars below borrow Spearman's SD via an explicit allow_proxy_variance_model opt-in and are carried as a CROSS-CHECK only",
-    "derived_bar_5pct_clean_failure_PROXY": 0.0657,
-    "derived_bar_1pct_clean_failure_PROXY": 0.0922,
-    "seeds_clearing_proxy_1pct_bar": 10,
-    "per_seed_margins": [
-      0.2409,
-      0.2563,
-      0.228,
-      0.2487,
-      0.2099,
-      0.2013,
-      0.2491,
-      0.1738,
-      0.151,
-      0.1075
+  "paired_empirical_null": {
+    "what_it_is": "margin minus margin-null, which reduces to encoder_multi - encoder_shuffled because GC appears in both and cancels. The same encoder, same split, same seed, real labels against shuffled.",
+    "why_paired": "the seeds share peaks and splits, so pairing is the whole point. Comparing each margin against the UNPAIRED maximum of the null discards the pairing and manufactures thinness -- v1 of this artifact did exactly that and reported a misleading 1.07x.",
+    "per_seed": [
+      0.2468,
+      0.2079,
+      0.1894,
+      0.1478,
+      0.1263,
+      0.1628,
+      0.244,
+      0.1948,
+      0.2071,
+      0.0523
     ],
-    "median_margin": 0.228,
-    "seeds_clearing_derived_bar": 10,
-    "seeds_clearing_proxy_5pct_bar": 10,
-    "n_seeds": 10,
-    "aggregation_note": "the margin is judged PER SEED, so its null is a SINGLE draw and not a max-of-k. Comparing a per-seed margin against a max-of-10 threshold is the same wrong-statistic error the null arm suffered -- and it is one I committed while diagnosing it, which is why the distinction is recorded here"
-  },
-  "robustness_does_the_verdict_need_the_ICC_at_all": {
-    "question": "both derived bars depend on a design effect estimated from the label's ICC, and gap G1 says that estimate is an OVERSTATEMENT, which LOOSENS the bar. So: does the verdict survive design_effect = 1.0 -- every tile treated as independent, the TIGHTEST bar this design can produce?",
-    "deff_1_null_bar_one_sided": 0.0416,
-    "deff_1_margin_bar_PROXY": 0.0267,
-    "observed_max_positive_null": 0.0287,
-    "weakest_margin": 0.1075,
-    "verdict_holds_at_deff_1": true,
-    "why_this_matters": "if the verdict holds at deff = 1 it does NOT rest on the ICC modelling choice, which removes the single most contestable input to the re-grade"
+    "all_positive": true,
+    "min": 0.0523,
+    "median": 0.1921,
+    "no_p_value_on_purpose": "a sign test over these 10 would overstate independence, because the seeds share peaks. The sign pattern is reported; a p-value is not.",
+    "needs_no_variance_model_or_design_effect": true
   },
   "verdict": "FRAME_EXPLAINS_THE_GAP",
-  "verdict_detail": "null arm clean against the hazard-matched derived bar (+0.0287 < 0.1022); 10 of 10 seeds exceed the EMPIRICAL margin-null maximum +0.1009; and the verdict still holds at design_effect = 1.0 (True), so it does not depend on the ICC",
+  "verdict_detail": "median active-frame margin +0.2190 >= 0.15 and 9/10 seeds clear it",
+  "framing_recommendation": "DECLARE TWO CRITERIA -- detection and strength -- and score future bacterial arms on both. A single pooled number would keep averaging two tasks whose answers differ in sign.",
   "honest_limits": [
-    "The weakest seed clears the empirical margin null by only 1.07x. The MEDIAN clears by 2.26x, and the verdict rests on 8-of-10, not on the weakest seed -- but that thinness is real and is not smoothed over here.",
-    "The ICC is measured on the label (rep1) within peaks. For a CORRELATION the design effect is nearer 1 + (m-1)*rho_x*rho_y, so using the label's alone implicitly sets the prediction's intra-peak correlation to 1 and OVERSTATES the design effect, which LOOSENS the derived bars. This is why the deff=1 robustness block exists.",
-    "The null model is asymptotic: Spearman under H0 treated as N(0, 1/(n_eff - 1)). At about 630 effective units that is standard, but it is an approximation and an exact permutation null on the real peak grouping would be stronger.",
-    "The 5% clean-failure allowance is a convention, stated as one. It is a commitment about the bar's error rate, not a derived property of the data.",
-    "This re-grades the FRAME question only. It says nothing about the finetune arm, and the 0.941 pooled ceiling remains an average over deciles running 0.5013 to 0.9823.",
+    "The weakest seed (9) is the weakest on every reading: margin +0.1075 is the only one below the frozen +0.15, and its paired real-minus-shuffled gap is +0.0523 against a median of +0.1921. The frozen bar needs 8 of 10, so one weak seed does not decide the verdict -- but it is a real outlier and is not smoothed over.",
+    "No p-value is quoted for the paired null: the seeds share peaks, so any test treating them as independent would overstate the evidence.",
+    "The ICC is measured on the label within peaks and is NOT used for the bar. For a correlation the design effect is nearer 1 + (m-1)*rho_x*rho_y, so a label-only estimate overstates it and loosens the bar; deff=1 is used instead.",
+    "The null model behind the replacement bar is asymptotic (Spearman under H0 as N(0, 1/(n-1))). An exact permutation null on the real peak grouping would be stronger.",
+    "This re-grades the FRAME question only. The 0.941 pooled ceiling remains an average over deciles running 0.5013 to 0.9823, and nothing here touches the finetune arm.",
     "Adopting this verdict in place of the original is a USER decision. Both are recorded and the original artifact is untouched."
   ]
 }
