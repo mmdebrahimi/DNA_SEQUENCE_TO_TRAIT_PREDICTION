@@ -1,0 +1,969 @@
+{
+  "schema": "active-frame-rescore-v1",
+  "date": "2026-11-16",
+  "substrate": {
+    "cache": "data/mpra",
+    "n_tiles": 44106
+  },
+  "threshold_audit": {
+    "n": 44106,
+    "n_active": 14913,
+    "n_inactive": 29193,
+    "implied_cut": 0.5778,
+    "active_range": [
+      0.5778,
+      158.3076
+    ],
+    "inactive_range": [
+      0.0,
+      0.5778
+    ],
+    "active_median": 1.002,
+    "inactive_median": 0.3585,
+    "overlap_either_side": 0,
+    "flag_is_a_clean_cut_on_the_label": true,
+    "conditions_on_the_outcome": false,
+    "reads_as": "a clean cut means every active-frame number is RANGE-RESTRICTED on the outcome"
+  },
+  "committed_source": "wiki/asgiven_arm_result_2026-11-02.json",
+  "comparator_provenance": {
+    "recomputed_in_run": false,
+    "source": "data/promoteratlas/local_reconcile_2026-11-01.json",
+    "note": "the atlas series was NOT recomputed in its own run; this script recomputes it from the stored predictions, which is a stronger check than the one the committed artifact performed on itself"
+  },
+  "committed_medians": {
+    "asgiven-position-resolved-promoteratlas-150bp": 0.5086,
+    "promoteratlas-base-embeddings-frozen-150bp": 0.5076
+  },
+  "arms": {
+    "asgiven-position-resolved-promoteratlas-150bp": {
+      "file": "data\\promoteratlas\\asgiven_arm_pertile_2026-11-02.json",
+      "identity": {
+        "tolerance": 0.001,
+        "candidates": {
+          "asgiven-position-resolved-promoteratlas-150bp": {
+            "n_seeds_compared": 10,
+            "max_abs_delta": 0.0,
+            "per_seed_delta": {
+              "0": 0.0,
+              "1": 0.0,
+              "2": 0.0,
+              "3": 0.0,
+              "4": 0.0,
+              "5": 0.0,
+              "6": 0.0,
+              "7": 0.0,
+              "8": 0.0,
+              "9": 0.0
+            },
+            "matches": true
+          },
+          "promoteratlas-base-embeddings-frozen-150bp": {
+            "n_seeds_compared": 10,
+            "max_abs_delta": 0.0126,
+            "per_seed_delta": {
+              "0": -0.0126,
+              "1": -0.0123,
+              "2": 0.0016,
+              "3": 0.0033,
+              "4": -0.0055,
+              "5": -0.0043,
+              "6": 0.0031,
+              "7": -0.0044,
+              "8": 0.0046,
+              "9": -0.0041
+            },
+            "matches": false
+          }
+        },
+        "resolved_to": "asgiven-position-resolved-promoteratlas-150bp",
+        "n_matching_series": 1
+      },
+      "split_gate": {
+        "passed": true,
+        "per_seed": {
+          "0": {
+            "n_stored": 11198,
+            "n_test_committed": 11198,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11198,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "1": {
+            "n_stored": 11018,
+            "n_test_committed": 11018,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11018,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "2": {
+            "n_stored": 11373,
+            "n_test_committed": 11373,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11373,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "3": {
+            "n_stored": 10883,
+            "n_test_committed": 10883,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10883,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "4": {
+            "n_stored": 11025,
+            "n_test_committed": 11025,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11025,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "5": {
+            "n_stored": 10907,
+            "n_test_committed": 10907,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10907,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "6": {
+            "n_stored": 10590,
+            "n_test_committed": 10590,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10590,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "7": {
+            "n_stored": 11249,
+            "n_test_committed": 11249,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11249,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "8": {
+            "n_stored": 10661,
+            "n_test_committed": 10661,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10661,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "9": {
+            "n_stored": 10690,
+            "n_test_committed": 10690,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10690,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          }
+        },
+        "note": "n_test is the plan's declared gate; the exact index-set check is a strengthening, since equal sizes do not imply the same rows"
+      },
+      "recomputed_pooled_per_seed": {
+        "0": 0.5335,
+        "1": 0.5376,
+        "2": 0.4999,
+        "3": 0.5019,
+        "4": 0.502,
+        "5": 0.512,
+        "6": 0.5109,
+        "7": 0.4889,
+        "8": 0.5062,
+        "9": 0.5169
+      },
+      "scores": {
+        "per_seed": {
+          "0": {
+            "n_test": 11198,
+            "n_test_active": 3824,
+            "pooled_arm": 0.5335,
+            "pooled_gc": 0.3,
+            "pooled_gc_from_ridge_gc_return": 0.3,
+            "active_arm": 0.379,
+            "active_gc": 0.0233,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2335,
+            "active_margin": 0.3557,
+            "binned_margin_by_label": {
+              "n_bins": 10,
+              "bins": [
+                {
+                  "bin": 0,
+                  "n": 1120,
+                  "arm": -0.0363,
+                  "gc": -0.0358,
+                  "margin": -0.0005
+                },
+                {
+                  "bin": 1,
+                  "n": 1120,
+                  "arm": 0.0028,
+                  "gc": 0.0098,
+                  "margin": -0.007
+                },
+                {
+                  "bin": 2,
+                  "n": 1120,
+                  "arm": 0.0454,
+                  "gc": 0.02,
+                  "margin": 0.0254
+                },
+                {
+                  "bin": 3,
+                  "n": 1120,
+                  "arm": -0.0068,
+                  "gc": -0.001,
+                  "margin": -0.0058
+                },
+                {
+                  "bin": 4,
+                  "n": 1120,
+                  "arm": -0.0125,
+                  "gc": 0.0251,
+                  "margin": -0.0376
+                },
+                {
+                  "bin": 5,
+                  "n": 1120,
+                  "arm": 0.0743,
+                  "gc": 0.0408,
+                  "margin": 0.0336
+                },
+                {
+                  "bin": 6,
+                  "n": 1120,
+                  "arm": 0.1167,
+                  "gc": 0.0396,
+                  "margin": 0.0771
+                },
+                {
+                  "bin": 7,
+                  "n": 1120,
+                  "arm": 0.1219,
+                  "gc": 0.0173,
+                  "margin": 0.1046
+                },
+                {
+                  "bin": 8,
+                  "n": 1119,
+                  "arm": 0.1241,
+                  "gc": 0.008,
+                  "margin": 0.1161
+                },
+                {
+                  "bin": 9,
+                  "n": 1119,
+                  "arm": 0.3592,
+                  "gc": -0.1805,
+                  "margin": 0.5397
+                }
+              ],
+              "n_total": 11198,
+              "binning_variable": "expn_med, the SCORED label",
+              "conditions_on_the_outcome": true,
+              "reads_as": "binning on the scored label conditions on the outcome; the MARGIN is still readable because both arms face the identical restriction, but neither absolute is comparable to a pooled number"
+            },
+            "binned_margin_by_group1": {
+              "n_bins": 10,
+              "bins": [
+                {
+                  "bin": 0,
+                  "n": 1120,
+                  "arm": 0.0101,
+                  "gc": 0.0108,
+                  "margin": -0.0007
+                },
+                {
+                  "bin": 1,
+                  "n": 1120,
+                  "arm": 0.0079,
+                  "gc": 0.0496,
+                  "margin": -0.0417
+                },
+                {
+                  "bin": 2,
+                  "n": 1120,
+                  "arm": 0.0872,
+                  "gc": 0.0894,
+                  "margin": -0.0022
+                },
+                {
+                  "bin": 3,
+                  "n": 1120,
+                  "arm": 0.124,
+                  "gc": 0.0699,
+                  "margin": 0.0542
+                },
+                {
+                  "bin": 4,
+                  "n": 1120,
+                  "arm": 0.2119,
+                  "gc": 0.1581,
+                  "margin": 0.0538
+                },
+                {
+                  "bin": 5,
+                  "n": 1120,
+                  "arm": 0.2028,
+                  "gc": 0.1536,
+                  "margin": 0.0492
+                },
+                {
+                  "bin": 6,
+                  "n": 1120,
+                  "arm": 0.1808,
+                  "gc": 0.133,
+                  "margin": 0.0478
+                },
+                {
+                  "bin": 7,
+                  "n": 1120,
+                  "arm": 0.1588,
+                  "gc": 0.0533,
+                  "margin": 0.1056
+                },
+                {
+                  "bin": 8,
+                  "n": 1119,
+                  "arm": 0.1964,
+                  "gc": -0.0067,
+                  "margin": 0.2031
+                },
+                {
+                  "bin": 9,
+                  "n": 1119,
+                  "arm": 0.3761,
+                  "gc": -0.1585,
+                  "margin": 0.5345
+                }
+              ],
+              "n_total": 11198,
+              "binning_variable": "RNA_exp_sum_1, group 1's published summary",
+              "conditions_on_the_outcome": false,
+              "reads_as": "PREFERRED: bins are assigned by a measurement rather than by the scored label, so the bin assignment does not condition on the outcome"
+            }
+          },
+          "1": {
+            "n_test": 11018,
+            "n_test_active": 3621,
+            "pooled_arm": 0.5376,
+            "pooled_gc": 0.3151,
+            "pooled_gc_from_ridge_gc_return": 0.3151,
+            "active_arm": 0.3843,
+            "active_gc": 0.0192,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2225,
+            "active_margin": 0.3651
+          },
+          "2": {
+            "n_test": 11373,
+            "n_test_active": 3812,
+            "pooled_arm": 0.4999,
+            "pooled_gc": 0.3073,
+            "pooled_gc_from_ridge_gc_return": 0.3073,
+            "active_arm": 0.3633,
+            "active_gc": 0.0492,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1926,
+            "active_margin": 0.3141
+          },
+          "3": {
+            "n_test": 10883,
+            "n_test_active": 3635,
+            "pooled_arm": 0.5019,
+            "pooled_gc": 0.2917,
+            "pooled_gc_from_ridge_gc_return": 0.2917,
+            "active_arm": 0.3713,
+            "active_gc": 0.0538,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2102,
+            "active_margin": 0.3175
+          },
+          "4": {
+            "n_test": 11025,
+            "n_test_active": 3692,
+            "pooled_arm": 0.502,
+            "pooled_gc": 0.3191,
+            "pooled_gc_from_ridge_gc_return": 0.3191,
+            "active_arm": 0.3804,
+            "active_gc": 0.0182,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1829,
+            "active_margin": 0.3622
+          },
+          "5": {
+            "n_test": 10907,
+            "n_test_active": 3739,
+            "pooled_arm": 0.512,
+            "pooled_gc": 0.3347,
+            "pooled_gc_from_ridge_gc_return": 0.3347,
+            "active_arm": 0.3423,
+            "active_gc": 0.041,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1773,
+            "active_margin": 0.3013
+          },
+          "6": {
+            "n_test": 10590,
+            "n_test_active": 3572,
+            "pooled_arm": 0.5109,
+            "pooled_gc": 0.3091,
+            "pooled_gc_from_ridge_gc_return": 0.3091,
+            "active_arm": 0.3464,
+            "active_gc": 0.1057,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2018,
+            "active_margin": 0.2407
+          },
+          "7": {
+            "n_test": 11249,
+            "n_test_active": 3790,
+            "pooled_arm": 0.4889,
+            "pooled_gc": 0.3191,
+            "pooled_gc_from_ridge_gc_return": 0.3191,
+            "active_arm": 0.3523,
+            "active_gc": 0.049,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1698,
+            "active_margin": 0.3033
+          },
+          "8": {
+            "n_test": 10661,
+            "n_test_active": 3577,
+            "pooled_arm": 0.5062,
+            "pooled_gc": 0.3133,
+            "pooled_gc_from_ridge_gc_return": 0.3133,
+            "active_arm": 0.3249,
+            "active_gc": 0.0369,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1929,
+            "active_margin": 0.288
+          },
+          "9": {
+            "n_test": 10690,
+            "n_test_active": 3536,
+            "pooled_arm": 0.5169,
+            "pooled_gc": 0.2747,
+            "pooled_gc_from_ridge_gc_return": 0.2747,
+            "active_arm": 0.3885,
+            "active_gc": 0.0055,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2422,
+            "active_margin": 0.383
+          }
+        },
+        "pooled": {
+          "arm_median": 0.5086,
+          "gc_median": 0.3112,
+          "margin_median": 0.1973,
+          "n_seeds_arm_wins": 10,
+          "bootstrap": {
+            "mean": 0.2026,
+            "ci_lo": 0.1893,
+            "ci_hi": 0.2167,
+            "n_boot": 1000,
+            "excludes_zero": true
+          },
+          "conditions_on_the_outcome": false
+        },
+        "active": {
+          "arm_median": 0.3673,
+          "gc_median": 0.0389,
+          "margin_median": 0.3158,
+          "n_seeds_arm_wins": 10,
+          "bootstrap": {
+            "mean": 0.3231,
+            "ci_lo": 0.2956,
+            "ci_hi": 0.3482,
+            "n_boot": 1000,
+            "excludes_zero": true
+          },
+          "conditions_on_the_outcome": true,
+          "not_a_ledger_candidate": true
+        }
+      }
+    },
+    "promoteratlas-base-embeddings-frozen-150bp": {
+      "file": "data\\promoteratlas\\per_tile_predictions_2026-11-01.json",
+      "identity": {
+        "tolerance": 0.001,
+        "candidates": {
+          "asgiven-position-resolved-promoteratlas-150bp": {
+            "n_seeds_compared": 10,
+            "max_abs_delta": 0.0126,
+            "per_seed_delta": {
+              "0": 0.0126,
+              "1": 0.0123,
+              "2": -0.0016,
+              "3": -0.0033,
+              "4": 0.0055,
+              "5": 0.0043,
+              "6": -0.0031,
+              "7": 0.0044,
+              "8": -0.0046,
+              "9": 0.0041
+            },
+            "matches": false
+          },
+          "promoteratlas-base-embeddings-frozen-150bp": {
+            "n_seeds_compared": 10,
+            "max_abs_delta": 0.0,
+            "per_seed_delta": {
+              "0": 0.0,
+              "1": 0.0,
+              "2": 0.0,
+              "3": 0.0,
+              "4": 0.0,
+              "5": 0.0,
+              "6": 0.0,
+              "7": 0.0,
+              "8": 0.0,
+              "9": 0.0
+            },
+            "matches": true
+          }
+        },
+        "resolved_to": "promoteratlas-base-embeddings-frozen-150bp",
+        "n_matching_series": 1
+      },
+      "split_gate": {
+        "passed": true,
+        "per_seed": {
+          "0": {
+            "n_stored": 11198,
+            "n_test_committed": 11198,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11198,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "1": {
+            "n_stored": 11018,
+            "n_test_committed": 11018,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11018,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "2": {
+            "n_stored": 11373,
+            "n_test_committed": 11373,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11373,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "3": {
+            "n_stored": 10883,
+            "n_test_committed": 10883,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10883,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "4": {
+            "n_stored": 11025,
+            "n_test_committed": 11025,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11025,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "5": {
+            "n_stored": 10907,
+            "n_test_committed": 10907,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10907,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "6": {
+            "n_stored": 10590,
+            "n_test_committed": 10590,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10590,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "7": {
+            "n_stored": 11249,
+            "n_test_committed": 11249,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 11249,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "8": {
+            "n_stored": 10661,
+            "n_test_committed": 10661,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10661,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          },
+          "9": {
+            "n_stored": 10690,
+            "n_test_committed": 10690,
+            "size_matches_committed": true,
+            "n_reproduced_by_splitter": 10690,
+            "held_out_peaks_reproduced": 608,
+            "exact_index_set_matches_splitter": true
+          }
+        },
+        "note": "n_test is the plan's declared gate; the exact index-set check is a strengthening, since equal sizes do not imply the same rows"
+      },
+      "recomputed_pooled_per_seed": {
+        "0": 0.5461,
+        "1": 0.5499,
+        "2": 0.4983,
+        "3": 0.4986,
+        "4": 0.5075,
+        "5": 0.5163,
+        "6": 0.5078,
+        "7": 0.4933,
+        "8": 0.5016,
+        "9": 0.521
+      },
+      "scores": {
+        "per_seed": {
+          "0": {
+            "n_test": 11198,
+            "n_test_active": 3824,
+            "pooled_arm": 0.5461,
+            "pooled_gc": 0.3,
+            "pooled_gc_from_ridge_gc_return": 0.3,
+            "active_arm": 0.3877,
+            "active_gc": 0.0233,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2461,
+            "active_margin": 0.3644,
+            "binned_margin_by_label": {
+              "n_bins": 10,
+              "bins": [
+                {
+                  "bin": 0,
+                  "n": 1120,
+                  "arm": -0.0191,
+                  "gc": -0.0358,
+                  "margin": 0.0166
+                },
+                {
+                  "bin": 1,
+                  "n": 1120,
+                  "arm": 0.0218,
+                  "gc": 0.0098,
+                  "margin": 0.0119
+                },
+                {
+                  "bin": 2,
+                  "n": 1120,
+                  "arm": 0.0304,
+                  "gc": 0.02,
+                  "margin": 0.0103
+                },
+                {
+                  "bin": 3,
+                  "n": 1120,
+                  "arm": -0.0169,
+                  "gc": -0.001,
+                  "margin": -0.0159
+                },
+                {
+                  "bin": 4,
+                  "n": 1120,
+                  "arm": 0.0059,
+                  "gc": 0.0251,
+                  "margin": -0.0192
+                },
+                {
+                  "bin": 5,
+                  "n": 1120,
+                  "arm": 0.0902,
+                  "gc": 0.0408,
+                  "margin": 0.0494
+                },
+                {
+                  "bin": 6,
+                  "n": 1120,
+                  "arm": 0.086,
+                  "gc": 0.0396,
+                  "margin": 0.0464
+                },
+                {
+                  "bin": 7,
+                  "n": 1120,
+                  "arm": 0.1042,
+                  "gc": 0.0173,
+                  "margin": 0.0869
+                },
+                {
+                  "bin": 8,
+                  "n": 1119,
+                  "arm": 0.1673,
+                  "gc": 0.008,
+                  "margin": 0.1592
+                },
+                {
+                  "bin": 9,
+                  "n": 1119,
+                  "arm": 0.3285,
+                  "gc": -0.1805,
+                  "margin": 0.5091
+                }
+              ],
+              "n_total": 11198,
+              "binning_variable": "expn_med, the SCORED label",
+              "conditions_on_the_outcome": true,
+              "reads_as": "binning on the scored label conditions on the outcome; the MARGIN is still readable because both arms face the identical restriction, but neither absolute is comparable to a pooled number"
+            },
+            "binned_margin_by_group1": {
+              "n_bins": 10,
+              "bins": [
+                {
+                  "bin": 0,
+                  "n": 1120,
+                  "arm": 0.0306,
+                  "gc": 0.0108,
+                  "margin": 0.0197
+                },
+                {
+                  "bin": 1,
+                  "n": 1120,
+                  "arm": 0.0711,
+                  "gc": 0.0496,
+                  "margin": 0.0215
+                },
+                {
+                  "bin": 2,
+                  "n": 1120,
+                  "arm": 0.1075,
+                  "gc": 0.0894,
+                  "margin": 0.018
+                },
+                {
+                  "bin": 3,
+                  "n": 1120,
+                  "arm": 0.1155,
+                  "gc": 0.0699,
+                  "margin": 0.0456
+                },
+                {
+                  "bin": 4,
+                  "n": 1120,
+                  "arm": 0.2251,
+                  "gc": 0.1581,
+                  "margin": 0.067
+                },
+                {
+                  "bin": 5,
+                  "n": 1120,
+                  "arm": 0.228,
+                  "gc": 0.1536,
+                  "margin": 0.0744
+                },
+                {
+                  "bin": 6,
+                  "n": 1120,
+                  "arm": 0.2108,
+                  "gc": 0.133,
+                  "margin": 0.0778
+                },
+                {
+                  "bin": 7,
+                  "n": 1120,
+                  "arm": 0.1618,
+                  "gc": 0.0533,
+                  "margin": 0.1086
+                },
+                {
+                  "bin": 8,
+                  "n": 1119,
+                  "arm": 0.2328,
+                  "gc": -0.0067,
+                  "margin": 0.2395
+                },
+                {
+                  "bin": 9,
+                  "n": 1119,
+                  "arm": 0.3497,
+                  "gc": -0.1585,
+                  "margin": 0.5081
+                }
+              ],
+              "n_total": 11198,
+              "binning_variable": "RNA_exp_sum_1, group 1's published summary",
+              "conditions_on_the_outcome": false,
+              "reads_as": "PREFERRED: bins are assigned by a measurement rather than by the scored label, so the bin assignment does not condition on the outcome"
+            }
+          },
+          "1": {
+            "n_test": 11018,
+            "n_test_active": 3621,
+            "pooled_arm": 0.5499,
+            "pooled_gc": 0.3151,
+            "pooled_gc_from_ridge_gc_return": 0.3151,
+            "active_arm": 0.3882,
+            "active_gc": 0.0192,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2348,
+            "active_margin": 0.369
+          },
+          "2": {
+            "n_test": 11373,
+            "n_test_active": 3812,
+            "pooled_arm": 0.4983,
+            "pooled_gc": 0.3073,
+            "pooled_gc_from_ridge_gc_return": 0.3073,
+            "active_arm": 0.3494,
+            "active_gc": 0.0492,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.191,
+            "active_margin": 0.3002
+          },
+          "3": {
+            "n_test": 10883,
+            "n_test_active": 3635,
+            "pooled_arm": 0.4986,
+            "pooled_gc": 0.2917,
+            "pooled_gc_from_ridge_gc_return": 0.2917,
+            "active_arm": 0.3569,
+            "active_gc": 0.0538,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2069,
+            "active_margin": 0.3031
+          },
+          "4": {
+            "n_test": 11025,
+            "n_test_active": 3692,
+            "pooled_arm": 0.5075,
+            "pooled_gc": 0.3191,
+            "pooled_gc_from_ridge_gc_return": 0.3191,
+            "active_arm": 0.3755,
+            "active_gc": 0.0182,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1884,
+            "active_margin": 0.3573
+          },
+          "5": {
+            "n_test": 10907,
+            "n_test_active": 3739,
+            "pooled_arm": 0.5163,
+            "pooled_gc": 0.3347,
+            "pooled_gc_from_ridge_gc_return": 0.3347,
+            "active_arm": 0.3259,
+            "active_gc": 0.041,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1816,
+            "active_margin": 0.2849
+          },
+          "6": {
+            "n_test": 10590,
+            "n_test_active": 3572,
+            "pooled_arm": 0.5078,
+            "pooled_gc": 0.3091,
+            "pooled_gc_from_ridge_gc_return": 0.3091,
+            "active_arm": 0.3256,
+            "active_gc": 0.1057,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1987,
+            "active_margin": 0.2199
+          },
+          "7": {
+            "n_test": 11249,
+            "n_test_active": 3790,
+            "pooled_arm": 0.4933,
+            "pooled_gc": 0.3191,
+            "pooled_gc_from_ridge_gc_return": 0.3191,
+            "active_arm": 0.3289,
+            "active_gc": 0.049,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1742,
+            "active_margin": 0.2799
+          },
+          "8": {
+            "n_test": 10661,
+            "n_test_active": 3577,
+            "pooled_arm": 0.5016,
+            "pooled_gc": 0.3133,
+            "pooled_gc_from_ridge_gc_return": 0.3133,
+            "active_arm": 0.2831,
+            "active_gc": 0.0369,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.1883,
+            "active_margin": 0.2462
+          },
+          "9": {
+            "n_test": 10690,
+            "n_test_active": 3536,
+            "pooled_arm": 0.521,
+            "pooled_gc": 0.2747,
+            "pooled_gc_from_ridge_gc_return": 0.2747,
+            "active_arm": 0.3903,
+            "active_gc": 0.0055,
+            "not_a_ledger_candidate": true,
+            "why_not_a_ledger_candidate": "the active frame is a threshold ON THE LABEL, so these are range-restricted on the outcome and are not candidates for best achievable prediction of the population the ceiling: criterion names",
+            "pooled_margin": 0.2463,
+            "active_margin": 0.3848
+          }
+        },
+        "pooled": {
+          "arm_median": 0.5076,
+          "gc_median": 0.3112,
+          "margin_median": 0.1948,
+          "n_seeds_arm_wins": 10,
+          "bootstrap": {
+            "mean": 0.2056,
+            "ci_lo": 0.1911,
+            "ci_hi": 0.2217,
+            "n_boot": 1000,
+            "excludes_zero": true
+          },
+          "conditions_on_the_outcome": false
+        },
+        "active": {
+          "arm_median": 0.3531,
+          "gc_median": 0.0389,
+          "margin_median": 0.3016,
+          "n_seeds_arm_wins": 10,
+          "bootstrap": {
+            "mean": 0.311,
+            "ci_lo": 0.2766,
+            "ci_hi": 0.3432,
+            "n_boot": 1000,
+            "excludes_zero": true
+          },
+          "conditions_on_the_outcome": true,
+          "not_a_ledger_candidate": true
+        }
+      }
+    }
+  },
+  "no_model_was_trained": true,
+  "reads_as": "the MARGIN between an arm and GC under the SAME restriction is the readable quantity. Active-frame absolutes are range-restricted on the outcome and carry not_a_ledger_candidate; do not compare them to pooled numbers or to the 0.941 ceiling, whose own frame is what the parent plan is investigating",
+  "wall_seconds": 17.6
+}

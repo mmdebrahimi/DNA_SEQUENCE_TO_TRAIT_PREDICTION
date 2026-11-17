@@ -1,0 +1,355 @@
+{
+  "schema": "glm-active-frame-gate-v1",
+  "date": "2026-11-16",
+  "preregistered": {
+    "question": "on the ACTIVE frame -- the 14,913 tiles above a pure threshold on the label at 0.5778 -- does the published conv encoder (widths 6/20/75, 13,217 params) beat a single GC number by MORE than the +0.0122 it manages on the pooled frame?",
+    "primary_metric": "spearman",
+    "comparator": "gc",
+    "candidate_arms": [
+      "encoder-multi"
+    ],
+    "null_arm": "encoder-shuffled",
+    "registered_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "frame": "active-only; leave-peak-out applied WITHIN the active subset, so train and test are both active and the comparison matches the 2026-11-16 scratch design whose +0.1820 margin calibrated the thresholds below",
+    "device": "cpu",
+    "protocol": "dna_decode.glm.encoder.REGISTERED_PROTOCOL, unchanged -- architecture-matched to the published +0.0122 rather than retuned for this frame",
+    "pooled_reconcile_anchor": {
+      "arm": "gc",
+      "seed": 0,
+      "expected": 0.3,
+      "tolerance": 0.01,
+      "source": "wiki/glm_genomewide_oracle_2026-10-07.json",
+      "why_pooled": "the anchor exists only on the pooled frame; asserting it there BEFORE changing frames is the only way to prove the data and split are right"
+    },
+    "expected_n_parameters": 13217,
+    "explains_margin": 0.15,
+    "explains_min_seeds": 8,
+    "contributes_margin": 0.05,
+    "null_max_abs": 0.05,
+    "not_a_blind_pre_registration": true,
+    "why_not_blind": "the 2026-11-16 scratch measurement (4-mer ridge, +0.1820 active-frame margin on 10 of 10 seeds) motivated these thresholds, so they were set with a directional expectation in view. Recorded in the same field name wiki/asgiven_arm_result_2026-11-02.json uses.",
+    "frozen_after_the_mechanism_analysis": true,
+    "why_frozen_after": "this project's standing rule: a bar frozen BEFORE the analysis that says what a correct fix can achieve is mis-specified, and the two bars mis-specified that way this quarter were both frozen too early. The mechanism here -- GC is a detector, a learned representation is not -- was analysed first and the thresholds set against it.",
+    "does_not_extend": "scripts/glm_encoder_gate.py::PREREGISTERED is NOT edited. Its reconcile anchor is broken by the active frame by construction, so sharing it would rewrite a commitment and force INDETERMINATE_RECONCILE_FAILED.",
+    "verdicts": {
+      "FRAME_EXPLAINS_THE_GAP": "active-frame margin >= +0.15 on at least 8 of 10 seeds -- the pooled +0.0122 was a frame artifact to first order",
+      "FRAME_CONTRIBUTES": "margin > +0.05 with a paired CI excluding zero -- the frame carries part of the gap but not the whole of it",
+      "FRAME_DOES_NOT_EXPLAIN": "margin <= +0.05, or the CI includes zero -- the frame hypothesis is tested and rejected",
+      "INDETERMINATE_NULL_NOT_CLEAN": "the shuffled-label arm itself scores on this frame, so the pipeline fabricates signal and NOTHING is graded",
+      "INDETERMINATE_POOLED_RECONCILE_FAILED": "gc seed 0 did not reproduce 0.3000 on the POOLED frame, so this script is not reading the published data and nothing is interpretable"
+    },
+    "framing_recommendation": {
+      "FRAME_EXPLAINS_THE_GAP": "DECLARE TWO CRITERIA -- detection and strength -- and score future bacterial arms on both. A single pooled number would keep averaging two tasks whose answers differ in sign.",
+      "FRAME_CONTRIBUTES": "KEEP the pooled frame as primary and ADD the active-frame margin as a required disclosure beside it. Not enough separation to justify re-basing every future number.",
+      "FRAME_DOES_NOT_EXPLAIN": "KEEP THE POOLED FRAME AND DECLARE NOTHING. This is the load-bearing entry: re-framing onto a subset with no measured headroom would score every future arm on a frame strictly worse than today's.",
+      "INDETERMINATE_NULL_NOT_CLEAN": "NO FRAMING CHANGE. An ungraded run cannot inform a scope decision.",
+      "INDETERMINATE_POOLED_RECONCILE_FAILED": "NO FRAMING CHANGE. Fix the read path first."
+    },
+    "thresholds_are": "ASSERTED; the active-frame ceiling (0.9690 from the tiles' own replicates) is DERIVED and contextualises them without setting them"
+  },
+  "pooled_preregistration_imported_read_only": {
+    "reconcile_anchor": {
+      "arm": "gc",
+      "seed": 0,
+      "expected": 0.3,
+      "tolerance": 0.01,
+      "source": "wiki/glm_genomewide_oracle_2026-10-07.json"
+    },
+    "note": "imported from scripts/glm_encoder_gate.py for reference only; that file is not edited and a test pins it byte-identical to HEAD"
+  },
+  "substrate": {
+    "cache": "data/mpra",
+    "n_tiles": 44106,
+    "n_active": 14913,
+    "threshold_audit": {
+      "n": 44106,
+      "n_active": 14913,
+      "n_inactive": 29193,
+      "implied_cut": 0.5778,
+      "active_range": [
+        0.5778,
+        158.3076
+      ],
+      "inactive_range": [
+        0.0,
+        0.5778
+      ],
+      "active_median": 1.002,
+      "inactive_median": 0.3585,
+      "overlap_either_side": 0,
+      "flag_is_a_clean_cut_on_the_label": true,
+      "conditions_on_the_outcome": false,
+      "reads_as": "a clean cut means every active-frame number is RANGE-RESTRICTED on the outcome"
+    }
+  },
+  "threads_pinned": {
+    "OMP_NUM_THREADS": "1",
+    "OPENBLAS_NUM_THREADS": "1",
+    "MKL_NUM_THREADS": "1",
+    "NUMEXPR_NUM_THREADS": "1"
+  },
+  "phase1_pooled": {
+    "gc_seed0": 0.3,
+    "reconcile_ok": true,
+    "encoder_multi_seed0": {
+      "spearman": 0.3236,
+      "n_parameters": 13217,
+      "epochs_ran": 11,
+      "device": "cpu",
+      "wall_seconds": 135.5
+    }
+  },
+  "phase2_active": {
+    "n_active_used": 14913,
+    "per_seed": {
+      "0": {
+        "n_train": 11091,
+        "n_test": 3822,
+        "held_out_peaks": 462,
+        "gc": -0.0422,
+        "encoder_multi": 0.1987,
+        "encoder_shuffled": -0.0481,
+        "margin": 0.2409,
+        "epochs_ran": 16,
+        "epochs_ran_null": 8,
+        "wall_seconds": 109.6,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "1": {
+        "n_train": 11090,
+        "n_test": 3823,
+        "held_out_peaks": 462,
+        "gc": -0.0508,
+        "encoder_multi": 0.2055,
+        "encoder_shuffled": -0.0024,
+        "margin": 0.2563,
+        "epochs_ran": 14,
+        "epochs_ran_null": 8,
+        "wall_seconds": 98.9,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "2": {
+        "n_train": 11015,
+        "n_test": 3898,
+        "held_out_peaks": 462,
+        "gc": -0.0318,
+        "encoder_multi": 0.1962,
+        "encoder_shuffled": 0.0068,
+        "margin": 0.228,
+        "epochs_ran": 17,
+        "epochs_ran_null": 6,
+        "wall_seconds": 82.9,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "3": {
+        "n_train": 11238,
+        "n_test": 3675,
+        "held_out_peaks": 462,
+        "gc": -0.0722,
+        "encoder_multi": 0.1765,
+        "encoder_shuffled": 0.0287,
+        "margin": 0.2487,
+        "epochs_ran": 14,
+        "epochs_ran_null": 9,
+        "wall_seconds": 131.6,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "4": {
+        "n_train": 11198,
+        "n_test": 3715,
+        "held_out_peaks": 462,
+        "gc": -0.0833,
+        "encoder_multi": 0.1266,
+        "encoder_shuffled": 0.0003,
+        "margin": 0.2099,
+        "epochs_ran": 12,
+        "epochs_ran_null": 8,
+        "wall_seconds": 115.0,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "5": {
+        "n_train": 11165,
+        "n_test": 3748,
+        "held_out_peaks": 462,
+        "gc": -0.0506,
+        "encoder_multi": 0.1507,
+        "encoder_shuffled": -0.0121,
+        "margin": 0.2013,
+        "epochs_ran": 10,
+        "epochs_ran_null": 6,
+        "wall_seconds": 71.5,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "6": {
+        "n_train": 11239,
+        "n_test": 3674,
+        "held_out_peaks": 462,
+        "gc": -0.065,
+        "encoder_multi": 0.1841,
+        "encoder_shuffled": -0.0599,
+        "margin": 0.2491,
+        "epochs_ran": 13,
+        "epochs_ran_null": 8,
+        "wall_seconds": 93.3,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "7": {
+        "n_train": 11283,
+        "n_test": 3630,
+        "held_out_peaks": 462,
+        "gc": -0.0412,
+        "encoder_multi": 0.1326,
+        "encoder_shuffled": -0.0622,
+        "margin": 0.1738,
+        "epochs_ran": 14,
+        "epochs_ran_null": 9,
+        "wall_seconds": 107.2,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "8": {
+        "n_train": 11108,
+        "n_test": 3805,
+        "held_out_peaks": 462,
+        "gc": -0.0113,
+        "encoder_multi": 0.1397,
+        "encoder_shuffled": -0.0674,
+        "margin": 0.151,
+        "epochs_ran": 12,
+        "epochs_ran_null": 9,
+        "wall_seconds": 75.4,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      },
+      "9": {
+        "n_train": 11220,
+        "n_test": 3693,
+        "held_out_peaks": 462,
+        "gc": -0.0304,
+        "encoder_multi": 0.0771,
+        "encoder_shuffled": 0.0248,
+        "margin": 0.1075,
+        "epochs_ran": 6,
+        "epochs_ran_null": 7,
+        "wall_seconds": 47.5,
+        "n_parameters": 13217,
+        "conditions_on_the_outcome": true
+      }
+    },
+    "gc_median": -0.0464,
+    "encoder_multi_median": 0.1636,
+    "margin_median": 0.219,
+    "n_seeds_clearing_explains_bar": 9,
+    "margin_ci": [
+      0.1769,
+      0.2342
+    ],
+    "null_max_abs": 0.0674,
+    "conditions_on_the_outcome": true,
+    "not_a_ledger_candidate": true
+  },
+  "phase3_binned_margin": {
+    "n_bins": 10,
+    "bins": [
+      {
+        "bin": 0,
+        "n": 383,
+        "arm": 0.007,
+        "gc": -0.0061,
+        "margin": 0.0131
+      },
+      {
+        "bin": 1,
+        "n": 383,
+        "arm": -0.0552,
+        "gc": -0.0078,
+        "margin": -0.0474
+      },
+      {
+        "bin": 2,
+        "n": 382,
+        "arm": -0.0305,
+        "gc": 0.0124,
+        "margin": -0.0429
+      },
+      {
+        "bin": 3,
+        "n": 382,
+        "arm": 0.0674,
+        "gc": -0.0274,
+        "margin": 0.0948
+      },
+      {
+        "bin": 4,
+        "n": 382,
+        "arm": 0.0483,
+        "gc": 0.0511,
+        "margin": -0.0028
+      },
+      {
+        "bin": 5,
+        "n": 382,
+        "arm": 0.1099,
+        "gc": 0.0319,
+        "margin": 0.078
+      },
+      {
+        "bin": 6,
+        "n": 382,
+        "arm": 0.0449,
+        "gc": -0.0649,
+        "margin": 0.1098
+      },
+      {
+        "bin": 7,
+        "n": 382,
+        "arm": -0.0704,
+        "gc": 0.0186,
+        "margin": -0.089
+      },
+      {
+        "bin": 8,
+        "n": 382,
+        "arm": 0.0936,
+        "gc": 0.0771,
+        "margin": 0.0166
+      },
+      {
+        "bin": 9,
+        "n": 382,
+        "arm": 0.4707,
+        "gc": 0.293,
+        "margin": 0.1777
+      }
+    ],
+    "n_total": 3822,
+    "seed": 0,
+    "binning_variable": "RNA_exp_sum_1, group 1's published summary",
+    "conditions_on_the_outcome": false,
+    "is_not_a_second_bar": true,
+    "reads_as": "the SHAPE of the margin across the range. The verdict is computed from the seed medians alone and a test pins that this table cannot move it"
+  },
+  "verdict": "INDETERMINATE_NULL_NOT_CLEAN",
+  "verdict_detail": "shuffled-label arm reached |0.0674| against a ceiling of 0.05",
+  "framing_recommendation": "NO FRAMING CHANGE. An ungraded run cannot inform a scope decision.",
+  "smoke": false,
+  "wall_seconds": 1128.2
+}

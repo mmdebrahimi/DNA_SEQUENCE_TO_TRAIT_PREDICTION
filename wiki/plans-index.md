@@ -984,3 +984,25 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 - The binding constraint may be the WEEKLY quota rather than the session cap: the gradeable prefix is 91 epochs = 32.3 h, against a commonly-cited ~30 h weekly allowance, which Step 4 resolves before Step 6 spends a session.
 
 ---
+
+## [plan_file: Resolve_The_Scoring_Frame_Confound_Behind_The_Bacterial_Versus_Human_Gap_Plan/] 2026-11-16
+**Summary:** Produce the three measurements that decide whether the 20-25x bacterial-versus-human gain ratio is a SCORING-FRAME artifact rather than a kingdom difference -- the published conv on the active frame, the strongest arm re-scored from committed per-tile predictions, and the human label's own distributional shape.
+**Key decisions:**
+- Step 3 creates its OWN frozen pre-registration rather than extending `scripts/glm_encoder_gate.py::PREREGISTERED`. The active frame breaks that bar's reconcile anchor BY CONSTRUCTION -- GC seed 0 is about -0.04 there, not the pinned 0.3000 -- so sharing the dict would both retroactively rewrite a commitment and force `INDETERMINATE_RECONCILE_FAILED`.
+- Step 2 needs NO training and NO `D:` volume. The strongest arm's per-tile predictions are already committed under `data/promoteratlas/` (10 seeds, ~11,000 held-out tiles each, lengths matching the committed split), and arm identity is assigned by reconciling the pooled recompute against the committed per-seed series -- as-given median 0.5086, atlas median 0.5076 -- never by filename.
+- Step 3 reconciles on the POOLED frame first and only then scores the active frame, because the pooled frame is the one carrying a published anchor. Validating on the frame being questioned would prove nothing about the data or the split.
+- Step 4 reuses the existing MD5-verifying `scripts/fetch_lentimpra.py` with `--dest` overridden to a local path, and deliberately does NOT invent a human `active` flag -- lentiMPRA publishes none, so the comparison is on distributional shape and best-single-threshold recoverable share only.
+- The plan touches no frozen unit, no arm `metric`/`status`/`verdict`, and neither eukaryotic arm artifact. Re-interpreting a published verdict is an authority call and is left as Open Question 1.
+
+---
+## [plan_file: Resolve_The_Scoring_Frame_Confound_Behind_The_Bacterial_Versus_Human_Gap_V3_Plan/] 2026-11-16
+**Status:** candidate
+**Summary:** Produce the three measurements that decide whether the 20-25x bacterial-versus-human gain ratio is a SCORING-FRAME artifact rather than a kingdom difference -- rebuilt around the 2026-11-16 retraction, so the vacuous single-threshold statistic is replaced by a quantile-binned reproducibility curve that bins on one replicate group and scores agreement inside the OTHER, leaving the binning variable and the scored pair with no measurement in common.
+**Key decisions:**
+- The replacement statistic is selection-independent BY CONSTRUCTION, not by care. It uses the newly-read nested sub-replicate design (`RNA_exp_sum_{1,2}_{1,2}`, all four columns numeric on 44,106 of 44,106 tiles, each group summary verified as exactly the mean of its own two sub-columns) and ships with an `attenuation_null` that holds the design fixed. A curve that cannot come out flat on three unrelated distributions fails Step 1 before Steps 2-4 can cite it.
+- The published eukaryotic `verdict` needs NO reinterpreting, so the authority call the previous draft reserved for it does not exist: `verdict_detail` is a comparison of two measured numbers that stays true whatever the frame work finds, and the frame result lands inside `honest_limits[0]` and strengthens `honest_limits[1]` rather than contradicting either.
+- Keeping the strongest arm's active-frame score a diagnostic is still right but NOT for commensurability -- the ledger already files a human lentiMPRA score (0.4853) under a criterion naming *bacterial* activity against the *bacterial* 0.941 ceiling (R11). The reason is intrinsic: a range-restricted score is not a candidate for "best achievable prediction" of the population the criterion names.
+- The substrate re-framing decision moves into Step 3's frozen bar as a total `framing_recommendation` map, one entry per verdict, fixed before the run; and the retracted 0.8194 is kept rather than deleted, with Step 5 adding `never_cite_for_provenance` because the contract-number audit verifies by whole-number presence and would otherwise certify it.
+- v1 is UNTRACKED in git (R12), so this landed as a sibling `_V3_` folder rather than an in-place overwrite that would have destroyed the only copy. Consolidating to one folder requires committing v1 first and is a separate git action.
+
+---

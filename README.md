@@ -389,7 +389,10 @@ the bacterial tiles:
 Learning from sequence buys roughly **20–25x more on human regulatory DNA than on bacterial
 promoters** — all ten folds agree within ±0.02, and both paired-bootstrap CIs lie entirely above the
 bacterial gain. Both cell lines returned the verdict `SUBSTRATE_LIMITED` against a bar frozen before
-the run: the *bacterial substrate* was holding the method back, not the method. That is the opposite of
+the run: the *bacterial substrate* was holding the method back, not the method. **Do not quote that
+ratio without the frame caveat below** — the bacterial side is scored on a frame whose own
+reproducibility is *not* uniform across its range, and the 0.941 ceiling it is measured against turns
+out to be a pooled average over deciles whose individual ceilings run 0.50 to 0.98. That is the opposite of
 what this project assumed for months, and it is the single strongest argument for moving up the tree.
 
 **Do not compare 0.4853 against the bacterial 0.5086.** Different substrate, different noise floor,
@@ -409,9 +412,25 @@ sign unanimously**: a 4-mer ridge loses to GC on 0 of 10 seeds pooled and beats 
 within actives, margin +0.1820. So the bacterial +0.0122 is two opposite effects cancelling, not
 an absence of learnable signal. A third line of support for this -- a single-threshold statistic -- was RETRACTED the same day as
 vacuous (it is a closed form in the split proportion alone); the sign flip and GC's within-active
-collapse are direct measurements and stand. This does NOT refute the human result -- the decisive check,
-whether the human label is similarly bimodal, is UNMEASURED (detached volume + an uninstalled
-dependency). Read the ratio as unresolved, not as 20-25x. Detail and limits:
+collapse are direct measurements and stand. **The decisive check has since been RUN, and neither blocker this paragraph used to name was
+real** — it claimed "detached volume + an uninstalled dependency" when `openpyxl` 3.1.5 was
+installed all along and `scripts/fetch_lentimpra.py` takes `--dest`; the check was simply unrun.
+Measured 2026-11-16 on the fetched deposit: **the human label is NOT similarly concentrated.** On
+the scale the models actually fit, bacterial `log1p` has a modal-bin share of **0.5704** against
+HepG2 **0.2203** and K562 **0.2319** — though the scale-invariant measure runs the *other* way
+(distinct-value share 0.9057 bacterial vs 0.1170 / 0.0559 human), so the two labels are
+*differently* pathological rather than one being a milder version of the other. **No human ceiling
+exists:** the deposit carries zero per-replicate columns across 6 files, so none is derivable and
+none was borrowed from the bacterial 0.941.
+
+What the bacterial frame *does* show, on a selection-independent design: binning on one replicate
+group and scoring agreement inside the other gives per-decile agreement climbing **0.1437 → 0.9323**
+(trend **+0.9879** against an attenuation-null maximum of **+0.4303**, replicated in the mirror
+direction at +0.9515 vs +0.4499). **The decisive conv-versus-GC gate on the active frame returned
+`INDETERMINATE_NULL_NOT_CLEAN` and is NOT graded** — its 0.05 null ceiling was inherited from a
+pooled bar sized for ~11,200 test rows and applied to 3,822, which is a bar-specification error, so
+no margin from it is quoted. Detail, limits and the decisions still open:
+[`wiki/glm_scoring_frame_resolution.md`](wiki/glm_scoring_frame_resolution.md) ·
 [`wiki/glm_bacterial_scoring_frame_2026-11-16.md`](wiki/glm_bacterial_scoring_frame_2026-11-16.md).
 
 Note what this does and does not support. It is a **molecular** readout — regulatory activity of a DNA

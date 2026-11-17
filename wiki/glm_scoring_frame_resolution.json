@@ -1,0 +1,227 @@
+{
+  "schema": "glm-scoring-frame-resolution-v1",
+  "date": "2026-11-16",
+  "question": "is the 20-25x bacterial-versus-human gain ratio a SCORING-FRAME artifact rather than a kingdom difference?",
+  "headline": "PARTIALLY RESOLVED. The decisive gate returned INDETERMINATE and is NOT graded. What IS established: the bacterial label reproducibility rises monotonically across its range (trend +0.9879 against a null max +0.4303, replicated in the mirror direction at +0.9515 vs +0.4499), so the published 0.941 is a POOLED AVERAGE over deciles whose own ceilings run 0.5013 to 0.9823; and the human label is NOT similarly concentrated.",
+  "supersedes": {
+    "retracted_statistic": "spearman of a single threshold on the label against the label = 0.8194, reported 2026-11-16 as 87 percent of the achievable ranking signal, and used to infer that the pooled Spearman is overwhelmingly a detection metric",
+    "why_vacuous": "rho = sqrt(3k(n-k)/(n^2-1)) is a closed form in the split proportion alone; at n=44,106 k=14,913 it equals 0.8194 exactly, and uniform, Gaussian, Pareto and bimodal samples all return it to four decimals. The maximum is 0.866 at ANY median split of ANY continuous label.",
+    "replacement": "dna_decode/glm/active_frame.reproducibility_curve, which bins on one replicate group and scores agreement INSIDE the other so the binning variable and the scored pair share no measurement, reported only beside attenuation_null, which holds the design fixed",
+    "the_retracted_value_is_NOT_deleted": "wiki/glm_bacterial_scoring_frame_2026-11-16.json keeps it under RETRACTED_2026_11_16 with a correction_log entry. Deleting the evidence of an error is what lets it be re-derived."
+  },
+  "never_cite_for_provenance": {
+    "paths": [
+      "wiki/glm_bacterial_scoring_frame_2026-11-16.json"
+    ],
+    "why": "the contract-number audit verifies a cited number by whole-number presence in the cited artifact, so a contract citing that memo would find the retracted 0.8194 and certify it as provenance. No cell_registry contract cites it today and a test holds that line."
+  },
+  "finding_1_reproducibility_rises_across_the_range": {
+    "design": "bin on RNA_exp_sum_1 (group 1 published summary, itself verified as the exact mean of RNA_exp_sum_1_1 and _1_2 on 44,106 of 44,106 rows); score Spearman between RNA_exp_sum_2_1 and _2_2 inside each decile. The binning variable and the scored pair share NO measurement.",
+    "per_decile_agreement": [
+      0.1437,
+      0.1105,
+      0.1472,
+      0.1804,
+      0.2175,
+      0.3357,
+      0.3857,
+      0.4187,
+      0.5755,
+      0.9323
+    ],
+    "per_decile_implied_ceiling": [
+      0.5013,
+      0.4462,
+      0.5066,
+      0.5528,
+      0.5978,
+      0.709,
+      0.7461,
+      0.7683,
+      0.8547,
+      0.9823
+    ],
+    "per_decile_n": [
+      4411,
+      4411,
+      4411,
+      4411,
+      4411,
+      4411,
+      4410,
+      4410,
+      4410,
+      4410
+    ],
+    "pooled_agreement": 0.723,
+    "trend": 0.9879,
+    "attenuation_null": {
+      "mean": -0.0079,
+      "sd": 0.2114,
+      "p95": 0.3697,
+      "max": 0.4303,
+      "min": -0.4424
+    },
+    "beyond_null_max": true,
+    "mirror_replication": {
+      "trend": 0.9515,
+      "null_max": 0.4499,
+      "beyond_null_max": true,
+      "why_it_is_free": "binning on one group and scoring the mirror group reuses the same four columns, so the replication costs nothing and is independent of the first direction binning"
+    },
+    "reads_as": "the trend MUST be read against the null, which reaches +0.4303 on its own: binning on group 1 restricts group 1, which correlates with group 2, so range restriction alone produces substantial apparent slope. +0.9879 is more than double that.",
+    "the_consequence_for_every_bacterial_number": "0.941 is not a single ceiling. It is a pooled average over deciles whose own ceilings run 0.5013 to 0.9823, so an arm reported against 0.941 is judged against a figure that describes no part of the range."
+  },
+  "finding_2_the_decisive_gate_did_not_grade": {
+    "verdict": "INDETERMINATE_NULL_NOT_CLEAN",
+    "verdict_detail": "shuffled-label arm reached |0.0674| against a ceiling of 0.05",
+    "framing_recommendation": "NO FRAMING CHANGE. An ungraded run cannot inform a scope decision.",
+    "phase1_pooled_reconcile": {
+      "gc_seed0": 0.3,
+      "expected": 0.3,
+      "encoder_multi_seed0": 0.3236,
+      "published_seed0": 0.3235,
+      "n_parameters": 13217,
+      "epochs_ran": 11,
+      "published_epochs_seed0": 11,
+      "passed": true
+    },
+    "ungraded_numbers_DO_NOT_QUOTE_AS_A_RESULT": {
+      "gc_median": -0.0464,
+      "conv_median": 0.1636,
+      "margin_median": 0.219,
+      "margin_ci": [
+        0.1769,
+        0.2342
+      ],
+      "seeds_clearing_the_0_15_bar": 9,
+      "what_the_bar_would_have_returned": "FRAME_EXPLAINS_THE_GAP",
+      "why_it_is_withheld": "the null gate fires FIRST by the bar own ordering. A bar that is overridden once it returns an inconvenient answer is not a bar."
+    },
+    "null_diagnosis": {
+      "nulls": [
+        -0.0481,
+        -0.0024,
+        0.0068,
+        0.0287,
+        0.0003,
+        -0.0121,
+        -0.0599,
+        -0.0622,
+        -0.0674,
+        0.0248
+      ],
+      "max_abs": 0.0674,
+      "ceiling": 0.05,
+      "breaches": [
+        -0.0599,
+        -0.0622,
+        -0.0674
+      ],
+      "all_breaches_negative": true,
+      "n_test_per_seed": 3822,
+      "my_error_in_the_bar": "the 0.05 ceiling was INHERITED from scripts/glm_encoder_gate.PREREGISTERED null_max_abs, which was set for a POOLED test set of about 11,200 rows. The active frame test set is 3,822 rows. A tolerance must come from the tested quantity, not from another arm; I did not re-derive it and that is a bar-specification error of mine.",
+      "what_is_NOT_claimed": "the breach is not evidence the pipeline fabricates signal. All three breaching values are NEGATIVE; a shuffled-label model that anti-correlates has learned noise pointing the wrong way; and a conv is a smooth function of sequence rather than an independent random vector, so its spread is legitimately wider than 1/sqrt(n) = 0.0162.",
+      "what_would_fix_it_properly": "re-derive the ceiling for a 3,822-row frame from a null distribution over enough replicates to estimate one, then re-freeze and re-run. Loosening it now, after seeing the result, is the post-hoc edit this project has logged twice.",
+      "changing_the_gate_is_a_user_authority_call": true
+    }
+  },
+  "finding_3_the_margin_grows_on_the_active_frame": {
+    "source": "wiki/active_frame_rescore_2026-11-16.json; no model trained, arm identity by reconcile at max abs delta 0.0000",
+    "arms": {
+      "asgiven-position-resolved-promoteratlas-150bp": {
+        "pooled_margin": 0.1973,
+        "active_margin": 0.3158,
+        "pooled_arm": 0.5086,
+        "active_arm": 0.3673,
+        "active_gc": 0.0389,
+        "wins_of_10": 10,
+        "ci": {
+          "mean": 0.3231,
+          "ci_lo": 0.2956,
+          "ci_hi": 0.3482,
+          "n_boot": 1000,
+          "excludes_zero": true
+        },
+        "not_a_ledger_candidate": true
+      },
+      "promoteratlas-base-embeddings-frozen-150bp": {
+        "pooled_margin": 0.1948,
+        "active_margin": 0.3016,
+        "pooled_arm": 0.5076,
+        "active_arm": 0.3531,
+        "active_gc": 0.0389,
+        "wins_of_10": 10,
+        "ci": {
+          "mean": 0.311,
+          "ci_lo": 0.2766,
+          "ci_hi": 0.3432,
+          "n_boot": 1000,
+          "excludes_zero": true
+        },
+        "not_a_ledger_candidate": true
+      }
+    },
+    "reads_as": "the MARGIN between an arm and GC under the SAME restriction is the readable quantity; both arms beat GC by MORE on the active frame because the GC pooled advantage was almost entirely detection. Active-frame absolutes are range-restricted on the outcome and are NOT ledger candidates.",
+    "relation_to_the_scratch_measurement": "the 2026-11-16 scratch used a 4-mer ridge, NOT the published conv, and fit GC WITHIN the active subset (-0.0464) rather than on the pooled train set (+0.0389). Different experiments; the numbers must not be merged. Step 3 independently reproduced the scratch -0.0464 with GC fit inside the active frame."
+  },
+  "finding_4_the_human_label_is_not_similarly_concentrated": {
+    "source": "wiki/human_frame_shape_2026-11-16.json",
+    "on_the_model_scale": {
+      "bacterial_log1p_modal_bin_share": 0.5704,
+      "human_HepG2": 0.2203,
+      "human_K562": 0.2319,
+      "why_log1p": "modal_bin_share uses equal-WIDTH bins and is not scale-invariant; log1p is the target ridge_gc and the conv are fit against, so it is the scale the models see",
+      "raw_scale_is_NOT_comparable": 0.979
+    },
+    "the_scale_invariant_measure_runs_the_OTHER_way": {
+      "bacterial_distinct_value_share": 0.9057,
+      "human_HepG2": 0.117,
+      "human_K562": 0.0559,
+      "reads_as": "the two labels are DIFFERENTLY pathological rather than one being a milder version of the other: the bacterial label has concentrated mass but nearly all-distinct values, the human labels have spread mass but are heavily tied."
+    },
+    "human_ceiling": null,
+    "human_ceiling_reason": "no per-replicate columns were found in the deposit, so no Spearman-Brown step-up is derivable. Reported as null rather than filled with the BACTERIAL 0.941, which both wiki/eukaryotic_arm_result_*.json currently carry as context",
+    "no_human_reproducibility_curve": "the deposit carries ZERO per-replicate columns across 6 files, so no Spearman-Brown step-up is derivable. The R2 unverified flag is now resolved in the negative.",
+    "WTC11": "refused at join rate 0.0000 (0 of 23,064 rows), recorded rather than worked around"
+  },
+  "which_of_the_four_eukaryotic_differences_this_resolves": {
+    "resolved": [],
+    "partially_informed": [
+      "library construction / assay readout -- the two labels are measurably differently shaped, and the bacterial one has a reliability gradient the human deposit cannot even be checked for"
+    ],
+    "left_open": [
+      "assay",
+      "element length 230bp vs 150bp",
+      "kingdom"
+    ],
+    "honest_statement": "this plan does NOT identify which of the four named differences carries the effect. It adds a FIFTH candidate -- the scoring frame -- and shows that candidate is real on the bacterial side and unmeasurable on the human side."
+  },
+  "the_published_eukaryotic_verdict_is_UNTOUCHED_and_why": {
+    "verdict_field": "SUBSTRATE_LIMITED, unchanged in both wiki/eukaryotic_arm_result_HepG2_2026-11-01.json and the K562 sibling",
+    "verdict_detail_is_a_CI_COMPARISON": "the CI for the human gain lies entirely ABOVE the bacterial gain 0.0122 -- a comparison of two measured numbers that stays true whatever this plan finds",
+    "lands_inside_honest_limits_0": "which of the four differences carries the effect -- now five candidates",
+    "strengthens_honest_limits_1": "the 0.0122 anchor was already flagged as a fixed point with unpropagated uncertainty; this plan upgrades that to frame-dependent",
+    "so_no_reinterpretation_is_needed": true,
+    "the_remaining_authority_call": "whether those two artifacts should gain a sixth honest_limits entry. This plan position is the forward pointer only, leaving both byte-identical."
+  },
+  "honest_limits": [
+    "The decisive gate is UNGRADED. Findings 1, 3 and 4 do not depend on it, but the question the plan was built to answer -- does the published conv beat GC by more on the active frame -- has no graded answer.",
+    "The active frame conditions on the outcome. Every active-frame absolute is range-restricted; only differentials under the same restriction are readable.",
+    "modal_bin_share is not scale-invariant even on log1p: log1p is one monotone transform among many, chosen because it is what the models fit, not because it is canonical.",
+    "The reproducibility curve null reaches +0.4303 on its own, so the trend is interpretable ONLY against it. Three per-decile ceilings below 0.55 rest on 4,411 rows each.",
+    "One substrate, one organism, one assay series (GSE144621). Nothing here generalises to bacterial regulation at large.",
+    "3 null replicates in the gate is not a null distribution, which the gate own scope language says."
+  ],
+  "cites": [
+    "wiki/active_frame_rescore_2026-11-16.json",
+    "wiki/glm_active_frame_gate_2026-11-16.json",
+    "wiki/human_frame_shape_2026-11-16.json",
+    "wiki/glm_bacterial_scoring_frame_2026-11-16.json",
+    "wiki/asgiven_arm_result_2026-11-02.json",
+    "wiki/glm_genomewide_oracle_2026-10-07.json",
+    "wiki/eukaryotic_arm_result_HepG2_2026-11-01.json",
+    "wiki/eukaryotic_arm_result_K562_2026-11-01.json"
+  ],
+  "frozen_surface_touched": false
+}
