@@ -1,0 +1,190 @@
+{
+  "schema": "human-frame-shape-v1",
+  "date": "2026-11-16",
+  "status": "MEASURED",
+  "fetch": {
+    "skipped": true
+  },
+  "deposit_scan": {
+    "data_dir": "data\\mpra_human",
+    "exists": true,
+    "n_files": 6,
+    "files": [
+      {
+        "file": "_fetch_manifest.json",
+        "bytes": 1475,
+        "columns": null,
+        "note": "not a delimited text table; header not scanned"
+      },
+      {
+        "file": "_zenodo_record.json",
+        "bytes": 7863,
+        "columns": null,
+        "note": "not a delimited text table; header not scanned"
+      },
+      {
+        "file": "Table S3 - large-scale lib design.xlsx",
+        "bytes": 56198290,
+        "columns": null,
+        "note": "not a delimited text table; header not scanned"
+      },
+      {
+        "file": "Table S6 - folds and performance.xlsx",
+        "bytes": 6126664,
+        "columns": null,
+        "note": "not a delimited text table; header not scanned"
+      },
+      {
+        "file": "Table S7 - joint lib design.xlsx",
+        "bytes": 8301566,
+        "columns": null,
+        "note": "not a delimited text table; header not scanned"
+      },
+      {
+        "file": "Table S9 - folds and performance.xlsx",
+        "bytes": 3564742,
+        "columns": null,
+        "note": "not a delimited text table; header not scanned"
+      }
+    ],
+    "replicate_like_columns": [],
+    "has_replicates": false,
+    "patterns_used": [
+      "(?:^|[_.])rep(?:licate)?[_.]?\\d+$",
+      "(?:^|[_.])r\\d+$",
+      "rna[_.].*[_.]\\d+$",
+      "dna[_.].*[_.]\\d+$"
+    ],
+    "excluded_pattern": "fold",
+    "excluded_as_fold": [],
+    "n_excluded_as_fold": 0,
+    "fold_exclusion_was_inert": true,
+    "what_inert_means_here": "the fold exclusion removed NOTHING on this deposit, so it is a guard against a column shape that did not occur rather than an active control. Reported because a filter that removes nothing is not a control, and presenting it as one would be the vacuous-control pattern this project has shipped once already",
+    "why_fold_is_excluded": "in this deposit `fold` is the authors' published 10-fold cross-validation assignment, not a measurement replicate; treating it as one would manufacture a ceiling from a CV index",
+    "reason": "no header matched a per-replicate pattern, so no human reproducibility curve and no human ceiling are derivable from this deposit"
+  },
+  "cells": {
+    "HepG2": {
+      "cell": "HepG2",
+      "loaded": true,
+      "n_records": 61463,
+      "join_rate": 1.0,
+      "loader_stats": {
+        "cell": "HepG2",
+        "n_designed": 164307,
+        "n_measured": 61463,
+        "n_joined": 61463,
+        "join_rate": 1.0,
+        "s3_sheet": "HepG2 large-scale",
+        "s3_header_row": 4,
+        "s6_sheet": "Fold assignment, HepG2",
+        "s6_header_row": 1,
+        "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+        "length_min": 230,
+        "length_max": 230,
+        "n_folds": 10
+      },
+      "shape": {
+        "n": 61463,
+        "n_bins": 20,
+        "min": -3.0036,
+        "max": 6.8933,
+        "median": -0.1927,
+        "modal_bin_share": 0.2203,
+        "n_distinct_values": 7192,
+        "distinct_value_share": 0.117,
+        "conditions_on_the_outcome": false,
+        "deliberately_absent": "no best-single-threshold-versus-label Spearman and no share-of-ceiling: that statistic is rho = sqrt(3k(n-k)/(n^2-1)), a closed form in the split proportion alone, retracted 2026-11-16"
+      },
+      "activity_is": "log2(RNA/DNA); goes negative, so it is NOT a positive-only intensity",
+      "no_active_flag_invented": true
+    },
+    "K562": {
+      "cell": "K562",
+      "loaded": true,
+      "n_records": 98332,
+      "join_rate": 1.0,
+      "loader_stats": {
+        "cell": "K562",
+        "n_designed": 243778,
+        "n_measured": 98332,
+        "n_joined": 98332,
+        "join_rate": 1.0,
+        "s3_sheet": "K562 large-scale",
+        "s3_header_row": 2,
+        "s6_sheet": "Fold assignment, K562",
+        "s6_header_row": 1,
+        "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+        "length_min": 230,
+        "length_max": 230,
+        "n_folds": 10
+      },
+      "shape": {
+        "n": 98332,
+        "n_bins": 20,
+        "min": -2.9905,
+        "max": 5.8063,
+        "median": -0.225,
+        "modal_bin_share": 0.2319,
+        "n_distinct_values": 5494,
+        "distinct_value_share": 0.0559,
+        "conditions_on_the_outcome": false,
+        "deliberately_absent": "no best-single-threshold-versus-label Spearman and no share-of-ceiling: that statistic is rho = sqrt(3k(n-k)/(n^2-1)), a closed form in the split proportion alone, retracted 2026-11-16"
+      },
+      "activity_is": "log2(RNA/DNA); goes negative, so it is NOT a positive-only intensity",
+      "no_active_flag_invented": true
+    },
+    "WTC11": {
+      "cell": "WTC11",
+      "loaded": false,
+      "refusal": "WTC11 joins at 0.0000 (0 of 23064 measured rows), below the 0.95 bar. This is a KEY problem, not a small cohort: S6 keys this cell by Ensembl gene id while S3 uses element names. Returning the overlap would hand back a 0.0%-complete cohort that looks complete.",
+      "refusal_is_expected_for_WTC11": true,
+      "note": "recorded, not worked around"
+    }
+  },
+  "bacterial_comparison": {
+    "n_tiles": 44106,
+    "shape": {
+      "n": 44106,
+      "n_bins": 20,
+      "min": 0.0,
+      "max": 158.3076,
+      "median": 0.4338,
+      "modal_bin_share": 0.979,
+      "n_distinct_values": 39945,
+      "distinct_value_share": 0.9057,
+      "conditions_on_the_outcome": false,
+      "deliberately_absent": "no best-single-threshold-versus-label Spearman and no share-of-ceiling: that statistic is rho = sqrt(3k(n-k)/(n^2-1)), a closed form in the split proportion alone, retracted 2026-11-16"
+    },
+    "shape_on_model_scale": {
+      "n": 44106,
+      "n_bins": 20,
+      "min": 0.0,
+      "max": 5.0708,
+      "median": 0.3603,
+      "modal_bin_share": 0.5704,
+      "n_distinct_values": 39945,
+      "distinct_value_share": 0.9057,
+      "conditions_on_the_outcome": false,
+      "deliberately_absent": "no best-single-threshold-versus-label Spearman and no share-of-ceiling: that statistic is rho = sqrt(3k(n-k)/(n^2-1)), a closed form in the split proportion alone, retracted 2026-11-16"
+    },
+    "model_scale_is": "log1p(expn_med) -- the target ridge_gc and the conv are fit against",
+    "comparability": {
+      "compare_this_row_to_the_human_cells": "shape_on_model_scale",
+      "why_not_the_raw_row": "modal_bin_share uses equal-WIDTH bins and so is NOT scale-invariant. expn_med is a raw ratio on [0, 158.3] with median 0.4338; human activity is log2(RNA/DNA) on about [-3, +7]. Comparing those raw modal-bin shares compares a heavy right skew against an already-logged variable",
+      "distinct_value_share_is_scale_invariant": true,
+      "note_on_distinct_value_share": "a monotone transform preserves distinctness, so that measure is already comparable across the two and log1p does not move it"
+    }
+  },
+  "human_reproducibility_curve": null,
+  "human_reproducibility_curve_reason": "no header matched a per-replicate pattern, so no human reproducibility curve and no human ceiling are derivable from this deposit",
+  "human_ceiling": null,
+  "human_ceiling_reason": "no per-replicate columns were found in the deposit, so no Spearman-Brown step-up is derivable. Reported as null rather than filled with the BACTERIAL 0.941, which both wiki/eukaryotic_arm_result_*.json currently carry as context",
+  "the_two_halves_are_reported_separately": {
+    "a_distributional_shape": "modal-bin share and distinct-value count, per cell and for the bacterial label, directly comparable",
+    "b_reproducibility_curve": "available only with per-replicate columns; see human_reproducibility_curve_reason",
+    "why_separate": "merging them into one headline is how the retracted single-threshold statistic travelled; a shape comparison and a reliability comparison answer different questions"
+  },
+  "no_active_flag_invented": true,
+  "wall_seconds": 105.8
+}
