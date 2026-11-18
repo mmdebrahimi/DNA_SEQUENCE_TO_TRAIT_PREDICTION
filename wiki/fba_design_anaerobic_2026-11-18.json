@@ -1,0 +1,96 @@
+{
+  "schema": "fba-design-anaerobic-v1",
+  "date": "2026-11-18",
+  "question": "Arm A was run AEROBIC on a FERMENTATIVE product. Does re-running it anaerobic -- the correct regime -- produce the growth-coupled D-lactate designs the aerobic run did not find?",
+  "verdict": "condition-corrected-and-still-no-designs-but-no-arm-searched-the-multi-knockout-space",
+  "headline": "The condition defect is real and now fixed, and fixing it changed NOTHING at depth 1. Closing O2 dropped wildtype growth from 0.876997 to 0.15754 /h (a 5.6x fall), so the regime genuinely changed -- and the exhaustive depth-1 scan over 2266 candidates still returns ZERO coupled designs, exactly as the aerobic scan did. The multi-knockout question remains OPEN: depth 3 searched a shortlist covering 0.03039% of the pair space, and both MILP arms were truncated by a hardcoded solver limit.",
+  "THE_CONDITION_CHANGE_IS_VERIFIED_NOT_ASSUMED": {
+    "aerobic_wildtype_growth_per_h": 0.876997,
+    "anaerobic_wildtype_growth_per_h": 0.15754,
+    "fold_drop": 5.57,
+    "condition_string_reported_by_the_tool": "ANAEROBIC (O2 uptake closed)",
+    "why_this_is_the_positive_control": "A flag that silently did nothing would leave growth unchanged. A 5.6x fall on closing O2 uptake is the expected magnitude for E. coli losing respiration, so the arm really did run in a different regime -- which is what makes its null interpretable at all."
+  },
+  "MY_OWN_REVIEW_CLAIM_IS_REFUTED": {
+    "what_I_claimed": "A review pass called the aerobic condition 'the more likely dominant cause' of the depth-1 null, outranking the recorded depth-1 blindness.",
+    "what_the_measurement_shows": "Anaerobic depth 1 returns zero coupled designs over the same exhaustive 2266 candidates. Correcting the condition alone changed the result not at all.",
+    "what_survives": "The condition WAS wrong and fixing it was necessary -- an aerobic run on a fermentative product could never have been informative. What was wrong was my RANKING of the condition above depth, asserted from mechanism rather than measured.",
+    "what_is_now_the_live_hypothesis": "DEPTH. Published growth-coupled D-lactate strains are multi-knockout, and no arm here has searched the multi-knockout space: depth 3 saw a pre-ranked shortlist and the MILP arms were truncated."
+  },
+  "enumeration_arms": {
+    "depth1": {
+      "condition": "ANAEROBIC (O2 uptake closed)",
+      "n_candidates_scanned": 2266,
+      "n_singles_evaluated": 2008,
+      "n_pairs_evaluated": 0,
+      "n_triples_evaluated": 0,
+      "n_coupled_designs": 0,
+      "n_nonviable_at_floor": 258,
+      "wildtype_growth_per_h": 0.15754,
+      "growth_floor_per_h": 0.141786,
+      "wildtype_already_coupled": false
+    },
+    "depth3": {
+      "condition": "ANAEROBIC (O2 uptake closed)",
+      "n_candidates_scanned": 2266,
+      "n_singles_evaluated": 2008,
+      "n_pairs_evaluated": 780,
+      "n_triples_evaluated": 816,
+      "n_coupled_designs": 0,
+      "n_nonviable_at_floor": 258,
+      "wildtype_growth_per_h": 0.15754,
+      "growth_floor_per_h": 0.141786,
+      "wildtype_already_coupled": false
+    }
+  },
+  "multi_knockout_coverage": {
+    "pair_space_total": 2566245,
+    "pairs_evaluated": 780,
+    "pairs_coverage_pct": 0.030395,
+    "triple_space_total": 1936659560,
+    "triples_evaluated": 816,
+    "triples_coverage_pct": 4.2134e-05,
+    "why_this_matters": "Depth 3 is NOT exhaustive. Its pairs and triples come from a pre-ranked pool, and pyproject.toml records that the pre-ranking cannot see a design whose members are individually unremarkable. At this coverage its zero is near-uninformative about multi-knockout designs -- it is not a search of the space, it is a search of a shortlist.",
+    "and_the_shortlist_had_no_signal_to_rank_by": "Every single knockout scored improvement_over_wildtype 0.0 in the aerobic arm, so the ranking the pool is built from had nothing to order on."
+  },
+  "milp_arms": {
+    "floor_0.9": {
+      "condition": "ANAEROBIC (O2 uptake closed)",
+      "solver": "scip",
+      "status": "time_limit",
+      "n_designs": 0,
+      "growth_floor_per_h": 0.141786,
+      "hit_internal_time_limit": true,
+      "READING": "NO CLAIM EITHER WAY. The solver stopped on its own internal limit with no design in hand, so this is truncation, not a measured absence."
+    },
+    "floor_0.5": {
+      "condition": "ANAEROBIC (O2 uptake closed)",
+      "solver": "scip",
+      "status": "time_limit",
+      "n_designs": 0,
+      "growth_floor_per_h": 0.07877,
+      "hit_internal_time_limit": true,
+      "READING": "NO CLAIM EITHER WAY. The solver stopped on its own internal limit with no design in hand, so this is truncation, not a measured absence."
+    }
+  },
+  "THE_TOOL_FINDING": {
+    "what": "dna_decode/fba/design.py:290 hardcodes `time_limit: int = 1800` for the MILP path and NO CLI flag exposes it.",
+    "consequence": "Both MILP arms were given 10800 s wall budgets and both stopped at ~1870 s with status=time_limit. The overnight budget was unreachable through the CLI, so the MILP arm has never once been allowed to finish -- in either condition.",
+    "status": "A longer run calling the library directly with a multi-hour time_limit is IN FLIGHT."
+  },
+  "what_is_established": [
+    "At depth 1 the search is EXHAUSTIVE over 2266 candidates in BOTH conditions, and both return zero. 'No single reaction knockout couples D-lactate to growth in iML1515' is now a measured fact aerobically AND anaerobically.",
+    "The anaerobic arm is non-vacuous: 258 candidates are non-viable at the floor, so the growth constraint binds.",
+    "Wildtype is not already coupled in either condition, so there was headroom to couple."
+  ],
+  "what_is_NOT_established": [
+    "That iML1515 admits no growth-coupled D-lactate design. No arm has searched the multi-knockout space: depth 3 covered 0.03039% of pairs from a pre-ranked shortlist whose ranking signal was uniformly zero, and both MILP arms were truncated.",
+    "Anything about the bench. These are stoichiometric predictions and FBA models no regulation, kinetics, toxicity or constructibility."
+  ],
+  "honest_limits": [
+    "ONE target, ONE model. Two conditions, two MILP floors, knockout bounds 1/2/3.",
+    "Reaction-level knockouts, not gene-level; a reaction knockout is not always realisable by deleting genes.",
+    "A solver time limit is a statement about the budget, never about the model.",
+    "The MILP floor is wildtype-relative while the enumeration floor is own-max-relative -- non-commensurable quantities, per the CLI's own help text."
+  ]
+}
