@@ -1,5 +1,11 @@
 # Generator-side hypotheses — and why the two I recommended first are both BROKEN
 
+> **RANKING SUPERSEDED the same day by `wiki/generator_hypotheses_ranked_researched_2026-11-18.md`.**
+> That file re-ranks on MERIT (this one orders by EFFORT, which put the two refuted picks on top) after
+> a literature pass, and **corrects a false claim traceable to this set**: H8 is NOT unbuilt —
+> `dna_decode/fba/design.py` already implements it and has simply never been run. The C1/C2/C3 review
+> findings below STAND and are reinforced there by independent published evidence.
+
 <!-- doc-status: LIVE as of 2026-11-18. Persists a /hypothesise set that was emitted to stdout only,
      TOGETHER with the /brainstorm review that refuted its two top picks. The two were generated and
      reviewed in the same session; separating them is the hazard this file exists to prevent. -->
@@ -105,7 +111,7 @@ Ranked by effort ascending, then breadth, then title. **Rank is NOT merit** — 
 | 5 | Predict a nearer-to-sequence target and compose upward | the prediction target must be the phenotype the user names | months | untouched; the repo's own R8 rail says this is under-asked |
 | 6 | Generate the experiment, not the edit | the generator's output must be a genome edit rather than a measurement to make | months | untouched |
 | 7 | Cross-paradigm oracle disagreement as exploration reward | the oracle must speak with one voice | months | untouched |
-| 8 | Let a metabolic objective be the trait specification | the trait specification must be a phenotype label rather than a metabolic objective | months | untouched |
+| 8 | Let a metabolic objective be the trait specification | the trait specification must be a phenotype label rather than a metabolic objective | months | **ALREADY BUILT — `fba/design.py`, never run. Not a hypothesis; see the ranked memo's Tier 0** |
 
 Full `why-not-impossible` / `why-not-trivial` text for each is in the session transcript; the
 relaxed-constraint column is the field downstream skills key on.
