@@ -1,0 +1,240 @@
+{
+  "schema": "oracle-decay-curve-v1",
+  "date": "2026-11-18",
+  "question": "does the fine-tuned encoder's rank accuracy decay with MINIMUM Hamming distance to the nearest training sequence?",
+  "motivation_is_weaker_than_the_plan_claimed": "The plan asserted published work ESTABLISHES this decay. Primary-source reading refuted that: the edit-distance result cited measures training-data INFLUENCE not accuracy and never plots performance against distance, and the K-regime collapse is on SIMULATED NK landscapes with PEARSON r counting regimes from a seed, explicitly not distance to the nearest training sequence. The decay is PLAUSIBLE, NOT established for this quantity. Do not report this as confirming a known effect. See wiki/generator_hypotheses_source_notes_2026-11-18.md",
+  "substrate": {
+    "dataset": "GEO GSE108535 (Urtecho/Kosuri sigma70 variants)",
+    "n_pairs": 10898,
+    "axis": "Minus10",
+    "held_out_values": [
+      "12T->G",
+      "12T->G/7T->C"
+    ],
+    "n_train": 8173,
+    "n_test": 2725,
+    "seq_length": 150
+  },
+  "scope_limits": [
+    "MPRA PROMOTER substrate, NOT protein DMS. Does not transfer to the DMS regime.",
+    "The encoder was fine-tuned on a DIFFERENT dataset (GSE144621 peak tiles), so distance here is to the held-in GSE108535 split, NOT to the fine-tuning corpus. Different quantities; do not quote one as the other.",
+    "One checkpoint of ten seeds, one element axis, one substrate.",
+    "Distance is EXACT minimum Hamming to the nearest train sequence, not an approximation."
+  ],
+  "teacher": {
+    "checkpoint": "data\\promoteratlas\\finetune_checkpoints\\seed_0.pt",
+    "epoch_in_checkpoint": 6
+  },
+  "bins_fixed_before_run": [
+    [
+      0,
+      1
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      4,
+      7
+    ],
+    [
+      8,
+      15
+    ],
+    [
+      16,
+      31
+    ],
+    [
+      32,
+      63
+    ],
+    [
+      64,
+      150
+    ]
+  ],
+  "min_bin_n_fixed_before_run": 30,
+  "interval_method": "Fisher z-transform. The plan said 'Wilson-style'; Wilson is for a PROPORTION and this is a correlation, so Wilson would have produced a plausible-looking number that means nothing. Deviation recorded, not silently substituted.",
+  "distance_summary": {
+    "min": 1,
+    "max": 4,
+    "median": 2,
+    "mean": 1.51
+  },
+  "overall_spearman_pooled": 0.7313,
+  "bins": [
+    {
+      "bin": "0-1",
+      "bin_index": 0,
+      "n": 1331,
+      "status": "scored",
+      "spearman": 0.8004,
+      "ci95": [
+        0.7802,
+        0.8189
+      ]
+    },
+    {
+      "bin": "2-3",
+      "bin_index": 1,
+      "n": 1393,
+      "status": "scored",
+      "spearman": 0.5926,
+      "ci95": [
+        0.5574,
+        0.6257
+      ]
+    },
+    {
+      "bin": "4-7",
+      "bin_index": 2,
+      "n": 1,
+      "status": "refused:below_floor",
+      "spearman": null,
+      "ci95": null,
+      "why": "n=1 is below the pre-registered floor of 30; a correlation here would be a figure, not a measurement"
+    },
+    {
+      "bin": "8-15",
+      "bin_index": 3,
+      "n": 0,
+      "status": "refused:below_floor",
+      "spearman": null,
+      "ci95": null,
+      "why": "n=0 is below the pre-registered floor of 30; a correlation here would be a figure, not a measurement"
+    },
+    {
+      "bin": "16-31",
+      "bin_index": 4,
+      "n": 0,
+      "status": "refused:below_floor",
+      "spearman": null,
+      "ci95": null,
+      "why": "n=0 is below the pre-registered floor of 30; a correlation here would be a figure, not a measurement"
+    },
+    {
+      "bin": "32-63",
+      "bin_index": 5,
+      "n": 0,
+      "status": "refused:below_floor",
+      "spearman": null,
+      "ci95": null,
+      "why": "n=0 is below the pre-registered floor of 30; a correlation here would be a figure, not a measurement"
+    },
+    {
+      "bin": "64-150",
+      "bin_index": 6,
+      "n": 0,
+      "status": "refused:below_floor",
+      "spearman": null,
+      "ci95": null,
+      "why": "n=0 is below the pre-registered floor of 30; a correlation here would be a figure, not a measurement"
+    }
+  ],
+  "monotonicity": {
+    "verdict": "declines_monotonically",
+    "n_scored_bins": 2,
+    "scored_bin_indices": [
+      0,
+      1
+    ],
+    "spearman_by_scored_bin": [
+      0.8004,
+      0.5926
+    ],
+    "successive_deltas": [
+      -0.2078
+    ],
+    "caveat": "REPORTED, not assumed. With few scored bins a monotone run is weak evidence, and the bins are not independent samples of one underlying curve."
+  },
+  "confound_gate": {
+    "status": "CONFOUNDED",
+    "found": "after the run, by decomposing each scored bin by its held-out value",
+    "what_the_two_scored_bins_actually_are": "Bin 0-1 is 100.0 percent the SINGLE-substitution held-out value (12T->G, n=1331). Bin 2-3 is 98.6 percent the DOUBLE-substitution value (12T->G/7T->C, n=1374). The two scored bins are therefore not two distances from training data -- they are two different held-out groups.",
+    "consequence": "The 0.8004 -> 0.5926 decline CANNOT be attributed to distance. 'Rank accuracy falls with distance from the nearest training sequence' and 'rank accuracy is lower on a double mutant than on a single mutant' are the SAME partition in this split, and a double mutant may be intrinsically harder to predict for reasons that have nothing to do with training distance, epistasis being the obvious one.",
+    "cross_tab_held_out_value_by_distance": {
+      "12T->G": {
+        "d=1": 1331,
+        "d=2": 16,
+        "d=3": 3,
+        "d=4": 0
+      },
+      "12T->G/7T->C": {
+        "d=1": 0,
+        "d=2": 1371,
+        "d=3": 3,
+        "d=4": 1
+      }
+    },
+    "scored_bin_composition": {
+      "0-1": {
+        "n": 1331,
+        "composition": {
+          "12T->G": {
+            "n": 1331,
+            "pct_of_bin": 100.0
+          }
+        }
+      },
+      "2-3": {
+        "n": 1393,
+        "composition": {
+          "12T->G": {
+            "n": 19,
+            "pct_of_bin": 1.4
+          },
+          "12T->G/7T->C": {
+            "n": 1374,
+            "pct_of_bin": 98.6
+          }
+        }
+      }
+    },
+    "within_group_separation_attempt": {
+      "12T->G": {
+        "cells": {
+          "d=1": 1331,
+          "d=2": 16,
+          "d=3": 3
+        },
+        "distances_with_n_at_or_above_floor": [
+          1
+        ],
+        "separable": false
+      },
+      "12T->G/7T->C": {
+        "cells": {
+          "d=2": 1371,
+          "d=3": 3,
+          "d=4": 1
+        },
+        "distances_with_n_at_or_above_floor": [
+          2
+        ],
+        "separable": false
+      }
+    },
+    "why_the_confound_cannot_be_broken_here": "Breaking it needs a distance contrast INSIDE one held-out group. Every off-mode cell is far below the pre-registered floor of 30: the single group has 1331 variants at d=1 but only 16 at d=2 and 3 at d=3, and the double group has 1371 at d=2 but only 3 at d=3 and 1 at d=4. So no group spans two distances at scorable n.",
+    "the_floor_was_NOT_lowered_to_force_the_test": "Dropping MIN_BIN_N from 30 to 19 would have produced a within-group number. That is a post-hoc edit to a pre-registration made after seeing which value yields a result, so it was not done. The refusal is the correct output.",
+    "relationship_to_the_monotonicity_block": "The `monotonicity` block above is LEFT UNEDITED. It is the mechanical output of a function fixed before any data was read, and it already carries its own caveat that two scored bins are weak evidence and are not independent samples of one curve. This gate sits beside it rather than rewriting it; read them together, and read this one as governing."
+  },
+  "verdict": "confounded:distance_collinear_with_mutation_order",
+  "headline": "The distance axis has almost no dynamic range on this substrate: observed distances run 1..4 with median 2, so 5 of the 7 pre-registered bins are empty or near-empty and only 2 scored. Those 2 bins then turn out to be the single-mutant and double-mutant held-out groups rather than two distances, so the 0.80 -> 0.59 decline is NOT evidence of decay with training distance. No decay claim is made.",
+  "what_was_actually_established": [
+    "The harness runs end-to-end on real substrate with the real fine-tuned encoder and produces a well-formed result. Its pre-registered bins and floor did their job: they made 5 empty bins visible instead of letting 2 bins pose as a curve.",
+    "The frozen encoder ranks held-out GSE108535 variants well overall (pooled Spearman +0.7313 on n=2725), which is a real and separately useful number -- it is a held-out generalisation result, not a distance result.",
+    "Predictions on the held-out SINGLE mutant (rho 0.8004) are markedly better than on the held-out DOUBLE mutant (rho 0.5926). That contrast is real; its CAUSE is not identified."
+  ],
+  "what_was_NOT_established": [
+    "That oracle accuracy decays with distance from training data. The substrate cannot test it: the split holds out point-mutation descriptors, so held-out variants sit 1-4 bases from the held-in set by construction, and distance is collinear with mutation order.",
+    "Anything about distance from the FINE-TUNING corpus. The encoder was fine-tuned on GSE144621 peak tiles; every distance here is to the held-in GSE108535 split, which the model never saw. These are different quantities and the artifact's scope_limits already said so."
+  ],
+  "the_unmeasured_route_that_would_answer_it": "data/mpra/GSE144621_peak_tile_expression_formatted_std.txt.gz is LOCAL (46,713 rows; the fine-tune used 44,106 tiles). Distance from the held-out GSE108535 variants to that corpus is the quantity the question actually names, and genomic peak tiles versus designed synthetic promoters should give real dynamic range rather than 1..4. NOT RUN: it is a different measurement than the one this harness was built and pre-registered for, so it belongs to a fresh pre-registration rather than being appended to this one after seeing this result.",
+  "honest_limits": [
+    "One checkpoint (seed_0 of ten), one element axis (Minus10), one seed, one substrate.",
+    "The confound was found AFTER the run, not predicted before it. The pre-registered floor limited the damage but did not anticipate the collinearity.",
+    "The single-vs-double contrast is itself a two-group comparison on one axis of one split; it is not a general claim about mutation order."
+  ]
+}
