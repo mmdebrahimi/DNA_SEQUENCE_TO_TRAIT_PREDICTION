@@ -1,0 +1,152 @@
+{
+  "schema": "fba-design-enumeration-v1",
+  "date": "2026-11-18",
+  "question": "Does the never-run growth-coupled strain designer in dna_decode/fba/design.py produce a coupled design on its one documented validation target?",
+  "verdict": "exhaustive-at-depth-1-and-found-none",
+  "headline": "2266 candidate reactions scanned exhaustively as single knockouts against EX_lac__D_e in iML1515. ZERO coupled designs. The code runs correctly -- this is a genuine negative at depth 1, not a plumbing failure.",
+  "model": "iML1515",
+  "organism": "Escherichia coli K-12 MG1655",
+  "condition": "model default (aerobic if O2 uptake is open)",
+  "target_reaction": "EX_lac__D_e",
+  "target_name": "D-lactate exchange",
+  "knockout_level": "reaction",
+  "growth_floor": {
+    "fraction": 0.9,
+    "per_h": 0.789297,
+    "wildtype_growth_per_h": 0.876997,
+    "basis": "fraction of EACH strain's OWN maximum growth (standard coupling definition)",
+    "min_growth_frac_of_wt": 0.05
+  },
+  "counts": {
+    "n_candidates_scanned": 2266,
+    "n_singles_evaluated": 2015,
+    "n_pairs_evaluated": 0,
+    "n_triples_evaluated": 0,
+    "n_coupled_designs": 0,
+    "n_nonviable_at_floor": 251,
+    "n_inheriting_baseline_only": 0
+  },
+  "coupling_classes_observed": {
+    "POSSIBLE": 6
+  },
+  "why_the_classes_are_not_pooled": "POSSIBLE means a growing strain MAY secrete the product (max_product_flux > 0 while min_product_flux is 0). OBLIGATORY means it MUST (min_product_flux > 0). Pooling them would report a wildtype that merely CAN make lactate as a coupled design, which it is not.",
+  "wildtype": {
+    "already_coupled": false,
+    "min_product_flux": 0.0,
+    "max_product_flux": 2.119455,
+    "coupling": "POSSIBLE",
+    "reading": "Wildtype iML1515 CAN secrete D-lactate (max 2.119455) but is not forced to (min 0.0), so it is POSSIBLE and not OBLIGATORY. That is the correct starting point for a coupling search: there is headroom to couple."
+  },
+  "best_uncoupled_singles": [
+    {
+      "knockouts": [
+        "GAPP"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.0,
+      "max_product_flux": 2.119455,
+      "growth_per_h": 0.876997,
+      "coupling": "POSSIBLE",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.8770 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "METGLCURt2pp"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.0,
+      "max_product_flux": 2.119455,
+      "growth_per_h": 0.876997,
+      "coupling": "POSSIBLE",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.8770 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "METGLCURtex"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.0,
+      "max_product_flux": 2.119455,
+      "growth_per_h": 0.876997,
+      "coupling": "POSSIBLE",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.8770 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "INOSTO"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.0,
+      "max_product_flux": 2.119455,
+      "growth_per_h": 0.876997,
+      "coupling": "POSSIBLE",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.8770 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    },
+    {
+      "knockouts": [
+        "HPYRP"
+      ],
+      "n_knockouts": 1,
+      "min_product_flux": 0.0,
+      "max_product_flux": 2.119455,
+      "growth_per_h": 0.876997,
+      "coupling": "POSSIBLE",
+      "notes": [
+        "floor = 90% of this strain's own max growth (0.8770 /h)"
+      ],
+      "improvement_over_wildtype": 0.0
+    }
+  ],
+  "best_uncoupled_reading": "The best single knockouts the search could find score improvement_over_wildtype 0.0 -- they do not raise the guaranteed product floor at all. Not a near miss: no single reaction knockout moves the minimum product flux off zero.",
+  "depth_3_attempt": {
+    "attempted": true,
+    "max_knockouts": 3,
+    "completed": false,
+    "outcome": "did-not-complete-in-budget",
+    "foreground_timeout_s": 600,
+    "moved_to_background": true,
+    "ended_by": "session end, not by the job finishing or erroring",
+    "stdout_json_bytes": 0,
+    "stderr_bytes": 0,
+    "partial_result_recovered": false,
+    "evidence_it_is_not_a_crash": "stderr is 0 bytes, so the process emitted no traceback; the output JSON is 0 bytes, so it never reached its single write at the end. It was still running when it was stopped.",
+    "why_this_is_itself_informative": "Depth 3 enumerates pairs and triples over the most promising singles, but EVERY single in this run scored improvement_over_wildtype 0.0, so the pre-ranking it depends on has no signal to rank by. That is the exact defect pyproject.toml records for this code path.",
+    "NOT_claimed": "This is NOT evidence that no depth-2 or depth-3 coupled design exists. An unfinished search is an absence of evidence. Only the depth-1 arm is exhaustive."
+  },
+  "search_description": "all 2266 candidates scanned exhaustively as singles; single reaction knockouts over 2266; only single knockouts searched (max_knockouts=1)",
+  "pool_strategy": "single_effect",
+  "pool_note": "all 2266 candidates scanned exhaustively as singles",
+  "scope_from_the_code": "STOICHIOMETRIC prediction. A coupled design is a HYPOTHESIS FOR THE BENCH, not a validated strain: FBA does not model regulation, enzyme kinetics, toxicity, metabolic burden, or whether the knockout strain is constructible.",
+  "depth_1_blindness_caveat_verbatim_from_pyproject": "The bounded pair/triple enumeration in `fba/design.py` is exhaustive only at depth 1 and is blind to designs whose members are individually unremarkable -- which is most real ones (see that module's `competition_ranking` for two measured failed attempts to fix it by pre-ranking).",
+  "what_this_does_and_does_not_establish": {
+    "establishes": [
+      "The designer executes end-to-end on a real genome-scale model and returns a well-formed, internally consistent result. It was never run before today.",
+      "At depth 1 the search is EXHAUSTIVE over all 2266 candidates, so the statement that no single-reaction knockout couples D-lactate to growth at a 90 percent growth floor in iML1515 is a measured fact about this model, not a sampling outcome.",
+      "251 of the candidates are non-viable at the floor, so the scan is genuinely exercising the growth constraint rather than trivially passing everything."
+    ],
+    "does_NOT_establish": [
+      "That no coupled design exists for D-lactate. Depth 1 cannot see multi-knockout designs, and the pyproject caveat above says the enumeration is blind to exactly the designs whose members are individually unremarkable -- which every member here is.",
+      "That the MILP arm will also find nothing. It solves the bilevel problem directly instead of enumerating, which is why it is a separate arm of this plan.",
+      "Anything about the bench. The scope field quoted above is explicit that a coupled design would be a hypothesis for the bench, not a validated strain."
+    ]
+  },
+  "consequence_for_the_plan": "This result PROMOTES the MILP arm (Steps 3-4) from a comparison to the load-bearing test. The enumeration arm has now returned its exhaustive depth-1 answer and its depth-3 arm did not complete, so the open question -- whether iML1515 admits a growth-coupled D-lactate design at all -- now rests entirely on the solver that does not enumerate.",
+  "honest_limits": [
+    "ONE target (D-lactate), ONE model (iML1515), ONE condition (model default, aerobic if the O2 uptake bound is open), ONE growth floor (90 percent). None of these was swept.",
+    "Reaction-level knockouts, not gene-level. A reaction knockout is not always realisable by deleting genes, and the gene-to-reaction mapping can make a reaction undeletable.",
+    "Depth 3 did not complete, so this artifact reports a depth-1 result only.",
+    "The claim that the published growth-coupled lactate strains are DOUBLE knockouts -- which would explain a depth-1 null -- is at SEARCH-SUMMARY level only. Three routes to the primary sources were blocked from this host, so it is labelled as such and is NOT used to interpret this result."
+  ]
+}
