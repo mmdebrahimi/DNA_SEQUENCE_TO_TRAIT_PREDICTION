@@ -177,5 +177,36 @@
     "A non-transfer verdict says the 1.0000 IDENTITY does not hold for this teacher. It does NOT show self-distillation WORKS -- that needs the real-data validation half the ban's own wording requires.",
     "Perturbation is uniform random point substitution; a generator's candidates are not uniform, so this exercises the method's mechanics and not the real off-distribution gap.",
     "The students use the one-hot basis. A student with a RICHER basis than tested here might copy the network more closely, so this is a lower bound on copyability."
-  ]
+  ],
+  "prior_art_THIS_IS_THE_SECOND_ATTEMPT": {
+    "found_AFTER_this_run_designed_and_executed": true,
+    "why_that_matters": "features/glm-self-distillation/ already held a feature record, an idea-anchor, a technical-plan and a 2026-10-31 brainstorm asking THIS EXACT question. A prior learned-teacher probe (scripts/glm_selfdistill_learned_teacher.py, bar wiki/glm_selfdistill_learned_teacher_acceptance_bar.json, result wiki/glm_selfdistill_learned_teacher_2026-10-31.json) RAN and its headline MECHANISM_DISSOLVES_WITH_LEARNED_TEACHER was WITHDRAWN by that review. I should have found it before designing anything; searching the vocabulary of what I was BUILDING instead of the arm being TOUCHED is the documented failure mode this repo already has a rail for.",
+    "what_was_withdrawn_there_and_why": "C1: against the conv teacher a 1-feature GC student reproduced it BETTER than 600 positional features did, in 0 of 9 cells favouring the richer student. A strictly more expressive student copying strictly worse is the signature of a sample-limited fit, not of an irreducible teacher, so ~0.40 agreement could not support the dissolve claim.",
+    "C1_RE_APPLIED_TO_THIS_RUN": {
+      "result": "PASSES in 6 of 6 cells -- capacity ordering intact, unlike the withdrawn run",
+      "ridge_teacher": {
+        "student_gc": 0.2315,
+        "student_linear": 1.0,
+        "student_mlp": "0.9991-0.9994"
+      },
+      "finetuned_teacher": {
+        "student_gc": 0.3279,
+        "student_linear": "0.7322-0.7506",
+        "student_mlp": "0.7347-0.8135"
+      },
+      "contrast_with_the_withdrawn_conv_run": "there linear 0.3843-0.4475 LOST to GC 0.4111-0.4567; here linear 0.7322-0.7506 beats GC 0.3279 by a wide margin and the MLP beats the linear student at low perturbation",
+      "honest_timing": "checked AFTER the run, prompted by finding that brainstorm, not before"
+    },
+    "its_other_defects_checked_against_this_run": {
+      "M1_perturbed_set_correspondence": "STRUCTURALLY AVOIDED, not merely passed: _perturb is called ONCE per rate and the single `pert` list feeds both teachers' labels AND both students' features, so the coincidence that run depended on cannot arise here",
+      "M2_mlp_convergence": "DOES NOT APPLY -- measured 0 ConvergenceWarnings; agreement is stable (ridge 0.9994/0.9994/0.9991), not the 0.2375-0.9501 swing reported there",
+      "M3_perturbed_scale": "SATISFIED -- copies=2, 16,346 perturbed rows against 8,173 train, which is that review's own recommendation 3",
+      "recommendation_1_capacity_matched_student": "NOT DONE -- see scope_limit_from_C2 below"
+    }
+  },
+  "scope_limit_from_C2": {
+    "what_this_run_does_NOT_establish": "that the fine-tuned teacher carries irreducible structure no student could capture. The agreement arm is a one-hot linear student, which against a network is the POORER student, so the 0.99 floor is one it cannot reach a priori. Establishing irreducibility needs the capacity-matched student that review's recommendation 1 names, and that is NOT done here.",
+    "what_it_DOES_establish_and_why_that_is_the_relevant_claim": "the ban's cited mechanism is a statement about SPAN, not about irreducibility: a ridge teacher's predictions lie IN the span of its own features, so a same-basis student recovers it by identity. student_linear is same-basis for the ridge teacher BY CONSTRUCTION, which is what makes the reproduced 1.0000 meaningful, and a 1,847,428-parameter network is not in that span. Discharging the mechanism needs only the span claim, which the positive control anchors.",
+    "a_corroboration_I_WITHDRAW": "I first offered 'the linear student's agreement RISES with rate while the MLP's FALLS' as evidence for the mechanism. By that review's own C1 logic the falling direction is a FIT signature, not a teacher-structure signature, so it is withdrawn as corroboration. The MLP BEATING the linear student at low perturbation (0.8135 vs 0.7322) stands; the crossover at rate 0.10 (0.7347 vs 0.7506) is a fit artifact and is not evidence for anything here."
+  }
 }

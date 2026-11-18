@@ -69,11 +69,11 @@ enhancer–promoter interaction; a bacterial promoter is 100–300 bp) — **the
 2026-10-07: the oracle converts ρ 0.59 into **79% of achievable SELECTION value at k=10** (GC 13%), so the
 scoring half is adequate and the **GENERATOR is the bottleneck**; self-distillation is **DEGENERATE on a
 linear oracle** (student–teacher agreement **1.0000**) → **forbidden until a learned representation lands**,
-then only with its real-data validation half. `wiki/alphagenome_lessons_actionable_2026-10-07.md` +
+DISCHARGED 2026-11-18; its real-data validation half STANDS. `wiki/alphagenome_lessons_actionable_2026-10-07.md` +
 `glm_oracle_selection_result_2026-10-07.md`.
 
-**G-A + G-C ran to VALID negatives 2026-10-08 — the learned representation did NOT land, so the
-self-distillation ban above STAYS.** Conv encoder vs one GC number: median +0.0122 but paired CI includes
+**G-A + G-C ran to VALID negatives 2026-10-08 — no learned representation THERE; DISCHARGED
+2026-11-18, MECHANISM only, NOT a licence: `wiki/glm_selfdistill_finetuned_teacher_2026-11-18.json`.** Conv encoder vs one GC number: median +0.0122 but paired CI includes
 zero (6/10 seeds); conditioning on medium +0.0001. **Do NOT quote +0.0122 as a win.**
 `wiki/glm_encoder_gate_result_2026-10-08.md` + `glm_condition_conditioning_result_2026-10-08.md`.
 
