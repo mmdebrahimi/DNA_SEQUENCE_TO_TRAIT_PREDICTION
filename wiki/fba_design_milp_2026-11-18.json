@@ -1,0 +1,66 @@
+{
+  "schema": "fba-design-milp-v1",
+  "date": "2026-11-18",
+  "question": "Does solving the bilevel problem as a MILP find growth-coupled D-lactate designs that the bounded enumeration cannot see?",
+  "verdict": "milp-did-not-complete-on-this-host",
+  "headline": "Neither MILP floor completed within 1800 s on this host, so the MILP arm makes NO claim about whether iML1515 admits a growth-coupled D-lactate design. That is a statement about this host and this time budget, NOT about the model.",
+  "target_reaction": "EX_lac__D_e",
+  "model": "iML1515",
+  "organism": "Escherichia coli K-12 MG1655",
+  "solver_environment": {
+    "avail_solvers": [
+      "glpk",
+      "scip"
+    ],
+    "scip_available": true
+  },
+  "why_the_solver_is_recorded": "pyproject.toml makes SCIP REQUIRED, not optional, for this path: GLPK lacks indicator constraints, so straindesign falls back to a big-M translation that returned `unbounded` on iML1515 when measured 2026-08-07. An artifact that did not name the solver could not distinguish that failure from a genuine absence of designs.",
+  "arms": {
+    "0.9": {
+      "milp_floor_fraction_of_WILDTYPE": 0.9,
+      "timeout_s": 1800,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "stderr_tail": null,
+      "status": "did-not-complete",
+      "outcome": "timeout-or-no-output",
+      "designs_reported": null,
+      "NOT_an_empty_result": "Zero bytes of stdout is NOT a report of zero designs. The solve did not finish, so this arm makes NO claim about whether a coupled design exists."
+    },
+    "0.5": {
+      "milp_floor_fraction_of_WILDTYPE": 0.5,
+      "timeout_s": 1800,
+      "stdout_bytes": 0,
+      "stderr_bytes": 0,
+      "stderr_tail": null,
+      "status": "did-not-complete",
+      "outcome": "timeout-or-no-output",
+      "designs_reported": null,
+      "NOT_an_empty_result": "Zero bytes of stdout is NOT a report of zero designs. The solve did not finish, so this arm makes NO claim about whether a coupled design exists."
+    }
+  },
+  "THE_FLOORS_ARE_NOT_COMMENSURABLE": "This is the load-bearing caveat and the plan did not carry it. `dna-fba --help` states that --milp-floor is a fraction of WILD-TYPE growth and is 'NOT the mutant-relative floor the enumeration uses -- a MILP needs one absolute bound'. The enumeration's floor is a fraction of EACH STRAIN'S OWN maximum growth. So matching the NUMBER would not match the QUANTITY, and a design found by one arm and not the other cannot be attributed to the METHOD without accounting for this. Both 0.9 and 0.5 were run for that reason: 0.9 reproduces the enumeration's absolute wildtype floor of 0.789297 per h, and 0.5 is the plan's value and the CLI default.",
+  "plan_said": "--milp-floor 0.5 only",
+  "deviation": "Ran 0.9 as well. At 0.5 the floor is far more permissive (0.5 x wildtype), so a design found only there could be the floor rather than the method, and the method comparison -- the whole point of this arm -- would be unsupported.",
+  "enumeration_comparison": {
+    "enumeration_verdict": "exhaustive-at-depth-1-and-found-none",
+    "enumeration_n_candidates_scanned": 2266,
+    "enumeration_n_coupled_designs": 0,
+    "enumeration_growth_floor_frac_of_OWN_max": 0.9,
+    "enumeration_wildtype_floor_per_h": 0.789297,
+    "enumeration_depth": "exhaustive at depth 1; depth 3 did not complete"
+  },
+  "CONDITION_DEFECT_FOUND_IN_REVIEW": {
+    "what": "Both MILP arms, AND the Step 2 enumeration, were run AEROBIC -- the artifact records condition 'model default (aerobic if O2 uptake is open)'. `dna-fba --help` carries an --anaerobic flag ('close O2 uptake (redox must balance through secreted products)') which was never passed.",
+    "why_it_matters": "Growth-coupled D-lactate in E. coli is a FERMENTATIVE design. Under aerobic respiration the cell disposes of electrons via O2, so no knockout can make lactate secretion necessary for growth. Zero coupled designs is therefore close to the EXPECTED answer for the condition, rather than an informative result about the model or the search depth.",
+    "consequence_for_this_arm": "Even had the MILP completed, it would have answered the aerobic question. So the timeout is not the only reason this arm is uninformative, and a faster host would not have fixed it. The binding constraint was the CONDITION, not compute.",
+    "consequence_for_step_2": "Step 2's promotion of this MILP arm attributed its depth-1 null primarily to the recorded depth-1 blindness. The condition is the more likely dominant cause. Step 2's search arithmetic is unaffected and still reconciles (2015 evaluated + 251 non-viable = 2266 scanned); this is a framing defect, not a plumbing one.",
+    "status": "RECORDED, not yet corrected -- the anaerobic re-run is not performed in this artifact"
+  },
+  "honest_limits": [
+    "ONE target, ONE model, ONE condition -- and that condition is AEROBIC, which is the wrong regime for a fermentative product. See CONDITION_DEFECT_FOUND_IN_REVIEW.",
+    "A timeout is a statement about this host and this budget, never about the model.",
+    "The two arms' growth floors are different QUANTITIES, not merely different numbers.",
+    "An arm that did not complete contributes no evidence in either direction."
+  ]
+}
