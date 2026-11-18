@@ -1,0 +1,181 @@
+{
+  "schema": "glm-selfdistill-finetuned-teacher-v1",
+  "date": "2026-11-18",
+  "question": "does the 2026-10-07 self-distillation degeneracy survive replacing the ridge teacher with the fine-tuned PromoterAtlas encoder?",
+  "why_the_ridge_arm_is_here": "positive control -- same substrate, splits, perturbations, students and thresholds; only the teacher differs. It must reproduce ~1.0000 or this harness proves nothing.",
+  "substrate": {
+    "dataset": "GEO GSE108535 (Urtecho/Kosuri sigma70 variants)",
+    "n_pairs": 10898,
+    "axis": "Minus10",
+    "held_out_values": [
+      "12T->G",
+      "12T->G/7T->C"
+    ],
+    "n_train": 8173,
+    "n_test": 2725,
+    "seq_length": 150,
+    "teacher_was_finetuned_on": "GSE144621 peak tiles -- a DIFFERENT dataset",
+    "circularity": "base model cleared_vs_GSE108535 per wiki/promoteratlas_circularity_2026-10-31.md; the contaminated trspred-urtecho2018 head is NOT used -- verified in code"
+  },
+  "teacher_finetuned": {
+    "checkpoint": "data\\promoteratlas\\finetune_checkpoints\\seed_0.pt",
+    "epoch_in_checkpoint": 6
+  },
+  "teacher_rho_ridge_control": 0.5963,
+  "teacher_rho_finetuned": 0.7313,
+  "gc_standalone_rho": 0.1736,
+  "competence_floor": 0.3736,
+  "thresholds_imported_not_retyped": {
+    "agreement_floor": 0.99,
+    "delta_rho_tol": 0.01,
+    "beat_margin": 0.02,
+    "control_must_drop_by": 0.2,
+    "source": "scripts/glm_selfdistill_probe.py, fixed 2026-10-07"
+  },
+  "outcomes_defined_before_running": {
+    "HARNESS_BROKEN_RIDGE_CONTROL_DID_NOT_REPRODUCE": "the ridge teacher did NOT recover agreement >= the floor in this harness, so the harness fails to reproduce the 2026-10-07 result and no statement about any other teacher is licensed",
+    "TEACHER_NOT_COMPETENT_ON_THIS_SUBSTRATE": "the fine-tuned teacher does not clear standalone-GC + CONTROL_MUST_DROP on GSE108535, so a student failing to copy it would be copying noise and the agreement is uninterpretable",
+    "DEGENERACY_PERSISTS_WITH_A_LEARNED_TEACHER": "the linear student reproduces the LEARNED teacher too (agreement >= floor and |d rho| <= tol), so the measured degeneracy is NOT specific to a linear oracle and the block stands",
+    "DEGENERACY_DOES_NOT_TRANSFER_TO_THE_LEARNED_TEACHER": "the ridge control reproduced as required while the learned teacher's linear student did NOT, so the identity that produced 1.0000 does not hold for this teacher",
+    "DISTILLATION_HELPS_ON_THE_LEARNED_TEACHER": "some student BEATS the learned teacher on held-out measured expression by > beat margin"
+  },
+  "rows_ridge_control": [
+    {
+      "mutation_rate": 0.02,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.5963,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": -0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.5968,
+          "agreement_with_teacher": 0.9994,
+          "delta_rho_vs_teacher": 0.0005
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.2315,
+          "delta_rho_vs_teacher": -0.4226
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.05,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.5963,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": -0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.5992,
+          "agreement_with_teacher": 0.9994,
+          "delta_rho_vs_teacher": 0.0029
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.2315,
+          "delta_rho_vs_teacher": -0.4226
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.1,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.5963,
+          "agreement_with_teacher": 1.0,
+          "delta_rho_vs_teacher": -0.0
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.5933,
+          "agreement_with_teacher": 0.9991,
+          "delta_rho_vs_teacher": -0.003
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.2315,
+          "delta_rho_vs_teacher": -0.4226
+        }
+      }
+    }
+  ],
+  "rows_finetuned_teacher": [
+    {
+      "mutation_rate": 0.02,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.6397,
+          "agreement_with_teacher": 0.7322,
+          "delta_rho_vs_teacher": -0.0915
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.7328,
+          "agreement_with_teacher": 0.8135,
+          "delta_rho_vs_teacher": 0.0015
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.3279,
+          "delta_rho_vs_teacher": -0.5576
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.05,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.6462,
+          "agreement_with_teacher": 0.7399,
+          "delta_rho_vs_teacher": -0.085
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.6594,
+          "agreement_with_teacher": 0.7874,
+          "delta_rho_vs_teacher": -0.0718
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.3279,
+          "delta_rho_vs_teacher": -0.5576
+        }
+      }
+    },
+    {
+      "mutation_rate": 0.1,
+      "n_perturbed": 16346,
+      "arms": {
+        "student_linear": {
+          "rho_vs_measured": 0.6478,
+          "agreement_with_teacher": 0.7506,
+          "delta_rho_vs_teacher": -0.0835
+        },
+        "student_mlp": {
+          "rho_vs_measured": 0.6562,
+          "agreement_with_teacher": 0.7347,
+          "delta_rho_vs_teacher": -0.0751
+        },
+        "student_gc": {
+          "rho_vs_measured": 0.1736,
+          "agreement_with_teacher": 0.3279,
+          "delta_rho_vs_teacher": -0.5576
+        }
+      }
+    }
+  ],
+  "verdict": "DEGENERACY_DOES_NOT_TRANSFER_TO_THE_LEARNED_TEACHER",
+  "verdict_detail": "ridge control reproduced at [1.0, 1.0, 1.0] while the learned teacher's linear student reached (rate, agreement, d_rho) = [(0.02, 0.7322, -0.0915), (0.05, 0.7399, -0.085), (0.1, 0.7506, -0.0835)] -- below the 0.99 floor",
+  "honest_limits": [
+    "ONE element axis, ONE checkpoint (one of ten seeds), ONE substrate. This bounds the MECHANISM, not the eventual value of distillation.",
+    "CROSS-DATASET: the teacher was fine-tuned on GSE144621 tiles and is scored here on GSE108535, so its rho here is NOT the 0.6405 the arm reported and the two must never be quoted interchangeably.",
+    "A non-transfer verdict says the 1.0000 IDENTITY does not hold for this teacher. It does NOT show self-distillation WORKS -- that needs the real-data validation half the ban's own wording requires.",
+    "Perturbation is uniform random point substitution; a generator's candidates are not uniform, so this exercises the method's mechanics and not the real off-distribution gap.",
+    "The students use the one-hot basis. A student with a RICHER basis than tested here might copy the network more closely, so this is a lower bound on copyability."
+  ]
+}
