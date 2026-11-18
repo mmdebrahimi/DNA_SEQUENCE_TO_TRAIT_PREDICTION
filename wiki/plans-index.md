@@ -1020,3 +1020,18 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+
+## [plan_file: Run_The_Never_Run_Strain_Designer_And_Measure_The_Oracle_Decay_Curve_Plan/] 2026-11-18
+
+**Status:** candidate
+
+**Summary:** The ranked research memo produced an ordered work list whose first two items are now grounded and whose third is not; this plan runs the built-but-never-run growth-coupled strain designer, measures the oracle's accuracy decay against distance from its training data, and probes whether the expression-to-growth law is testable with local data instead of scheduling a test that may be unrunnable.
+
+**Key decisions:**
+- `dna_decode/fba/design.py` is already CLI-wired (`fba/cli.py:155,159`) and already tested (`tests/test_fba_design.py`) yet has ZERO result artifacts in `wiki/`, so this is a run-it item rather than a build; `cobra` is absent so it cannot execute today, while the iML1515 model IS present at `~/.cache/dna_decode/fba/iML1515.xml.gz` (620,180 bytes).
+- Two solver paths, and the cheap one carries a measured defect recorded at `pyproject.toml:140-147` -- the bounded enumeration is exhaustive only at depth 1 and blind to designs whose members are individually unremarkable. The `[design]` extra is therefore declared as an arm AT PLAN TIME (Step 3) so that a thin Step-2 result PROMOTES the MILP path rather than cancelling it; SCIP is required, not optional, because the GLPK big-M fallback returned `unbounded` on iML1515 (measured 2026-08-07).
+- H2's decay curve runs on the local MPRA substrate (GSE108535, 10,898 pairs at 150 bp) because NO protein DMS table is local -- a search under `data/` returns one reference FASTA with no measured values. The artifact must state that the result does not transfer to the protein DMS regime, where the published K=2 / K=4 / K=5 extrapolation pattern was measured.
+- Item 3 gets a read-only substrate-reachability probe (Step 7) rather than a scheduled test, because the promoter-strength-PAIRED-WITH-growth-rate dataset the published parameter-free law needs is not verified present locally; the probe decides whether a fetch is warranted and fetches nothing.
+- Both install steps may touch `uv.lock`, which is a frozen reproducibility unit, so any lock diff is reported explicitly rather than committed as incidental; disk is at 95% (25 GB free), surfaced as a Care pre-check and not a gate.
+
+---
