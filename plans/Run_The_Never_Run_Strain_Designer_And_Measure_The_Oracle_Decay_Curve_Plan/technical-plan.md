@@ -11,9 +11,9 @@ The ranked research memo (`wiki/generator_hypotheses_ranked_researched_2026-11-1
 
 **Item 1 — run the built-but-never-run growth-coupled strain designer.** `dna_decode/fba/design.py` implements "given a PRODUCT, which gene knockouts make producing it NECESSARY for growth?", is already CLI-wired (`fba/cli.py:155,159`) and already tested (`tests/test_fba_design.py`), yet has **no result artifact in `wiki/`**. It has never been run on the real model.
 
-**Item 2 — measure the oracle's accuracy decay against distance from its training data.** Published work establishes the phenomenon but, per the research pass, no paper quantifies it as a clean function of distance for a language model. This repo has never plotted it either.
+**Item 2 — measure the oracle's accuracy decay against distance from its training data.** CORRECTED 2026-11-18 after reading the primary sources (`wiki/generator_hypotheses_source_notes_2026-11-18.md`): the earlier claim here, that published work ESTABLISHES the phenomenon, was **wrong**. The edit-distance result cited for it measures training-data INFLUENCE (via Kronfluence), not accuracy, and that paper never plots performance against distance at all; the other support is on SIMULATED landscapes with Pearson, counting regimes from a seed rather than distance to the nearest training sequence. So the decay is **plausible but NOT established for the quantity this step measures** — which makes the measurement MORE novel, not less: two papers cited as establishing it instead confirm it is un-done. This repo has never plotted it either.
 
-**Item 3 — the published parameter-free expression-to-growth law.** Testing it needs promoter strength PAIRED WITH growth rate. That pairing is not verified present locally, so this plan probes substrate reachability rather than scheduling a test that may be unrunnable.
+**Item 3 — the published expression-to-growth law.** CORRECTED 2026-11-18: calling it "parameter-free" was half right. The growth-versus-expression law itself has zero free and two FIXED parameters, but the promoter-activity half adds **one fitted parameter**, overpredicted in minimal medium and needed a correction term, and its best-fit slope sits below the model's own predicted lower bound. Testing it needs promoter strength PAIRED WITH growth rate. That pairing is not verified present locally, so this plan probes substrate reachability rather than scheduling a test that may be unrunnable.
 
 Non-goals: no new wet-lab labels; no edits to the five sha256-pinned frozen-surface files; no reopening the natural-population zero-shot embedding track.
 
@@ -165,12 +165,12 @@ Depends on: Step 4, Step 6
 - **`uv.lock` is a frozen reproducibility unit** and both install steps may touch it. Report any diff explicitly rather than committing it as incidental.
 - **Disk at 95%** (25 GB free). `pyscipopt` plus matplotlib are the heaviest additions here. Surfaced per the Care pre-check; not a gate.
 - **[unverified] external surfaces:** the `straindesign>=1.19` API, and that it reports its active solver, are taken from the `pyproject.toml` comment rather than from the package's own help output or docs — it is not installed yet, so Step 3 must verify before Step 4 relies on it.
-- H2's result will be an MPRA-substrate decay curve. It does NOT transfer to the protein DMS regime, where the published K=2 / K=4 / K=5 pattern was measured.
+- H2's result will be an MPRA-substrate decay curve. It does NOT transfer to the protein DMS regime — and CORRECTED 2026-11-18, that K=2 / K=4 / K=5 pattern was measured on **simulated NK landscapes with Pearson r**, not on real protein DMS, so it is a weaker comparator than this line originally implied.
 - No external review path on this host (codex absent, LM Studio unreachable), so this plan has had no second reader.
 
 ## Open Questions
 
-- Which products should Step 2 and Step 4 target? Succinate, lactate and ethanol are the canonical growth-coupled benchmarks, and the 2005 lactate validation is the one documented success, which argues for lactate first because a known-positive makes a null result diagnostic.
+- RESOLVED 2026-11-18 by draft-then-ratify, recorded in the execution state file: **lactate first**, because a known-positive makes a null result diagnostic rather than ambiguous. Succinate and ethanol are the other canonical growth-coupled benchmarks. CAVEAT added after the source-reading: the 2005 lactate validation is **UNVERIFIED from primary source** — three independent routes to that review were blocked from this host — so it remains search-summary level and must not be quoted as established. This does not weaken Step 2, which rests on verified repo facts rather than on the literature.
 - Is max-knockouts 3 the right depth for the first run, given enumeration is exhaustive only at depth 1? Running depth 1 first would separate "exhaustive and found nothing" from "sampled and missed".
 
 ## Verification

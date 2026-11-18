@@ -1023,7 +1023,9 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ## [plan_file: Run_The_Never_Run_Strain_Designer_And_Measure_The_Oracle_Decay_Curve_Plan/] 2026-11-18
 
-**Status:** candidate
+**Status:** active
+
+**Amended in place 2026-11-18** (NOT re-saved — the save-once rule prescribes in-place edit plus a Status update rather than a second artifact; a mechanical re-save would have created a `_Plan_2` duplicate of a committed, mid-execution plan). Four prose claims that the primary-source reading refuted were corrected: the distance-decay phenomenon is NOT established for accuracy (the cited result measures training-data influence), the expression-to-growth law is only half parameter-free, the K-pattern comparator is simulated rather than real DMS, and the 2005 lactate validation is unverified from primary source. **All four were Problem Statement / Risk Flags / Open Questions prose — zero were inside a step contract**, and the toolkit confirms waves and footer unchanged, so the executable body and the in-flight execution are unaffected.
 
 **Summary:** The ranked research memo produced an ordered work list whose first two items are now grounded and whose third is not; this plan runs the built-but-never-run growth-coupled strain designer, measures the oracle's accuracy decay against distance from its training data, and probes whether the expression-to-growth law is testable with local data instead of scheduling a test that may be unrunnable.
 
