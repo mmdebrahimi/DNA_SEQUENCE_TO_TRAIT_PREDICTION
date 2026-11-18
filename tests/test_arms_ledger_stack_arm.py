@@ -124,7 +124,39 @@ ATLAS_ARM = "promoteratlas-base-embeddings-frozen-150bp-padded-to-200"
 #: atlas arm" off this field would be exactly the over-claim the arm's own bar was written to
 #: prevent. Both are, on the measured evidence, the joint leaders at ~0.508.
 ASGIVEN_ARM = "asgiven-position-resolved-promoteratlas-150bp"
-BEST_ARM = ASGIVEN_ARM
+
+#: RE-PINNED 2026-11-17, FOURTH firing of the leader guard, per its own instruction: re-pin naming
+#: the new leader, never relax the assertion.
+#:
+#: The fine-tuned PromoterAtlas encoder was recorded MEASURED at **0.6405** (median over 10 seeds,
+#: range 0.6102-0.7070) against the previous joint leaders at ~0.508, so the argmax moved by
+#: **+0.1319** over ASGIVEN_ARM's 0.5086.
+#:
+#: **AND UNLIKE THE 2026-11-04 RE-PIN, THIS LEAD *IS* A DEMONSTRATED GAIN.** That matters because
+#: the previous note had to say the opposite, and the distinction is the whole point of writing one:
+#:   * It was graded against a PRE-REGISTERED bar, not an argmax. The declared question was whether
+#:     fine-tuning beats the frozen encoder's committed 0.5076 by the inherited margin 0.02 on
+#:     byte-identical splits. Delta **+0.1329 = 6.6x** that margin, on ONE declared comparison, so
+#:     no multiplicity correction applies.
+#:   * All FIVE of the frozen bar's `check_order` gates are confirmed -- verdict `FINETUNE_ADDS`,
+#:     `wiki/finetune_arm_verdict_2026-11-17.json`.
+#:   * `split_equality` was EXECUTED rather than argued: the runner IMPORTS the incumbent's own
+#:     split function and READS `split_frac` 0.25 from the bar's comparator record, and re-running
+#:     it reproduces the recorded `n_train` for 10 of 10 seeds exactly.
+#:   * Normalised by each frame's own ceiling it takes the share of achievable signal from
+#:     **34.4% to 68.1%** of 0.941 -- roughly doubling it, which is the revival condition the G-A
+#:     scope note names.
+#:
+#: **TWO LIMITS, CARRIED BECAUSE A RE-PIN IS NOT A VICTORY LAP.** The bar states a 38-epoch
+#: diagnostic horizon and the run executed 7; the verdict reads only the frozen 7-epoch prefix so
+#: the deviation cannot move it, but that tail existed to close "would more budget have helped"
+#: EMPIRICALLY, so this is a frozen-budget result and NOT a converged one. And the shuffled-label
+#: nulls clear the ratio gate (max|null| 0.1997 < 0.50 x 0.6405) while sitting about **0.29 ABOVE**
+#: an untrained baseline that is NEGATIVE, so destroyed-label training still reaches ~0.18 where an
+#: untrained encoder reaches ~-0.11. Commensurable with its siblings: a bacterial TILE Spearman on
+#: the same 44,106-tile cohort under the same leave-peak-out split.
+FINETUNED_ARM = "finetuned-promoteratlas-encoder-150bp"
+BEST_ARM = FINETUNED_ARM
 
 #: Recorded MEASURED 2026-11-04 alongside ASGIVEN_ARM. A clean interpretable negative, not a null
 #: result -- which is a distinction the metric alone does not carry; see its MEASURED note.
@@ -250,9 +282,29 @@ def test_every_PLANNED_arm_still_has_an_empty_evidence_string():
     asserting it over one.
     """
     ledger = _live_ledger()
-    arms = ledger._data["criteria"][_criterion(ledger)]
+    criterion = _criterion(ledger)
+    arms = ledger._data["criteria"][criterion]
     planned = {n: a for n, a in arms.items() if a["status"] == al.STATUS_PLANNED}
-    assert planned, "vacuous: no planned arms left to check"
+
+    if not planned:
+        # 2026-11-17: the LAST planned arm (the fine-tuned encoder) was measured, so this guard
+        # has nothing left to exercise. The original `assert planned, "vacuous: ..."` was the right
+        # shape while three arms were untried -- vacuity then meant arms had silently vanished.
+        # Vacuity now means the arm set FINISHED, which is the intended end state of the arc, so
+        # the vacuous case is made CONDITIONALLY legitimate rather than either failing forever or
+        # skipping silently. This is strictly stronger than a skip: arms disappearing would not
+        # produce a `met` verdict, so the defect the assert was written to catch is still caught.
+        verdict = ledger.ceiling_verdict(criterion)
+        assert verdict.verdict == "met", (
+            "no planned arms AND the verdict is %r, not 'met' -- that is the silent-arm-loss case "
+            "the original non-vacuity assert existed to catch, not a finished arm set"
+            % verdict.verdict)
+        assert verdict.best, "a met criterion must name a best arm"
+        measured = [n for n, a in arms.items() if a["status"] == al.STATUS_MEASURED]
+        assert len(measured) >= al.MIN_MEASURED_ARMS, (
+            "met over fewer than %d measured arms" % al.MIN_MEASURED_ARMS)
+        return
+
     for name, arm in planned.items():
         assert arm["evidence"] == "", "%s: a planned arm has no executed evidence" % name
         assert arm["metric"] is None, "%s: a planned arm has no metric" % name

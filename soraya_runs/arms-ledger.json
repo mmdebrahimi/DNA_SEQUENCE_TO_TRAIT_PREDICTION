@@ -25,12 +25,12 @@
         "cost_tier": "large",
         "declared_at": "2026-11-02T16:46:45Z",
         "declared_from": "plans/Declare_And_Run_All_Three_Successor_Arms_And_Convert_The_Guards_From_State_Pins_To_Invariants_Plan/technical-plan.md",
-        "evidence": "",
-        "metric": null,
+        "evidence": "wiki/finetune_arm_verdict_2026-11-17.json -- FINETUNE_ADDS, all five frozen-bar check_order gates confirmed. Raw result wiki/finetune_arm_session4_2026-11-16.json (status COMPLETE, verdict_secured true, 10/10 seeds at the frozen 7-epoch budget, 3/3 shuffled-label nulls, 7.93 h of a 9.5 h ceiling); raw log wiki/finetune_arm_kaggle_logs/session4_pa-finetune-chain-s4_2026-11-16.log.json. METRIC: median 0.6405 over 10 seeds (range 0.6102-0.7070) against the committed incumbent 0.5076 = +0.1329 against an inherited margin of 0.02, i.e. 6.6x, on ONE declared comparison so no multiplicity correction applies. NULL: max|null| 0.1997 against a gate of 0.50 x the measured signal = 0.3203 -- passes as a RATIO; first misread as a failure by applying an absolute reading, then retracted. SPLIT EQUALITY was EXECUTED, not argued: the runner IMPORTS the incumbent own split function (leave_peak_out_indices) and READS split_frac 0.25 from the bar comparator record, and re-running it reproduces the recorded n_train for 10 of 10 seeds exactly. COMMENSURABLE with the sibling arms: a bacterial TILE Spearman on the same 44,106-tile cohort under the same leave-peak-out split as the 0.5086 prior best -- NOT a fraction like the fragment-rung arm. CEILING: 68.1% of 0.941 where the frozen encoder reaches 34.4%, roughly doubling the share of achievable signal. LIMIT 1: the bar states a 38-epoch diagnostic horizon and the run executed 7. The verdict reads only the frozen 7-epoch prefix so the deviation cannot move it, but the 38-epoch tail existed to close would-more-budget-have-helped EMPIRICALLY -- that stays OPEN. This is a frozen-budget result, not a converged one. LIMIT 2: the nulls clear the gate but sit about 0.29 ABOVE a negative untrained baseline (-0.1123, -0.0481, -0.1530), so shuffled-label training still reaches about 0.18 where an untrained encoder reaches about -0.11.",
+        "metric": 0.6405,
         "name": "finetuned-promoteratlas-encoder-150bp",
         "rationale": "Declared 2026-11-02 under R6, and it is the arm the positional arm's own limits point at: that arm froze the encoder, so its NO_GAIN bounds nothing about a fine-tuned one. **Tractable here precisely because the encoder is small -- 1,847,428 parameters, not a 1.2B LM -- so this is NOT comparable to the project's blocked large-LM fine-tunes.** Local compute is CPU-only (cuda False, 4 threads) at a measured 57.5 seq/s forward; the established GPU route is a Kaggle T4 kernel and scripts/kaggle/ already holds seven builders, so the route is chosen from a MEASURED probe rather than estimated. **The outcome that must not be over-read, pre-committed:** beating 0.5076 shows the frozen representation was the limit, while failing to shows either the SUBSTRATE or the TRAINING BUDGET was -- and a budget-limited null is not a representation-limited one. The probe's measured epoch-to-early-stop curve is what separates them, and without that curve this arm should not be run at all.",
-        "resolved_at": "",
-        "status": "planned"
+        "resolved_at": "2026-11-18T03:28:09Z",
+        "status": "measured"
       },
       "fragment-rung-321k-rows-size-lever-LB-M9": {
         "cost_tier": "large",
@@ -165,7 +165,7 @@
       "pyramid-4scale-1.70decades-150bp": {
         "cost_tier": "expensive",
         "declared_at": "2026-10-12T00:48:51Z",
-        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json \u2014 median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
+        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json — median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
         "metric": 0.3167,
         "name": "pyramid-4scale-1.70decades-150bp",
         "resolved_at": "2026-10-12T00:48:51Z",

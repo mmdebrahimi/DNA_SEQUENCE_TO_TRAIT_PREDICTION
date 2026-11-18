@@ -1,0 +1,106 @@
+{
+  "schema": "finetune-arm-verdict-v1",
+  "date": "2026-11-17",
+  "arm": "finetuned-promoteratlas-encoder-150bp",
+  "verdict": "FINETUNE_ADDS",
+  "verdict_basis": "the frozen bar's own check_order, applied in order; all five checks confirmed",
+  "why_this_artifact_exists": "Link 4 completed on 2026-11-16 and was never retrieved, so no verdict had ever been computed. Retrieval and interpretation are kept as two reviewable steps: the raw result is wiki/finetune_arm_session4_2026-11-16.json, committed untouched, and this file is the reading of it.",
+  "check_order_applied": [
+    {
+      "n": 1,
+      "check": "run_completed",
+      "result": "PASS",
+      "evidence": "status=COMPLETE"
+    },
+    {
+      "n": 2,
+      "check": "budget_reached",
+      "result": "PASS",
+      "evidence": "verdict_secured=True, seeds 10/10, nulls 3/3"
+    },
+    {
+      "n": 3,
+      "check": "split_equality",
+      "result": "PASS",
+      "evidence": "EXECUTED, not argued. scripts/finetune_arm_run.py:56 IMPORTS the incumbent's own split function (leave_peak_out_indices from scripts.positional_arm_score) rather than reimplementing it, and line 505 READS split_frac from the bar's comparator record (0.25) rather than choosing one. Re-running leave_peak_out_indices(tiles, frac=0.25, seed=s) over the 44,106-tile cohort reproduces the recorded n_train for 10 of 10 seeds exactly: 32908, 33088, 32733, 33223, 33081, 33199, 33516, 32857, 33445, 33416.",
+      "distinct_property_also_recorded_by_the_run": "peaks_shared_between_splits = 0 on all 10 seeds. That is a LEAKAGE check, a different property from split equality, and it is named separately here so the two are not conflated.",
+      "why_it_needed_checking": "The bar's comparator says the comparison is against the frozen encoder on BYTE-IDENTICAL splits, because identical splits are what make the difference attributable to the representation rather than to the data partition. The incumbent also carries recomputed_in_run=false, so it is a carried-forward constant -- which is exactly the case where split drift would go unnoticed."
+    },
+    {
+      "n": 4,
+      "check": "shuffled_label_null",
+      "result": "PASS",
+      "evidence": "the gate is: max|null| must fall below 0.50 x the arm's own measured signal. max|null| 0.1997 < 0.50 x 0.6405 = 0.3203",
+      "a_correction_recorded_rather_than_hidden": "first read as a FAILURE and retracted within one message. The gate is a RATIO, not an absolute; 0.1997 looks large beside the 0.05-style absolute bars elsewhere in this project and is comfortably inside half the measured signal."
+    },
+    {
+      "n": 5,
+      "check": "primary_decision",
+      "result": "FINETUNE_ADDS",
+      "evidence": "median 0.6405 against the committed incumbent 0.5076 = +0.1329, against an inherited margin of 0.02 (6.6x the requirement)",
+      "multiplicity": "exactly ONE comparison is declared by the bar, so no correction applies; the bar records that contrast deliberately."
+    }
+  ],
+  "numbers": {
+    "per_seed_frozen_budget": [
+      0.6557,
+      0.6453,
+      0.6307,
+      0.6879,
+      0.6442,
+      0.6102,
+      0.6214,
+      0.6196,
+      0.707,
+      0.6369
+    ],
+    "median": 0.6405,
+    "min": 0.6102,
+    "max": 0.707,
+    "incumbent_median": 0.5076,
+    "delta": 0.1329,
+    "required_margin": 0.02,
+    "null_values_at_frozen_budget": [
+      0.1799,
+      0.1997,
+      0.1725
+    ],
+    "null_max_abs": 0.1997,
+    "untrained_baseline_per_replicate": [
+      -0.1123,
+      -0.0481,
+      -0.153
+    ],
+    "wall_hours": 7.93,
+    "wall_ceiling_hours": 9.5
+  },
+  "against_the_ceiling": {
+    "note": "uses the cross-frame ceiling normalization added on 2026-11-17 -- each score read against its own frame's ceiling rather than against a bare threshold",
+    "pooled_ceiling": 0.941,
+    "frozen_encoder_fraction_of_ceiling": 0.3437,
+    "finetuned_encoder_fraction_of_ceiling": 0.6807,
+    "reading": "fine-tuning takes the fraction of achievable signal from 34.4% to 68.1%, roughly doubling it. That is precisely the revival condition the G-A scope note names: a candidate that raises fraction_of_ceiling, rather than one that merely widens a margin over a collapsing comparator."
+  },
+  "honest_limits": [
+    "THE HORIZON DEVIATED FROM THE BAR, AND THIS IS THE REAL LIMIT. The bar states a 38-epoch diagnostic horizon; the run executed 7. The run RECORDS the deviation and argues it cannot move the verdict, because the verdict reads only the frozen 7-epoch prefix while the horizon governs the pre-declared INELIGIBLE tail. That argument is sound for the verdict. But the 38-epoch tail existed specifically to close the question would more budget have helped EMPIRICALLY, and that question is therefore NOT closed. This is a frozen-budget result, not a converged one.",
+    "The null clears the ratio gate but is NOT the benign case. The run's own how_to_read_a_HIGH_null field says a null that merely MATCHES the untrained baseline says nothing about the fine-tune; these nulls sit about 0.29 ABOVE an untrained baseline that is negative (-0.1123, -0.0481, -0.1530). Training on destroyed labels still reaches about 0.18 where an untrained encoder reaches about -0.11. The gate passes; that margin over the untrained baseline is worth carrying forward rather than filing as clean.",
+    "3 null replicates is enough to show the fit collapses when the labels are destroyed, which is the claim. It is NOT enough to estimate a null distribution. That scope limit is the run's own wording, kept verbatim.",
+    "One substrate (GSE144621 peak tiles), one rung, one encoder, one comparison. Nothing here speaks to other substrates, and nothing here addresses the GENERATIVE question the project's north star names -- this is a discriminative scoring result.",
+    "The 277 MB of trained checkpoints are deliberately NOT in this repository, because the standing rule keeps heavy files off C:. They exist as the pa-finetune-chain-s4 kernel output on Kaggle: 13 .pt files of 22,305,931 bytes each (seed_0 through seed_9, null_0 through null_2). Their small per-epoch curve JSONs ARE committed beside this file."
+  ],
+  "provenance": {
+    "kaggle_kernel": "emanueleebrahimi/pa-finetune-chain-s4",
+    "pushed": "2026-11-16T13:18:50",
+    "kaggle_status_at_retrieval": "KernelWorkerStatus.COMPLETE",
+    "retrieved": "2026-11-17",
+    "resumed_from_dataset": "emanueleebrahimi/ft-ckpt-s3",
+    "raw_result": "wiki/finetune_arm_session4_2026-11-16.json",
+    "raw_log": "wiki/finetune_arm_kaggle_logs/session4_pa-finetune-chain-s4_2026-11-16.log.json",
+    "frozen_bar": "wiki/finetune_arm_acceptance_bar.json",
+    "prior_links": [
+      "wiki/finetune_arm_chain_link1_2026-11-15.json",
+      "wiki/finetune_arm_chain_link2_2026-11-16.json",
+      "wiki/finetune_arm_chain_link3_2026-11-16.json"
+    ]
+  }
+}

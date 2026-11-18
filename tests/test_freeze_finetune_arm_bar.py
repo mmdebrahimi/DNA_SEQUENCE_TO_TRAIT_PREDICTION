@@ -28,12 +28,30 @@ REPO = Path(__file__).resolve().parents[1]
 
 @pytest.fixture
 def anchors(tmp_path):
-    """Real anchors copied to tmp, so a test can mutate one without touching the repo."""
+    """Real anchors copied to tmp, so a test can mutate one without touching the repo.
+
+    The arm is PINNED back to `planned` in the temp copy. 2026-11-17: the fine-tuned arm was
+    recorded MEASURED, and the freeze script correctly refuses to build a bar over a scored arm --
+    `a bar frozen after a run is not a bar`, which is the whole anti-bar-shopping guard. That
+    refusal is right and is NOT relaxed anywhere: `test_refuses_an_arm_that_is_no_longer_planned`
+    still sets `measured` explicitly and still asserts the refusal, and it overrides this pin.
+
+    What was wrong was the FIXTURE, not the guard. These tests ask what the freeze does given a
+    planned arm, so `planned` is their PRECONDITION and must be established here rather than
+    inherited from live state -- inheriting it meant 44 tests passed only until the arm was run,
+    i.e. only until the project reached the end state the whole arc was aiming at.
+    """
     out = {}
     for key, src in (("reconcile", fb.RECONCILE), ("ledger", fb.LEDGER), ("probe", fb.PROBE)):
         dst = tmp_path / src.name
         dst.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
         out[key] = dst
+
+    led = json.loads(out["ledger"].read_text(encoding="utf-8"))
+    crit = next(k for k in led["criteria"] if fb.ARM in led["criteria"][k])
+    arm = led["criteria"][crit][fb.ARM]
+    arm.update(status="planned", metric=None, evidence="")
+    out["ledger"].write_text(json.dumps(led, indent=2), encoding="utf-8")
     return out
 
 

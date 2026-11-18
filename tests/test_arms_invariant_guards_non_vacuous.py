@@ -156,8 +156,43 @@ def _real_arms() -> dict:
     return d["criteria"][next(k for k in d["criteria"] if k.startswith(g1.CRITERION_PREFIX))]
 
 
-def test_a_met_verdict_over_an_untried_arm_is_CAUGHT(monkeypatch):
+#: Name of the arm these fixtures INJECT rather than harvest. Deliberately not a real arm name, so
+#: it can never be confused for one in a failure message.
+_SYNTHETIC_PLANNED = "synthetic-planned-arm-for-non-vacuity-fixture"
+
+
+def _real_arms_plus_a_planned_arm() -> dict:
+    """The live arm set with ONE synthetic `planned` arm injected.
+
+    2026-11-17: these fixtures used to HARVEST a planned arm out of live state. That worked only
+    while some arm happened to be untried, and on 2026-11-17 the last one (the fine-tuned encoder)
+    was measured, so four of them began failing -- `fixture needs a planned arm`, two
+    `StopIteration`s and a `DID NOT RAISE`. The guards under test were fine; the fixtures were
+    coupled to a population that was always going to empty out, because measuring every arm is the
+    intended end state of the arc.
+
+    These tests assert what the GUARD does when a planned arm is malformed, which is a property of
+    the guard rather than of the live ledger, so the precondition is now ESTABLISHED instead of
+    inherited. Injecting is also this file's own existing idiom -- the sibling
+    `test_a_blocked_verdict_over_a_fully_measured_set_is_CAUGHT` already synthesises the state it
+    needs. No assertion is weakened: every `pytest.raises` match string is unchanged.
+    """
     arms = json.loads(json.dumps(_real_arms()))
+    assert _SYNTHETIC_PLANNED not in arms, "the synthetic name collided with a real arm"
+    arms[_SYNTHETIC_PLANNED] = {
+        "name": _SYNTHETIC_PLANNED,
+        "cost_tier": "cheap",
+        "status": "planned",
+        "metric": None,
+        "evidence": "",
+        "declared_at": "2026-11-17T00:00:00Z",
+        "resolved_at": "",
+    }
+    return arms
+
+
+def test_a_met_verdict_over_an_untried_arm_is_CAUGHT(monkeypatch):
+    arms = _real_arms_plus_a_planned_arm()
     assert any(a["status"] == "planned" for a in arms.values()), "fixture needs a planned arm"
     _point_g1_at(monkeypatch, _StubLedger(arms, "met"))
     with pytest.raises(AssertionError, match="must block the criterion"):
@@ -194,7 +229,7 @@ def test_a_best_that_is_not_the_argmax_is_CAUGHT(monkeypatch):
 # the JSON-level blocking property, both branches
 # --------------------------------------------------------------------------------------------------
 def test_a_planned_arm_carrying_evidence_is_CAUGHT(monkeypatch):
-    arms = json.loads(json.dumps(_real_arms()))
+    arms = _real_arms_plus_a_planned_arm()
     name = next(n for n, a in arms.items() if a["status"] == "planned")
     arms[name]["evidence"] = "a rationale parked where executed evidence belongs"
     monkeypatch.setattr(g2, "_arms", lambda: arms)
@@ -203,7 +238,7 @@ def test_a_planned_arm_carrying_evidence_is_CAUGHT(monkeypatch):
 
 
 def test_a_planned_arm_carrying_a_metric_is_CAUGHT(monkeypatch):
-    arms = json.loads(json.dumps(_real_arms()))
+    arms = _real_arms_plus_a_planned_arm()
     name = next(n for n, a in arms.items() if a["status"] == "planned")
     arms[name]["metric"] = 0.42
     monkeypatch.setattr(g2, "_arms", lambda: arms)
@@ -213,7 +248,7 @@ def test_a_planned_arm_carrying_a_metric_is_CAUGHT(monkeypatch):
 
 def test_a_SETTLED_criterion_with_an_unresolved_measured_arm_is_CAUGHT(monkeypatch):
     """The branch that only runs once nothing is planned -- proven reachable rather than assumed."""
-    arms = json.loads(json.dumps(_real_arms()))
+    arms = _real_arms_plus_a_planned_arm()
     for n, a in arms.items():
         if a["status"] == "planned":
             a.update(status="measured", metric=None, evidence="synthetic")
