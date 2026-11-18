@@ -1,0 +1,53 @@
+{
+  "schema": "expression-growth-substrate-probe-v1",
+  "date": "2026-11-18",
+  "question": "is the published expression-to-growth law testable with LOCAL data? It needs promoter strength PAIRED WITH growth rate on the same rows.",
+  "method": "READ-ONLY header scan. Fetched nothing. A file qualifies only if its header carries BOTH an expression-like and a growth-like token -- the PAIRING is the requirement, not the presence of either axis somewhere in the repo. Tokens are matched against header fields SPLIT on non-alphanumerics, not by substring.",
+  "defect_found_and_fixed_during_this_step": "The first version SUBSTRING-matched and returned pairing-found on three files. All three were FALSE POSITIVES whose only growth hit was 'rate' inside num_integ-RATE-d_barcodes; none carries a growth or fitness axis at all -- they are RNA counts, DNA counts and barcode tallies. The verdict INVERTED on the fix. Same defect class this repo has recorded before, where a word-boundary assumption failed on a real column name. Caught by inspecting the three candidates instead of accepting the verdict, which the probe's own honest-limits had flagged as the non-conservative direction.",
+  "verdict_enum_closed": [
+    "pairing-found",
+    "substrate-blocked",
+    "indeterminate:no-roots-readable"
+  ],
+  "verdict": "substrate-blocked",
+  "detail": "2 reachable root(s), 46 tabular files examined, and NONE carries an expression-like column alongside a growth-like column on the same rows. The law relates the two, so expression-only substrates (GSE108535) and growth-only substrates (FBA/Keio) each fail it separately.",
+  "roots_searched": [
+    {
+      "root": "data",
+      "reachable": true,
+      "n_tabular_files": 46
+    },
+    {
+      "root": "C:\\Users\\Laptop Portable\\.cache\\dna_decode",
+      "reachable": true,
+      "n_tabular_files": 0
+    },
+    {
+      "root": "D:\\dna_decode_cache",
+      "reachable": false,
+      "n_tabular_files": 0,
+      "note": "absent on this host"
+    },
+    {
+      "root": "D:\\dna_decode_data",
+      "reachable": false,
+      "n_tabular_files": 0,
+      "note": "absent on this host"
+    },
+    {
+      "root": "E:\\PythonProjects\\dna_decode_cache",
+      "reachable": false,
+      "n_tabular_files": 0,
+      "note": "absent on this host"
+    }
+  ],
+  "n_tabular_files_examined": 46,
+  "candidates": [],
+  "why_a_vacuous_pass_is_impossible": "An empty inventory yields substrate-blocked, never a clean pass; and if NO root were readable the verdict is indeterminate rather than blocked, because unreadable roots cannot support a claim about what exists.",
+  "honest_limits": [
+    "HEADER scan only. A dataset pairing the two axes across two files joined by a key would NOT be detected, and neither would one whose columns are named unconventionally.",
+    "Per-root scan bounded to the first 400 tabular files; the per-root count is reported so truncation is visible.",
+    "Token matching is lexical. 'rate' is deliberately in the growth list and will also match unrelated rate columns, which biases this probe toward FINDING a pairing -- so a substrate-blocked verdict is the conservative direction.",
+    "The one source that could have said whether such a paired dataset exists in the literature (the eLife random-promoter paper) was UNREACHABLE from this host."
+  ]
+}
