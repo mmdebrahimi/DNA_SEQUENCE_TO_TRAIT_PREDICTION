@@ -62,6 +62,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import statistics as st
 from pathlib import Path
 from typing import Any
@@ -79,7 +80,15 @@ from scripts.glm_active_frame_gate import (
 )
 
 GATE_ARTIFACT = Path("wiki/glm_active_frame_gate_2026-11-16.json")
+#: Family G-A's recorded result. Source of the POOLED-frame ceiling and arm medians, so the
+#: cross-frame comparison reads both halves from artifacts rather than from this file.
+POOLED_ARTIFACT = Path("wiki/glm_learned_representation_2026-10-08.json")
 OUT = Path("wiki/glm_active_frame_regrade_2026-11-17.json")
+
+#: The active-frame ceiling is not its own field anywhere -- it is embedded in the gate's
+#: `preregistered.thresholds_are` prose. It is PARSED from that string rather than typed here,
+#: because a typed 0.9690 beside a comment is still a number this file asserts.
+_ACTIVE_CEILING_RE = re.compile(r"active-frame ceiling \((\d+\.\d+)")
 
 #: Measured 2026-11-17 by one-way ANOVA on the exact active frame the gate used. The selector is
 #: ``t.active == "active"`` -- a STRING comparison -- which reproduces the gate's 14,913 tiles to
@@ -149,6 +158,43 @@ def recorded_ci(artifact: dict[str, Any]) -> tuple[float, float]:
     )
 
 
+def active_ceiling(artifact: dict[str, Any]) -> float:
+    """Parse the active-frame ceiling out of the gate's own provenance prose.
+
+    Refuses rather than falling back to a literal. If the gate ever stops stating its ceiling, the
+    right outcome is a loud failure, not a normalization computed against a number this file made
+    up.
+    """
+    prose = str((artifact.get("preregistered") or {}).get("thresholds_are", ""))
+    m = _ACTIVE_CEILING_RE.search(prose)
+    if not m:
+        raise RegradeRefused(
+            "could not parse the active-frame ceiling from "
+            "`preregistered.thresholds_are`. Normalizing against a hardcoded ceiling would make "
+            "this artifact assert a number instead of reading one, so this refuses instead"
+        )
+    return float(m.group(1))
+
+
+def load_pooled_frame(pooled: dict[str, Any]) -> tuple[float, float, float]:
+    """The POOLED frame's ceiling and arm medians, from family G-A's recorded result.
+
+    Returns `(ceiling, encoder_median, gc_median)`. Every field is required: a default here would
+    silently normalize one frame against a fabricated ceiling, which is the exact failure the
+    normalization exists to expose.
+    """
+    try:
+        ceiling = float(pooled["noise_ceiling"])
+        arms = pooled["arms"]
+        return ceiling, float(arms["encoder-multi"]["median"]), float(arms["gc"]["median"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise RegradeRefused(
+            f"the pooled artifact {POOLED_ARTIFACT} lacks {exc!r}; it must carry `noise_ceiling` "
+            f"plus `arms['encoder-multi']['median']` and `arms['gc']['median']` for the "
+            f"cross-frame normalization to read both halves from artifacts"
+        ) from exc
+
+
 def bar_diff(frozen: dict, used: dict) -> dict:
     """Every field where the bar actually used differs from the frozen one. The point of the
     re-grade is that this has exactly one entry."""
@@ -160,7 +206,8 @@ def bar_diff(frozen: dict, used: dict) -> dict:
     }
 
 
-def regrade(artifact: dict[str, Any], *, max_clean_failure: float = MAX_CLEAN_FAILURE) -> dict:
+def regrade(artifact: dict[str, Any], *, max_clean_failure: float = MAX_CLEAN_FAILURE,
+            pooled: dict[str, Any] | None = None) -> dict:
     margins, nulls, encoders, gcs, n_rows, n_units = load_arms(artifact)
     ci_lo, ci_hi = recorded_ci(artifact)
 
@@ -206,9 +253,80 @@ def regrade(artifact: dict[str, Any], *, max_clean_failure: float = MAX_CLEAN_FA
     # each margin against the UNPAIRED maximum discards that and manufactures false thinness.
     paired = [e - n for e, n in zip(encoders, nulls)]
 
+    # ---- CROSS-FRAME CEILING NORMALIZATION. The scoring-frame work established that a
+    # correlation is read against its OWN frame's ceiling; these two artifacts did not apply that
+    # rule to themselves, and the omission makes a specific wrong inference available.
+    if pooled is None:
+        pooled = json.loads(POOLED_ARTIFACT.read_text(encoding="utf-8"))
+    pool_ceil, pool_enc, pool_gc = load_pooled_frame(pooled)
+    act_ceil = active_ceiling(artifact)
+    act_enc = float(artifact["phase2_active"]["encoder_multi_median"])
+    act_gc = float(artifact["phase2_active"]["gc_median"])
+    pool_frac = round(pool_enc / pool_ceil, 4)
+    act_frac = round(act_enc / act_ceil, 4)
+    enc_fall = round(pool_enc - act_enc, 4)
+    gc_fall = round(pool_gc - act_gc, 4)
+
     return {
         "schema": "glm-active-frame-regrade-v2",
         "date": "2026-11-17",
+        "ceiling_normalization": {
+            "why": (
+                "a correlation is read against its OWN frame's ceiling. Without these two numbers "
+                "printed together, the growing margin reads as evidence the learned "
+                "representation is stronger than family G-A concluded. Normalized, it is weaker."
+            ),
+            "pooled_frame": {
+                "source": str(POOLED_ARTIFACT),
+                "ceiling": pool_ceil,
+                "encoder_median": pool_enc,
+                "gc_median": pool_gc,
+                "fraction_of_ceiling": pool_frac,
+            },
+            "active_frame": {
+                "source": str(GATE_ARTIFACT),
+                "ceiling": act_ceil,
+                "ceiling_provenance": str(artifact["preregistered"]["thresholds_are"]),
+                "ceiling_was_parsed_not_typed": True,
+                "encoder_median": act_enc,
+                "gc_median": act_gc,
+                "fraction_of_ceiling": act_frac,
+            },
+            "encoder_reaches_a_SMALLER_fraction_on_the_active_frame": act_frac < pool_frac,
+            "THE_COMPARATOR_COLLAPSED": (
+                f"both arms fall from the pooled frame to the active one -- the encoder by "
+                f"{enc_fall:+.4f} ({pool_enc:.4f} -> {act_enc:.4f}) and GC by {gc_fall:+.4f} "
+                f"({pool_gc:.4f} -> {act_gc:.4f}). The margin grows from +0.0122 to "
+                f"{st.median(margins):+.4f} because the COMPARATOR collapsed, not because the "
+                f"candidate improved. Relative to achievable signal the encoder reaches "
+                f"{act_frac:.1%} of the active ceiling against {pool_frac:.1%} of the pooled one."
+            ),
+            "encoder_fall": enc_fall,
+            "gc_fall": gc_fall,
+            "gc_fell_further": gc_fall > enc_fall,
+            "scoping_caution": (
+                "NAME WHICH CEILING EACH FRACTION USES. scripts/glm_genomewide_oracle.py, the "
+                "owner of `fraction_of_ceiling`, documents \"Do not compare the two fractions\" "
+                "for fractions taken across SUBSTRATES with unrelated ceilings. These two are "
+                f"across FRAMES of ONE substrate -- {pool_frac:.4f} against the pooled {pool_ceil} "
+                f"ceiling and {act_frac:.4f} against the active {act_ceil} ceiling -- which is a "
+                "weaker comparison than the forbidden one but is still only legible with both "
+                "ceilings stated."
+            ),
+            "NOT_grounds_to_revisit_G_A": (
+                "This is an observation about SCOPE, not a reason to re-open family G-A. The gate "
+                "artifact itself records `conditions_on_the_outcome: "
+                f"{artifact['phase2_active'].get('conditions_on_the_outcome')}` and "
+                "`not_a_ledger_candidate: "
+                f"{artifact['phase2_active'].get('not_a_ledger_candidate')}`, so its own author "
+                "already marked these numbers as non-candidates. The project's umbrella states "
+                "the self-distillation precondition as 'a learned representation LANDS (G-A "
+                "terminal-met is NOT sufficient)', and Action-Log row 10 records a prior session "
+                "reaching this same fork on 2026-10-23 and declining it. Re-grading G-A on a "
+                "frame that collapses its comparator would be changing the POPULATION until the "
+                "bar passes -- structurally the same move as changing the bar."
+            ),
+        },
         "what_changed": (
             "EXACTLY ONE field of the pre-registered bar: null_max_abs. The effect-size "
             "thresholds, the seed count and the verdict ladder are the frozen bar unchanged, and "
@@ -354,6 +472,17 @@ def main(argv: list[str] | None = None) -> int:
     print(f"paired real-minus-shuffled: all positive="
           f"{result['paired_empirical_null']['all_positive']}, "
           f"min {result['paired_empirical_null']['min']:+.4f}")
+    cn = result["ceiling_normalization"]
+    print()
+    print("CEILING NORMALIZATION (each frame against its OWN ceiling):")
+    for name in ("pooled_frame", "active_frame"):
+        f = cn[name]
+        print(f"  {name:13s} ceiling {f['ceiling']:.4f}  encoder {f['encoder_median']:+.4f}  "
+              f"gc {f['gc_median']:+.4f}  -> {f['fraction_of_ceiling']:.1%} of ceiling")
+    print(f"  encoder reaches a SMALLER fraction on the active frame: "
+          f"{cn['encoder_reaches_a_SMALLER_fraction_on_the_active_frame']}")
+    print(f"  encoder fell {cn['encoder_fall']:+.4f}, GC fell {cn['gc_fall']:+.4f}  "
+          f"(GC further: {cn['gc_fell_further']}) -- the margin grew by COMPARATOR COLLAPSE")
     print(f"written: {args.out}")
     return 0
 

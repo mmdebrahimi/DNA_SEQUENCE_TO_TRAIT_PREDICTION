@@ -1006,3 +1006,17 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 - v1 is UNTRACKED in git (R12), so this landed as a sibling `_V3_` folder rather than an in-place overwrite that would have destroyed the only copy. Consolidating to one folder requires committing v1 first and is a separate git action.
 
 ---
+
+## [plan_file: Normalize_The_Active_Frame_Result_By_Its_Own_Ceiling_And_Make_Link_4_Launch_Ready_Plan/] 2026-11-17
+**Status:** active
+
+**Summary:** Yesterday's scoring-frame work established that a pooled correlation must be read against its own frame's noise ceiling, but the two artifacts it produced do not themselves apply that rule, and the omission makes a specific wrong inference available -- the same 13,217-parameter conv encoder reaches 34.4% of the pooled 0.941 ceiling and only 16.9% of the active 0.9690 ceiling, so the active-frame margin grows over GC because the comparator collapses rather than because the encoder improved.
+
+**Key decisions:**
+- The normalization lands in `wiki/glm_active_frame_regrade_2026-11-17.json`, NOT in `wiki/glm_active_frame_gate_2026-11-16.json`, because the latter is a recorded run result committed at `eb0963eb`; a recorded measurement is not rewritten to carry a later reading.
+- The G-A arm `conv-3width-13k-params-150bp` gains a SCOPE field only -- `status`, `metric` and `evidence` stay byte-identical and that is asserted by test. This is explicitly not a verdict change: the gate artifact already self-flags `conditions_on_the_outcome: true` and `not_a_ledger_candidate: true`, and the umbrella's own blocked_by says a learned representation landing is a different fact from G-A being terminal-met.
+- Reuses the existing owner of ceiling normalization, `scripts/glm_genomewide_oracle.py` (which computes `fraction_of_ceiling` and ships the bar `fraction_of_ceiling_for_GENERALISES: 0.50`), rather than inventing a second spelling -- and names which ceiling each fraction uses, because that file documents "Do not compare the two fractions" for fractions taken across substrates.
+- Link 4 of the finetune arm is validated to the point of `--self-test` against the existing `ft-ckpt-s3` checkpoint dataset and explicitly NOT pushed: the push is outward-facing, spends the user's Kaggle quota, and is blocked until the 2026-11-21 refresh regardless. A failing self-test is a successful outcome for the plan, surfacing breakage four days early.
+
+---
+

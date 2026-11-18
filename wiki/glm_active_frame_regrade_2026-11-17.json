@@ -1,6 +1,32 @@
 {
   "schema": "glm-active-frame-regrade-v2",
   "date": "2026-11-17",
+  "ceiling_normalization": {
+    "why": "a correlation is read against its OWN frame's ceiling. Without these two numbers printed together, the growing margin reads as evidence the learned representation is stronger than family G-A concluded. Normalized, it is weaker.",
+    "pooled_frame": {
+      "source": "wiki\\glm_learned_representation_2026-10-08.json",
+      "ceiling": 0.941,
+      "encoder_median": 0.3234,
+      "gc_median": 0.3112,
+      "fraction_of_ceiling": 0.3437
+    },
+    "active_frame": {
+      "source": "wiki\\glm_active_frame_gate_2026-11-16.json",
+      "ceiling": 0.969,
+      "ceiling_provenance": "ASSERTED; the active-frame ceiling (0.9690 from the tiles' own replicates) is DERIVED and contextualises them without setting them",
+      "ceiling_was_parsed_not_typed": true,
+      "encoder_median": 0.1636,
+      "gc_median": -0.0464,
+      "fraction_of_ceiling": 0.1688
+    },
+    "encoder_reaches_a_SMALLER_fraction_on_the_active_frame": true,
+    "THE_COMPARATOR_COLLAPSED": "both arms fall from the pooled frame to the active one -- the encoder by +0.1598 (0.3234 -> 0.1636) and GC by +0.3576 (0.3112 -> -0.0464). The margin grows from +0.0122 to +0.2190 because the COMPARATOR collapsed, not because the candidate improved. Relative to achievable signal the encoder reaches 16.9% of the active ceiling against 34.4% of the pooled one.",
+    "encoder_fall": 0.1598,
+    "gc_fall": 0.3576,
+    "gc_fell_further": true,
+    "scoping_caution": "NAME WHICH CEILING EACH FRACTION USES. scripts/glm_genomewide_oracle.py, the owner of `fraction_of_ceiling`, documents \"Do not compare the two fractions\" for fractions taken across SUBSTRATES with unrelated ceilings. These two are across FRAMES of ONE substrate -- 0.3437 against the pooled 0.941 ceiling and 0.1688 against the active 0.969 ceiling -- which is a weaker comparison than the forbidden one but is still only legible with both ceilings stated.",
+    "NOT_grounds_to_revisit_G_A": "This is an observation about SCOPE, not a reason to re-open family G-A. The gate artifact itself records `conditions_on_the_outcome: True` and `not_a_ledger_candidate: True`, so its own author already marked these numbers as non-candidates. The project's umbrella states the self-distillation precondition as 'a learned representation LANDS (G-A terminal-met is NOT sufficient)', and Action-Log row 10 records a prior session reaching this same fork on 2026-10-23 and declining it. Re-grading G-A on a frame that collapses its comparator would be changing the POPULATION until the bar passes -- structurally the same move as changing the bar."
+  },
   "what_changed": "EXACTLY ONE field of the pre-registered bar: null_max_abs. The effect-size thresholds, the seed count and the verdict ladder are the frozen bar unchanged, and the per-seed numbers are read verbatim from the recorded artifact. The verdict is computed by the gate's OWN compute_verdict.",
   "bar_diff_against_the_frozen_preregistration": {
     "null_max_abs": {
