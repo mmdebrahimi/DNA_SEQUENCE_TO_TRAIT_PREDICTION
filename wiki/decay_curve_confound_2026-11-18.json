@@ -1,0 +1,195 @@
+{
+  "schema": "decay-curve-confound-v1",
+  "date": "2026-11-18",
+  "question": "are the decay-curve's scored bins DISTANCE bins, or single held-out groups wearing distance labels?",
+  "substrate": {
+    "dataset": "GEO GSE108535 (Urtecho/Kosuri sigma70 variants)",
+    "axis": "Minus10",
+    "seed": 0,
+    "held_out_values": [
+      "12T->G",
+      "12T->G/7T->C"
+    ],
+    "n_train": 8173,
+    "n_test": 2725
+  },
+  "floor_and_bins_are_INPUTS": "Both come from scripts/oracle_decay_curve.py, which fixed them before any data was read. They are echoed into the result so a later run cannot quietly use a different floor.",
+  "result": {
+    "verdict": "confounded:collinear",
+    "verdict_enum_closed": [
+      "confounded:collinear",
+      "separable:within-group-possible",
+      "indeterminate:single-group",
+      "indeterminate:no-scored-bins"
+    ],
+    "min_bin_n_supplied_by_caller": 30,
+    "bins_supplied_by_caller": [
+      [
+        0,
+        1
+      ],
+      [
+        2,
+        3
+      ],
+      [
+        4,
+        7
+      ],
+      [
+        8,
+        15
+      ],
+      [
+        16,
+        31
+      ],
+      [
+        32,
+        63
+      ],
+      [
+        64,
+        150
+      ]
+    ],
+    "n_total": 2725,
+    "n_groups": 2,
+    "groups": [
+      "12T->G",
+      "12T->G/7T->C"
+    ],
+    "distances_observed": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "cross_tab": {
+      "12T->G": {
+        "d=1": 1331,
+        "d=2": 16,
+        "d=3": 3,
+        "d=4": 0
+      },
+      "12T->G/7T->C": {
+        "d=1": 0,
+        "d=2": 1371,
+        "d=3": 3,
+        "d=4": 1
+      }
+    },
+    "bins": [
+      {
+        "bin": "0-1",
+        "bin_index": 0,
+        "n": 1331,
+        "scored": true,
+        "composition": {
+          "12T->G": {
+            "n": 1331,
+            "pct_of_bin": 100.0
+          }
+        },
+        "dominant_group": "12T->G",
+        "dominant_pct": 100.0
+      },
+      {
+        "bin": "2-3",
+        "bin_index": 1,
+        "n": 1393,
+        "scored": true,
+        "composition": {
+          "12T->G": {
+            "n": 19,
+            "pct_of_bin": 1.4
+          },
+          "12T->G/7T->C": {
+            "n": 1374,
+            "pct_of_bin": 98.6
+          }
+        },
+        "dominant_group": "12T->G/7T->C",
+        "dominant_pct": 98.6
+      },
+      {
+        "bin": "4-7",
+        "bin_index": 2,
+        "n": 1,
+        "scored": false,
+        "composition": {
+          "12T->G/7T->C": {
+            "n": 1,
+            "pct_of_bin": 100.0
+          }
+        },
+        "dominant_group": "12T->G/7T->C",
+        "dominant_pct": 100.0
+      },
+      {
+        "bin": "8-15",
+        "bin_index": 3,
+        "n": 0,
+        "scored": false,
+        "composition": {},
+        "dominant_group": null,
+        "dominant_pct": null
+      },
+      {
+        "bin": "16-31",
+        "bin_index": 4,
+        "n": 0,
+        "scored": false,
+        "composition": {},
+        "dominant_group": null,
+        "dominant_pct": null
+      },
+      {
+        "bin": "32-63",
+        "bin_index": 5,
+        "n": 0,
+        "scored": false,
+        "composition": {},
+        "dominant_group": null,
+        "dominant_pct": null
+      },
+      {
+        "bin": "64-150",
+        "bin_index": 6,
+        "n": 0,
+        "scored": false,
+        "composition": {},
+        "dominant_group": null,
+        "dominant_pct": null
+      }
+    ],
+    "n_scored_bins": 2,
+    "max_dominant_pct_across_scored_bins": 100.0,
+    "within_group_separation": {
+      "12T->G": {
+        "cells": {
+          "d=1": 1331,
+          "d=2": 16,
+          "d=3": 3
+        },
+        "distances_at_or_above_floor": [
+          1
+        ],
+        "separable": false
+      },
+      "12T->G/7T->C": {
+        "cells": {
+          "d=2": 1371,
+          "d=3": 3,
+          "d=4": 1
+        },
+        "distances_at_or_above_floor": [
+          2
+        ],
+        "separable": false
+      }
+    },
+    "reading": "No group spans two distances at the floor, so no within-group distance contrast exists. The scored bins are group contrasts wearing distance labels (worst bin is 100.0% one group).",
+    "what_this_does_not_establish": "A confounded design is UNINFORMATIVE about the distance question -- it is not evidence that distance has no effect. Nor does a separable verdict mean the within-group contrast was actually computed; it means one is possible at the supplied floor."
+  }
+}
