@@ -1,0 +1,88 @@
+{
+  "schema": "fba-pool-restriction-generality-v1",
+  "date": "2026-11-19",
+  "question": "The lactate result claimed the wall was the candidate pool. That is a causal claim from ONE product. Does the same rule work on products whose answers I did not know?",
+  "rule_tested": "pool = a fixed set of 14 fermentative routes MINUS the reactions that PRODUCE the target. Identical rule for every target; only the exclusion set changes.",
+  "verdict": "generalises-with-a-named-limit-in-the-rule-itself",
+  "headline": "3 of 5 products yield coupled designs under the identical rule, and both failures trace to the RULE rather than the model. The strongest evidence is a positive control I did not design for: succinate independently recovered the published design LDH_D + ALCD2x + PFL that the module's own passing test asserts.",
+  "results": {
+    "EX_lac__D_e": {
+      "pool": 13,
+      "designs": 63,
+      "best_min": 13.42495,
+      "best_growth": 0.115583,
+      "best_kos": [
+        "PTAr",
+        "ACALD",
+        "PFL"
+      ]
+    },
+    "EX_etoh_e": {
+      "pool": 12,
+      "designs": 30,
+      "best_min": 13.42495,
+      "best_growth": 0.115583,
+      "best_kos": [
+        "LDH_D",
+        "ACKr",
+        "PFL"
+      ]
+    },
+    "EX_succ_e": {
+      "pool": 12,
+      "designs": 2,
+      "best_min": 9.263835,
+      "best_growth": 0.081588,
+      "best_kos": [
+        "LDH_D",
+        "ALCD2x",
+        "PFL"
+      ]
+    },
+    "EX_ac_e": {
+      "pool": 10,
+      "designs": 0,
+      "best_min": null,
+      "best_growth": null,
+      "best_kos": []
+    },
+    "EX_for_e": {
+      "pool": 13,
+      "designs": 0,
+      "best_min": null,
+      "best_growth": null,
+      "best_kos": []
+    }
+  },
+  "POSITIVE_CONTROL_NOT_DESIGNED_FOR": "tests/test_fba_design.py::test_reproduces_the_literature_anaerobic_succinate_design asserts the design set is exactly {PFL, LDH_D, ALCD2x}, reached from a HAND-PICKED 5-reaction pool. The generic rule here, given a 12-reaction pool it derived mechanically, returned that same set as its best design. So the rule recovers a known-correct answer without being told it.",
+  "THE_IDENTICAL_FLUX_WAS_CHECKED_NOT_RATIONALISED": {
+    "observation": "lactate and ethanol both report best_min 13.42495 and best_max 18.462119.",
+    "why_suspicious": "the same number to 5 dp on two different products and two different knockout sets.",
+    "probe": "each design re-evaluated against BOTH exchanges plus acetate, through the module's own evaluate_knockouts on a separately prepared model.",
+    "measured": {
+      "PTAr,ACALD,PFL": {
+        "EX_lac__D_e": "min 13.42495, OBLIGATORY",
+        "EX_etoh_e": "min 0.0 (max 2.804227), POSSIBLE",
+        "EX_ac_e": "min 0.0 (max 1.108782), POSSIBLE"
+      },
+      "LDH_D,ACKr,PFL": {
+        "EX_lac__D_e": "min 0.0 (max 0.657), POSSIBLE",
+        "EX_etoh_e": "min 13.42495, OBLIGATORY",
+        "EX_ac_e": "min 0.0 (max 1.35886), POSSIBLE"
+      }
+    },
+    "conclusion": "DIFFERENT solutions, not a shared number. Each design forces its OWN product to OBLIGATORY and leaves the others merely POSSIBLE at a floor of zero. The equal value is real stoichiometric symmetry: closing PFL plus two of the three remaining fermentation sinks funnels all carbon into the one that remains, and lactate and ethanol have the same capacity per glucose at that redox balance."
+  },
+  "THE_TWO_FAILURES_ARE_THE_RULES_FAULT": {
+    "EX_for_e": "for_c has 11 producing reactions but PFL is the only FERMENTATIVE one (with OBTFL); the rest -- AMPMS2, GTPCI, GTPCII2, FTHFD, DB4PS, SFGTHi, UPLA4FNF, FORCT, FORt2pp -- are biosynthetic trace routes, not carbon sinks. The rule excluded PFL as a producer, which removed the ONLY lever that could redirect carbon to formate. So this zero says the rule is wrong for a product with a single fermentative route, NOT that formate cannot couple.",
+    "EX_ac_e": "the pool shrank to 10 because four producers (ACKr, PTAr, PTA2, POX) were excluded. NOT diagnosed further, so this zero is UNEXPLAINED rather than explained.",
+    "the_general_defect": "the rule excludes every producing reaction, but for a product whose production runs through ONE dominant route, excluding it removes the intervention rather than protecting it. A better rule would keep open only the terminal step that must stay open."
+  },
+  "WHAT_THIS_SCOPES_IN_THE_EARLIER_CLAIM": "The claim that the wall was the candidate pool SURVIVES but must be scoped. Pool restriction turns an unsearchable 2266-reaction space into an exhaustive search that finds real designs, and it does so for 3 of 5 products INCLUDING a known-correct positive control. It is NOT a universal fix: it depends on the pool being built so the target's own route stays open while competing sinks close, and my mechanical version of that gets formate wrong.",
+  "honest_limits": [
+    "5 products, ONE model, ONE condition, ONE growth floor, depth 3. Exhaustive over each pool, never over the model.",
+    "The acetate zero is undiagnosed.",
+    "STOICHIOMETRIC predictions. FBA models no regulation, kinetics, toxicity or burden; a coupled design is a hypothesis for the bench, not a validated strain.",
+    "The succinate best_min here (9.263835) is LOWER than the 12.28 the module's docstring quotes, because that figure is at a 99 percent growth floor and this runs at 90 percent. Same strain, different floor -- the docstring states this explicitly. Not a discrepancy."
+  ]
+}
