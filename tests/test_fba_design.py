@@ -259,13 +259,26 @@ def test_a_single_knockout_cannot_couple_lactate_and_that_is_why_pre_ranking_fai
     from dna_decode.fba.design import evaluate_knockouts, set_anaerobic
     from dna_decode.fba.model import load_model
 
+    # The `with m:` block is LOAD-BEARING, not hygiene, and `reuse=False` does NOT substitute for it.
+    # `load_model()` hands back a SHARED CACHED object, and `set_anaerobic` mutates bounds in place.
+    # The first version of this test called `set_anaerobic` on that shared object and left EX_o2_e at
+    # 0.0 for every later caller in the process, which broke test_fba_zero_flux_theorem and
+    # test_fba_gapfill in the FULL suite while both still passed in isolation.
+    #
+    # `reuse=False` looks like the fix and is NOT: model.py writes `_MODELS[mid] = model`
+    # unconditionally, guarded only on `path is None` and never on `reuse`, so a reuse=False load
+    # REPLACES the cache with its fresh object and mutating that pollutes exactly the same way
+    # (measured). The module's own idiom is the real fix -- `evaluate_knockouts` and
+    # `find_coupled_designs` both confine their condition changes to `with model:`, which is why the
+    # sibling test above never polluted anything.
     m = load_model()
-    set_anaerobic(m)
-    wt = m.slim_optimize()
-    tgt = m.reactions.get_by_id("EX_lac__D_e")
+    with m:
+        set_anaerobic(m)
+        wt = m.slim_optimize()
+        tgt = m.reactions.get_by_id("EX_lac__D_e")
 
-    alone = evaluate_knockouts(m, tgt, ["PFL"], 0.9, wt, "reaction")
-    pair = evaluate_knockouts(m, tgt, ["PFL", "ALCD2x"], 0.9, wt, "reaction")
+        alone = evaluate_knockouts(m, tgt, ["PFL"], 0.9, wt, "reaction")
+        pair = evaluate_knockouts(m, tgt, ["PFL", "ALCD2x"], 0.9, wt, "reaction")
 
     # PFL alone lifts the ceiling but NOT the floor -- invisible to any improvement-based ranking.
     assert alone.coupling == POSSIBLE
@@ -275,3 +288,6 @@ def test_a_single_knockout_cannot_couple_lactate_and_that_is_why_pre_ranking_fai
     # Add one more and the floor leaves zero. Coupling is a property of the SET, not its members.
     assert pair.coupling == OBLIGATORY
     assert pair.min_product > 5.0
+
+    # The condition change must NOT outlive this test -- this is the regression guard.
+    assert m.reactions.get_by_id("EX_o2_e").lower_bound < 0.0
