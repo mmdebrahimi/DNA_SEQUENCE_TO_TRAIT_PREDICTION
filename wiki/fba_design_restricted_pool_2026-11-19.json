@@ -1,0 +1,187 @@
+{
+  "schema": "fba-design-restricted-pool-v1",
+  "date": "2026-11-19",
+  "question": "Last night no arm found a growth-coupled D-lactate design and the question was left open on compute. Was the wall the MODEL, the SEARCH BUDGET, or the CANDIDATE POOL?",
+  "verdict": "designs-exist-the-wall-was-the-candidate-pool",
+  "headline": "iML1515 DOES admit growth-coupled D-lactate designs, and they are strong. Restricting the candidate pool from 2266 reactions to the 13 that compete with lactate for fermentative carbon and redox returns 63 coupled designs EXHAUSTIVELY in seconds. The best guarantees 13.42495 mmol/gDW/h of D-lactate at every growing flux distribution while the strain still grows at 0.115583 /h. Neither biology nor compute was the wall.",
+  "search": {
+    "pool": [
+      "PFL",
+      "ALCD2x",
+      "ACALD",
+      "FRD2",
+      "FRD3",
+      "ACKr",
+      "PTAr",
+      "PTA2",
+      "POX",
+      "MGSA",
+      "LDH_D2",
+      "L_LACD2",
+      "L_LACD3"
+    ],
+    "pool_size": 13,
+    "LDH_D_deliberately_excluded": true,
+    "why_LDH_D_is_excluded": "LDH_D is the lactate-PRODUCING enzyme. The module's own passing literature test reaches SUCCINATE by deleting it, which makes succinate and D-lactate competing fermentation products -- so the published design that works in this module is actively anti-lactate.",
+    "n_singles_evaluated": 13,
+    "n_pairs_evaluated": 78,
+    "n_triples_evaluated": 286,
+    "exhaustive_over_the_pool": true,
+    "wildtype_already_coupled": false,
+    "n_coupled_designs": 63
+  },
+  "top_designs": [
+    {
+      "knockouts": [
+        "PTAr",
+        "ACALD",
+        "PFL"
+      ],
+      "min_product_flux": 13.42495,
+      "max_product_flux": 18.462119,
+      "growth_per_h": 0.115583,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 13.42495
+    },
+    {
+      "knockouts": [
+        "ACKr",
+        "ALCD2x",
+        "PFL"
+      ],
+      "min_product_flux": 13.42495,
+      "max_product_flux": 18.462119,
+      "growth_per_h": 0.115583,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 13.42495
+    },
+    {
+      "knockouts": [
+        "PTAr",
+        "ALCD2x",
+        "PFL"
+      ],
+      "min_product_flux": 13.42495,
+      "max_product_flux": 18.462119,
+      "growth_per_h": 0.115583,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 13.42495
+    },
+    {
+      "knockouts": [
+        "ACKr",
+        "ACALD",
+        "PFL"
+      ],
+      "min_product_flux": 13.42495,
+      "max_product_flux": 18.462119,
+      "growth_per_h": 0.115583,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 13.42495
+    },
+    {
+      "knockouts": [
+        "FRD2",
+        "ACALD",
+        "PFL"
+      ],
+      "min_product_flux": 10.097466,
+      "max_product_flux": 18.458171,
+      "growth_per_h": 0.115879,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 10.097466
+    },
+    {
+      "knockouts": [
+        "POX",
+        "ACALD",
+        "PFL"
+      ],
+      "min_product_flux": 10.097466,
+      "max_product_flux": 18.458171,
+      "growth_per_h": 0.115879,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 10.097466
+    },
+    {
+      "knockouts": [
+        "FRD2",
+        "ALCD2x",
+        "PFL"
+      ],
+      "min_product_flux": 10.097466,
+      "max_product_flux": 18.458171,
+      "growth_per_h": 0.115879,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 10.097466
+    },
+    {
+      "knockouts": [
+        "LDH_D2",
+        "ALCD2x",
+        "PFL"
+      ],
+      "min_product_flux": 10.097466,
+      "max_product_flux": 18.458171,
+      "growth_per_h": 0.115879,
+      "coupling": "OBLIGATORY",
+      "improvement_over_wildtype": 10.097466
+    }
+  ],
+  "THE_MECHANISM_MEASURED": {
+    "ladder": {
+      "(wildtype)": {
+        "min_product_flux": 0.0,
+        "max_product_flux": 7.256,
+        "growth_per_h": 0.15754,
+        "coupling": "POSSIBLE"
+      },
+      "PFL": {
+        "min_product_flux": 0.0,
+        "max_product_flux": 18.458171,
+        "growth_per_h": 0.115879,
+        "coupling": "POSSIBLE"
+      },
+      "PFL,ALCD2x": {
+        "min_product_flux": 10.097466,
+        "max_product_flux": 18.458171,
+        "growth_per_h": 0.115879,
+        "coupling": "OBLIGATORY"
+      },
+      "PTAr,ACALD,PFL": {
+        "min_product_flux": 13.42495,
+        "max_product_flux": 18.462119,
+        "growth_per_h": 0.115583,
+        "coupling": "OBLIGATORY"
+      },
+      "ACKr,ALCD2x,PFL": {
+        "min_product_flux": 13.42495,
+        "max_product_flux": 18.462119,
+        "growth_per_h": 0.115583,
+        "coupling": "OBLIGATORY"
+      }
+    },
+    "reading": "PFL alone raises the CEILING (max product 7.256 -> 18.458) and leaves the FLOOR at 0.0, so it stays POSSIBLE and scores improvement_over_wildtype 0.0. Coupling first appears at DEPTH 2 (PFL+ALCD2x, min 10.097, OBLIGATORY) and strengthens at depth 3 (13.425).",
+    "why_the_unrestricted_search_missed_them": "This is a direct empirical confirmation, on this model, of the defect pyproject.toml records for this code path: the pair/triple pool is PRE-RANKED, and the ranking is 'blind to designs whose members are individually unremarkable'. PFL is a member of every top design and individually scores exactly 0.0 improvement, so a pre-ranked shortlist cannot promote it and the triple containing it is never built. Last night's unrestricted depth-3 run evaluated 780 pairs of a possible 2.57 million and found nothing; the 13-reaction pool evaluates 78 pairs and 286 triples and finds 63 designs."
+  },
+  "WHAT_THIS_DOES_NOT_OVERTURN": [
+    "The depth-1 exhaustive null STANDS and is consistent: no SINGLE reaction knockout couples D-lactate, aerobically or anaerobically. Every design here is a pair or a triple, and the ladder shows exactly why -- the single knockout leaves the floor at zero.",
+    "The MILP non-convergence is EXPLAINED, not contradicted. It was searching the full space; the documented success searches a biologically pre-selected pool.",
+    "The aerobic condition defect was still a real defect. These designs are anaerobic, and the module's own docstring says aerobic coupling is rare because the cell can respire carbon fully to CO2 and never has to secrete a fermentation product."
+  ],
+  "CORRECTION_TO_THE_PLANS_PREMISE": "The plan called D-lactate 'the one documented growth-coupled validation'. That was MY claim, taken from a search summary I had explicitly labelled as unverified because three routes to the primary sources were blocked. The module's OWN documented, test-passing validation is ANAEROBIC SUCCINATE via PFL+LDH_D+ALCD2x (tests/test_fba_design.py::test_reproduces_the_literature_anaerobic_succinate_design, verified passing today). So the target was chosen on an unverified recollection while the repo carried a verified one in a passing test. D-lactate does work -- but the pool, not the target, was what the night's compute was missing.",
+  "honest_limits": [
+    "STOICHIOMETRIC prediction. FBA models no regulation, enzyme kinetics, toxicity, metabolic burden, or whether the strain is constructible. A coupled design is a HYPOTHESIS FOR THE BENCH, not a validated strain.",
+    "Exhaustive over a 13-reaction pool that I selected on biological grounds, NOT over the model. A different pool could contain better designs, and a pool is a hypothesis too.",
+    "Reaction-level knockouts; a reaction knockout is not always realisable by deleting genes.",
+    "ONE target, ONE model, ONE condition, one growth floor (90%% of each strain's own maximum).",
+    "Guaranteed flux 13.42495 is at that floor; the coupling definition is floor-dependent, as the module's own docstring records (same strain, 0.0027 at a 10% floor vs 12.28 at 99%)."
+  ],
+  "plausibility_check": {
+    "glucose_uptake_bound": 10.0,
+    "theoretical_max_lactate": 20.0,
+    "best_guaranteed": 13.42495,
+    "best_max": 18.462119,
+    "note": "2 lactate per glucose, so ~20.0 is the ceiling; the guaranteed 13.42495 is ~67% of it."
+  }
+}
