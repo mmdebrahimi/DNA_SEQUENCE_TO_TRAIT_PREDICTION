@@ -1,0 +1,38 @@
+{
+  "schema": "oracle-decay-substrate-feasibility-v1",
+  "date": "2026-11-19",
+  "question": "The decay curve measured distance to the HELD-IN GSE108535 split, which the frozen encoder never saw, and the axis spanned only 1..4. The route that would answer the ORIGINAL question is distance to GSE144621, the corpus the encoder was actually fine-tuned on. Is THAT axis measurable?",
+  "verdict": "not-measurable-the-axis-saturates-at-the-far-end",
+  "headline": "No. Every sampled designed variant sits 84-96 bases from its nearest genomic tile out of 150, spanning only 12 values across 12 distinct levels, and ALL 250 land in ONE pre-registered bin. A decay curve over a single bin is not a curve.",
+  "why_this_probe_ran_first": "Last night the equivalent question was answered only AFTER hours of oracle scoring, and the range problem was discovered at the end. The distance computation needs no checkpoint and no torch, so feasibility is minutes. This is the check that should have preceded the first run.",
+  "measured": {
+    "n_tiles_at_seq_length": 45512,
+    "n_tiles_sampled": 4000,
+    "n_variants_sampled": 250,
+    "min": 84,
+    "p25": 90,
+    "median": 92,
+    "p75": 93,
+    "max": 96,
+    "range_spanned": 12,
+    "n_distinct_levels": 12,
+    "preregistered_bin_occupancy": {
+      "64-150": 250
+    },
+    "n_bins_occupied": 1,
+    "expected_for_unrelated_150bp": 112.5
+  },
+  "THE_STRUCTURAL_FINDING": {
+    "statement": "The two available reference sets sit at OPPOSITE EXTREMES and there is no middle, so the decay question is not answerable with this substrate pairing in EITHER direction.",
+    "near_end": "distance to the held-in GSE108535 split spans 1..4 -- the variants are a single designed scaffold differing by point mutations, so they are near-identical to each other.",
+    "far_end": "distance to the GSE144621 fine-tuning corpus spans 84..96 -- designed synthetic promoters and genomic peak tiles are unrelated sequence classes.",
+    "what_a_decay_curve_needs": "variants spanning NEAR to FAR relative to ONE reference set. Neither pairing supplies that.",
+    "what_this_means_for_the_question": "The blocker is SUBSTRATE, not compute and not method. Answering it needs a variant library with a graded mutational load relative to the training corpus -- not a bigger budget on these two datasets."
+  },
+  "honest_limits": [
+    "SAMPLED min: 4000 of 45512 tiles. A sampled minimum OVERESTIMATES the true minimum, so the full corpus would shift these distances DOWN somewhat.",
+    "That caveat does not change the verdict: the distribution is tight (p25 90, p75 93), so a uniform downward shift moves the band without widening it, and a single-bin occupancy survives any plausible shift. A full-corpus run would tighten the numbers, not the conclusion.",
+    "250 of 10898 variants sampled; the sample is random with a fixed seed, not stratified.",
+    "This bounds MEASURABILITY on this pairing. It is NOT evidence that oracle accuracy does or does not decay with training distance -- that question remains open and untested."
+  ]
+}
