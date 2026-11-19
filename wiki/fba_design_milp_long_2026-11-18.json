@@ -1,0 +1,63 @@
+{
+  "schema": "fba-design-milp-long-v1",
+  "date": "2026-11-19",
+  "question": "does the bilevel MILP find a growth-coupled D-lactate design in iML1515 when given hours instead of the hardcoded 1800 s, anaerobically, at a 3-knockout bound?",
+  "verdict": "milp-truncated-by-its-own-time-limit-no-claim",
+  "why_this_run_exists": "dna_decode/fba/design.py:290 hardcodes time_limit=1800 and no CLI flag exposes it, so the overnight CLI arms could not use the budget they were given. Both returned status=time_limit with n_designs=0, which is the solver giving up rather than a measured absence.",
+  "two_improvements_over_the_cli_arms": [
+    "time_limit raised from the hardcoded 1800 s to 12600 s per arm.",
+    "max_knockouts raised 2 -> 3; published growth-coupled D-lactate strains are multi-knockout."
+  ],
+  "model": {
+    "loader": "dna_decode.fba.model.load_model(None)",
+    "n_reactions": 2712,
+    "n_genes": 1516
+  },
+  "target_reaction": "EX_lac__D_e",
+  "arms": [
+    {
+      "milp_floor_frac_of_WILDTYPE": 0.5,
+      "max_knockouts": 3,
+      "anaerobic": true,
+      "time_limit_s_requested": 12600,
+      "elapsed_s": 12642.7,
+      "error": null,
+      "solver": "scip",
+      "status": "time_limit",
+      "condition": "ANAEROBIC (O2 uptake closed)",
+      "wildtype_growth_per_h": 0.15754,
+      "growth_floor_per_h": 0.07877,
+      "n_designs": 0,
+      "target_reaction": "EX_lac__D_e",
+      "n_designs_returned": 0,
+      "designs": [],
+      "hit_internal_time_limit": true,
+      "READING": "The solver STOPPED on its own time limit with no design in hand. This is NOT a measured absence of designs -- the search was truncated, so this arm makes no claim in either direction."
+    },
+    {
+      "milp_floor_frac_of_WILDTYPE": 0.9,
+      "max_knockouts": 3,
+      "anaerobic": true,
+      "time_limit_s_requested": 12600,
+      "elapsed_s": 12638.1,
+      "error": null,
+      "solver": "scip",
+      "status": "time_limit",
+      "condition": "ANAEROBIC (O2 uptake closed)",
+      "wildtype_growth_per_h": 0.15754,
+      "growth_floor_per_h": 0.141786,
+      "n_designs": 0,
+      "target_reaction": "EX_lac__D_e",
+      "n_designs_returned": 0,
+      "designs": [],
+      "hit_internal_time_limit": true,
+      "READING": "The solver STOPPED on its own time limit with no design in hand. This is NOT a measured absence of designs -- the search was truncated, so this arm makes no claim in either direction."
+    }
+  ],
+  "honest_limits": [
+    "A solver time limit is a statement about the budget, never about the model.",
+    "The MILP floor is a fraction of WILD-TYPE growth; the enumeration floor is a fraction of each strain's OWN maximum. Non-commensurable quantities, per the CLI's own help text.",
+    "ONE target, ONE model, ONE condition, two floors, one knockout bound.",
+    "Designs, if any, are stoichiometric HYPOTHESES FOR THE BENCH: FBA models no regulation, kinetics, toxicity, burden, or whether the strain is constructible."
+  ]
+}
