@@ -39,6 +39,18 @@ dependencies = [
     "h5py>=3.10",
     "pyarrow>=15",
 
+    # xlsx reader. DEFAULT, not an extra, by the same Wave 1.5 C3 reasoning as pytest below:
+    # a dependency the documented `uv run pytest` flow needs cannot live in an extra, because
+    # `uv sync --extra X` resolves to EXACTLY default+X and silently deletes everything else.
+    # It was undeclared until 2026-11-19 -- an ad-hoc install that a `uv sync --extra design
+    # --extra forward` duly removed, breaking 3 committed tests (test_readme_frame_caveat,
+    # test_essentiality_label_sources, test_essentiality_ladder_w0_probe). Two PACKAGE modules
+    # import it (glm/lentimpra.py, organism_rules/arabidopsis_fri_caller.py) plus 6 scripts.
+    # Cheap and pure-Python (~250 KB + et-xmlfile), so it does NOT reintroduce the multi-GB
+    # platform-specific problem that moved torch to [ml]. Every import of it stays LAZY and
+    # in-function, so the wheel-only purity those modules protect is unaffected.
+    "openpyxl>=3.1",
+
     # HTTP for ingestion
     "requests>=2.31",
 
