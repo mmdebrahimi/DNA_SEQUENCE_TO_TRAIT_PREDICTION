@@ -1,0 +1,1038 @@
+{
+  "schema": "fba-pool-rule-diagnosis-v1",
+  "date": "2026-11-19",
+  "question": "The committed generality run left acetate UNDIAGNOSED and blamed only formate on the rule. Are both zeros ONE defect, and is the producer-DETECTION method itself wrong rather than merely too broad?",
+  "method": "Read-only. For each target: reproduce sign detection (r.metabolites[met] > 0), compare it against what the committed run actually excluded, and run a FLUX-ROLE test (does single deletion collapse max product to <= FLUX_TOL) over the union. Anaerobic, growth_frac from the committed run, every touch inside `with model:`.",
+  "growth_frac": 0.9,
+  "flux_tol": 1e-06,
+  "pool_and_exclusions_copied_verbatim_from": "wiki/fba_pool_restriction_generality_2026-11-19.json (a79f9f6f)",
+  "routes": [
+    "PFL",
+    "ALCD2x",
+    "ACALD",
+    "FRD2",
+    "FRD3",
+    "ACKr",
+    "PTAr",
+    "PTA2",
+    "POX",
+    "MGSA",
+    "LDH_D",
+    "LDH_D2",
+    "L_LACD2",
+    "L_LACD3"
+  ],
+  "rule_exclusions": {
+    "EX_lac__D_e": [
+      "LDH_D"
+    ],
+    "EX_etoh_e": [
+      "ALCD2x",
+      "ACALD"
+    ],
+    "EX_ac_e": [
+      "ACKr",
+      "PTAr",
+      "PTA2",
+      "POX"
+    ],
+    "EX_succ_e": [
+      "FRD2",
+      "FRD3"
+    ],
+    "EX_for_e": [
+      "PFL"
+    ]
+  },
+  "per_target": {
+    "EX_lac__D_e": {
+      "metabolite": "lac__D_c",
+      "n_sign_detected_in_whole_model": 4,
+      "sign_detected_in_whole_model": [
+        "ACM6PH",
+        "D_LACt2pp",
+        "GLYOX",
+        "GLYOX3"
+      ],
+      "comparison_within_the_pool": {
+        "n_sign_detected": 0,
+        "n_rule_excluded": 1,
+        "sign_detected": [],
+        "rule_excluded": [
+          "LDH_D"
+        ],
+        "excluded_but_NOT_sign_detected": [
+          "LDH_D"
+        ],
+        "sign_detected_but_NOT_excluded": [],
+        "symmetric_difference": [
+          "LDH_D"
+        ],
+        "sets_agree": false,
+        "reading": "the two sets DISAGREE, so the rule excluded reactions sign detection does not call producers and/or vice versa -- the detection method is implicated, not just the breadth"
+      },
+      "flux_role": {
+        "ACALD": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ACKr": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ALCD2x": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "FRD2": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.255999999994023,
+          "growth_after_deletion": 0.15753981693758692,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "FRD3": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.256000000000442,
+          "growth_after_deletion": 0.1575398169376029,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 0.8062222222219788,
+          "growth_after_deletion": 0.1575398169375914,
+          "state": "reduced",
+          "load_bearing": false
+        },
+        "LDH_D2": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.256000000000041,
+          "growth_after_deletion": 0.1575398169376029,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD2": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.255999999997825,
+          "growth_after_deletion": 0.1575398169376029,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD3": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.255999999997825,
+          "growth_after_deletion": 0.1575398169376029,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "MGSA": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.255999999997825,
+          "growth_after_deletion": 0.15753981693759606,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PFL": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "POX": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.255999999992141,
+          "growth_after_deletion": 0.15753981693759492,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTA2": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": 0.0,
+          "max_product_after_deletion": 7.255999999995197,
+          "growth_after_deletion": 0.15753981693760197,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTAr": {
+          "present_in_model": true,
+          "intact_max_product": 7.255999999999531,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        }
+      },
+      "load_bearing_by_flux_role": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "rule_excluded_a_load_bearing_route": [],
+      "rule_excluded_a_NON_load_bearing_route": [
+        "LDH_D"
+      ]
+    },
+    "EX_etoh_e": {
+      "metabolite": "etoh_c",
+      "n_sign_detected_in_whole_model": 1,
+      "sign_detected_in_whole_model": [
+        "ETOHtrpp"
+      ],
+      "comparison_within_the_pool": {
+        "n_sign_detected": 0,
+        "n_rule_excluded": 2,
+        "sign_detected": [],
+        "rule_excluded": [
+          "ACALD",
+          "ALCD2x"
+        ],
+        "excluded_but_NOT_sign_detected": [
+          "ACALD",
+          "ALCD2x"
+        ],
+        "sign_detected_but_NOT_excluded": [],
+        "symmetric_difference": [
+          "ACALD",
+          "ALCD2x"
+        ],
+        "sets_agree": false,
+        "reading": "the two sets DISAGREE, so the rule excluded reactions sign detection does not call producers and/or vice versa -- the detection method is implicated, not just the breadth"
+      },
+      "flux_role": {
+        "ACALD": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ACKr": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ALCD2x": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "FRD2": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.2431806743792855,
+          "max_product_after_deletion": 12.499180674381332,
+          "growth_after_deletion": 0.1575398169375903,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "FRD3": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.24318067438268,
+          "max_product_after_deletion": 12.499180674377152,
+          "growth_after_deletion": 0.15753981693761146,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.243180674380344,
+          "max_product_after_deletion": 12.499180674377662,
+          "growth_after_deletion": 0.15753981693760333,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D2": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.243180674384202,
+          "max_product_after_deletion": 12.499180674377662,
+          "growth_after_deletion": 0.15753981693760333,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD2": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.243180674384202,
+          "max_product_after_deletion": 12.499180674377662,
+          "growth_after_deletion": 0.15753981693760333,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD3": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.243180674384202,
+          "max_product_after_deletion": 12.499180674377662,
+          "growth_after_deletion": 0.15753981693760333,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "MGSA": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.243180674384202,
+          "max_product_after_deletion": 12.499180674377662,
+          "growth_after_deletion": 0.15753981693760333,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PFL": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "POX": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.243180674380761,
+          "max_product_after_deletion": 12.499180674381014,
+          "growth_after_deletion": 0.15753981693759064,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTA2": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": 5.243180674382654,
+          "max_product_after_deletion": 12.499180674378605,
+          "growth_after_deletion": 0.15753981693759064,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTAr": {
+          "present_in_model": true,
+          "intact_max_product": 12.49918067437798,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        }
+      },
+      "load_bearing_by_flux_role": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "rule_excluded_a_load_bearing_route": [
+        "ACALD",
+        "ALCD2x"
+      ],
+      "rule_excluded_a_NON_load_bearing_route": []
+    },
+    "EX_ac_e": {
+      "metabolite": "ac_c",
+      "n_sign_detected_in_whole_model": 14,
+      "sign_detected_in_whole_model": [
+        "ACACCT",
+        "ACODA",
+        "ACOXT",
+        "ACt2rpp",
+        "ACt4pp",
+        "AGDC",
+        "ALDD2y",
+        "BUTCT",
+        "CITL",
+        "CYSS",
+        "DC6PDA",
+        "HXCT",
+        "POX",
+        "UHGADA"
+      ],
+      "comparison_within_the_pool": {
+        "n_sign_detected": 1,
+        "n_rule_excluded": 4,
+        "sign_detected": [
+          "POX"
+        ],
+        "rule_excluded": [
+          "ACKr",
+          "POX",
+          "PTA2",
+          "PTAr"
+        ],
+        "excluded_but_NOT_sign_detected": [
+          "ACKr",
+          "PTA2",
+          "PTAr"
+        ],
+        "sign_detected_but_NOT_excluded": [],
+        "symmetric_difference": [
+          "ACKr",
+          "PTA2",
+          "PTAr"
+        ],
+        "sets_agree": false,
+        "reading": "the two sets DISAGREE, so the rule excluded reactions sign detection does not call producers and/or vice versa -- the detection method is implicated, not just the breadth"
+      },
+      "flux_role": {
+        "ACALD": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ACKr": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ALCD2x": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "FRD2": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587099672,
+          "max_product_after_deletion": 12.5757790540115,
+          "growth_after_deletion": 0.15753981693758284,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "FRD3": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587102268,
+          "max_product_after_deletion": 12.575779054010548,
+          "growth_after_deletion": 0.15753981693759594,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587100319,
+          "max_product_after_deletion": 12.575779054010393,
+          "growth_after_deletion": 0.15753981693759672,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D2": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587100047,
+          "max_product_after_deletion": 12.575779054013827,
+          "growth_after_deletion": 0.15753981693759594,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD2": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587100235,
+          "max_product_after_deletion": 12.575779054011793,
+          "growth_after_deletion": 0.1575398169375985,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD3": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587100157,
+          "max_product_after_deletion": 12.575779054013587,
+          "growth_after_deletion": 0.15753981693760244,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "MGSA": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587100045,
+          "max_product_after_deletion": 12.575779054013827,
+          "growth_after_deletion": 0.15753981693760247,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PFL": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "POX": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587100049,
+          "max_product_after_deletion": 12.57577905401132,
+          "growth_after_deletion": 0.15753981693760297,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTA2": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": 5.030700587101326,
+          "max_product_after_deletion": 12.57577905401072,
+          "growth_after_deletion": 0.15753981693759256,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTAr": {
+          "present_in_model": true,
+          "intact_max_product": 12.575779054011306,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        }
+      },
+      "load_bearing_by_flux_role": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "rule_excluded_a_load_bearing_route": [
+        "ACKr",
+        "PTAr"
+      ],
+      "rule_excluded_a_NON_load_bearing_route": [
+        "POX",
+        "PTA2"
+      ]
+    },
+    "EX_succ_e": {
+      "metabolite": "succ_c",
+      "n_sign_detected_in_whole_model": 17,
+      "sign_detected_in_whole_model": [
+        "ASPO5",
+        "DHORDfum",
+        "FRD2",
+        "FRD3",
+        "HKNDDH",
+        "ICL",
+        "MCITL2",
+        "PPPGO3",
+        "SDPDS",
+        "SGDS",
+        "SHSL1",
+        "SSALx",
+        "SSALy",
+        "SUCCt1pp",
+        "SUCCt2_2pp",
+        "SUCCt2_3pp",
+        "TAUDO"
+      ],
+      "comparison_within_the_pool": {
+        "n_sign_detected": 2,
+        "n_rule_excluded": 2,
+        "sign_detected": [
+          "FRD2",
+          "FRD3"
+        ],
+        "rule_excluded": [
+          "FRD2",
+          "FRD3"
+        ],
+        "excluded_but_NOT_sign_detected": [],
+        "sign_detected_but_NOT_excluded": [],
+        "symmetric_difference": [],
+        "sets_agree": true,
+        "reading": "the two sets AGREE, so sign detection is not the problem for this target"
+      },
+      "flux_role": {
+        "ACALD": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ACKr": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ALCD2x": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "FRD2": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.047305993214095524,
+          "max_product_after_deletion": 3.675305993213291,
+          "growth_after_deletion": 0.15753981693759384,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "FRD3": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.047305993214102345,
+          "max_product_after_deletion": 3.6753059932128775,
+          "growth_after_deletion": 0.15753981693758376,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.04730599321410094,
+          "max_product_after_deletion": 3.675305993212948,
+          "growth_after_deletion": 0.15753981693759705,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D2": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.04730599321409597,
+          "max_product_after_deletion": 3.675305993213499,
+          "growth_after_deletion": 0.1575398169375964,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD2": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.04730599321409597,
+          "max_product_after_deletion": 3.675305993213499,
+          "growth_after_deletion": 0.1575398169375964,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD3": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.04730599321409597,
+          "max_product_after_deletion": 3.675305993213499,
+          "growth_after_deletion": 0.1575398169375964,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "MGSA": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.04730599321409597,
+          "max_product_after_deletion": 3.675305993213499,
+          "growth_after_deletion": 0.1575398169375964,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PFL": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "POX": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.04730599321410025,
+          "max_product_after_deletion": 3.675305993213261,
+          "growth_after_deletion": 0.15753981693758873,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTA2": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": 0.04730599321410476,
+          "max_product_after_deletion": 3.675305993212988,
+          "growth_after_deletion": 0.15753981693759467,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTAr": {
+          "present_in_model": true,
+          "intact_max_product": 3.6753059932132546,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        }
+      },
+      "load_bearing_by_flux_role": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "rule_excluded_a_load_bearing_route": [],
+      "rule_excluded_a_NON_load_bearing_route": [
+        "FRD2",
+        "FRD3"
+      ]
+    },
+    "EX_for_e": {
+      "metabolite": "for_c",
+      "n_sign_detected_in_whole_model": 11,
+      "sign_detected_in_whole_model": [
+        "AMPMS2",
+        "DB4PS",
+        "FORCT",
+        "FORt2pp",
+        "FTHFD",
+        "GTPCI",
+        "GTPCII2",
+        "OBTFL",
+        "PFL",
+        "SFGTHi",
+        "UPLA4FNF"
+      ],
+      "comparison_within_the_pool": {
+        "n_sign_detected": 1,
+        "n_rule_excluded": 1,
+        "sign_detected": [
+          "PFL"
+        ],
+        "rule_excluded": [
+          "PFL"
+        ],
+        "excluded_but_NOT_sign_detected": [],
+        "sign_detected_but_NOT_excluded": [],
+        "symmetric_difference": [],
+        "sets_agree": true,
+        "reading": "the two sets AGREE, so sign detection is not the problem for this target"
+      },
+      "flux_role": {
+        "ACALD": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ACKr": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "ALCD2x": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "FRD2": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548660593,
+          "max_product_after_deletion": 25.660946548655136,
+          "growth_after_deletion": 0.15753981693759853,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "FRD3": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548659348,
+          "max_product_after_deletion": 25.660946548653015,
+          "growth_after_deletion": 0.1575398169376061,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548659717,
+          "max_product_after_deletion": 25.66094654865582,
+          "growth_after_deletion": 0.15753981693759284,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "LDH_D2": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548657143,
+          "max_product_after_deletion": 25.660946548653015,
+          "growth_after_deletion": 0.1575398169376061,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD2": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548659938,
+          "max_product_after_deletion": 25.66094654865275,
+          "growth_after_deletion": 0.1575398169375962,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "L_LACD3": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548662844,
+          "max_product_after_deletion": 25.660946548654135,
+          "growth_after_deletion": 0.1575398169375929,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "MGSA": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548661568,
+          "max_product_after_deletion": 25.660946548653726,
+          "growth_after_deletion": 0.1575398169375962,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PFL": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        },
+        "POX": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548661156,
+          "max_product_after_deletion": 25.66094654865499,
+          "growth_after_deletion": 0.1575398169376048,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTA2": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": 11.148946548657682,
+          "max_product_after_deletion": 25.6609465486573,
+          "growth_after_deletion": 0.157539816937589,
+          "state": "unaffected",
+          "load_bearing": false
+        },
+        "PTAr": {
+          "present_in_model": true,
+          "intact_max_product": 25.660946548654913,
+          "min_product_after_deletion": NaN,
+          "max_product_after_deletion": NaN,
+          "growth_after_deletion": NaN,
+          "state": "infeasible",
+          "load_bearing": true
+        }
+      },
+      "load_bearing_by_flux_role": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "rule_excluded_a_load_bearing_route": [
+        "PFL"
+      ],
+      "rule_excluded_a_NON_load_bearing_route": []
+    }
+  },
+  "growth_confound_control": {
+    "per_target_load_bearing_sets": {
+      "EX_lac__D_e": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "EX_etoh_e": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "EX_ac_e": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "EX_succ_e": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ],
+      "EX_for_e": [
+        "ACALD",
+        "ACKr",
+        "ALCD2x",
+        "PFL",
+        "PTAr"
+      ]
+    },
+    "all_five_targets_identical": true,
+    "growth_infeasible_at_floor": [
+      "ACALD",
+      "ACKr",
+      "ALCD2x",
+      "PFL",
+      "PTAr"
+    ],
+    "growth_only_probe": {
+      "PFL": {
+        "max_growth_after_deletion": 0.1158793002898527,
+        "reaches_floor": false
+      },
+      "ALCD2x": {
+        "max_growth_after_deletion": 0.11820291196809322,
+        "reaches_floor": false
+      },
+      "ACALD": {
+        "max_growth_after_deletion": 0.11820291196805538,
+        "reaches_floor": false
+      },
+      "FRD2": {
+        "max_growth_after_deletion": 0.15753981693756414,
+        "reaches_floor": true
+      },
+      "FRD3": {
+        "max_growth_after_deletion": 0.15753981693758118,
+        "reaches_floor": true
+      },
+      "ACKr": {
+        "max_growth_after_deletion": 0.11931962573684315,
+        "reaches_floor": false
+      },
+      "PTAr": {
+        "max_growth_after_deletion": 0.11931962573687484,
+        "reaches_floor": false
+      },
+      "PTA2": {
+        "max_growth_after_deletion": 0.15753981693760055,
+        "reaches_floor": true
+      },
+      "POX": {
+        "max_growth_after_deletion": 0.15753981693759592,
+        "reaches_floor": true
+      },
+      "MGSA": {
+        "max_growth_after_deletion": 0.15753981693759592,
+        "reaches_floor": true
+      },
+      "LDH_D": {
+        "max_growth_after_deletion": 0.15753981693759592,
+        "reaches_floor": true
+      },
+      "LDH_D2": {
+        "max_growth_after_deletion": 0.15753981693759592,
+        "reaches_floor": true
+      },
+      "L_LACD2": {
+        "max_growth_after_deletion": 0.15753981693759592,
+        "reaches_floor": true
+      },
+      "L_LACD3": {
+        "max_growth_after_deletion": 0.15753981693759592,
+        "reaches_floor": true
+      }
+    },
+    "floor_absolute": 0.14178583524383911,
+    "load_bearing_set_EQUALS_growth_infeasible_set": true,
+    "verdict": "FLUX_ROLE_ARM_IS_A_PURE_GROWTH_CONFOUND",
+    "reading": "The per-target load-bearing set is IDENTICAL across five unrelated products AND equals exactly the set of deletions that cannot reach the growth floor. So this arm measures GROWTH ESSENTIALITY at the chosen floor, with zero product-specificity. It cannot distinguish 'load-bearing for this product' from 'required to grow at this floor'.",
+    "root_cause": "The floor was passed as growth_frac x WILDTYPE growth. design.py's own evaluate_knockouts docstring warns against exactly this: the floor must be growth_frac x the MUTANT'S OWN maximum, because 'a floor taken relative to the wild type is unreachable for any knockout that slows the cell' (verified in-repo 2026-08-07). Every one of these five deletions slows the cell, so each is infeasible by construction rather than by product dependence.",
+    "consequence_for_the_plan": "This plan's Step 2 would build build_candidate_pool on this arm. Its premise is REFUTED before any code was written: the constructor would exclude the growth-essential set for every product alike. Step 2 must be REDESIGNED, not executed -- the mutant-relative floor is the documented fix and belongs in a re-planned step."
+  },
+  "non_mutation_check": {
+    "EX_o2_e_inside_context": 0.0,
+    "EX_o2_e_after_context": -1000.0,
+    "condition_reverted": true
+  }
+}
