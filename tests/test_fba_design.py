@@ -201,3 +201,77 @@ def test_wildtype_ecoli_is_not_growth_coupled_for_succinate():
     assert d.coupling == POSSIBLE
     assert math.isclose(d.min_product, 0.0, abs_tol=1e-6)
     assert d.max_product > 1.0
+
+
+@pytest.mark.slow
+def test_restricted_pool_finds_anaerobic_d_lactate_designs():
+    """The companion gate to the succinate one: the POOL, not the budget, is what finds designs.
+
+    Measured 2026-11-19 after four unrestricted arms found nothing overnight. Searching all 2266
+    candidate reactions returns ZERO coupled D-lactate designs at every depth and budget tried --
+    including a bilevel MILP given 12600 s per arm, seven times its hardcoded limit. Restricting the
+    pool to the routes that COMPETE with lactate for fermentative carbon and redox returns 63
+    designs exhaustively in seconds.
+
+    Why the unrestricted search cannot find them, measured: PFL alone raises the product CEILING
+    (7.256 -> 18.458) and leaves the FLOOR at 0.0, so it scores improvement_over_wildtype exactly
+    0.0. Coupling first appears at DEPTH 2. Since the pair/triple pool is PRE-RANKED, a member that
+    individually scores zero can never be promoted, and the triple containing it is never built --
+    which is verbatim the limitation pyproject.toml records for this path.
+
+    LDH_D is DELIBERATELY ABSENT from the pool: it is the lactate-PRODUCING enzyme, and the
+    succinate gate above reaches ITS product precisely by deleting it. The two products compete.
+    """
+    pytest.importorskip("cobra")
+    from dna_decode.fba.design import find_coupled_designs
+    from dna_decode.fba.model import load_model, wildtype_growth
+
+    pool = ["PFL", "ALCD2x", "ACALD", "FRD2", "FRD3", "ACKr", "PTAr", "PTA2",
+            "POX", "MGSA", "LDH_D2", "L_LACD2", "L_LACD3"]
+    assert "LDH_D" not in pool, "deleting the producing enzyme cannot yield a lactate design"
+
+    m = load_model()
+    r = find_coupled_designs(
+        m, "EX_lac__D_e", wt_growth=wildtype_growth(m), anaerobic=True, level="reaction",
+        max_knockouts=3, growth_frac=0.9, gene_ids=pool,
+    )
+
+    assert r["n_candidates_scanned"] == len(pool)
+    assert r["wildtype_already_coupled"] is False       # unlike succinate, WT secretes none
+    assert r["n_coupled_designs"] >= 10                 # 63 measured; the bar is deliberately loose
+    best = r["designs"][0]
+    assert len(best["knockouts"]) >= 2                  # depth 1 cannot couple -- see the docstring
+    assert "PFL" in best["knockouts"]                   # the zero-scoring member every design needs
+    assert best["min_product_flux"] > 5.0               # guaranteed lactate, not a rounding artifact
+    assert best["growth_per_h"] > 0.0                   # the designed strain must still grow
+    assert best["min_product_flux"] < 2 * 10.0          # 2 lactate per glucose at an uptake of 10
+
+
+@pytest.mark.slow
+def test_a_single_knockout_cannot_couple_lactate_and_that_is_why_pre_ranking_fails():
+    """The mechanism behind the test above, pinned on its own.
+
+    This is the whole reason an unrestricted search fails, so it is worth a test that does not
+    depend on the search at all: PFL alone is the highest-value MEMBER of every top design and
+    scores ZERO improvement by itself.
+    """
+    pytest.importorskip("cobra")
+    from dna_decode.fba.design import evaluate_knockouts, set_anaerobic
+    from dna_decode.fba.model import load_model
+
+    m = load_model()
+    set_anaerobic(m)
+    wt = m.slim_optimize()
+    tgt = m.reactions.get_by_id("EX_lac__D_e")
+
+    alone = evaluate_knockouts(m, tgt, ["PFL"], 0.9, wt, "reaction")
+    pair = evaluate_knockouts(m, tgt, ["PFL", "ALCD2x"], 0.9, wt, "reaction")
+
+    # PFL alone lifts the ceiling but NOT the floor -- invisible to any improvement-based ranking.
+    assert alone.coupling == POSSIBLE
+    assert math.isclose(alone.min_product, 0.0, abs_tol=1e-6)
+    assert alone.max_product > 15.0
+
+    # Add one more and the floor leaves zero. Coupling is a property of the SET, not its members.
+    assert pair.coupling == OBLIGATORY
+    assert pair.min_product > 5.0
