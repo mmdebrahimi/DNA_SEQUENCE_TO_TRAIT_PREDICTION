@@ -291,3 +291,112 @@ def test_a_single_knockout_cannot_couple_lactate_and_that_is_why_pre_ranking_fai
 
     # The condition change must NOT outlive this test -- this is the regression guard.
     assert m.reactions.get_by_id("EX_o2_e").lower_bound < 0.0
+
+
+# ---------------------------------------------------------------------------------------------
+# The pool constructor: what the 2026-11-19 method correction actually established.
+#
+# NOTE ON ONE ADAPTED ASSERTION. The plan's Step 4 specified a test asserting that the flux-role
+# arm returns a NON-EMPTY load-bearing set for acetate. Under the CORRECTED (mutant-relative)
+# method it returns an EMPTY set for acetate, measured. That plan line was written under the
+# premise Step 1 refuted, so forcing it would pin the bug rather than the fix. What is pinned
+# instead is the property the correction actually buys: PRODUCT-SPECIFICITY.
+# ---------------------------------------------------------------------------------------------
+
+
+def test_lethal_is_not_treated_as_product_essential():
+    """The confound in one line. A deletion that kills growth says nothing about the product."""
+    from dna_decode.fba.design import DELETION_ROLES, PRODUCT_ESSENTIAL_ROLES
+
+    assert "lethal" in DELETION_ROLES
+    assert "lethal" not in PRODUCT_ESSENTIAL_ROLES
+    assert PRODUCT_ESSENTIAL_ROLES == ("collapsed",)
+
+
+def test_build_candidate_pool_refuses_empty_routes():
+    from dna_decode.fba.design import build_candidate_pool
+
+    with pytest.raises(ValueError, match="empty"):
+        build_candidate_pool(None, None, [])
+
+
+@pytest.mark.slow
+def test_the_pool_is_PRODUCT_SPECIFIC_which_is_what_the_correction_bought():
+    """The whole point of the mutant-relative floor, pinned.
+
+    Before the correction the per-product load-bearing sets were IDENTICAL across five unrelated
+    products and equal to the growth-infeasible set -- a growth-essentiality measurement wearing a
+    product label. After it, ALCD2x (alcohol dehydrogenase) is excluded for ETHANOL and retained for
+    D-LACTATE. If this test ever goes green with both pools equal, the confound is back.
+    """
+    pytest.importorskip("cobra")
+    from dna_decode.fba.design import build_candidate_pool, resolve_target, set_anaerobic
+    from dna_decode.fba.model import load_model
+
+    routes = ["PFL", "ALCD2x", "ACALD", "FRD2", "FRD3", "ACKr", "PTAr", "PTA2",
+              "POX", "MGSA", "LDH_D", "LDH_D2", "L_LACD2", "L_LACD3"]
+    m = load_model()
+    with m:
+        set_anaerobic(m)
+        etoh = build_candidate_pool(m, resolve_target(m, "EX_etoh_e"), routes, growth_frac=0.9)
+        lac = build_candidate_pool(m, resolve_target(m, "EX_lac__D_e"), routes, growth_frac=0.9)
+
+    assert "ALCD2x" in etoh["excluded_product_essential"]
+    assert "ALCD2x" not in lac["excluded_product_essential"]
+    assert set(etoh["pool"]) != set(lac["pool"]), "identical pools means the confound returned"
+    assert etoh["floor_basis"] == "mutant_own_maximum"
+    # The condition must not outlive the block.
+    assert m.reactions.get_by_id("EX_o2_e").lower_bound < 0.0
+
+
+@pytest.mark.slow
+def test_a_growth_slowing_deletion_is_not_reported_lethal():
+    """The mutant-relative floor in one assertion.
+
+    PFL slows anaerobic growth from 0.15754 to 0.11588 /h. Against a floor of 90% of WILD-TYPE
+    growth that is infeasible, which is how the refuted method reported every major fermentative
+    deletion as product-essential. Against the mutant's OWN maximum it is viable, so the role must
+    not be `lethal`.
+    """
+    pytest.importorskip("cobra")
+    from dna_decode.fba.design import resolve_target, set_anaerobic, single_deletion_role
+    from dna_decode.fba.model import load_model
+
+    m = load_model()
+    with m:
+        set_anaerobic(m)
+        role = single_deletion_role(m, resolve_target(m, "EX_lac__D_e"), "PFL", 0.9)
+
+    assert role["present_in_model"] is True
+    assert role["role"] != "lethal", "a growth-slowing deletion judged against WILDTYPE growth"
+    assert role["floor_basis"] == "mutant_own_maximum"
+    assert role["mutant_max_growth"] > 0.0
+
+
+@pytest.mark.slow
+def test_sign_detection_misses_a_reversible_producer_and_the_role_method_does_not_depend_on_it():
+    """The original defect, pinned so nobody reverts to stoichiometric sign.
+
+    ACKr makes acetate but is written in the consuming direction, so its ac_c coefficient is
+    negative and a sign test never sees it. The role method asks what a deletion DOES, so it is
+    not exposed to how the reaction was written down.
+    """
+    pytest.importorskip("cobra")
+    from dna_decode.fba.design import resolve_target, set_anaerobic, single_deletion_role
+    from dna_decode.fba.model import load_model
+
+    m = load_model()
+    met = m.metabolites.get_by_id("ac_c")
+    sign_detected = {r.id for r in met.reactions if r.metabolites[met] > 0}
+
+    # The defect: a real acetate-producing route is invisible to sign detection.
+    assert "ACKr" not in sign_detected
+    assert "PTAr" not in sign_detected
+
+    # The role method still returns a usable classification for it.
+    with m:
+        set_anaerobic(m)
+        role = single_deletion_role(m, resolve_target(m, "EX_ac_e"), "ACKr", 0.9)
+    from dna_decode.fba.design import DELETION_ROLES
+
+    assert role["role"] in DELETION_ROLES

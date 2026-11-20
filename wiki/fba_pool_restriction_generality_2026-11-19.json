@@ -84,5 +84,17 @@
     "The acetate zero is undiagnosed.",
     "STOICHIOMETRIC predictions. FBA models no regulation, kinetics, toxicity or burden; a coupled design is a hypothesis for the bench, not a validated strain.",
     "The succinate best_min here (9.263835) is LOWER than the 12.28 the module's docstring quotes, because that figure is at a 99 percent growth floor and this runs at 90 percent. Same strain, different floor -- the docstring states this explicitly. Not a discrepancy."
-  ]
+  ],
+  "superseded_by": {
+    "artifact": "wiki/fba_pool_rule_fix_2026-11-19.json",
+    "diagnosis": "wiki/fba_pool_rule_diagnosis_2026-11-19.json",
+    "what_this_artifact_got_right": "The headline stands: pool restriction turns an unsearchable 2266-reaction space into an exhaustive search that finds real designs, and it works for 3 of 5 products including the known-correct succinate control. Every measured number in `results` is unchanged and was reproduced by the later run.",
+    "what_it_got_wrong_or_left_open": [
+      "It treated the two zeros as two separate puzzles -- formate blamed on the rule, acetate recorded as UNEXPLAINED. They are ONE defect.",
+      "It did not record the deeper half: producer detection was done by stoichiometric SIGN, which is invalid for a reversible reaction written in the consuming direction. Measured: ACKr / PTAr / PTA2 are absent from the 14 sign-detected producers of ac_c, and LDH_D from those of lac__D_c."
+    ],
+    "the_replacement_method_was_ALSO_wrong": "The first proposed fix -- a flux-role test at 90% of WILDTYPE growth -- is a pure growth confound. It returned an IDENTICAL load-bearing set across all five unrelated products, exactly equal to the set of deletions that cannot reach the growth floor. Corrected by judging the product range at each mutant's OWN maximum, mirroring evaluate_knockouts.",
+    "what_the_corrected_method_measured": "All five pools change (13->14, 12->13, 12->14, 10->14, 13->14) and every design count is unchanged (63, 30, 2, 0, 0). So acetate and formate are now a GENUINE negative rather than an artifact: the old rule had removed PFL from the formate pool, deleting the only fermentative lever, and the corrected rule keeps it as a candidate and still finds nothing.",
+    "correction_to_how_this_artifact_should_be_QUOTED": "Quote the guaranteed FLUX, never the knockout set. FOUR designs tie at 13.42495 for D-lactate, so `best_kos` is settled by sort order over equal keys and varied across runs. This artifact names PTAr,ACALD,PFL as the lactate best; the flux is right and the identity is one tie among four."
+  }
 }
