@@ -279,6 +279,137 @@ def competition_ranking(model, target_rxn, growth_frac: float = 0.9, processes: 
     return scores
 
 
+#: What a single deletion does to the TARGET, with growth judged against the mutant's own ceiling.
+#: `lethal` is deliberately its OWN state and NOT a product claim -- see `single_deletion_role`.
+DELETION_ROLES = ("lethal", "collapsed", "reduced", "unaffected")
+
+#: Only this role means "the pool must keep this reaction OPEN or the product becomes unmakeable".
+#: `lethal` is excluded on purpose: a lethal knockout cannot appear in any viable design anyway, and
+#: `find_coupled_designs` already filters those itself (it reports `n_nonviable_at_floor`). Treating
+#: lethal as product-load-bearing is exactly the confound measured on 2026-11-19.
+PRODUCT_ESSENTIAL_ROLES = ("collapsed",)
+
+
+def single_deletion_role(
+    model, target_rxn, rid: str, growth_frac: float, *, level: str = "reaction",
+    reduced_frac: float = 0.5, tol: float = FLUX_TOL,
+) -> dict:
+    """What does deleting `rid` alone do to `target_rxn`? Judged at the MUTANT'S OWN growth ceiling.
+
+    **The floor basis is the whole point, and a wildtype-relative floor gets this measurably wrong.**
+    `evaluate_knockouts` above already documents why: a floor taken relative to the wild type is
+    unreachable for any knockout that slows the cell. Measured consequence when that mistake is made
+    (`wiki/fba_pool_rule_diagnosis_2026-11-19.json`): every major fermentative deletion reports
+    "product infeasible" because it cannot reach 90% of WILD-TYPE growth, so the result is IDENTICAL
+    across five unrelated products and is really a growth-essentiality measurement wearing a product
+    label. Mirroring `evaluate_knockouts` -- take `mutant_max` AFTER the deletion and judge the
+    product range against that -- separates the two questions.
+
+    Returns a dict carrying the role plus the numbers it was derived from, so a caller can audit the
+    classification rather than trust it. Non-mutating: the deletion is confined to `with model:`.
+    """
+    if rid not in {r.id for r in model.reactions}:
+        return {"reaction": rid, "present_in_model": False, "role": None}
+
+    with model:
+        apply_knockout(model, rid, level)
+        mutant_max = model.slim_optimize()
+        lethal = (mutant_max is None or mutant_max != mutant_max or mutant_max <= 0)
+        if lethal:
+            return {
+                "reaction": rid, "present_in_model": True, "role": "lethal",
+                "mutant_max_growth": None if mutant_max is None or mutant_max != mutant_max
+                else float(mutant_max),
+                "why": "deleting this reaction leaves no growth at all, so it is GROWTH-essential; "
+                       "this says nothing about whether the target product depends on it",
+            }
+        # Intact ceiling at the SAME floor fraction, so `reduced` is a like-for-like comparison.
+        mutant_max = float(mutant_max)
+        _dmn, deleted_max, _dgr = product_range_at_growth(model, target_rxn, growth_frac, mutant_max)
+
+    with model:
+        wt_own = model.slim_optimize()
+        wt_own = None if (wt_own is None or wt_own != wt_own) else float(wt_own)
+        intact_max = None
+        if wt_own is not None and wt_own > 0:
+            _imn, intact_max, _igr = product_range_at_growth(model, target_rxn, growth_frac, wt_own)
+            intact_max = None if (intact_max is None or intact_max != intact_max) else float(intact_max)
+
+    dmax = None if (deleted_max is None or deleted_max != deleted_max) else float(deleted_max)
+    if dmax is None:
+        role = "collapsed"          # grows, yet no product is achievable at its own floor
+    elif dmax <= tol:
+        role = "collapsed"
+    elif intact_max is not None and intact_max > tol and dmax < intact_max * reduced_frac:
+        role = "reduced"
+    else:
+        role = "unaffected"
+
+    return {
+        "reaction": rid, "present_in_model": True, "role": role,
+        "mutant_max_growth": mutant_max,
+        "intact_max_product": intact_max,
+        "max_product_after_deletion": dmax,
+        "floor_basis": "mutant_own_maximum",
+    }
+
+
+def build_candidate_pool(
+    model, target_rxn, routes, *, growth_frac: float = 0.9, level: str = "reaction",
+    reduced_frac: float = 0.5,
+) -> dict:
+    """`routes` minus the reactions the TARGET cannot be made without. Returns pool + its audit.
+
+    Replaces picking producers by stoichiometric SIGN, which is invalid for a reversible reaction
+    written in the consuming direction -- measured 2026-11-19: `ACKr`/`PTAr`/`PTA2` are absent from
+    the 14 sign-detected producers of `ac_c`, and `LDH_D` from those of `lac__D_c`, because each runs
+    both ways. Role is decided by what a deletion DOES, at the mutant's own growth ceiling.
+
+    REFUSES rather than returning something misleading: an empty `routes`, and a pool that would come
+    back empty because every route is product-essential. An empty pool makes `find_coupled_designs`
+    return zero designs, which is indistinguishable from "no design exists" -- the exact shape of the
+    bug this function was written to remove.
+    """
+    routes = list(dict.fromkeys(routes))
+    if not routes:
+        raise ValueError("build_candidate_pool: `routes` is empty; there is no pool to construct")
+
+    roles = {}
+    for rid in routes:
+        r = single_deletion_role(model, target_rxn, rid, growth_frac,
+                                 level=level, reduced_frac=reduced_frac)
+        roles[rid] = r
+
+    product_essential = sorted(k for k, v in roles.items() if v.get("role") in PRODUCT_ESSENTIAL_ROLES)
+    lethal = sorted(k for k, v in roles.items() if v.get("role") == "lethal")
+    absent = sorted(k for k, v in roles.items() if not v.get("present_in_model"))
+    pool = [r for r in routes if r not in set(product_essential) and r not in set(absent)]
+
+    if not pool:
+        raise ValueError(
+            "build_candidate_pool: every route is product-essential or absent, so the pool is empty "
+            "(%d product-essential, %d absent of %d routes). An empty pool makes the search return "
+            "zero designs, which cannot be told apart from 'no design exists'."
+            % (len(product_essential), len(absent), len(routes)))
+
+    return {
+        "pool": pool,
+        "n_routes_in": len(routes),
+        "n_pool_out": len(pool),
+        "excluded_product_essential": product_essential,
+        "retained_though_lethal": lethal,
+        "excluded_absent_from_model": absent,
+        "roles": roles,
+        "floor_basis": "mutant_own_maximum",
+        "growth_frac": growth_frac,
+        "why_lethal_is_retained": (
+            "A lethal deletion is GROWTH-essential, not product-essential. It cannot appear in a "
+            "viable design, and `find_coupled_designs` already filters non-viable candidates itself "
+            "(reported as `n_nonviable_at_floor`). Excluding it here would re-import the growth "
+            "confound that a wildtype-relative floor produces."),
+    }
+
+
 def find_coupled_designs_milp(
     model,
     target: str,
