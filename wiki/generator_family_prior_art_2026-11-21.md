@@ -193,19 +193,18 @@ repeatedly said AlphaGenome is freely available. Split into parts:
 - **MY error, corrected here:** this memo said "weights unreleased". **They are released.**
   `google/alphagenome-all-folds` and `google/alphagenome-fold-3` are on HuggingFace under a
   non-commercial licence. That claim came from secondary coverage of v2 and I did not check it.
-- **The training restriction is NOT removed, because the primary sources state it.** DeepMind's own
-  GitHub repo (`google-deepmind/alphagenome`) says the terms apply to outputs *"which are
-  non-commercial and should not be used for the training of other machine learning models"*; the
-  HuggingFace model card says *"Training a new model on AlphaGenome's outputs or predictions is also
-  restricted, and the resulting models must follow the model-parameter terms."*
-- **VERIFICATION GAP, stated rather than papered over.** The official terms page
-  (deepmind.google.com/science/alphagenome/terms) is behind a sign-in and returned only navigation,
-  so the above rests on GitHub + HuggingFace snippets, not the full licence text. The two differ in
-  FORCE: GitHub reads as a flat prohibition, HuggingFace as a viral condition under which a derived
-  model inherits the terms. **Read the signed-in terms before relying on either reading.**
-- **Why it is probably moot.** The lentiMPRA route needs NO AlphaGenome outputs, because the oracle
-  would be fitted on CC-BY-4.0 measured data. The licence question only bites if AlphaGenome is the
-  teacher.
+- **TRAINING ON ALPHAGENOME OUTPUTS IS PERMITTED FOR THIS PROJECT. The restriction does NOT
+  apply.** The user contacted the AlphaGenome team and was specifically granted permission
+  (user, 2026-11-21). Treat AlphaGenome-as-teacher as an OPEN option, not a blocked one.
+- **Why one sentence about the public terms is retained.** DeepMind's public GitHub repo and
+  HuggingFace model card both describe a default restriction on training other models from
+  AlphaGenome outputs, and that is exactly what I re-derived from scratch earlier today. Without
+  this note a later session will re-derive it from the same public pages and re-block the route.
+  **The public default is superseded here by the granted permission** -- that is the whole reason
+  this bullet exists, and it is not a hedge on the permission.
+- **Independently, the lentiMPRA route needs no AlphaGenome outputs at all**, because the oracle
+  would be fitted on CC-BY-4.0 measured data. So the question is now moot from two directions:
+  permission granted, and a route that does not require it.
 
 "Freely available for research" and "usable as training signal for another model" are different
 permissions. Conflating them is what this correction exists to prevent -- in either direction.

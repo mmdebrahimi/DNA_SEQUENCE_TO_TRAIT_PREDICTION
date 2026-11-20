@@ -217,7 +217,7 @@ the actual interview transcripts, which also corrected two of our *own* statemen
 The 1 Mb context, U-Net compress/expand, transformer tower and 2D contact branch all exist for **long-range
 enhancer–promoter interaction across hundreds of kb** — and a bacterial promoter is **100–300 bp**. Its 11
 output heads predict splicing, histone marks and chromatin contacts, **which a bacterium does not have**.
-It is human/mouse, and its licence **forbids training on its outputs**. So AlphaGenome cannot be integrated
+It is human/mouse, and its licence **forbids training on its outputs**. **[BOTH CLAUSES SUPERSEDED 2026-11-21.** The AlphaGenome team granted this project specific permission to train on its outputs (user), so the licence clause does not constrain work here. And human/mouse is no longer a disqualification: organism is a substrate CHOICE under the north star's "climb to animals", and the eukaryotic arm already ran on the human lentiMPRA panel 2026-11-01 returning SUBSTRATE_LIMITED for both HepG2 and K562 -- the human gain's CI lies entirely ABOVE the bacterial gain 0.0122. See wiki/generator_family_prior_art_2026-11-21.md.**]** So AlphaGenome cannot be integrated
 into the bacterial GLM, and the reason is structural, not effort.
 
 *(Where it could legitimately integrate: the HUMAN clinical track. The AlphaGenome Atlas precomputes ~9

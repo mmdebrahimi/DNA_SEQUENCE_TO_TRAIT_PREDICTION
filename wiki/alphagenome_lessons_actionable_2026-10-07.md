@@ -12,7 +12,7 @@ Nature 2024" — wrong on both).
 compress/expand, the transformer tower and the 2D contact branch all exist for one purpose — long-range
 enhancer–promoter interaction across hundreds of kb — and a bacterial promoter is 100–300 bp. Its eleven
 output heads predict splicing, histone marks and chromatin contacts, which a bacterium does not have. Its
-licence separately forbids training on its outputs, and the model is human/mouse. So anyone reading the
+licence separately forbids training on its outputs **[SUPERSEDED 2026-11-21 -- the AlphaGenome team granted this project specific permission to train on its outputs (user); that clause does NOT constrain work here. See the annotation at the end of this file.]**, and the model is human/mouse **[also superseded: organism is a substrate CHOICE here, not a constraint -- see wiki/generator_family_prior_art_2026-11-21.md]**. So anyone reading the
 circulated architecture description is reading the half that is irrelevant to us.
 
 What transfers is how they *train* and how they *validate*.
@@ -152,8 +152,9 @@ Appended rather than edited, so the 2026-10-07 reading stays legible as what was
    `dna_decode/glm/lentimpra.py` already holds 159,795 measured human lentiMPRA pairs at 230 bp under
    CC-BY-4.0 -- roughly 37x our 4,340 bacterial proxy windows. See
    `wiki/generator_family_prior_art_2026-11-21.md`.
-2. **"licence separately forbids training on its outputs"** -- DeepMind's GitHub repo and the
-   HuggingFace model card both support a training restriction, so the claim is NOT withdrawn. But the
-   full terms page is sign-in gated and was not read, and the two available sources differ on whether
-   it is a prohibition or a viral inheritance condition. Treat as supported but unverified.
-   Separately, weights ARE downloadable on HuggingFace under non-commercial terms.
+2. **"licence separately forbids training on its outputs" is WITHDRAWN for this project.** The
+   AlphaGenome team granted the user specific permission to train on its outputs (user, 2026-11-21),
+   so the body's licence sentence does NOT constrain work here. The public GitHub and HuggingFace
+   pages still describe a default restriction, which is noted only so a future session does not
+   re-derive it from those pages and re-block the route. Separately, weights ARE downloadable on
+   HuggingFace, correcting a claim of mine that they were unreleased.
