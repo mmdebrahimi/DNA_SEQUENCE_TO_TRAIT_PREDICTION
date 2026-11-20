@@ -1061,3 +1061,16 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+## [plan_file: Bound_The_Training_Variance_That_Dominated_And_Decide_If_The_Delta_Is_Resolvable_At_All_Plan/] 2026-11-21
+**Status:** candidate
+**Shelved 2026-11-21, not executed.** A prior-art scan (wiki/generator_family_prior_art_2026-11-21.md) found the problem solved repeatedly on E. coli by ADVERSARIAL and DIFFUSION generators with wet-lab validation (WGAN-GP 45.8% functional), while Absorb & Escape names the autoregressive failure mode as inability to capture global DNA structure. So this plan would decompose variance INSIDE the generator family the literature says to leave. It remains valid and runnable -- it can still CLOSE the resolvability question -- but it cannot move the surviving +0.1186 null gap. Direction decision deferred to the user.
+**Summary:** The paired sweep returned DELTA_NOT_ESTABLISHED and its pre-registration had named TRAINING variance as the term it does not bound -- which turned out to dominate: epoch 3 at generation seed 7 drifted 0.0413 from the committed arm, larger than the 0.0271 effect under test, with differing loss curves under the same method and seed. This separates measurement variance (across generation seeds at fixed training) from training variance (across training runs at fixed generation seed) to decide whether a delta this size is resolvable at all under single-run training.
+**Key decisions:**
+- Measured cause, not speculation: there is NO torch seeding anywhere in the kernel while the training data order IS deterministic, so the drift is LoRA adapter init plus cuDNN nondeterminism and training runs are currently unlabelled. Step 2 adds `torch.manual_seed(train_seed)` before `get_peft_model`.
+- Deterministic algorithms are deliberately NOT forced: residual cuDNN nondeterminism IS part of training variance, which is the quantity being measured, so suppressing it would change the measurement. Seeding the init only makes runs labelled and distinct, which is all the decomposition needs.
+- The zero-shot row is REUSED from the predecessor grid rather than re-scored, because line 447 scores the pristine MODEL_ID and the row is therefore training-independent; one cell is re-scored in-run as a reuse check that ABORTS on mismatch. Saves 9 scorings (~21 min).
+- TRAINING_VARIANCE_DOMINATES is the outcome that CLOSES a question rather than refining one, and the bar says so in advance -- with the loss-curve reproducibility check as the guard against an unfalsifiable reading, since if the seeds did not separate the runs the decomposition is void.
+- HONEST SCOPE LIMIT, carried as the first Open Question: this plan cannot move the robust finding (the generator loses to a 3-mer Markov chain at 10 of 10 seeds, mean gap 0.1186). A redirect decision is open before the ~1.9 h run.
+
+---
+
