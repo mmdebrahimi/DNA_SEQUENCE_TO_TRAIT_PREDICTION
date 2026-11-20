@@ -1,0 +1,320 @@
+{
+  "schema": "fba-pool-rule-fix-v1",
+  "date": "2026-11-19",
+  "question": "Does the pool constructor built on the MUTANT-relative floor change the pools, and does it recover designs for the two products that returned zero?",
+  "method_correction": "Step 1 refuted the original flux-role method as a pure growth confound (identical answers across five unrelated products, equal to the growth-infeasible set). The corrected method judges the product range at each mutant's OWN maximum growth, mirroring evaluate_knockouts.",
+  "params_read_verbatim_from": "wiki/fba_pool_restriction_generality_2026-11-19.json",
+  "params": {
+    "anaerobic": true,
+    "level": "reaction",
+    "max_knockouts": 3,
+    "growth_frac": 0.9
+  },
+  "old_results": {
+    "EX_lac__D_e": {
+      "pool": 13,
+      "designs": 63,
+      "best_min": 13.42495,
+      "best_kos": [
+        "PTAr",
+        "ACALD",
+        "PFL"
+      ]
+    },
+    "EX_etoh_e": {
+      "pool": 12,
+      "designs": 30,
+      "best_min": 13.42495,
+      "best_kos": [
+        "LDH_D",
+        "ACKr",
+        "PFL"
+      ]
+    },
+    "EX_succ_e": {
+      "pool": 12,
+      "designs": 2,
+      "best_min": 9.263835,
+      "best_kos": [
+        "LDH_D",
+        "ALCD2x",
+        "PFL"
+      ]
+    },
+    "EX_ac_e": {
+      "pool": 10,
+      "designs": 0,
+      "best_min": null,
+      "best_kos": []
+    },
+    "EX_for_e": {
+      "pool": 13,
+      "designs": 0,
+      "best_min": null,
+      "best_kos": []
+    }
+  },
+  "new_results": {
+    "EX_lac__D_e": {
+      "pool": 14,
+      "designs": 63,
+      "best_min": 13.42495,
+      "best_growth": 0.115583,
+      "best_kos": [
+        "ACKr",
+        "ALCD2x",
+        "PFL"
+      ],
+      "n_singles": 14,
+      "n_pairs": 91,
+      "n_triples": 364
+    },
+    "EX_etoh_e": {
+      "pool": 13,
+      "designs": 30,
+      "best_min": 13.42495,
+      "best_growth": 0.115583,
+      "best_kos": [
+        "LDH_D",
+        "ACKr",
+        "PFL"
+      ],
+      "n_singles": 13,
+      "n_pairs": 78,
+      "n_triples": 286
+    },
+    "EX_succ_e": {
+      "pool": 14,
+      "designs": 2,
+      "best_min": 9.263835,
+      "best_growth": 0.081588,
+      "best_kos": [
+        "LDH_D",
+        "ALCD2x",
+        "PFL"
+      ],
+      "n_singles": 14,
+      "n_pairs": 91,
+      "n_triples": 364
+    },
+    "EX_ac_e": {
+      "pool": 14,
+      "designs": 0,
+      "best_min": null,
+      "best_growth": null,
+      "best_kos": [],
+      "n_singles": 14,
+      "n_pairs": 91,
+      "n_triples": 364
+    },
+    "EX_for_e": {
+      "pool": 14,
+      "designs": 0,
+      "best_min": null,
+      "best_growth": null,
+      "best_kos": [],
+      "n_singles": 14,
+      "n_pairs": 91,
+      "n_triples": 364
+    }
+  },
+  "pool_audit": {
+    "EX_lac__D_e": {
+      "pool": [
+        "PFL",
+        "ALCD2x",
+        "ACALD",
+        "FRD2",
+        "FRD3",
+        "ACKr",
+        "PTAr",
+        "PTA2",
+        "POX",
+        "MGSA",
+        "LDH_D",
+        "LDH_D2",
+        "L_LACD2",
+        "L_LACD3"
+      ],
+      "n_routes_in": 14,
+      "n_pool_out": 14,
+      "excluded_product_essential": [],
+      "retained_though_lethal": [],
+      "excluded_absent_from_model": [],
+      "floor_basis": "mutant_own_maximum"
+    },
+    "EX_etoh_e": {
+      "pool": [
+        "PFL",
+        "ACALD",
+        "FRD2",
+        "FRD3",
+        "ACKr",
+        "PTAr",
+        "PTA2",
+        "POX",
+        "MGSA",
+        "LDH_D",
+        "LDH_D2",
+        "L_LACD2",
+        "L_LACD3"
+      ],
+      "n_routes_in": 14,
+      "n_pool_out": 13,
+      "excluded_product_essential": [
+        "ALCD2x"
+      ],
+      "retained_though_lethal": [],
+      "excluded_absent_from_model": [],
+      "floor_basis": "mutant_own_maximum"
+    },
+    "EX_succ_e": {
+      "pool": [
+        "PFL",
+        "ALCD2x",
+        "ACALD",
+        "FRD2",
+        "FRD3",
+        "ACKr",
+        "PTAr",
+        "PTA2",
+        "POX",
+        "MGSA",
+        "LDH_D",
+        "LDH_D2",
+        "L_LACD2",
+        "L_LACD3"
+      ],
+      "n_routes_in": 14,
+      "n_pool_out": 14,
+      "excluded_product_essential": [],
+      "retained_though_lethal": [],
+      "excluded_absent_from_model": [],
+      "floor_basis": "mutant_own_maximum"
+    },
+    "EX_ac_e": {
+      "pool": [
+        "PFL",
+        "ALCD2x",
+        "ACALD",
+        "FRD2",
+        "FRD3",
+        "ACKr",
+        "PTAr",
+        "PTA2",
+        "POX",
+        "MGSA",
+        "LDH_D",
+        "LDH_D2",
+        "L_LACD2",
+        "L_LACD3"
+      ],
+      "n_routes_in": 14,
+      "n_pool_out": 14,
+      "excluded_product_essential": [],
+      "retained_though_lethal": [],
+      "excluded_absent_from_model": [],
+      "floor_basis": "mutant_own_maximum"
+    },
+    "EX_for_e": {
+      "pool": [
+        "PFL",
+        "ALCD2x",
+        "ACALD",
+        "FRD2",
+        "FRD3",
+        "ACKr",
+        "PTAr",
+        "PTA2",
+        "POX",
+        "MGSA",
+        "LDH_D",
+        "LDH_D2",
+        "L_LACD2",
+        "L_LACD3"
+      ],
+      "n_routes_in": 14,
+      "n_pool_out": 14,
+      "excluded_product_essential": [],
+      "retained_though_lethal": [],
+      "excluded_absent_from_model": [],
+      "floor_basis": "mutant_own_maximum"
+    }
+  },
+  "decision": {
+    "verdict": "fix-changes-pools-but-not-outcomes",
+    "verdict_enum_closed": [
+      "fix-recovers-designs",
+      "fix-changes-pools-but-not-outcomes",
+      "no-pool-change"
+    ],
+    "pools_changed": {
+      "EX_lac__D_e": {
+        "old": 13,
+        "new": 14
+      },
+      "EX_etoh_e": {
+        "old": 12,
+        "new": 13
+      },
+      "EX_succ_e": {
+        "old": 12,
+        "new": 14
+      },
+      "EX_ac_e": {
+        "old": 10,
+        "new": 14
+      },
+      "EX_for_e": {
+        "old": 13,
+        "new": 14
+      }
+    },
+    "previously_zero": [
+      "EX_ac_e",
+      "EX_for_e"
+    ],
+    "recovered": [],
+    "reading": "The pools provably differ yet the previously-zero products are still zero. The fermentative route was preserved this time, so those zeros are now a GENUINE negative for those products rather than an artifact of the rule -- a stronger result than the original zero, not a weaker one.",
+    "caveat_on_best_design_field": "The verdict (fix-changes-pools-but-not-outcomes) rests on DESIGN COUNTS and pool membership, both reproducible. It does NOT rest on best_kos, which is tie-broken and varied across runs. The lactate best_kos differing old-vs-new (PTAr,ACALD,PFL -> ACKr,ALCD2x,PFL) is a tie-break, NOT evidence the fix changed the outcome."
+  },
+  "no_regression_check": {
+    "checked": [
+      "EX_lac__D_e",
+      "EX_etoh_e",
+      "EX_succ_e"
+    ],
+    "regressions": {},
+    "clean": true
+  },
+  "non_mutation_check": {
+    "EX_o2_e_inside": 0.0,
+    "EX_o2_e_after": -1000.0,
+    "condition_reverted": true
+  },
+  "honest_limits": [
+    "Exhaustive over each CONSTRUCTED pool, never over the model's 2266 reactions.",
+    "ONE model, ONE condition, ONE growth floor, depth 3.",
+    "STOICHIOMETRIC predictions. A coupled design is a hypothesis for the bench, not a validated strain; FBA models no regulation, kinetics, toxicity or burden."
+  ],
+  "reproducibility_and_ties": {
+    "design_count_is_reproducible": true,
+    "evidence": "Three consecutive identical calls in one process returned 63, 63, 63 coupled designs for D-lactate with best min_product_flux 13.42495 every time.",
+    "best_design_IDENTITY_is_NOT_determined": {
+      "observed_top_sets": [
+        "ACKr,ALCD2x,PFL",
+        "ACKr,ALCD2x,PFL",
+        "ACKr,ACALD,PFL",
+        "PTAr,ACALD,PFL (the committed 2026-11-19 run)"
+      ],
+      "why": "FOUR designs tie at the best guaranteed flux 13.42495 (measured: of the returned designs, 16 sit at 10.09747 and 4 at 13.42495). Which tied design surfaces as designs[0] is settled by sort order over equal keys, and that varies between runs.",
+      "consequence": "QUOTE THE FLUX, NOT THE KNOCKOUT SET. '63 designs, best guarantees 13.42495' is stable and reproducible. 'The best design is PTAr+ACALD+PFL' is NOT a determined claim -- it is one of four tied sets. Earlier write-ups in this repo named a specific triple as the best; the flux they quoted is right and the identity was one tie among four.",
+      "related_in_repo": "Same class as the recorded BLOSUM62 mid-rank trap, where sorted()-order tie-breaking silently shifted a median."
+    },
+    "designs_list_is_TRUNCATED": {
+      "what": "find_coupled_designs returns n_coupled_designs=63 while the `designs` list carries 20 entries.",
+      "why_it_matters": "Reading len(result['designs']) as the design count under-reports it by 3x. This produced a false discrepancy during verification -- a '20 vs 63' contradiction that was a misread, not a result conflict.",
+      "rule": "Use n_coupled_designs for the count; the designs list is a capped sample."
+    }
+  }
+}

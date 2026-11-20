@@ -164,15 +164,173 @@ def flux_role_load_bearing(model, target_rxn, candidates, growth_frac, wt_growth
     return rows
 
 
+#: Step 3's verdicts, FIXED HERE before any validation result was read. The plan pre-registered
+#: these precisely because this module has a recorded instance of a pre-committed rule mislabelling
+#: a zero, so the branch is chosen mechanically rather than argued for after the fact.
+VALIDATE_VERDICTS = (
+    "fix-recovers-designs",                 # formate and/or acetate now yield >= 1 coupled design
+    "fix-changes-pools-but-not-outcomes",   # pools provably differ, both still zero -> GENUINE negative
+    "no-pool-change",                       # constructor reproduces the old pools -> retract the diagnosis
+)
+
+
+def choose_validate_verdict(old_results, new_results) -> dict:
+    """PURE. Decide which pre-registered branch the measurement landed in.
+
+    `old_results` / `new_results` map target -> {"pool": int, "designs": int}. No model, no FBA.
+    """
+    pools_changed = {
+        t: {"old": old_results[t]["pool"], "new": new_results[t]["pool"]}
+        for t in new_results if t in old_results
+        and old_results[t]["pool"] != new_results[t]["pool"]
+    }
+    was_zero = [t for t in ("EX_ac_e", "EX_for_e") if old_results.get(t, {}).get("designs") == 0]
+    recovered = [t for t in was_zero if (new_results.get(t, {}).get("designs") or 0) > 0]
+
+    if not pools_changed:
+        verdict = "no-pool-change"
+        reading = ("The constructor reproduced the previous pools exactly, so the diagnosis that the "
+                   "old rule mis-identified producers is NOT supported by this arm and must be "
+                   "retracted rather than reinterpreted.")
+    elif recovered:
+        verdict = "fix-recovers-designs"
+        reading = ("%s now yield coupled designs where the old rule returned zero, so the rule was "
+                   "the wall for those products." % ", ".join(recovered))
+    else:
+        verdict = "fix-changes-pools-but-not-outcomes"
+        reading = ("The pools provably differ yet the previously-zero products are still zero. The "
+                   "fermentative route was preserved this time, so those zeros are now a GENUINE "
+                   "negative for those products rather than an artifact of the rule -- a stronger "
+                   "result than the original zero, not a weaker one.")
+
+    assert verdict in VALIDATE_VERDICTS, "verdict escaped the closed enum"
+    return {
+        "verdict": verdict,
+        "verdict_enum_closed": list(VALIDATE_VERDICTS),
+        "pools_changed": pools_changed,
+        "previously_zero": was_zero,
+        "recovered": recovered,
+        "reading": reading,
+    }
+
+
+def _validate(growth_frac: float, out_path) -> int:
+    """Step 3: re-run all five products on CONSTRUCTED pools and pick a pre-registered branch."""
+    from dna_decode.fba.design import build_candidate_pool, find_coupled_designs, resolve_target, set_anaerobic
+    from dna_decode.fba.model import load_model, wildtype_growth
+
+    # Params read VERBATIM from the committed run, never re-derived from prose.
+    committed = json.loads(
+        Path("wiki/fba_pool_restriction_generality_2026-11-19.json").read_text(encoding="utf-8"))
+    old_results = {t: {"pool": v["pool"], "designs": v["designs"], "best_min": v["best_min"],
+                       "best_kos": v["best_kos"]}
+                   for t, v in committed["results"].items()}
+
+    model = load_model()
+    assert len(model.reactions) == 2712 and len(model.genes) == 1516, "not iML1515"
+    wt_aer = wildtype_growth(model)
+
+    new_results, pool_audit = {}, {}
+    with model:
+        set_anaerobic(model)
+        for tgt in old_results:
+            trx = resolve_target(model, tgt)
+            built = build_candidate_pool(model, trx, ROUTES, growth_frac=growth_frac)
+            pool_audit[tgt] = {k: built[k] for k in
+                               ("pool", "n_routes_in", "n_pool_out", "excluded_product_essential",
+                                "retained_though_lethal", "excluded_absent_from_model", "floor_basis")}
+            r = find_coupled_designs(
+                model, tgt, wt_growth=wt_aer, anaerobic=True, level="reaction",
+                max_knockouts=3, growth_frac=growth_frac, gene_ids=built["pool"])
+            ds = r["designs"] or []
+            best = ds[0] if ds else {}
+            new_results[tgt] = {
+                "pool": r["n_candidates_scanned"],
+                "designs": r["n_coupled_designs"],
+                "best_min": best.get("min_product_flux"),
+                "best_growth": best.get("growth_per_h"),
+                "best_kos": best.get("knockouts", []),
+                "n_singles": r["n_singles_evaluated"], "n_pairs": r["n_pairs_evaluated"],
+                "n_triples": r["n_triples_evaluated"],
+            }
+        o2_in = model.reactions.get_by_id("EX_o2_e").lower_bound
+    o2_out = model.reactions.get_by_id("EX_o2_e").lower_bound
+
+    decision = choose_validate_verdict(old_results, new_results)
+
+    # NO-REGRESSION on the three that already worked. Checked, not assumed.
+    regressions = {}
+    for t in ("EX_lac__D_e", "EX_etoh_e", "EX_succ_e"):
+        if old_results.get(t, {}).get("designs", 0) > 0 and (new_results.get(t, {}).get("designs") or 0) == 0:
+            regressions[t] = {"old": old_results[t]["designs"], "new": new_results[t]["designs"]}
+
+    art = {
+        "schema": "fba-pool-rule-fix-v1",
+        "date": str(date.today()),
+        "question": ("Does the pool constructor built on the MUTANT-relative floor change the pools, "
+                     "and does it recover designs for the two products that returned zero?"),
+        "method_correction": ("Step 1 refuted the original flux-role method as a pure growth confound "
+                             "(identical answers across five unrelated products, equal to the "
+                             "growth-infeasible set). The corrected method judges the product range at "
+                             "each mutant's OWN maximum growth, mirroring evaluate_knockouts."),
+        "params_read_verbatim_from": "wiki/fba_pool_restriction_generality_2026-11-19.json",
+        "params": {"anaerobic": True, "level": "reaction", "max_knockouts": 3,
+                   "growth_frac": growth_frac},
+        "old_results": old_results,
+        "new_results": new_results,
+        "pool_audit": pool_audit,
+        "decision": decision,
+        "no_regression_check": {
+            "checked": ["EX_lac__D_e", "EX_etoh_e", "EX_succ_e"],
+            "regressions": regressions,
+            "clean": not regressions,
+        },
+        "non_mutation_check": {"EX_o2_e_inside": o2_in, "EX_o2_e_after": o2_out,
+                               "condition_reverted": o2_out < 0.0},
+        "honest_limits": [
+            "Exhaustive over each CONSTRUCTED pool, never over the model's 2266 reactions.",
+            "ONE model, ONE condition, ONE growth floor, depth 3.",
+            "STOICHIOMETRIC predictions. A coupled design is a hypothesis for the bench, not a "
+            "validated strain; FBA models no regulation, kinetics, toxicity or burden.",
+        ],
+    }
+    out = Path(out_path) if out_path else Path("wiki/fba_pool_rule_fix_%s.json" % date.today())
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(art, indent=2), encoding="utf-8")
+
+    r = json.loads(out.read_text(encoding="utf-8"))
+    assert r["decision"]["verdict"] in VALIDATE_VERDICTS
+    assert r["non_mutation_check"]["condition_reverted"], "the validation leaked its condition"
+    assert sum(v["n_singles"] for v in r["new_results"].values()) > 0, "nothing was actually searched"
+
+    print("params (verbatim): %s" % r["params"])
+    for t, v in r["new_results"].items():
+        o = r["old_results"][t]
+        print("  %-13s pool %2d->%2d   designs %3d->%-3d  best_min %s -> %s" % (
+            t, o["pool"], v["pool"], o["designs"], v["designs"], o["best_min"], v["best_min"]))
+    print("\n  pools changed: %s" % list(r["decision"]["pools_changed"]))
+    print("  VERDICT: %s" % r["decision"]["verdict"])
+    print("  %s" % r["decision"]["reading"])
+    print("  no-regression clean: %s %s" % (r["no_regression_check"]["clean"],
+                                            r["no_regression_check"]["regressions"] or ""))
+    print("  condition reverted: %s" % r["non_mutation_check"]["condition_reverted"])
+    print("wrote %s" % out)
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--self-check", action="store_true", help="exercise the pure comparison and exit")
+    ap.add_argument("--validate", action="store_true",
+                    help="Step 3: re-run all five products on CONSTRUCTED pools")
     ap.add_argument("--growth-frac", type=float, default=0.9)
     ap.add_argument("--out", default=None)
     args = ap.parse_args()
 
     if args.self_check:
         return _self_check()
+    if args.validate:
+        return _validate(args.growth_frac, args.out)
 
     from dna_decode.fba.design import FLUX_TOL, resolve_target, set_anaerobic
     from dna_decode.fba.model import load_model
@@ -402,6 +560,37 @@ def _self_check() -> int:
     ok &= "infeasible" in LOAD_BEARING_STATES and "collapsed" in LOAD_BEARING_STATES
     ok &= "reduced" not in LOAD_BEARING_STATES     # graded, reported but not pool-excluding
     print("  LOAD_BEARING_STATES     -> %s" % (LOAD_BEARING_STATES,))
+
+    # choose_validate_verdict -- Step 3's branch picker, exercised before the expensive run so a
+    # logic error cannot masquerade as a measurement.
+    OLD = {"EX_lac__D_e": {"pool": 13, "designs": 63}, "EX_ac_e": {"pool": 10, "designs": 0},
+           "EX_for_e": {"pool": 13, "designs": 0}}
+    same = choose_validate_verdict(OLD, {k: dict(v) for k, v in OLD.items()})
+    print("  verdict(identical pools) -> %s" % same["verdict"])
+    ok &= same["verdict"] == "no-pool-change"
+
+    changed_zero = choose_validate_verdict(OLD, {
+        "EX_lac__D_e": {"pool": 14, "designs": 63}, "EX_ac_e": {"pool": 14, "designs": 0},
+        "EX_for_e": {"pool": 14, "designs": 0}})
+    print("  verdict(pools moved, still 0) -> %s" % changed_zero["verdict"])
+    ok &= changed_zero["verdict"] == "fix-changes-pools-but-not-outcomes"
+    ok &= "GENUINE" in changed_zero["reading"]
+
+    recovered = choose_validate_verdict(OLD, {
+        "EX_lac__D_e": {"pool": 14, "designs": 63}, "EX_ac_e": {"pool": 14, "designs": 7},
+        "EX_for_e": {"pool": 14, "designs": 0}})
+    print("  verdict(acetate recovered)    -> %s recovered=%s" % (
+        recovered["verdict"], recovered["recovered"]))
+    ok &= recovered["verdict"] == "fix-recovers-designs"
+    ok &= recovered["recovered"] == ["EX_ac_e"]
+
+    # A pool change on an ALREADY-WORKING product must not count as recovery.
+    not_recovery = choose_validate_verdict(OLD, {
+        "EX_lac__D_e": {"pool": 14, "designs": 99}, "EX_ac_e": {"pool": 10, "designs": 0},
+        "EX_for_e": {"pool": 13, "designs": 0}})
+    print("  verdict(only lactate moved)   -> %s" % not_recovery["verdict"])
+    ok &= not_recovery["verdict"] == "fix-changes-pools-but-not-outcomes"
+    ok &= not_recovery["recovered"] == []
 
     print("SELF-CHECK %s" % ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
