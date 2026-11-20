@@ -1,0 +1,118 @@
+{
+  "record": "glm-generator-paired-sweep-verdict-v1",
+  "date": "2026-11-20",
+  "bar": "wiki/glm_generator_paired_noise_bar_2026-11-20.json",
+  "grid": "wiki/glm_generator_paired_sweep_2026-11-20.json",
+  "claim_status": "DIAGNOSTIC_METHOD_VARIANT",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "instrument_ok": true,
+  "instrument_note": "null reproduces at seed 7 (0.6679) and the grid is complete",
+  "supersedes_in_kernel_verdict": "The grid artifact's own `verdict` field reads INSTRUMENT_INVALID. That was a gate defect: it required the null within 1e-6 of 0.6679 at EVERY seed, but 0.6679 is the null's value at seed 7 only, because --seed also drives the corpus split and the null refit. The grid data itself is sound and is used unmodified.",
+  "delta": {
+    "verdict": "DELTA_NOT_ESTABLISHED",
+    "per_seed_delta": {
+      "0": 0.1016,
+      "1": -0.0386,
+      "2": 0.0466,
+      "3": 0.0221,
+      "4": -0.0172,
+      "5": 0.0378,
+      "6": 0.0328,
+      "7": -0.0142,
+      "8": 0.1686,
+      "9": 0.1181
+    },
+    "mean_delta": 0.04576,
+    "spread_delta": 0.2072,
+    "n_against_committed_sign": 3,
+    "committed_delta": 0.0271,
+    "delta_at_anchor_seed": -0.0142,
+    "sign_flipped_at_anchor_seed": true,
+    "spread_over_committed_effect": 7.65
+  },
+  "trajectory": {
+    "verdict": "TRAJECTORY_UNRESOLVED",
+    "per_step": {
+      "zeroshot->epoch1": {
+        "mean": 0.00158,
+        "n_positive": 6,
+        "n_negative": 4,
+        "sign_consistent": false
+      },
+      "epoch1->epoch2": {
+        "mean": 0.01872,
+        "n_positive": 8,
+        "n_negative": 2,
+        "sign_consistent": false
+      },
+      "epoch2->epoch3": {
+        "mean": 0.02546,
+        "n_positive": 9,
+        "n_negative": 1,
+        "sign_consistent": false
+      }
+    },
+    "ep1_to_ep3_range": 0.1257,
+    "delta_spread": 0.2072,
+    "precedence_note": "FLAT_NOT_EPOCHS and TRAJECTORY_UNRESOLVED both hold; the bar did not state precedence, so the more specific one is reported.",
+    "suggestive_but_not_a_finding": "Step means rise monotonically ([0.00158, 0.01872, 0.02546]) and positive counts rise ([6, 8, 9]), which is what progressive over-training would look like. The frozen rule says UNRESOLVED and it is NOT upgraded: its own text prescribes more draws, not a conclusion."
+  },
+  "null_comparison": {
+    "per_seed_zeroshot_minus_null": {
+      "0": 0.0917,
+      "1": 0.166,
+      "2": 0.127,
+      "3": 0.0794,
+      "4": 0.1333,
+      "5": 0.1377,
+      "6": 0.1413,
+      "7": 0.1108,
+      "8": 0.0869,
+      "9": 0.1114
+    },
+    "mean_gap": 0.11855,
+    "n_seeds_model_beats_null": 0,
+    "n_seeds": 10,
+    "distinct_null_values": [
+      0.5674,
+      0.5983,
+      0.6059,
+      0.6284,
+      0.6388,
+      0.639,
+      0.6491,
+      0.6679,
+      0.6861,
+      0.7024
+    ],
+    "reading": "The generator is worse than its own seed-matched 3-mer Markov null at 10 of 10 seeds. This claim is NOT affected by the delta result."
+  },
+  "anchor": {
+    "zeroshot_at_seed7": 0.7787,
+    "committed_zeroshot": 0.7787,
+    "zeroshot_reproduces_exactly": true,
+    "epoch3_at_seed7": 0.7645,
+    "committed_finetuned": 0.8058,
+    "epoch3_drift": 0.0413,
+    "reading": "Zero-shot reproduces the committed number EXACTLY at the same seed, so the scoring path is deterministic and the instrument is validated. Epoch 3 does NOT, and cannot be expected to: it is a different training run. The loss curves differ (7.43638 / 7.16777 / 6.91858 here vs 7.4361 / 7.1655 / 6.9148 committed), so training is nondeterministic -- which is exactly the variance the bar recorded this design does NOT bound."
+  },
+  "what_this_does_not_bound": "TRAINING variance, and it turned out to dominate. Every scored model comes from ONE training trajectory; the seeds vary generation and the corpus split. The epoch-3 drift from the committed arm at the SAME seed is larger than the effect under test.",
+  "honest_limits": [
+    "One organism (E. coli K-12), one corpus, ONE training trajectory.",
+    "An upstream window is a PROXY for a promoter, not a mapped TSS.",
+    "A k-mer discriminator sees LOCAL composition; the published failures are LONG-RANGE, so a low score is necessary, NOT sufficient -- and this run produced no low scores.",
+    "n=120 generated sequences per cell, the committed geometry, kept for comparability.",
+    "The across-seed spread is MEASUREMENT variation (generation + corpus split + null refit), not generation alone; the bar's wording was narrower than what the seed actually moves."
+  ]
+}

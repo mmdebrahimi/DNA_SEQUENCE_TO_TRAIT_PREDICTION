@@ -4,23 +4,32 @@
   "frozen_before": "any paired number exists. No multi-seed run has been executed at the time this file is written; the sweep kernel is not yet built. This is the pre-registration, not a post-hoc reading.",
   "family": "glm-generator-finetune-2026-10-07",
   "supersedes_nothing": "This does NOT replace wiki/glm_generator_finetune_acceptance_bar.json. That bar froze the question 'does the fine-tuned model fall below the 3-mer Markov null at 0.6679'. It was answered: NO (0.8058). This bar freezes a DIFFERENT question about the NOISE of the delta that answer rests on.",
-
   "question": "The carried reading is that LoRA fine-tuning made distinguishability WORSE by +0.0271 (zero-shot 0.7787 -> fine-tuned 0.8058, mode-both, lower is better). Both numbers are a SINGLE generation draw at one seed. Is that delta larger than its own sampling variation, and does distinguishability rise monotonically across fine-tuning epochs?",
-
   "why_the_existing_control_does_not_answer_it": "falsifier.self_control_ceiling splits the NATURAL corpus against itself across discriminator seeds. It is identical in both committed arms (mode-both 0.5865, kmer 0.5447) because it depends only on the natural corpus and those seeds, not on either generated set. It bounds 'is this distinguishable from natural at all' -- both arms far exceed it -- and is silent on whether two generated sets from two weight sets differ by more than sampling noise.",
-
   "decision_quantity": {
     "definition": "delta_s = score_ft_ep3(s) - score_zs(s), computed PER SEED s, mode-both",
-    "summary_statistics": ["sign pattern across seeds", "mean of delta_s", "spread of delta_s (max - min)"],
+    "summary_statistics": [
+      "sign pattern across seeds",
+      "mean of delta_s",
+      "spread of delta_s (max - min)"
+    ],
     "why_paired": "Var(A - B) = Var(A) + Var(B) - 2Cov(A, B). One arm's seed spread is NOT the uncertainty of A - B. Scoring both models at the SAME seed also cancels the shared terms -- within a seed the eval windows, the discriminator split and the natural corpus are identical -- so a paired delta isolates the weights.",
     "anti_pattern_this_avoids": "Deriving the band from one arm's seed spread. That is the documented error in feedback_tolerance_band_from_the_tested_quantity, whose FIRST recorded instance (2026-10-20) was this same generator and the same shape. The v1 draft of this plan did exactly that and was corrected on review before any run."
   },
-
   "no_numeric_band_is_frozen_here": "Deliberate. The magnitude of the sampling variation is precisely what this run measures, so freezing a numeric threshold now would be guessing at the scale -- the documented way a bar gets mis-specified. The rules below compare the delta to its OWN measured variation and are therefore scale-free.",
-
-  "seed_set": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+  "seed_set": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
   "seed_set_rationale": "Ten seeds, extending falsifier.self_control_ceiling's own seeds=(0,1,2,3,4) convention. MUST contain 7, because 7 is the falsifier CLI default and therefore the seed both committed arms ran at, which is what makes the anchors checkable. Cost at ten seeds is 4 models x 10 seeds = 40 scorings; at the measured 138 s per scoring plus 578 s training that is about 1.7 hours, well inside one Kaggle session.",
-
   "delta_outcomes": {
     "DELTA_ROBUST": {
       "condition": "every seed's delta_s has the same sign as the committed +0.0271 AND the mean of delta_s exceeds the spread of delta_s",
@@ -36,7 +45,6 @@
       "reading": "No delta or trajectory claim is made. A missing cell is not averaged over."
     }
   },
-
   "trajectory_outcomes": {
     "scored_on": "paired per-seed differences between consecutive epoch checkpoints, same seed set",
     "OVERFIT_MONOTONE": {
@@ -56,28 +64,42 @@
       "reading": "The trajectory is smaller than the instrument's noise at this geometry. The remedy is more draws or a larger n, NOT a conclusion."
     }
   },
-
   "anchor_rule": {
     "ANCHOR_DRIFT": "If the seed-7 zero-shot score differs from the committed 0.7787, or the seed-7 epoch-3 score from the committed 0.8058, by more than the spread of delta_s, the run is labelled ANCHOR_DRIFT and NO mechanism claim is made. Rationale: RECORDED warns that CUDA yields different sampled sequences than CPU for this generator; this run is T4-to-T4 against T4 numbers, but cuDNN nondeterminism at a fixed seed is not excluded, so the anchors are checked against the measured spread rather than for exact equality."
   },
-
   "claim_status": "DIAGNOSTIC_METHOD_VARIANT",
   "not_the_frozen_arm": "Epochs 1 and 2 are NOT the pre-registered method: wiki/glm_generator_finetune_acceptance_bar.json freezes method_frozen.epochs = 3. The bar 0.6679 is NOT restated here as clearable by an epoch-1 or epoch-2 checkpoint, and no outcome in this file may be reported as the frozen arm's result. Epoch 3 IS the frozen method and is the only checkpoint comparable to the committed arm B.",
-
   "what_this_design_does_NOT_bound": "TRAINING variance. All four scored models come from ONE training trajectory; the seed set varies GENERATION only. So a DELTA_ROBUST verdict establishes that the delta survives generation noise and says nothing about run-to-run training noise. A second training run at a different torch seed is the test for that and is deliberately out of scope.",
-
   "forecast": {
     "P_DELTA_ROBUST": 0.45,
     "reasoning": "For: +0.0271 is a fifth of the distance from the self-control ceiling (0.5865) to the observed scores (~0.79), and the kmer mode moved in the SAME direction (+0.0204), which two independent feature sets agreeing on a sign makes less likely to be pure noise. Against: n=120 generated sequences is small, a held-out AUROC on 120-vs-1200 has substantial sampling variation, and nobody has ever measured it for this instrument -- the honest prior on an unmeasured noise floor spanning a 0.027 gap is close to a coin flip. Recorded so no result can be retro-fitted.",
     "P_trajectory_informative": 0.5,
     "trajectory_reasoning": "Conditional on DELTA_ROBUST the trajectory is likely readable, since a resolvable endpoint difference implies the intermediate steps are probably resolvable too. If the delta is not established the trajectory is very likely TRAJECTORY_UNRESOLVED, which is why the two verdicts are reported separately rather than combined."
   },
-
   "honest_limits": [
     "One organism (E. coli K-12), one corpus, one training trajectory.",
     "An upstream window is a PROXY for a promoter, not a mapped transcription start site.",
     "A k-mer discriminator measures LOCAL composition; the published audits that separate generated from natural sequence name LONG-RANGE organisation as the failure, which k-mer features cannot see. So a low distinguishability remains necessary, NOT sufficient.",
     "Seeds vary generation only; training variance is unmeasured by construction.",
     "n=120 is the committed geometry and is kept for comparability with the anchors, not because it is the best choice for variance."
-  ]
+  ],
+  "amended_after_the_run": {
+    "date": "2026-11-20",
+    "nothing_above_was_changed": "Every rule, threshold-free condition, outcome name and forecast above is exactly as frozen. This block is ADDITIVE. The original wording is preserved deliberately: it is the record of what was committed to before the numbers existed.",
+    "correction_1_the_band_was_mislabelled": "The spread is described above as 'generation-sampling variation'. It is MEASUREMENT variation: the falsifier takes a single --seed and threads it into build_natural(..., seed) -- which shuffles and selects the natural windows, hence the fit/eval split -- and into MarkovGenerator(seed=...).fit, as well as into generation. So the across-seed spread mixes generation, corpus split and null refit. The PAIRED delta is unaffected, because within one seed both models see the same windows, the same split and the same null, so the confound cancels inside each delta -- an unanticipated second justification for pairing.",
+    "correction_2_the_null_gate_could_only_pass_at_seed_7": "INSTRUMENT_INVALID above fires when 'the Markov null does not reproduce 0.6679'. Applied per-cell that can only ever pass at seed 7, because the null is refit per seed and in the committed grid takes 10 distinct values from 0.5674 to 0.7024. The in-kernel reading did apply it per-cell and duly returned INSTRUMENT_INVALID. Corrected to anchor reproduction at seed 7 alone; see scripts/glm_paired_sweep_verdict.py.",
+    "correction_3_trajectory_precedence_was_unstated": "FLAT_NOT_EPOCHS and TRAJECTORY_UNRESOLVED can both hold, and the bar did not say which wins. The more specific one (TRAJECTORY_UNRESOLVED, which adds the spread-exceeds-range clause) is reported. Recorded as an omission in the bar rather than resolved silently.",
+    "what_the_run_returned": {
+      "delta": "DELTA_NOT_ESTABLISHED (mean +0.0458, spread 0.2072, 3 of 10 seeds against the committed sign, sign FLIPPED at seed 7)",
+      "trajectory": "TRAJECTORY_UNRESOLVED",
+      "null_comparison": "the generator is worse than its own seed-matched null at 10 of 10 seeds, mean gap +0.1186 -- that claim SURVIVES",
+      "forecast_check": "P_DELTA_ROBUST was forecast at 0.45; the outcome was NOT_ESTABLISHED."
+    },
+    "the_caveat_named_the_dominant_term": "what_this_design_does_NOT_bound said TRAINING variance is unmeasured. Measured consequence: zero-shot at seed 7 reproduces the committed 0.7787 EXACTLY, while epoch 3 at seed 7 drifts 0.0413 from the committed 0.8058 -- larger than the 0.0271 effect under test -- and the loss curves differ (7.43638/7.16777/6.91858 vs 7.4361/7.1655/6.9148). A single training run cannot support a delta claim of this size at any seed count.",
+    "artifacts": [
+      "wiki/glm_generator_paired_sweep_2026-11-20.json",
+      "wiki/glm_generator_paired_sweep_verdict_2026-11-20.json",
+      "wiki/glm_generator_paired_sweep_2026-11-20.md"
+    ]
+  }
 }
