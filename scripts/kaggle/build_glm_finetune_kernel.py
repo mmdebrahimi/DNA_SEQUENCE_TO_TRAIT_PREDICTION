@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import base64
 import io
+import re
 import tarfile
 from pathlib import Path
 
@@ -145,6 +146,11 @@ LR = 1e-4
 EPOCHS = 3
 BATCH = 8
 DTYPE = "float32"
+
+#: Variant switch. False emits the frozen two-arm kernel unchanged.
+PAIRED = __PAIRED__
+#: Injected from the builder SEED_SET definition -- never restated here.
+SEEDS = __SEEDS__
 
 # ---- what the committed split manifest says; a drift here REFUSES ----
 EXPECT_SPLIT = {"corpus_total": 4340, "falsifier_fit": 600, "falsifier_eval": 600,
@@ -430,8 +436,157 @@ def step6_finetune(peft_model, tok, seqs):
         curve.append({"epoch": ep, "mean_loss": round(tot / max(nb, 1), 5)})
         print("epoch %d mean loss %.4f  (%.1f min elapsed)"
               % (ep, tot / max(nb, 1), (time.time() - t0) / 60.0), flush=True)
+        # Per-epoch adapter. ADAPTER sits under /kaggle/working, which IS collected as
+        # kernel output, so every checkpoint survives the session -- that is why the
+        # 2026-10-31 adapter was still retrievable. Adapters are megabytes; only the
+        # merged model is 4.8 GB, and that still goes to /tmp.
+        ep_dir = ADAPTER + "/ep%d" % (ep + 1)
+        peft_model.save_pretrained(ep_dir)
+        print("saved adapter for epoch %d -> %s" % (ep + 1, ep_dir), flush=True)
     print("loss curve:", json.dumps(curve), flush=True)
     return curve
+
+
+def paired_reading(grid, null_ok):
+    """The variant OWN reading, deliberately separate from verdict().
+
+    It judges a PAIRED per-seed DIFFERENCE, not one pair of scores, and must never be
+    confused with the frozen arm verdict. The rules are frozen in
+    wiki/glm_generator_paired_noise_bar_2026-11-20.json and are SCALE-FREE: the delta is
+    compared to its own measured spread, never to a constant.
+    """
+    if not null_ok:
+        return "INSTRUMENT_INVALID", "the Markov null did not reproduce", {}
+    zs = {c["seed"]: c["both"] for c in grid if c["model"] == "zeroshot"}
+    e3 = {c["seed"]: c["both"] for c in grid if c["epoch"] == 3}
+    shared = sorted(s for s in set(zs) & set(e3)
+                    if zs[s] is not None and e3[s] is not None)
+    if len(shared) != len(SEEDS):
+        return ("INSTRUMENT_INVALID",
+                "a model-by-seed cell is missing: %d of %d seeds scored on both arms"
+                % (len(shared), len(SEEDS)), {})
+    deltas = {s: e3[s] - zs[s] for s in shared}
+    vals = [deltas[s] for s in shared]
+    mean = sum(vals) / len(vals)
+    spread = max(vals) - min(vals)
+    stats = {"per_seed_delta": {str(s): round(deltas[s], 6) for s in shared},
+             "mean_delta": round(mean, 6),
+             "spread_delta": round(spread, 6),
+             "all_positive": all(v > 0 for v in vals),
+             "committed_delta_at_seed7": 0.0271}
+    if all(v > 0 for v in vals) and mean > spread:
+        return ("DELTA_ROBUST",
+                "every seed positive and mean %.4f > spread %.4f" % (mean, spread), stats)
+    return ("DELTA_NOT_ESTABLISHED",
+            "signs %s, mean %.4f vs spread %.4f"
+            % ("all positive" if all(v > 0 for v in vals) else "MIXED", mean, spread),
+            stats)
+
+
+def anchor_check(grid, spread):
+    """The committed arms ran at seed 7. If this run seed-7 scores drift from them by more
+    than the measured spread, the run is not comparable to the arm it extends."""
+    z7 = [c["both"] for c in grid
+          if c["model"] == "zeroshot" and c["seed"] == 7 and c["both"] is not None]
+    e7 = [c["both"] for c in grid
+          if c["epoch"] == 3 and c["seed"] == 7 and c["both"] is not None]
+    if not z7 or not e7:
+        return "ANCHOR_MISSING", {}
+    dz = abs(z7[0] - 0.7787)
+    de = abs(e7[0] - 0.8058)
+    got = {"zeroshot_seed7": z7[0], "vs_committed_zeroshot": round(dz, 6),
+           "epoch3_seed7": e7[0], "vs_committed_finetuned": round(de, 6),
+           "tolerance_used": round(spread, 6)}
+    drift = (dz > spread or de > spread)
+    return ("ANCHOR_DRIFT" if drift else "ANCHOR_OK"), got
+
+
+def score_model_at_every_seed(cli, label, path, device, grid, epoch):
+    """Score ONE model at EVERY seed, one record per model-by-seed cell.
+
+    The grid is re-written after every cell on purpose: a session cut mid-grid then leaves a
+    partially filled grid that is still readable, instead of an average over an unknown
+    denominator.
+    """
+    for s in SEEDS:
+        out = OUT + "/cell_%s_seed%d.json" % (label, s)
+        _, got = run_arm(cli, "%s-seed%d" % (label, s), path, device, out, seed=s)
+        grid.append({"model": label, "epoch": epoch, "seed": s,
+                     "both": got.get("both"), "kmer": got.get("kmer"),
+                     "null": got.get("_null", {})})
+        json.dump(grid, open(OUT + "/glm_paired_sweep_grid.json", "w"), indent=2)
+    return grid
+
+
+def paired_sweep(cli, device, dev, seqs, tok, model):
+    """Train ONCE under the frozen method, then score zero-shot plus every epoch checkpoint
+    at every seed. One download, one training trajectory, a full paired grid."""
+    import gc
+
+    import torch
+    from peft import PeftModel
+
+    grid = []
+    print("\n=== PAIRED SWEEP: zero-shot at %d seeds ===" % len(SEEDS), flush=True)
+    score_model_at_every_seed(cli, "zeroshot", MODEL_ID, device, grid, None)
+
+    peft_model = step4_lora_shapecheck(tok, model, seqs)
+    curve = step6_finetune(peft_model, tok, seqs)
+    del peft_model, model
+    gc.collect()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()
+
+    for ep in range(1, EPOCHS + 1):
+        ep_dir = ADAPTER + "/ep%d" % ep
+        print("\n=== PAIRED SWEEP: merging epoch %d ===" % ep, flush=True)
+        # Reuse step3_model: it wires setup_tokenizer explicitly. The remote modeling code
+        # only PRINTS a warning when its own tokenizer re-fetch fails, so a bare
+        # from_pretrained here would leave generate() to raise much later.
+        tok_i, base_i = step3_model()
+        pm = PeftModel.from_pretrained(base_i, ep_dir)
+        merged = pm.merge_and_unload()
+        merged.save_pretrained(MERGED, safe_serialization=True)
+        tok_i.save_pretrained(MERGED)
+        del pm, merged, base_i
+        gc.collect()
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+        score_model_at_every_seed(cli, "epoch%d" % ep, MERGED, device, grid, ep)
+
+    nulls = [c["null"].get("both") for c in grid if c.get("null")]
+    null_ok = bool(nulls) and all(
+        v is not None and abs(v - BAR_BOTH) < 1e-6 for v in nulls)
+    v, why, stats = paired_reading(grid, null_ok)
+    anchor, anchor_got = anchor_check(grid, stats.get("spread_delta", 0.0))
+
+    rec = {"record": "glm-generator-paired-sweep-v1",
+           "claim_status": "DIAGNOSTIC_METHOD_VARIANT",
+           "not_the_frozen_arm": ("Epochs 1 and 2 are NOT the pre-registered method "
+                                  "(method_frozen.epochs = 3). Epoch 3 IS. The bar 0.6679 "
+                                  "is not restated as clearable by an epoch-1 or epoch-2 "
+                                  "checkpoint."),
+           "bar": "wiki/glm_generator_paired_noise_bar_2026-11-20.json",
+           "device": dev,
+           "seeds": list(SEEDS),
+           "loss_curve": curve,
+           "grid": grid,
+           "verdict": v, "why": why, "stats": stats,
+           "anchor": anchor, "anchor_detail": anchor_got,
+           "does_not_bound": ("TRAINING variance. Every scored model comes from ONE training "
+                              "trajectory; the seeds vary GENERATION only."),
+           "honest_limits": [
+               "One organism (E. coli K-12), one corpus, one training trajectory.",
+               "An upstream window is a PROXY for a promoter, not a mapped TSS.",
+               "A k-mer discriminator sees LOCAL composition; the published failures are "
+               "LONG-RANGE, so a low score is necessary, NOT sufficient.",
+               "n=120 is the committed geometry, kept for comparability with the anchors, "
+               "not because it is the best choice for variance."]}
+    json.dump(rec, open(OUT + "/glm_paired_sweep_result.json", "w"), indent=2)
+    print("\nPAIRED VERDICT: %s -- %s" % (v, why), flush=True)
+    print("ANCHOR: %s %s" % (anchor, json.dumps(anchor_got)), flush=True)
+    print("wrote " + OUT + "/glm_paired_sweep_result.json", flush=True)
+    return rec
 
 
 def verdict(base, ft, null_ok):
@@ -477,6 +632,15 @@ def main():
         return
 
     tok, model = step3_model()
+
+    if PAIRED:
+        # The paired variant owns the whole flow from here: it scores zero-shot at every
+        # seed, trains ONCE under the frozen method, then scores each epoch checkpoint at
+        # the same seeds. It never calls verdict(), because its decision quantity is a
+        # per-seed DIFFERENCE rather than one pair of scores.
+        paired_sweep(cli, device, dev, seqs, tok, model)
+        print("\ntotal %.1f min" % ((time.time() - t_run) / 60.0), flush=True)
+        return
 
     # ARM A first, on the PRISTINE model, before any adapter touches it.
     base_json, base = run_arm(cli, "A-zeroshot", MODEL_ID, device, OUT + "/arm_a_zeroshot.json")
@@ -590,11 +754,41 @@ if __name__ == "__main__":
 '''
 
 
+def build_body(*, diagnostic: bool = False, paired: bool = False,
+               payload: str = "x") -> str:
+    """The SINGLE place the kernel body is constructed.
+
+    main() and the tests both call this. That matters: on 2026-11-20 adding the PAIRED and
+    SEEDS placeholders broke a test that executed a body it had assembled itself from only two
+    of the four substitutions, while the tests that merely AST-parsed kept passing because a
+    bare `__PAIRED__` parses as a Name. One constructor plus the placeholder guard below makes
+    that class of drift impossible rather than merely unlikely.
+    """
+    if diagnostic and paired:
+        raise SystemExit("--diagnostic and --paired-sweep are mutually exclusive: the "
+                         "diagnostic stops before the model download, so it can never "
+                         "produce a paired grid.")
+    body = KERNEL.replace("__DIAG__", "True" if diagnostic else "False")
+    body = body.replace("__PAIRED__", "True" if paired else "False")
+    body = body.replace("__SEEDS__", repr(tuple(SEED_SET)))
+    body = body.replace("__PAYLOAD__", payload)
+    left = sorted(set(re.findall(r"__[A-Z][A-Z0-9_]*__", body)))
+    # Exclude Python's own dunders, which legitimately appear in the emitted code.
+    left = [x for x in left if x not in ("__NAME__", "__MAIN__", "__FILE__", "__DICT__")]
+    if left:
+        raise SystemExit("REFUSING a body with unsubstituted placeholder(s): %s -- add them "
+                         "to build_body()" % ", ".join(left))
+    return body
+
+
 def main(argv=None) -> int:
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--diagnostic", action="store_true",
                     help="emit the CPU diagnostic variant that stops before the model download")
+    ap.add_argument("--paired-sweep", action="store_true",
+                    help="emit the paired-delta variant: one training run, per-epoch adapters, "
+                         "every model scored at every seed in SEED_SET")
     a = ap.parse_args(argv)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w:gz") as tf:
@@ -604,9 +798,7 @@ def main(argv=None) -> int:
                 raise SystemExit("missing source for the payload: %s" % rel)
             tf.add(p, arcname=rel)
     payload = base64.b64encode(buf.getvalue()).decode()
-    body = KERNEL.replace("__DIAG__", "True" if a.diagnostic else "False")
-    body = body.replace("__SEEDS__", repr(tuple(SEED_SET)))
-    body = body.replace("__PAYLOAD__", payload)
+    body = build_body(diagnostic=a.diagnostic, paired=a.paired_sweep, payload=payload)
     # THE EMITTED KERNEL MUST PARSE, and this guard exists because its absence cost two Kaggle
     # sessions on 2026-10-31. The builder's OWN syntax says NOTHING about the kernel's: the body is
     # a raw triple-quoted string, so a literal newline inside a `print("...")` is perfectly legal
@@ -620,7 +812,15 @@ def main(argv=None) -> int:
     except SyntaxError as e:
         raise SystemExit("REFUSING to write a kernel that does not parse: line %d: %s -- %s"
                          % (e.lineno, e.msg, (e.text or "").rstrip()))
-    name = "glm_finetune_diag_kernel.py" if a.diagnostic else "glm_finetune_kernel.py"
+    if a.paired_sweep:
+        name = "glm_paired_sweep_kernel.py"
+    elif a.diagnostic:
+        name = "glm_finetune_diag_kernel.py"
+    else:
+        # The frozen two-arm artifact. It is the provenance record of the two committed
+        # arms, so regenerating it is a deliberate act, never a side effect of a variant
+        # build. Both variants above write their own file instead.
+        name = "glm_finetune_kernel.py"
     out = ROOT / "scripts" / "kaggle" / name
     out.write_text(body, encoding="utf-8")
     print("wrote %s  (%d KB, payload %d KB, %d files)"

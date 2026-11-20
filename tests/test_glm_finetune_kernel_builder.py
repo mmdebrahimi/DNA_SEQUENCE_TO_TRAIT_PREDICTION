@@ -56,13 +56,13 @@ def test_every_payload_file_exists():
 def test_the_emitted_kernel_parses():
     """Defect 2, the outcome: whatever the builder would write must be valid Python."""
     b = _builder()
-    body = b.KERNEL.replace("__DIAG__", "False").replace("__PAYLOAD__", "x")
+    body = b.build_body()
     ast.parse(body)
 
 
 def test_the_diagnostic_variant_also_parses():
     b = _builder()
-    body = b.KERNEL.replace("__DIAG__", "True").replace("__PAYLOAD__", "x")
+    body = b.build_body(diagnostic=True)
     ast.parse(body)
 
 
@@ -135,8 +135,7 @@ def test_exactly_at_the_bar_is_not_a_pass():
     """The bar is STRICTLY below. A score equal to the null's own value is not beating it."""
     b = _builder()
     ns = {"__name__": "_v"}
-    exec(compile(b.KERNEL.replace("__DIAG__", "False").replace("__PAYLOAD__", "x"),
-                 "k.py", "exec"), ns)
+    exec(compile(b.build_body(), "k.py", "exec"), ns)
     v, _why = ns["verdict"]({"both": 0.6679}, {"both": 0.6679}, True)
     assert v == "C_NO_IMPROVEMENT", v
     v, _why = ns["verdict"]({"both": 0.77}, {"both": 0.6679}, True)
