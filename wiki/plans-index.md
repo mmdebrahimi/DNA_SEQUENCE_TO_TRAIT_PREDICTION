@@ -1050,3 +1050,14 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+## [plan_file: Measure_The_Generator_Noise_Floor_As_A_Paired_Delta_In_One_Session_Plan/] 2026-11-20
+**Status:** candidate
+**Summary:** The carried +0.0271 "fine-tuning made it worse" delta is one draw versus one draw -- generation is seeded (`HFGenerator(seed=0)`, falsifier CLI `--seed` default 7, which `run_arm` never passes), so both committed arms are a single sample at seed 7. This measures the delta's own sampling variation by scoring zero-shot plus all three epoch checkpoints at a shared seed set and judging the paired per-seed deltas.
+**Key decisions:**
+- The band is derived from the PAIRED per-seed delta, never from one arm's seed spread. `Var(A-B) = Var(A)+Var(B)-2Cov`, and v1's one-arm version is the documented anti-pattern in `feedback_tolerance_band_from_the_tested_quantity` whose first recorded instance was this same generator.
+- ONE session, no gate. The whole 2026-10-31 run was 944 s (138 s per scoring, 578 s training), so the "expensive second phase" v1 gated does not exist; the gate also ran backwards, since a noisy instrument argues for more draws, not fewer measurements.
+- The frozen surface is untouched: bar 0.6679, `verdict()`, and `EPOCHS`/`LR`/`BATCH`/`DTYPE`/`LORA` unchanged. The variant ships as `DIAGNOSTIC_METHOD_VARIANT` with its own reading function, because epochs 1-2 are not `method_frozen.epochs = 3`.
+- Seed pairing bounds GENERATION noise ONLY. All four scored models come from one training trajectory, so training-run variance stays unmeasured and the memo must say so.
+
+---
+
