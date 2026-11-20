@@ -47,6 +47,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent.parent
 
+#: The swept seed set for the paired-delta variant, defined ONCE here and injected into the
+#: emitted kernel via __SEEDS__ so there is no second copy to drift. MUST contain 7: that is the
+#: falsifier CLI's default and therefore the seed both committed arms ran at, which is what makes
+#: the anchors against 0.7787 / 0.8058 checkable. Ten seeds = 4 models x 10 = 40 scorings; at the
+#: measured 138 s per scoring plus 578 s training that is about 1.7 h, inside one Kaggle session.
+SEED_SET = (0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+
 #: The import closure of `scripts/glm_generator_falsifier.py` PLUS the split script. Kept VERBATIM.
 #: `glm_finetune_window_split.py` is included rather than reimplemented because it is the module
 #: that OWNS the disjointness proof -- a second reader of the same windows is exactly how a solved
@@ -359,8 +366,14 @@ def step4_lora_shapecheck(tok, model, seqs):
     return peft_model
 
 
-def run_arm(cli, label, model_path, device, outfile):
-    """Score one arm through the SAME falsifier CLI. Only `--model` differs between arms."""
+def run_arm(cli, label, model_path, device, outfile, *, seed=None):
+    """Score one arm through the SAME falsifier CLI. Only `--model` differs between arms.
+
+    `seed` is keyword-only and defaults to None, which appends NOTHING and so reproduces the
+    two committed arms' argv exactly. The falsifier CLI's own default is 7, which is therefore
+    the seed both committed arms ran at -- that is why 7 must stay in SEED_SET, or the anchors
+    against 0.7787 / 0.8058 become uncheckable.
+    """
     print("\n=== ARM %s: %s ===" % (label, model_path), flush=True)
     argv = [
         "--model", model_path, "--device", device, "--conditional",
@@ -373,6 +386,8 @@ def run_arm(cli, label, model_path, device, outfile):
         "--cache-dir", HF,
         "--out", outfile,
     ]
+    if seed is not None:
+        argv += ["--seed", str(seed)]
     print("argv: " + " ".join(argv), flush=True)
     t0 = time.time()
     rc = cli.main(argv)
@@ -590,6 +605,7 @@ def main(argv=None) -> int:
             tf.add(p, arcname=rel)
     payload = base64.b64encode(buf.getvalue()).decode()
     body = KERNEL.replace("__DIAG__", "True" if a.diagnostic else "False")
+    body = body.replace("__SEEDS__", repr(tuple(SEED_SET)))
     body = body.replace("__PAYLOAD__", payload)
     # THE EMITTED KERNEL MUST PARSE, and this guard exists because its absence cost two Kaggle
     # sessions on 2026-10-31. The builder's OWN syntax says NOTHING about the kernel's: the body is
