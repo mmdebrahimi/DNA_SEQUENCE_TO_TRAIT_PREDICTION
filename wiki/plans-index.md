@@ -1039,7 +1039,7 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 ---
 
 ## [plan_file: Fix_The_Pool_Rule_Producer_Detection_And_Diagnose_The_Two_Zeros_As_One_Defect_Plan/] 2026-11-19
-**Status:** candidate
+**Status:** as-built
 **Summary:** The two zero-design products in the 2026-11-19 pool-restriction result are ONE defect with two faces, and the deeper half was unrecorded at the time: producer detection was done by stoichiometric sign (`r.metabolites[met] > 0`), which is invalid for reversible reactions, so the rule both over-excludes (formate: it cut `PFL`, the only fermentative route) and mis-identifies (acetate: the four reactions it excluded are not among the 14 that sign-detection returns for `ac_c`).
 **Key decisions:**
 - Replace sign-based producer detection with a FLUX-ROLE test: a reaction is load-bearing iff deleting it collapses the achievable product to <= `FLUX_TOL`, built on the existing `product_range_at_growth` + `apply_knockout` rather than a new FBA call.
