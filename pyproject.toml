@@ -125,6 +125,20 @@ Issues = "https://github.com/mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION/issues
 dev = [
     "pytest-cov>=5",
     "ruff>=0.4",
+
+    # Kaggle SDK -- the ONLY route to a free T4 for the GLM generator arms, and
+    # `scripts/kaggle_push_poll.py` imports it as a LIBRARY
+    # (`from kaggle.api.kaggle_api_extended import KaggleApi`), so `uv tool install`
+    # does not serve it -- it must be importable inside the project venv.
+    # WHY [dev] AND NOT DEFAULT, unlike the openpyxl/pytest precedent above: this
+    # project is PUBLISHED to PyPI, and nothing in the shipped package imports it, so
+    # a default dep would make every `pip install dna-decode` pull the Kaggle SDK.
+    # THE KNOWN COST of that choice: `uv sync --extra forward` resolves to EXACTLY
+    # default+forward and will DELETE it again. It was undeclared until 2026-11-19,
+    # when a bare `kaggle auth login` failed with CommandNotFound on a host whose
+    # ~/.kaggle/credentials.json was valid the whole time -- the CLI was gone, not the
+    # auth. Re-add with `uv pip install kaggle` (additive) after any such sync.
+    "kaggle>=1.6",
 ]
 
 # FBA metabolic-model cell (`dna-decode fba`): mechanistic gene-KO -> growth/essentiality over iML1515.
