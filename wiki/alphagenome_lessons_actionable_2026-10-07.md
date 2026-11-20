@@ -140,3 +140,20 @@ already encodes this boundary — here it is, stated by the authors about their 
    belongs on the generator.
 4. **No distillation code gets written until a learned representation exists** — and when it does, the
    real-data validation half ships with it or the result is circular.
+
+---
+
+## ANNOTATION, 2026-11-21 -- two claims in the body above are revised
+
+Appended rather than edited, so the 2026-10-07 reading stays legible as what was believed then.
+
+1. **"the model is human/mouse"** remains true but is NO LONGER a disqualification. It was written
+   when E. coli was assumed fixed. The north star says "climb to animals", and
+   `dna_decode/glm/lentimpra.py` already holds 159,795 measured human lentiMPRA pairs at 230 bp under
+   CC-BY-4.0 -- roughly 37x our 4,340 bacterial proxy windows. See
+   `wiki/generator_family_prior_art_2026-11-21.md`.
+2. **"licence separately forbids training on its outputs"** -- DeepMind's GitHub repo and the
+   HuggingFace model card both support a training restriction, so the claim is NOT withdrawn. But the
+   full terms page is sign-in gated and was not read, and the two available sources differ on whether
+   it is a prohibition or a viral inheritance condition. Treat as supported but unverified.
+   Separately, weights ARE downloadable on HuggingFace under non-commercial terms.

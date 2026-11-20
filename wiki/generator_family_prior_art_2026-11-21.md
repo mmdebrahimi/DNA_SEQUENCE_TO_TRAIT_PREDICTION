@@ -148,3 +148,64 @@ Markov null at 10 of 10 seeds, mean gap +0.1186.
   independent head-to-head was found.
 - Wet-lab fractions (45.8%) are for sequences that an oracle had already SELECTED, not for raw
   generator output, and are from one host / one reporter / one vector.
+
+## CORRECTIONS, 2026-11-21 (same day), from user challenge
+
+### 1. "Wrong organism" was MY assumption, not a project constraint
+
+The section above rejects AlphaGenome partly because it is human/mouse while we are on E. coli. The
+user challenged that directly -- *"who told you we are stuck on e.coli?"* -- and they are right, by a
+larger margin than the objection implied.
+
+- The north star says **"act in bacteria -> climb to animals"** and **"AMR was substrate #1, NOT the
+  subject."** Organism is a substrate CHOICE here, not a fixed constraint.
+- `dna_decode/glm/lentimpra.py` ALREADY loads the Agarwal 2025 **human** lentiMPRA panel:
+  **159,795 usable labelled pairs** (HepG2 61,463 + K562 98,332), every sequence exactly **230 bp**,
+  **measured** log2(RNA/DNA), the authors' own 10-fold assignment, **CC-BY-4.0** (Zenodo 10558183).
+  WTC11 refuses by design, its S6 activity rows being gene-keyed.
+- Against our bacterial substrate of **4,340 upstream-of-CDS PROXY windows**, that is **~37x more
+  data, measured rather than proxied, permissively licensed, and already in this codebase.**
+
+**So the data-scale gap this memo flagged against WGAN-GP's 14,098 experimentally identified
+promoters is not an argument for improving the bacterial corpus -- it is an argument for questioning
+the organism.** On the human panel we would hold more measured data than the literature's bacterial
+successes used.
+
+**Regime check, because this must not bypass `eval/regime.py`.** Generating regulatory elements and
+scoring them against measured MPRA activity is **constructed variation -> molecular endpoint**, the
+regime with a measured POSITIVE here (forward cell, rho 0.35-0.76). It is NOT the closed negative,
+which is **natural population + zero-shot + organism-level** phenotype (the Arabidopsis
+flowering-time result). Different regime, so that negative does not apply -- but screen any concrete
+proposal through `screen_proposal(population, endpoint, method)` before building, rather than taking
+this paragraph's word for it.
+
+**It also dissolves this memo's own linear-oracle objection.** 159,795 measured sequences is enough
+to fit a LEARNED oracle, and the repo's own measurement is that the guidance degeneracy reproduces on
+a ridge teacher while `DEGENERACY_DOES_NOT_TRANSFER_TO_THE_LEARNED_TEACHER`
+(`wiki/glm_selfdistill_finetuned_teacher_2026-11-18.json`).
+
+### 2. The licence record: one claim of mine was WRONG, the disputed one is SUPPORTED but UNVERIFIED
+
+The user asked for the training-restriction claim to be removed, on the grounds that DeepMind has
+repeatedly said AlphaGenome is freely available. Split into parts:
+
+- **"Freely available" is CORRECT** -- free for non-commercial research via the API.
+- **MY error, corrected here:** this memo said "weights unreleased". **They are released.**
+  `google/alphagenome-all-folds` and `google/alphagenome-fold-3` are on HuggingFace under a
+  non-commercial licence. That claim came from secondary coverage of v2 and I did not check it.
+- **The training restriction is NOT removed, because the primary sources state it.** DeepMind's own
+  GitHub repo (`google-deepmind/alphagenome`) says the terms apply to outputs *"which are
+  non-commercial and should not be used for the training of other machine learning models"*; the
+  HuggingFace model card says *"Training a new model on AlphaGenome's outputs or predictions is also
+  restricted, and the resulting models must follow the model-parameter terms."*
+- **VERIFICATION GAP, stated rather than papered over.** The official terms page
+  (deepmind.google.com/science/alphagenome/terms) is behind a sign-in and returned only navigation,
+  so the above rests on GitHub + HuggingFace snippets, not the full licence text. The two differ in
+  FORCE: GitHub reads as a flat prohibition, HuggingFace as a viral condition under which a derived
+  model inherits the terms. **Read the signed-in terms before relying on either reading.**
+- **Why it is probably moot.** The lentiMPRA route needs NO AlphaGenome outputs, because the oracle
+  would be fitted on CC-BY-4.0 measured data. The licence question only bites if AlphaGenome is the
+  teacher.
+
+"Freely available for research" and "usable as training signal for another model" are different
+permissions. Conflating them is what this correction exists to prevent -- in either direction.
