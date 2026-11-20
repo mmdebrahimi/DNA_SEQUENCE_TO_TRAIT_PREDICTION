@@ -1,0 +1,501 @@
+{
+  "record": "glm-generator-paired-sweep-v1",
+  "claim_status": "DIAGNOSTIC_METHOD_VARIANT",
+  "not_the_frozen_arm": "Epochs 1 and 2 are NOT the pre-registered method (method_frozen.epochs = 3). Epoch 3 IS. The bar 0.6679 is not restated as clearable by an epoch-1 or epoch-2 checkpoint.",
+  "bar": "wiki/glm_generator_paired_noise_bar_2026-11-20.json",
+  "device": {
+    "cuda": true,
+    "device_name": "Tesla T4",
+    "compute_capability": "7.5",
+    "vram_gib": 14.56,
+    "torch": "2.11.0+cu130",
+    "dtype_used": "float32",
+    "note": "fp32 for BOTH arms. CC>=7.5 would make fp16 fast, but fp16 sampling can change generated sequences and the weights must be the only difference between arms."
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "loss_curve": [
+    {
+      "epoch": 0,
+      "mean_loss": 7.43638
+    },
+    {
+      "epoch": 1,
+      "mean_loss": 7.16777
+    },
+    {
+      "epoch": 2,
+      "mean_loss": 6.91858
+    }
+  ],
+  "grid": [
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 0,
+      "both": 0.7305,
+      "kmer": 0.6986,
+      "null": {
+        "kmer": 0.5009,
+        "both": 0.6388
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 1,
+      "both": 0.7944,
+      "kmer": 0.6997,
+      "null": {
+        "kmer": 0.5022,
+        "both": 0.6284
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 2,
+      "both": 0.7761,
+      "kmer": 0.6624,
+      "null": {
+        "kmer": 0.4834,
+        "both": 0.6491
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 3,
+      "both": 0.7655,
+      "kmer": 0.758,
+      "null": {
+        "kmer": 0.5778,
+        "both": 0.6861
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 4,
+      "both": 0.8357,
+      "kmer": 0.8,
+      "null": {
+        "kmer": 0.5618,
+        "both": 0.7024
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 5,
+      "both": 0.7767,
+      "kmer": 0.7296,
+      "null": {
+        "kmer": 0.549,
+        "both": 0.639
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 6,
+      "both": 0.7396,
+      "kmer": 0.7068,
+      "null": {
+        "kmer": 0.4623,
+        "both": 0.5983
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 7,
+      "both": 0.7787,
+      "kmer": 0.7355,
+      "null": {
+        "kmer": 0.599,
+        "both": 0.6679
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 8,
+      "both": 0.6543,
+      "kmer": 0.5957,
+      "null": {
+        "kmer": 0.583,
+        "both": 0.5674
+      }
+    },
+    {
+      "model": "zeroshot",
+      "epoch": null,
+      "seed": 9,
+      "both": 0.7173,
+      "kmer": 0.7002,
+      "null": {
+        "kmer": 0.4823,
+        "both": 0.6059
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 0,
+      "both": 0.7443,
+      "kmer": 0.6993,
+      "null": {
+        "kmer": 0.5009,
+        "both": 0.6388
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 1,
+      "both": 0.7246,
+      "kmer": 0.6819,
+      "null": {
+        "kmer": 0.5022,
+        "both": 0.6284
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 2,
+      "both": 0.7673,
+      "kmer": 0.6762,
+      "null": {
+        "kmer": 0.4834,
+        "both": 0.6491
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 3,
+      "both": 0.7674,
+      "kmer": 0.7191,
+      "null": {
+        "kmer": 0.5778,
+        "both": 0.6861
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 4,
+      "both": 0.7891,
+      "kmer": 0.725,
+      "null": {
+        "kmer": 0.5618,
+        "both": 0.7024
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 5,
+      "both": 0.7725,
+      "kmer": 0.7141,
+      "null": {
+        "kmer": 0.549,
+        "both": 0.639
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 6,
+      "both": 0.7594,
+      "kmer": 0.7605,
+      "null": {
+        "kmer": 0.4623,
+        "both": 0.5983
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 7,
+      "both": 0.7884,
+      "kmer": 0.7167,
+      "null": {
+        "kmer": 0.599,
+        "both": 0.6679
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 8,
+      "both": 0.7211,
+      "kmer": 0.6254,
+      "null": {
+        "kmer": 0.583,
+        "both": 0.5674
+      }
+    },
+    {
+      "model": "epoch1",
+      "epoch": 1,
+      "seed": 9,
+      "both": 0.7505,
+      "kmer": 0.6706,
+      "null": {
+        "kmer": 0.4823,
+        "both": 0.6059
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 0,
+      "both": 0.796,
+      "kmer": 0.7195,
+      "null": {
+        "kmer": 0.5009,
+        "both": 0.6388
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 1,
+      "both": 0.7536,
+      "kmer": 0.6953,
+      "null": {
+        "kmer": 0.5022,
+        "both": 0.6284
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 2,
+      "both": 0.764,
+      "kmer": 0.7277,
+      "null": {
+        "kmer": 0.4834,
+        "both": 0.6491
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 3,
+      "both": 0.7714,
+      "kmer": 0.7518,
+      "null": {
+        "kmer": 0.5778,
+        "both": 0.6861
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 4,
+      "both": 0.7903,
+      "kmer": 0.7095,
+      "null": {
+        "kmer": 0.5618,
+        "both": 0.7024
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 5,
+      "both": 0.7539,
+      "kmer": 0.7299,
+      "null": {
+        "kmer": 0.549,
+        "both": 0.639
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 6,
+      "both": 0.7608,
+      "kmer": 0.7117,
+      "null": {
+        "kmer": 0.4623,
+        "both": 0.5983
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 7,
+      "both": 0.8296,
+      "kmer": 0.8159,
+      "null": {
+        "kmer": 0.599,
+        "both": 0.6679
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 8,
+      "both": 0.7282,
+      "kmer": 0.7,
+      "null": {
+        "kmer": 0.583,
+        "both": 0.5674
+      }
+    },
+    {
+      "model": "epoch2",
+      "epoch": 2,
+      "seed": 9,
+      "both": 0.824,
+      "kmer": 0.7767,
+      "null": {
+        "kmer": 0.4823,
+        "both": 0.6059
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 0,
+      "both": 0.8321,
+      "kmer": 0.7937,
+      "null": {
+        "kmer": 0.5009,
+        "both": 0.6388
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 1,
+      "both": 0.7558,
+      "kmer": 0.7222,
+      "null": {
+        "kmer": 0.5022,
+        "both": 0.6284
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 2,
+      "both": 0.8227,
+      "kmer": 0.7265,
+      "null": {
+        "kmer": 0.4834,
+        "both": 0.6491
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 3,
+      "both": 0.7876,
+      "kmer": 0.7266,
+      "null": {
+        "kmer": 0.5778,
+        "both": 0.6861
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 4,
+      "both": 0.8185,
+      "kmer": 0.7414,
+      "null": {
+        "kmer": 0.5618,
+        "both": 0.7024
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 5,
+      "both": 0.8145,
+      "kmer": 0.774,
+      "null": {
+        "kmer": 0.549,
+        "both": 0.639
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 6,
+      "both": 0.7724,
+      "kmer": 0.7022,
+      "null": {
+        "kmer": 0.4623,
+        "both": 0.5983
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 7,
+      "both": 0.7645,
+      "kmer": 0.7244,
+      "null": {
+        "kmer": 0.599,
+        "both": 0.6679
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 8,
+      "both": 0.8229,
+      "kmer": 0.7991,
+      "null": {
+        "kmer": 0.583,
+        "both": 0.5674
+      }
+    },
+    {
+      "model": "epoch3",
+      "epoch": 3,
+      "seed": 9,
+      "both": 0.8354,
+      "kmer": 0.7793,
+      "null": {
+        "kmer": 0.4823,
+        "both": 0.6059
+      }
+    }
+  ],
+  "verdict": "INSTRUMENT_INVALID",
+  "why": "the Markov null did not reproduce",
+  "stats": {},
+  "anchor": "ANCHOR_DRIFT",
+  "anchor_detail": {
+    "zeroshot_seed7": 0.7787,
+    "vs_committed_zeroshot": 0.0,
+    "epoch3_seed7": 0.7645,
+    "vs_committed_finetuned": 0.0413,
+    "tolerance_used": 0.0
+  },
+  "does_not_bound": "TRAINING variance. Every scored model comes from ONE training trajectory; the seeds vary GENERATION only.",
+  "honest_limits": [
+    "One organism (E. coli K-12), one corpus, one training trajectory.",
+    "An upstream window is a PROXY for a promoter, not a mapped TSS.",
+    "A k-mer discriminator sees LOCAL composition; the published failures are LONG-RANGE, so a low score is necessary, NOT sufficient.",
+    "n=120 is the committed geometry, kept for comparability with the anchors, not because it is the best choice for variance."
+  ]
+}
