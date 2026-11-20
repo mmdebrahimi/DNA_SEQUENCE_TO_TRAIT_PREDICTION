@@ -1051,7 +1051,7 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 ---
 
 ## [plan_file: Measure_The_Generator_Noise_Floor_As_A_Paired_Delta_In_One_Session_Plan/] 2026-11-20
-**Status:** candidate
+**Status:** as-built
 **Summary:** The carried +0.0271 "fine-tuning made it worse" delta is one draw versus one draw -- generation is seeded (`HFGenerator(seed=0)`, falsifier CLI `--seed` default 7, which `run_arm` never passes), so both committed arms are a single sample at seed 7. This measures the delta's own sampling variation by scoring zero-shot plus all three epoch checkpoints at a shared seed set and judging the paired per-seed deltas.
 **Key decisions:**
 - The band is derived from the PAIRED per-seed delta, never from one arm's seed spread. `Var(A-B) = Var(A)+Var(B)-2Cov`, and v1's one-arm version is the documented anti-pattern in `feedback_tolerance_band_from_the_tested_quantity` whose first recorded instance was this same generator.
