@@ -148,5 +148,120 @@ def _wrap(rows: list[dict], t0: float, *, complete: bool) -> dict:
     }
 
 
+# ---------------------------------------------------------------------------------------------
+# THE FROZEN READING, applied to the committed grid. Rules are fixed in
+# wiki/human_falsifier_bar_2026-11-21.json and are NOT recomputed or relaxed here.
+#
+# The tolerance is the HUMAN self-control's own seed spread, per the bar -- not a constant, because
+# the magnitude is what the run measures and freezing one beforehand would be guessing at the scale.
+# ---------------------------------------------------------------------------------------------
+
+VERDICT_OUT = ROOT / "wiki" / "human_falsifier_verdict_2026-11-21.json"
+
+
+def row_verdict(row: dict) -> tuple[str, dict]:
+    """One cell's verdict: margin-vs-margin against the measured seed spread."""
+    if row.get("status") != "SCORED":
+        return "INSTRUMENT_INVALID", {"reason": row.get("status")}
+    hm = row["margin"]
+    bm = BACTERIAL[row["mode"]]["margin"]
+    spread = row["self_control_seed_spread"]
+    diff = round(hm - bm, 4)
+    if diff > spread:
+        v = "CHAIN_IS_WEAKER_ON_HUMAN"
+    elif diff < -spread:
+        v = "CHAIN_IS_STRONGER_ON_HUMAN"
+    else:
+        v = "CHAIN_IS_COMPARABLE"
+    return v, {"human_margin": hm, "bacterial_margin": bm, "diff": diff,
+               "tolerance_seed_spread": spread, "exceeds_tolerance": abs(diff) > spread}
+
+
+def combine_cells(verdicts: list[str]) -> tuple[str, bool]:
+    """The bar's CONSERVATIVE disagreement rule: if the cells do not agree, report COMPARABLE.
+
+    WEAKER + COMPARABLE -> COMPARABLE. COMPARABLE + STRONGER -> COMPARABLE.
+    WEAKER + STRONGER -> COMPARABLE, and the contradiction is recorded.
+    Fixed in advance so a split result cannot be resolved by picking the agreeable cell.
+    """
+    uniq = set(verdicts)
+    if "INSTRUMENT_INVALID" in uniq:
+        return "INSTRUMENT_INVALID", False
+    if len(uniq) == 1:
+        return uniq.pop(), False
+    contradiction = {"CHAIN_IS_WEAKER_ON_HUMAN", "CHAIN_IS_STRONGER_ON_HUMAN"} <= uniq
+    return "CHAIN_IS_COMPARABLE", contradiction
+
+
+def compute_verdict(rows: list[dict]) -> dict:
+    per_row = []
+    for r in rows:
+        v, detail = row_verdict(r)
+        per_row.append({"cell": r["cell"], "geometry": r["geometry"], "mode": r["mode"],
+                        "verdict": v, **detail})
+
+    by_geom_mode = {}
+    for geom_label, _strip, _bp in GEOMETRIES:
+        for mode in MODES:
+            sel = [p for p in per_row if p["geometry"] == geom_label and p["mode"] == mode]
+            v, contra = combine_cells([p["verdict"] for p in sel])
+            by_geom_mode["%s|%s" % (geom_label, mode)] = {
+                "verdict": v, "cells_contradict": contra,
+                "per_cell": {p["cell"]: p["verdict"] for p in sel}}
+
+    # The adaptor diagnostic: how much of the full-230 distinguishability survives stripping.
+    adaptor = {}
+    for cell in CELLS:
+        for mode in MODES:
+            full = next((r for r in rows if r["cell"] == cell and r["mode"] == mode
+                         and r["geometry"] == GEOMETRIES[0][0]), None)
+            elem = next((r for r in rows if r["cell"] == cell and r["mode"] == mode
+                         and r["geometry"] == GEOMETRIES[1][0]), None)
+            if full and elem and full.get("status") == "SCORED" == elem.get("status"):
+                adaptor["%s|%s" % (cell, mode)] = {
+                    "null_full_230": full["null_distinguishability"],
+                    "null_element_200": elem["null_distinguishability"],
+                    "null_drop": round(full["null_distinguishability"]
+                                       - elem["null_distinguishability"], 4),
+                    "ceiling_full_230": full["self_control_ceiling"],
+                    "ceiling_element_200": elem["self_control_ceiling"],
+                    "ceiling_move": round(elem["self_control_ceiling"]
+                                          - full["self_control_ceiling"], 4)}
+    return {"per_row": per_row, "by_geometry_and_mode": by_geom_mode,
+            "adaptor_diagnostic": adaptor}
+
+
+def verdict_main() -> int:
+    grid = json.loads(OUT.read_text(encoding="utf-8"))
+    v = compute_verdict(grid["rows"])
+    rec = {"record": "human-falsifier-verdict-v1", "date": "2026-11-21",
+           "bar": "wiki/human_falsifier_bar_2026-11-21.json",
+           "grid": "wiki/human_falsifier_margin_2026-11-21.json",
+           "primary_geometry": GEOMETRIES[0][0],
+           "secondary_geometry": GEOMETRIES[1][0],
+           "primary_was_fixed_in_advance": ("The bar named full-230 PRIMARY before any number "
+                                            "existed, for comparability with the activity labels "
+                                            "and the 2026-11-01 encoder arm. It is NOT swapped "
+                                            "after the fact; see the memo for why that choice is "
+                                            "nonetheless uninformative about this question."),
+           **v}
+    VERDICT_OUT.write_text(json.dumps(rec, indent=2), encoding="utf-8")
+
+    print("PER (geometry, mode):")
+    for key, g in v["by_geometry_and_mode"].items():
+        print("  %-40s %-28s contradict=%-5s %s"
+              % (key, g["verdict"], g["cells_contradict"], g["per_cell"]))
+    print()
+    print("ADAPTOR DIAGNOSTIC (null distinguishability lost by stripping 15 nt each end):")
+    for key, a in v["adaptor_diagnostic"].items():
+        print("  %-14s null %.4f -> %.4f  (drop %+.4f)  ceiling moves %+.4f"
+              % (key, a["null_full_230"], a["null_element_200"], -a["null_drop"],
+                 a["ceiling_move"]))
+    print()
+    print("wrote", VERDICT_OUT.relative_to(ROOT).as_posix())
+    return 0
+
+
 if __name__ == "__main__":
-    raise SystemExit(main())
+    import sys
+    raise SystemExit(verdict_main() if "--verdict-only" in sys.argv else main())

@@ -1,0 +1,167 @@
+{
+  "record": "human-falsifier-verdict-v1",
+  "date": "2026-11-21",
+  "bar": "wiki/human_falsifier_bar_2026-11-21.json",
+  "grid": "wiki/human_falsifier_margin_2026-11-21.json",
+  "primary_geometry": "full_230nt_as_shipped",
+  "secondary_geometry": "element_200nt_adaptors_stripped",
+  "primary_was_fixed_in_advance": "The bar named full-230 PRIMARY before any number existed, for comparability with the activity labels and the 2026-11-01 encoder arm. It is NOT swapped after the fact; see the memo for why that choice is nonetheless uninformative about this question.",
+  "per_row": [
+    {
+      "cell": "HepG2",
+      "geometry": "full_230nt_as_shipped",
+      "mode": "kmer",
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "human_margin": 0.3742,
+      "bacterial_margin": 0.0543,
+      "diff": 0.3199,
+      "tolerance_seed_spread": 0.0242,
+      "exceeds_tolerance": true
+    },
+    {
+      "cell": "HepG2",
+      "geometry": "full_230nt_as_shipped",
+      "mode": "both",
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "human_margin": 0.4482,
+      "bacterial_margin": 0.0814,
+      "diff": 0.3668,
+      "tolerance_seed_spread": 0.0435,
+      "exceeds_tolerance": true
+    },
+    {
+      "cell": "HepG2",
+      "geometry": "element_200nt_adaptors_stripped",
+      "mode": "kmer",
+      "verdict": "CHAIN_IS_STRONGER_ON_HUMAN",
+      "human_margin": 0.0036,
+      "bacterial_margin": 0.0543,
+      "diff": -0.0507,
+      "tolerance_seed_spread": 0.0254,
+      "exceeds_tolerance": true
+    },
+    {
+      "cell": "HepG2",
+      "geometry": "element_200nt_adaptors_stripped",
+      "mode": "both",
+      "verdict": "CHAIN_IS_STRONGER_ON_HUMAN",
+      "human_margin": -0.0093,
+      "bacterial_margin": 0.0814,
+      "diff": -0.0907,
+      "tolerance_seed_spread": 0.0644,
+      "exceeds_tolerance": true
+    },
+    {
+      "cell": "K562",
+      "geometry": "full_230nt_as_shipped",
+      "mode": "kmer",
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "human_margin": 0.2633,
+      "bacterial_margin": 0.0543,
+      "diff": 0.209,
+      "tolerance_seed_spread": 0.1021,
+      "exceeds_tolerance": true
+    },
+    {
+      "cell": "K562",
+      "geometry": "full_230nt_as_shipped",
+      "mode": "both",
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "human_margin": 0.4122,
+      "bacterial_margin": 0.0814,
+      "diff": 0.3308,
+      "tolerance_seed_spread": 0.0968,
+      "exceeds_tolerance": true
+    },
+    {
+      "cell": "K562",
+      "geometry": "element_200nt_adaptors_stripped",
+      "mode": "kmer",
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "human_margin": 0.2241,
+      "bacterial_margin": 0.0543,
+      "diff": 0.1698,
+      "tolerance_seed_spread": 0.1011,
+      "exceeds_tolerance": true
+    },
+    {
+      "cell": "K562",
+      "geometry": "element_200nt_adaptors_stripped",
+      "mode": "both",
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "human_margin": 0.2129,
+      "bacterial_margin": 0.0814,
+      "diff": 0.1315,
+      "tolerance_seed_spread": 0.0929,
+      "exceeds_tolerance": true
+    }
+  ],
+  "by_geometry_and_mode": {
+    "full_230nt_as_shipped|kmer": {
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "cells_contradict": false,
+      "per_cell": {
+        "HepG2": "CHAIN_IS_WEAKER_ON_HUMAN",
+        "K562": "CHAIN_IS_WEAKER_ON_HUMAN"
+      }
+    },
+    "full_230nt_as_shipped|both": {
+      "verdict": "CHAIN_IS_WEAKER_ON_HUMAN",
+      "cells_contradict": false,
+      "per_cell": {
+        "HepG2": "CHAIN_IS_WEAKER_ON_HUMAN",
+        "K562": "CHAIN_IS_WEAKER_ON_HUMAN"
+      }
+    },
+    "element_200nt_adaptors_stripped|kmer": {
+      "verdict": "CHAIN_IS_COMPARABLE",
+      "cells_contradict": true,
+      "per_cell": {
+        "HepG2": "CHAIN_IS_STRONGER_ON_HUMAN",
+        "K562": "CHAIN_IS_WEAKER_ON_HUMAN"
+      }
+    },
+    "element_200nt_adaptors_stripped|both": {
+      "verdict": "CHAIN_IS_COMPARABLE",
+      "cells_contradict": true,
+      "per_cell": {
+        "HepG2": "CHAIN_IS_STRONGER_ON_HUMAN",
+        "K562": "CHAIN_IS_WEAKER_ON_HUMAN"
+      }
+    }
+  },
+  "adaptor_diagnostic": {
+    "HepG2|kmer": {
+      "null_full_230": 0.8757,
+      "null_element_200": 0.5106,
+      "null_drop": 0.3651,
+      "ceiling_full_230": 0.5016,
+      "ceiling_element_200": 0.507,
+      "ceiling_move": 0.0054
+    },
+    "HepG2|both": {
+      "null_full_230": 0.9591,
+      "null_element_200": 0.5295,
+      "null_drop": 0.4296,
+      "ceiling_full_230": 0.5109,
+      "ceiling_element_200": 0.5388,
+      "ceiling_move": 0.0279
+    },
+    "K562|kmer": {
+      "null_full_230": 0.8088,
+      "null_element_200": 0.7711,
+      "null_drop": 0.0377,
+      "ceiling_full_230": 0.5455,
+      "ceiling_element_200": 0.547,
+      "ceiling_move": 0.0015
+    },
+    "K562|both": {
+      "null_full_230": 0.9396,
+      "null_element_200": 0.7495,
+      "null_drop": 0.1901,
+      "ceiling_full_230": 0.5274,
+      "ceiling_element_200": 0.5366,
+      "ceiling_move": 0.0092
+    }
+  }
+}
