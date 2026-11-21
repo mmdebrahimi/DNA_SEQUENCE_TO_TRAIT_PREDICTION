@@ -1,0 +1,423 @@
+{
+  "record": "glm-seed-role-variance-v1",
+  "date": "2026-11-21",
+  "question": "Of the across-seed spread in generator distinguishability, how much is nuisance (corpus draw + discriminator split) that a seed-role split would remove, and how much is the candidate's own sampling?",
+  "probe_candidate": "MarkovGenerator(order=3) -- chosen because it is free to replicate; NOT the HF generator",
+  "geometry": {
+    "window_length_bp": 150,
+    "limit_natural": 1200,
+    "natural_set_arg": "promoter",
+    "kmer_k": 4,
+    "positional_bins": 6,
+    "markov_order": 3,
+    "n_generated_per_candidate": 400,
+    "feature_modes": [
+      "kmer",
+      "both"
+    ]
+  },
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "anchor_seed": 7,
+  "arms": {
+    "A_all_coupled": "one seed drives corpus shuffle, generation RNG and discriminator split",
+    "B_generation_only": "corpus and split pinned at seed 7; generation RNG varies",
+    "C_corpus_only": "generation RNG pinned at seed 7; corpus and split vary"
+  },
+  "seed_plans": {
+    "A_all_coupled": [
+      {
+        "seed": 0,
+        "corpus_seed": 0,
+        "gen_seed": 0,
+        "split_seed": 0
+      },
+      {
+        "seed": 1,
+        "corpus_seed": 1,
+        "gen_seed": 1,
+        "split_seed": 1
+      },
+      {
+        "seed": 2,
+        "corpus_seed": 2,
+        "gen_seed": 2,
+        "split_seed": 2
+      },
+      {
+        "seed": 3,
+        "corpus_seed": 3,
+        "gen_seed": 3,
+        "split_seed": 3
+      },
+      {
+        "seed": 4,
+        "corpus_seed": 4,
+        "gen_seed": 4,
+        "split_seed": 4
+      },
+      {
+        "seed": 5,
+        "corpus_seed": 5,
+        "gen_seed": 5,
+        "split_seed": 5
+      },
+      {
+        "seed": 6,
+        "corpus_seed": 6,
+        "gen_seed": 6,
+        "split_seed": 6
+      },
+      {
+        "seed": 7,
+        "corpus_seed": 7,
+        "gen_seed": 7,
+        "split_seed": 7
+      },
+      {
+        "seed": 8,
+        "corpus_seed": 8,
+        "gen_seed": 8,
+        "split_seed": 8
+      },
+      {
+        "seed": 9,
+        "corpus_seed": 9,
+        "gen_seed": 9,
+        "split_seed": 9
+      }
+    ],
+    "B_generation_only": [
+      {
+        "seed": 0,
+        "corpus_seed": 7,
+        "gen_seed": 0,
+        "split_seed": 7
+      },
+      {
+        "seed": 1,
+        "corpus_seed": 7,
+        "gen_seed": 1,
+        "split_seed": 7
+      },
+      {
+        "seed": 2,
+        "corpus_seed": 7,
+        "gen_seed": 2,
+        "split_seed": 7
+      },
+      {
+        "seed": 3,
+        "corpus_seed": 7,
+        "gen_seed": 3,
+        "split_seed": 7
+      },
+      {
+        "seed": 4,
+        "corpus_seed": 7,
+        "gen_seed": 4,
+        "split_seed": 7
+      },
+      {
+        "seed": 5,
+        "corpus_seed": 7,
+        "gen_seed": 5,
+        "split_seed": 7
+      },
+      {
+        "seed": 6,
+        "corpus_seed": 7,
+        "gen_seed": 6,
+        "split_seed": 7
+      },
+      {
+        "seed": 7,
+        "corpus_seed": 7,
+        "gen_seed": 7,
+        "split_seed": 7
+      },
+      {
+        "seed": 8,
+        "corpus_seed": 7,
+        "gen_seed": 8,
+        "split_seed": 7
+      },
+      {
+        "seed": 9,
+        "corpus_seed": 7,
+        "gen_seed": 9,
+        "split_seed": 7
+      }
+    ],
+    "C_corpus_only": [
+      {
+        "seed": 0,
+        "corpus_seed": 0,
+        "gen_seed": 7,
+        "split_seed": 0
+      },
+      {
+        "seed": 1,
+        "corpus_seed": 1,
+        "gen_seed": 7,
+        "split_seed": 1
+      },
+      {
+        "seed": 2,
+        "corpus_seed": 2,
+        "gen_seed": 7,
+        "split_seed": 2
+      },
+      {
+        "seed": 3,
+        "corpus_seed": 3,
+        "gen_seed": 7,
+        "split_seed": 3
+      },
+      {
+        "seed": 4,
+        "corpus_seed": 4,
+        "gen_seed": 7,
+        "split_seed": 4
+      },
+      {
+        "seed": 5,
+        "corpus_seed": 5,
+        "gen_seed": 7,
+        "split_seed": 5
+      },
+      {
+        "seed": 6,
+        "corpus_seed": 6,
+        "gen_seed": 7,
+        "split_seed": 6
+      },
+      {
+        "seed": 7,
+        "corpus_seed": 7,
+        "gen_seed": 7,
+        "split_seed": 7
+      },
+      {
+        "seed": 8,
+        "corpus_seed": 8,
+        "gen_seed": 7,
+        "split_seed": 8
+      },
+      {
+        "seed": 9,
+        "corpus_seed": 9,
+        "gen_seed": 7,
+        "split_seed": 9
+      }
+    ]
+  },
+  "summary": {
+    "A_all_coupled": {
+      "kmer": {
+        "n": 10,
+        "n_distinct": 10,
+        "mean": 0.5464,
+        "sd": 0.0266,
+        "min": 0.4983,
+        "max": 0.5855,
+        "values": [
+          0.5855,
+          0.5447,
+          0.4983,
+          0.5307,
+          0.5296,
+          0.5761,
+          0.573,
+          0.5366,
+          0.5567,
+          0.5325
+        ]
+      },
+      "both": {
+        "n": 10,
+        "n_distinct": 10,
+        "mean": 0.6572,
+        "sd": 0.014,
+        "min": 0.6462,
+        "max": 0.6952,
+        "values": [
+          0.6539,
+          0.6547,
+          0.6952,
+          0.6586,
+          0.6566,
+          0.6498,
+          0.6504,
+          0.6462,
+          0.6484,
+          0.6581
+        ]
+      }
+    },
+    "B_generation_only": {
+      "kmer": {
+        "n": 10,
+        "n_distinct": 10,
+        "mean": 0.5451,
+        "sd": 0.0299,
+        "min": 0.4979,
+        "max": 0.5931,
+        "values": [
+          0.4979,
+          0.5475,
+          0.526,
+          0.5355,
+          0.532,
+          0.5607,
+          0.5929,
+          0.5366,
+          0.5291,
+          0.5931
+        ]
+      },
+      "both": {
+        "n": 10,
+        "n_distinct": 10,
+        "mean": 0.6709,
+        "sd": 0.028,
+        "min": 0.6341,
+        "max": 0.7246,
+        "values": [
+          0.6341,
+          0.6732,
+          0.7246,
+          0.6644,
+          0.6636,
+          0.7038,
+          0.6903,
+          0.6462,
+          0.6469,
+          0.6621
+        ]
+      }
+    },
+    "C_corpus_only": {
+      "kmer": {
+        "n": 10,
+        "n_distinct": 10,
+        "mean": 0.5409,
+        "sd": 0.0252,
+        "min": 0.4991,
+        "max": 0.5745,
+        "values": [
+          0.5745,
+          0.5644,
+          0.5456,
+          0.4991,
+          0.5408,
+          0.5483,
+          0.5375,
+          0.5366,
+          0.4995,
+          0.5626
+        ]
+      },
+      "both": {
+        "n": 10,
+        "n_distinct": 10,
+        "mean": 0.6454,
+        "sd": 0.0249,
+        "min": 0.6072,
+        "max": 0.6956,
+        "values": [
+          0.6715,
+          0.6329,
+          0.65,
+          0.621,
+          0.6342,
+          0.6512,
+          0.6438,
+          0.6462,
+          0.6072,
+          0.6956
+        ]
+      }
+    }
+  },
+  "decomposition": {
+    "kmer": {
+      "sd_all_coupled": 0.0266,
+      "sd_generation_only": 0.0299,
+      "sd_corpus_only": 0.0252,
+      "generation_share_of_sd": 1.124,
+      "corpus_share_of_sd": 0.947,
+      "verdict": "DECOUPLING_LARGELY_INERT"
+    },
+    "both": {
+      "sd_all_coupled": 0.014,
+      "sd_generation_only": 0.028,
+      "sd_corpus_only": 0.0249,
+      "generation_share_of_sd": 2.0,
+      "corpus_share_of_sd": 1.779,
+      "verdict": "DECOUPLING_LARGELY_INERT"
+    }
+  },
+  "mechanism_variance_additivity": {
+    "kmer": {
+      "var_all_coupled": 0.000706,
+      "var_generation_only": 0.000892,
+      "var_corpus_only": 0.000636,
+      "sum_of_decoupled_vars": 0.001527,
+      "sum_over_coupled_ratio": 2.16,
+      "reading": "independent contributors would make the coupled variance roughly the SUM; a ratio well above 1 means the roles are NEGATIVELY correlated and cancel inside a seed"
+    },
+    "both": {
+      "var_all_coupled": 0.000196,
+      "var_generation_only": 0.000784,
+      "var_corpus_only": 0.000622,
+      "sum_of_decoupled_vars": 0.001406,
+      "sum_over_coupled_ratio": 7.18,
+      "reading": "independent contributors would make the coupled variance roughly the SUM; a ratio well above 1 means the roles are NEGATIVELY correlated and cancel inside a seed"
+    }
+  },
+  "mechanism_anchor_sensitivity": {
+    "by_anchor": {
+      "0": {
+        "sd": 0.022,
+        "mean": 0.669
+      },
+      "3": {
+        "sd": 0.0288,
+        "mean": 0.6674
+      },
+      "7": {
+        "sd": 0.028,
+        "mean": 0.6709
+      },
+      "9": {
+        "sd": 0.0232,
+        "mean": 0.6697
+      }
+    },
+    "sd_min": 0.022,
+    "sd_max": 0.0288,
+    "mode": "both",
+    "rival_status": "REFUTED: the generation-only spread exceeds the all-coupled spread at EVERY anchor tested (sd 0.022-0.0288 vs coupled 0.014), so it is not a property of one anchor corpus."
+  },
+  "honest_limits": [
+    "Measured on the MARKOV candidate. It bounds the INSTRUMENT nuisance variance and says nothing about the HF generator own sampling variance, which may be larger or smaller.",
+    "Arm C varies corpus AND split together, so it does not separate those two roles from each other; it bounds their combined contribution.",
+    "10 replicates per arm, so each SD is itself imprecise -- a ratio of two SDs at n=10 is a coarse reading, not a tight estimate.",
+    "The verdict thresholds (0.5, 0.8) are STATED, not derived. The raw ratios are reported so a reader is not limited to the band.",
+    "The cancellation MECHANISM (the null is fit on the same corpus draw it is scored against) is supported by the additivity ratio and by the anchor sweep, but it is not isolated by an experiment that removes the fit-set matching directly.",
+    "The anchor sweep varies WHICH corpus is pinned; it does not test a non-Markov candidate, so the cancellation is established for this null and not for generators in general.",
+    "One geometry and one organism."
+  ],
+  "wall_seconds": 72.9
+}
