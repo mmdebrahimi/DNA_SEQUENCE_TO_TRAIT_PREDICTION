@@ -1088,3 +1088,14 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+## [plan_file: Can_This_Instrument_Resolve_The_Generator_Question_At_All_Plan/] 2026-11-21
+**Summary:** Measure the noise floor the committed grid never recorded, decompose the across-seed variance into the part a seed-role split can remove, and freeze a bar before any re-run number exists.
+**Key decisions:**
+- Step 1 single-sources `build_natural` into `dna_decode/glm/corpus.py` so Steps 2/3/4 cannot grow a second description of the corpus, which is the hazard `geometry_from_args` already exists to prevent.
+- Step 2 emits a per-seed `{seed, null, ceiling, margin}` row per mode; margins may be negative and must not clamp, and the script refuses unless it reproduces the committed ceilings 0.5447/0.5865 at seed 7.
+- Step 3 uses the Markov null as a free variance probe across three arms (all-coupled, generation-only, corpus-only) rather than spending GPU time to learn whether the seed split is worth wiring.
+- Step 4 splits `--seed` into `--corpus-seed`/`--gen-seed`/`--split-seed`, each defaulting to the master, and adds an additive `"seeds"` artifact block -- none of the nine `COMPARISON_GEOMETRY_FIELDS` is a seed, so the comparison contract is untouched.
+- Step 5 freezes the acceptance bar (`NO_WINNABLE_REGION`, `DECOUPLING_HELPS`, `DECOUPLING_INERT`, `INDETERMINATE`, first-match-wins) before Step 6's re-run kernel can produce any number; Step 6 is built and offline-tested but execution stays gated and needs a FRESH Kaggle slug.
+- Scope deliberately excludes adding a generator ceiling criterion to `soraya_runs/arms-ledger.json` until the criterion question is settled.
+
+---
