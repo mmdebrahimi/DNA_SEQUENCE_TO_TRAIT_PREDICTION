@@ -305,6 +305,23 @@ def main(argv=None) -> int:
         # reads, so the two descriptions of one run cannot drift apart again (see
         # `geometry_from_args`). Everything below is per-run output, not geometry.
         **geometry_from_args(a),
+        # PROVENANCE: this artifact recorded no seed AT ALL until 2026-11-21, so a committed result
+        # could not be traced to the draw that produced it. Additive and deliberately NOT a geometry
+        # field -- no entry of COMPARISON_GEOMETRY_FIELDS is a seed, so `--compare-to` is unaffected.
+        #
+        # ONE seed drives all five roles below. That coupling was investigated as a precision problem
+        # and is NOT one: splitting it was measured to WIDEN the spread, not narrow it
+        # (wiki/glm_seed_role_variance_2026-11-21.json -- all-coupled sd 0.0140 against
+        # generation-only 0.0280 in `both` mode, because the Markov null is fitted on the fit half of
+        # the same corpus draw it is scored against, so the roles cancel inside one seed). Recording
+        # the roles is therefore documentation of a matched design, not a to-do.
+        "seeds": {"master": a.seed,
+                  "drives": ["corpus shuffle + limit truncation", "generator RNG", "Markov null RNG",
+                             "uniform null RNG", "discriminator fit/eval split"],
+                  "coupled": True,
+                  "note": "coupling is a FEATURE of the within-seed paired comparison: both arms of a "
+                          "delta see the same windows, the same split and the same null, so the "
+                          "confound cancels inside each delta"},
         "natural_sets": {k: naturals[k]["stats"].as_dict() for k in kinds},
         "fit_eval_split": {"n_fit": len(naturals[kinds[0]]["fit"]),
                            "n_eval": len(naturals[kinds[0]]["eval"]),
