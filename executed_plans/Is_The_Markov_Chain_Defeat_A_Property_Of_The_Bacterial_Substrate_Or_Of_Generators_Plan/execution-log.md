@@ -24,3 +24,23 @@ The plan's question is NOT ESTABLISHED either way, which is a legitimate pre-reg
 - Added beyond the plan: `scripts/human_adaptor_probe.py` + `wiki/human_adaptor_probe_2026-11-21.json`,
   because the memo's central correction rested on an UNMEASURED premise (that the flanks are
   constant) and its obvious rival (a 13% shorter-sequence effect) was unaddressed. Both now measured.
+
+## Final suite, reconciled by CAUSE
+Baseline: 12 failed / 9054 passed / 191 skipped (738 s)
+Final:    12 failed / 9099 passed / 191 skipped (859 s)
+
+Identical failure set, file-for-file and count-for-count: 7 `test_cyp4f2_getrm_concordance.py`,
+3 `test_essentiality_report_card_ladder.py`, 1 `test_readme_quickstart_output.py`,
+1 `test_pneumo_selection_probe.py`. All four are absent DATA, none a code defect, and all four
+predate this plan. **ZERO regressions**; +45 passing.
+
+One accounting discrepancy, chased rather than waved at. 9054 + 49 new tests should be 9103, not
+9099. The suite collected 9302 while running; the tree now collects 9298. The 4-test gap is the
+plan-hygiene family — the suite began collecting BEFORE the plan folder was archived and
+`wiki/plans-index.md` was updated, and this repo has tests that read both, so parametrized collection
+legitimately changed underneath the run. Verified benign rather than asserted:
+`test_plan_state_hygiene.py` + `test_claude_md_citations.py` are green post-archive (22 passed), so
+nothing broke on the archive and no test was lost.
+
+Run state cleaned up (the state file is gitignored, so its removal is not a tracked change).
+No worktrees to remove — sequential by deliberate override.
