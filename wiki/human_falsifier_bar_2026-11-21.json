@@ -1,0 +1,70 @@
+{
+  "record": "human-falsifier-margin-bar-v1",
+  "frozen": "2026-11-21",
+  "frozen_before": "any human distinguishability number exists. The falsifier, the corpus module and the generator CLI were checked and contain ZERO references to human data, so nothing has been measured on this substrate. This is the pre-registration, not a post-hoc reading.",
+  "plan": "plans/Is_The_Markov_Chain_Defeat_A_Property_Of_The_Bacterial_Substrate_Or_Of_Generators_Plan/technical-plan.md",
+  "substrate_artifact": "wiki/human_falsifier_substrate_2026-11-21.json",
+
+  "question": "The generator's one robust failure is losing to a 3-mer Markov chain: worse than its own seed-matched null at 10 of 10 seeds, mean gap +0.1186. Every measurement of that sits on ONE substrate (4,340 E. coli upstream-of-CDS PROXY windows, 150 bp) which the project has already measured as the weaker one (SUBSTRATE_LIMITED, 2026-11-01). Is the Markov-chain defeat a property of the BACTERIAL SUBSTRATE, or of GENERATORS?",
+
+  "decision_quantity": {
+    "definition": "margin = null_distinguishability - self_control_ceiling, computed SEPARATELY per substrate and per feature mode",
+    "why_a_margin_and_not_a_level": "Taken from the predecessor rather than invented. wiki/eukaryotic_arm_result_K562_2026-11-01.md states: 'The comparison that crosses the substrate boundary is the within-substrate gain, not raw Spearman. A within-substrate contrast is the only quantity that crosses a substrate boundary. Raw Spearman does not: the panels have different noise floors and different assays.' Our substrates ALSO differ in LENGTH (230 bp vs 150 bp), which changes a k-mer discriminator's job directly.",
+    "bacterial_anchors": {
+      "mode_both": {"null": 0.6679, "self_control": 0.5865, "margin": 0.0814},
+      "mode_kmer": {"null": 0.5990, "self_control": 0.5447, "margin": 0.0543},
+      "source": "wiki/glm_generator_paired_sweep_2026-11-20.json, committed; NOT recomputed here"
+    }
+  },
+
+  "PROHIBITED_COMPARISON": "The raw human distinguishability level may NOT be compared to the bacterial 0.6679, in this artifact, in the memo, or anywhere downstream. The substrates differ in length, assay, kingdom and library construction, and only a within-substrate contrast crosses that boundary. This prohibition is recorded because the invalid comparison is ONE SUBTRACTION AWAY at all times and is the intuitive thing to reach for. A test asserts the memo contains no such comparison.",
+
+  "no_numeric_tolerance_is_frozen_here": "Deliberate. The tolerance is the SELF-CONTROL's own seed spread on the human set, derived in the run. Its magnitude is exactly what the run measures, so freezing a constant now would be guessing at the scale -- the documented way a bar gets mis-specified.",
+
+  "outcomes_ordered_first_match_wins": {
+    "INSTRUMENT_INVALID": {
+      "condition": "the uniform control does not land high on the human set, OR alphabet_and_length_ok fails, OR self_control_ceiling cannot be derived, OR any cell-by-mode cell is missing",
+      "reading": "No margin is reported. A missing cell is not averaged over. The uniform control is the load-bearing check: bacterially it reaches 0.9641, and a uniform control near chance would mean the discriminator is broken and the null's value says nothing."
+    },
+    "CHAIN_IS_WEAKER_ON_HUMAN": {
+      "condition": "human margin EXCEEDS the bacterial margin by more than the human self-control's seed spread",
+      "reading": "The 3-mer opponent sits further above its own noise floor on human regulatory sequence, so the bacterial defeat is partly substrate-bound and the generator arm should move substrate before it is judged again.",
+      "explicitly_does_not_show": "That a generator would SUCCEED on human. Only that the opponent is relatively weaker there. A generator arm is a separate, gated question."
+    },
+    "CHAIN_IS_COMPARABLE": {
+      "condition": "the two margins differ by LESS than that spread",
+      "reading": "The defeat is about generators rather than about this substrate. Moving substrate will not relieve it, and the generator-family change is the only remaining lever."
+    },
+    "CHAIN_IS_STRONGER_ON_HUMAN": {
+      "condition": "human margin is LOWER than the bacterial margin by more than that spread",
+      "reading": "Moving substrate would make the generator's task HARDER, not easier. The bacterial substrate is the friendlier one for this specific contest, despite being the weaker one for a learned encoder."
+    }
+  },
+
+  "geometry_decisions_the_plan_delegated_to_this_bar": {
+    "adaptors_primary_is_FULL_230bp": "The publisher's sequence is '15nt 5' adaptor - 200nt element - 15nt 3' adaptor'. PRIMARY is the full 230 bp as shipped, because that is the geometry the measured activity labels were generated against and the geometry the 2026-11-01 encoder arm used -- so it is the one comparable to existing human numbers. The 200 nt element is measured as a SECONDARY row, because constant flanks are trivially learnable and could inflate distinguishability for a reason that is not about regulatory structure. Both are reported; the primary is named here so it cannot be chosen after seeing which is more favourable.",
+    "both_cells_reported_and_disagreement_resolves_CONSERVATIVELY": "HepG2 (n=61,463) and K562 (n=98,332) are both measured and both reported. If they yield DIFFERENT outcomes, the reported verdict is the WEAKER claim -- the one asserting less about the substrate. Concretely: WEAKER + COMPARABLE reports COMPARABLE; COMPARABLE + STRONGER reports COMPARABLE; WEAKER + STRONGER reports CHAIN_IS_COMPARABLE and records the contradiction. This is fixed in advance so a split result cannot be resolved by picking the agreeable cell."
+  },
+
+  "what_this_design_does_NOT_bound": [
+    "Whether a neural generator would do better on human. NO generator is run; this characterises the OPPONENT only. Adding one would need a new base model, since the current generator is GENERator-v2-prokaryote-1.2b-base, and would confound substrate with model family.",
+    "WHICH difference carries any effect found. This is ONE substrate change, not a substrate sweep: the panels differ in assay, in length (230 vs 150 bp), in kingdom and in library construction, exactly as the predecessor memo insisted about its own result.",
+    "Anything normalised against a human replicate ceiling. There is none: wiki/human_frame_shape_2026-11-16.json reports no per-replicate columns in the deposit, so no Spearman-Brown step-up is derivable, and it pointedly records that as null 'rather than filled with the BACTERIAL 0.941'. The bacterial 0.941 must NOT be borrowed.",
+    "Long-range organisation. A k-mer-plus-positional discriminator sees LOCAL composition, while the published generator failures name long-range structure, so any low score remains necessary-NOT-sufficient."
+  ],
+
+  "forecast": {
+    "P_CHAIN_IS_WEAKER_ON_HUMAN": 0.5,
+    "reasoning": "FOR: human regulatory elements carry motif grammar, positional structure and TF-binding architecture that a 3-mer chain cannot reproduce, and the 2026-11-01 arm measured that a learned encoder finds much more signal there (conv 0.4853 vs 0.3234 bacterial) while GC finds LESS (0.2362 vs 0.3112) -- a substrate where a simple composition feature does worse is plausibly one where a simple generative model also does worse. AGAINST: the margin is relative to the self-control ceiling, and a richer substrate may raise BOTH terms together, leaving the margin flat; the 230 bp length also gives the discriminator more positions, which could lift the null's score for reasons unrelated to substrate richness. Recorded so no result can be retro-fitted.",
+    "P_INSTRUMENT_INVALID": 0.1,
+    "invalid_reasoning": "The pieces are pure, list-in and already exercised on bacterial data, and the substrate is MD5-verified. The main residual risk is the uniform control behaving unexpectedly at 230 bp."
+  },
+
+  "honest_limits": [
+    "One human panel (Agarwal 2025 lentiMPRA), two cell types, 230 bp.",
+    "The label question is separately screened and CLEARED (wiki/lentimpra_gate_screen_2026-10-27.json) but that screen bounds the LABEL only, not regime fit or worth-doing.",
+    "The published incumbents are NOT available as a comparator: wiki/lentimpra_metric_resolution_2026-10-28.md is UNRESOLVED_TABLE_IDENTITY_UNVERIFIED, attempted and refused.",
+    "No neural generator, by design.",
+    "This bar compares a margin to a margin. It cannot say that either substrate is 'easy' or 'hard' in absolute terms."
+  ]
+}

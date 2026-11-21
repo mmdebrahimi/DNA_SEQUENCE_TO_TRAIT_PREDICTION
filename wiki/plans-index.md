@@ -1074,3 +1074,15 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 
 ---
 
+## [plan_file: Is_The_Markov_Chain_Defeat_A_Property_Of_The_Bacterial_Substrate_Or_Of_Generators_Plan/] 2026-11-21
+**Status:** candidate
+**Summary:** The generator's one robust failure is losing to a 3-mer Markov chain (worse than its own seed-matched null at 10 of 10 seeds, mean gap +0.1186), and every measurement of it sits on ONE substrate: 4,340 E. coli upstream-of-CDS PROXY windows at 150 bp. The eukaryotic arm already measured that substrate as the weaker one (SUBSTRATE_LIMITED, 2026-11-01: conv encoder 0.4853 on human HepG2 lentiMPRA vs 0.3234 bacterial, human gain CI [+0.2399,+0.2536] entirely above the bacterial +0.0122). So this asks whether the Markov-chain defeat is a property of the bacterial substrate or of generators, by measuring each substrate's null-minus-self-control margin.
+**Key decisions:**
+- NO neural generator, by design. Adding one needs a new base model (the current generator is GENERator-v2-prokaryote-1.2b-base, prokaryote-locked), which would confound "is this substrate better" with "is this model family better". The Markov null plus uniform control characterise the OPPONENT for free, CPU-only, locally.
+- The decision quantity is the WITHIN-SUBSTRATE margin (null minus self-control), never a raw cross-substrate level. Taken from the predecessor memo's rule that only a within-substrate contrast crosses a substrate boundary; the substrates also differ in length (230 vs 150 bp), which changes a k-mer discriminator's job directly. The prohibition is frozen into the bar with a test behind it.
+- The substrate is already on disk at data/mpra_human (72 MB, 2026-11-16), so Step 1 verifies provenance rather than fetching. An earlier draft said ABSENT because usable_cells() defaults to the detached D: path -- the third instance in one session of declaring something absent that lived at a different path.
+- The natural set is lentiMPRA sequences with the authors' published 10-fold assignment, so the fit/eval split is the publisher's rather than invented; the bacterial corpus and falsifier CLI are left byte-identical.
+- Verified untouched before planning: the falsifier, corpus module and generator CLI contain ZERO references to human data, so human distinguishability has genuinely never been measured.
+
+---
+

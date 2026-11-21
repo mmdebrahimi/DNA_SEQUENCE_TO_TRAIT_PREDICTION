@@ -1,0 +1,77 @@
+{
+  "record": "human-falsifier-substrate-v1",
+  "date": "2026-11-21",
+  "step": "Step 1 of plans/Is_The_Markov_Chain_Defeat_A_Property_Of_The_Bacterial_Substrate_Or_Of_Generators_Plan",
+  "no_fetch_performed": "The deposit was already on disk, fetched 2026-11-16. This step verifies rather than downloads. An earlier draft of the plan instructed a fetch; that was corrected before saving.",
+  "data_dir": "data/mpra_human",
+  "total_bytes": 74200600,
+  "deposit": {
+    "zenodo_record": "10558183",
+    "license": "cc-by-4.0",
+    "doi": "10.1101/2023.03.05.531189",
+    "title": "Massively parallel characterization of transcriptional regulatory elements",
+    "selection": "tables",
+    "zenodo_record_title": "Massively parallel characterization of transcriptional regulatory elements"
+  },
+  "per_file_verdict": [
+    {
+      "file": "Table S6 - folds and performance.xlsx",
+      "expected_md5": "cf9fdf589d60f1d85244e9cd06aa8ae2",
+      "expected_bytes": 6126664,
+      "present": true,
+      "actual_md5": "cf9fdf589d60f1d85244e9cd06aa8ae2",
+      "actual_bytes": 6126664,
+      "verdict": "VERIFIED"
+    },
+    {
+      "file": "Table S9 - folds and performance.xlsx",
+      "expected_md5": "ef967c8388d84da9ec81d22e11c868bd",
+      "expected_bytes": 3564742,
+      "present": true,
+      "actual_md5": "ef967c8388d84da9ec81d22e11c868bd",
+      "actual_bytes": 3564742,
+      "verdict": "VERIFIED"
+    },
+    {
+      "file": "Table S7 - joint lib design.xlsx",
+      "expected_md5": "5d9b71452e9648e8473edd74a4ae26fc",
+      "expected_bytes": 8301566,
+      "present": true,
+      "actual_md5": "5d9b71452e9648e8473edd74a4ae26fc",
+      "actual_bytes": 8301566,
+      "verdict": "VERIFIED"
+    },
+    {
+      "file": "Table S3 - large-scale lib design.xlsx",
+      "expected_md5": "513cb7678f4ae31634e501c6bcd10474",
+      "expected_bytes": 56198290,
+      "present": true,
+      "actual_md5": "513cb7678f4ae31634e501c6bcd10474",
+      "actual_bytes": 56198290,
+      "verdict": "VERIFIED"
+    }
+  ],
+  "all_manifest_files_verified": true,
+  "files_not_covered_by_manifest": [
+    "_fetch_manifest.json",
+    "_zenodo_record.json"
+  ],
+  "files_not_covered_note": "These are the provenance records themselves, which carry no digest to check against. Recorded so the count difference between the manifest (4) and the directory is explicit rather than unexplained.",
+  "usable_cells": {
+    "HepG2": {
+      "usable": true,
+      "reason": ""
+    },
+    "K562": {
+      "usable": true,
+      "reason": ""
+    },
+    "WTC11": {
+      "usable": false,
+      "reason": "WTC11 joins at 0.0000 (0 of 23064 measured rows), below the 0.95 bar. This is a KEY problem, not a small cohort: S6 keys this cell by Ensembl gene id while S3 uses element names. Returning the overlap would hand back a 0"
+    }
+  },
+  "d_rule_question": "CLOSED, not deferred. The deposit is ~72 MB already on C: at data/mpra_human, so there is no destination decision to surface. The standing rule sends heavy files to D:, which is detached; 72 MB is not heavy and is already placed.",
+  "default_dir_trap": "lentimpra.DEFAULT_DIR is D:/dna_decode_cache/mpra_human, on the detached drive. Calling usable_cells() with NO argument reports every cell unusable and is what made an earlier draft of this plan believe the substrate was absent. Every downstream call in this plan passes data_dir EXPLICITLY.",
+  "reproduce": "python -c \"import hashlib;print(hashlib.md5(open(PATH,'rb').read()).hexdigest())\""
+}
