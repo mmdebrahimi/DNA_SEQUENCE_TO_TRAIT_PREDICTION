@@ -31,9 +31,30 @@ noise floor:
 | K562 / kmer | 0.8088 | 0.7711 | -0.0377 | +0.0015 |
 
 On HepG2 almost the entire signal was the adaptors: the null falls to 0.5295 — essentially its own
-floor of 0.5388 — once 15 bases are removed from each end. A 3-mer Markov chain cannot reliably
-reproduce two constant flanks, the discriminator reads that, and **none of it is about regulatory
-structure.** The bar itself flagged this risk in advance (*"constant flanks are trivially learnable
+floor of 0.5388 — once 15 bases are removed from each end.
+
+**That drop alone is suggestive but underdetermined, so the mechanism was MEASURED rather than
+asserted** (`scripts/human_adaptor_probe.py` -> `wiki/human_adaptor_probe_2026-11-21.json`,
+`ADAPTOR_ARTIFACT_MECHANISM_CONFIRMED`). The first draft of this memo claimed the flanks were
+constant on the strength of a column description; both halves are now measured:
+
+- **The flanks are perfectly constant.** Across 3,000 natural sequences per cell the 5' 15 nt is
+  **1 distinct value** (`AGGACCGGATCAACT`, share 1.0000) and the 3' 15 nt likewise
+  (`CATTGCGTGAACCGA`), identical in both cell types. Per-position max-base share is **1.000** on both
+  flanks against **0.262** (HepG2) and **0.328** (K562) in the interior.
+- **The Markov chain never reproduces them.** Of 120 generated sequences per cell, **0 match either
+  flank exactly**; the mean matching 5' prefix is 3.69 of 15 bases (max 8) for HepG2 and 3.62 (max 7)
+  for K562.
+
+**This refutes the obvious rival explanation.** Stripping removes 30 of 230 positions (13%), so the
+weaker separation could in principle be a shorter-sequence effect rather than anything about
+adaptors. It is not: positions that are **identical in every natural sequence** carry zero natural
+variability, so they cannot contribute to a discriminator's ability to characterise natural sequence
+— which is exactly why the self-control's floor barely moves. They can only supply the
+constant-versus-not signal a stochastic generator fails.
+
+So a 3-mer Markov chain cannot reproduce two constant flanks, the discriminator reads that, and
+**none of it is about regulatory structure.** The bar itself flagged this risk in advance (*"constant flanks are trivially learnable
 and could inflate distinguishability for a reason that is not about regulatory structure"*) and then
 made the flanked geometry primary anyway. That is an internal inconsistency in my own
 pre-registration, exposed by the measurement rather than by review.
@@ -105,3 +126,5 @@ on content rather than inferred from fold ids.
   spread, which bounds discriminator-split noise but not generation-sampling noise on the null.
 - The forecast recorded 0.5 for `CHAIN_IS_WEAKER_ON_HUMAN`; the secondary geometry returned
   `CHAIN_IS_COMPARABLE`, so the forecast was neither confirmed nor refuted.
+- The adaptor probe explains the **full-230 rows only**. It says nothing about the element-200 rows,
+  where the cells genuinely disagree, and it is not evidence about generation.

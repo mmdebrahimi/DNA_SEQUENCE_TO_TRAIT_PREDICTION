@@ -134,3 +134,49 @@ def test_the_memo_carries_the_structural_limits(memo, flat):
 def test_the_forecast_outcome_is_reported_honestly(flat):
     """The bar forecast 0.5 for WEAKER; the secondary returned COMPARABLE, so neither."""
     assert "neither confirmed nor refuted" in flat
+
+
+# --------------------------------------------------------------------------- the adaptor mechanism
+
+PROBE = ROOT / "wiki" / "human_adaptor_probe_2026-11-21.json"
+
+
+@pytest.fixture(scope="module")
+def probe():
+    return json.loads(PROBE.read_text(encoding="utf-8"))
+
+
+def test_the_flanks_are_measured_constant_not_asserted(probe):
+    """The memo's central correction rested on this; the first draft asserted it from a column
+    description. Both flanks must be exactly ONE distinct value per cell."""
+    assert probe["verdict"] == "ADAPTOR_ARTIFACT_MECHANISM_CONFIRMED"
+    assert probe["flanks_are_constant"] is True
+    for r in probe["rows"]:
+        assert r["natural_5p"]["distinct"] == 1, r["cell"]
+        assert r["natural_3p"]["distinct"] == 1, r["cell"]
+        assert r["natural_5p"]["modal_share"] == 1.0
+        assert r["mean_max_base_share"]["flank_5p"] == 1.0
+        assert r["mean_max_base_share"]["flank_3p"] == 1.0
+        # And the interior must NOT be constant, or the contrast means nothing.
+        assert r["mean_max_base_share"]["interior"] < 0.5, r["cell"]
+
+
+def test_the_markov_chain_never_reproduces_the_flanks(probe):
+    assert probe["markov_never_reproduces_them"] is True
+    for r in probe["rows"]:
+        m = r["markov"]
+        assert m["exact_5p_matches"] == 0 and m["exact_3p_matches"] == 0, r["cell"]
+        assert m["mean_matching_5p_prefix"] < m["of_possible"] / 2
+
+
+def test_the_length_rival_is_explicitly_REFUTED(probe, flat):
+    """Stripping removes 13% of the sequence, so 'shorter sequence' is the obvious rival. It must be
+    named and refuted, not ignored."""
+    assert probe["length_rival_status"].startswith("REFUTED")
+    assert "refutes the obvious rival explanation" in flat
+    assert "30 of 230" in flat
+
+
+def test_the_probe_scope_is_bounded_to_the_full_230_rows(probe, flat):
+    assert "full-230" in probe["scope"] or "FULL-230" in probe["scope"]
+    assert "explains the **full-230 rows only**" in flat

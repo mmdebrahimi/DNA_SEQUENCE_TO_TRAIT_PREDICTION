@@ -1,0 +1,67 @@
+{
+  "record": "human-adaptor-probe-v1",
+  "date": "2026-11-21",
+  "question": "Is the full-230 geometry's separation the constant adaptors, or just a shorter-sequence effect from removing 30 of 230 positions?",
+  "verdict": "ADAPTOR_ARTIFACT_MECHANISM_CONFIRMED",
+  "flanks_are_constant": true,
+  "markov_never_reproduces_them": true,
+  "length_rival_status": "REFUTED. The stripped positions carry ZERO natural variability (max-base share 1.000), so they cannot contribute to a discriminator's ability to characterise natural sequence; removing them can only remove the constant-versus-not signal that a stochastic generator fails.",
+  "scope": "Explains the FULL-230 rows only. It says nothing about the element-200 rows, where the cells genuinely disagree, and it is NOT evidence about generation.",
+  "rows": [
+    {
+      "cell": "HepG2",
+      "n_natural": 3000,
+      "natural_5p": {
+        "distinct": 1,
+        "modal": "AGGACCGGATCAACT",
+        "modal_share": 1.0
+      },
+      "natural_3p": {
+        "distinct": 1,
+        "modal": "CATTGCGTGAACCGA",
+        "modal_share": 1.0
+      },
+      "mean_max_base_share": {
+        "flank_5p": 1.0,
+        "interior": 0.2621,
+        "flank_3p": 1.0
+      },
+      "markov": {
+        "n_generated": 120,
+        "exact_5p_matches": 0,
+        "exact_3p_matches": 0,
+        "mean_matching_5p_prefix": 3.69,
+        "max_matching_5p_prefix": 8,
+        "of_possible": 15
+      }
+    },
+    {
+      "cell": "K562",
+      "n_natural": 3000,
+      "natural_5p": {
+        "distinct": 1,
+        "modal": "AGGACCGGATCAACT",
+        "modal_share": 1.0
+      },
+      "natural_3p": {
+        "distinct": 1,
+        "modal": "CATTGCGTGAACCGA",
+        "modal_share": 1.0
+      },
+      "mean_max_base_share": {
+        "flank_5p": 1.0,
+        "interior": 0.3277,
+        "flank_3p": 1.0
+      },
+      "markov": {
+        "n_generated": 120,
+        "exact_5p_matches": 0,
+        "exact_3p_matches": 0,
+        "mean_matching_5p_prefix": 3.62,
+        "max_matching_5p_prefix": 7,
+        "of_possible": 15
+      }
+    }
+  ],
+  "wall_seconds": 156.2
+}
