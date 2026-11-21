@@ -1,0 +1,372 @@
+{
+  "record": "glm-seed-role-ceilings-v1",
+  "date": "2026-11-21",
+  "question": "At each of the committed grid seeds, is the Markov null actually ABOVE the discriminator own noise floor -- i.e. is there a winnable region at all?",
+  "geometry": {
+    "window_length_bp": 150,
+    "limit_natural": 1200,
+    "natural_set_arg": "promoter",
+    "kmer_k": 4,
+    "positional_bins": 6,
+    "feature_modes": [
+      "kmer",
+      "both"
+    ]
+  },
+  "source_grid": "glm_generator_paired_sweep_2026-11-20.json",
+  "anchor_gate": {
+    "seed": 7,
+    "committed": {
+      "kmer": 0.5447,
+      "both": 0.5865
+    },
+    "tol": 0.0005,
+    "passed": true
+  },
+  "why_this_was_missing": "The committed grid cell schema is {model, epoch, seed, both, kmer, null{kmer,both}} with no ceiling field, so the per-seed margin could not be computed from it. The one committed ceiling pair (0.5447/0.5865) comes from a DIFFERENT artifact at a single seed, and was read as though it applied at every seed.",
+  "margin_definition": "null - ceiling. Positive = the null is distinguishable above the noise floor, so beating it would be a real claim. Negative = the null sits below its own noise floor and the mode has no winnable region. NOT clamped.",
+  "rows": [
+    {
+      "seed": 0,
+      "mode": "kmer",
+      "null": 0.5009,
+      "ceiling": 0.5262,
+      "margin": -0.0253,
+      "ceiling_values": [
+        0.4879,
+        0.4958,
+        0.483,
+        0.4813,
+        0.5262
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 0,
+      "mode": "both",
+      "null": 0.6388,
+      "ceiling": 0.5494,
+      "margin": 0.0894,
+      "ceiling_values": [
+        0.4891,
+        0.5072,
+        0.4747,
+        0.4899,
+        0.5494
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 1,
+      "mode": "kmer",
+      "null": 0.5022,
+      "ceiling": 0.5595,
+      "margin": -0.0573,
+      "ceiling_values": [
+        0.5595,
+        0.5394,
+        0.496,
+        0.4848,
+        0.5406
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 1,
+      "mode": "both",
+      "null": 0.6284,
+      "ceiling": 0.5692,
+      "margin": 0.0592,
+      "ceiling_values": [
+        0.5692,
+        0.5131,
+        0.5357,
+        0.4311,
+        0.5483
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 2,
+      "mode": "kmer",
+      "null": 0.4834,
+      "ceiling": 0.5338,
+      "margin": -0.0504,
+      "ceiling_values": [
+        0.53,
+        0.456,
+        0.5338,
+        0.49,
+        0.4805
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 2,
+      "mode": "both",
+      "null": 0.6491,
+      "ceiling": 0.5383,
+      "margin": 0.1108,
+      "ceiling_values": [
+        0.5215,
+        0.4474,
+        0.529,
+        0.5115,
+        0.5383
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 3,
+      "mode": "kmer",
+      "null": 0.5778,
+      "ceiling": 0.5897,
+      "margin": -0.0119,
+      "ceiling_values": [
+        0.4729,
+        0.5897,
+        0.5693,
+        0.5021,
+        0.4815
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 3,
+      "mode": "both",
+      "null": 0.6861,
+      "ceiling": 0.56,
+      "margin": 0.1261,
+      "ceiling_values": [
+        0.5161,
+        0.5508,
+        0.56,
+        0.5224,
+        0.4625
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 4,
+      "mode": "kmer",
+      "null": 0.5618,
+      "ceiling": 0.5416,
+      "margin": 0.0202,
+      "ceiling_values": [
+        0.3893,
+        0.4847,
+        0.5349,
+        0.5416,
+        0.4591
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 4,
+      "mode": "both",
+      "null": 0.7024,
+      "ceiling": 0.5141,
+      "margin": 0.1883,
+      "ceiling_values": [
+        0.3919,
+        0.4863,
+        0.4987,
+        0.5141,
+        0.4682
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 5,
+      "mode": "kmer",
+      "null": 0.549,
+      "ceiling": 0.5229,
+      "margin": 0.0261,
+      "ceiling_values": [
+        0.5229,
+        0.5162,
+        0.4562,
+        0.5162,
+        0.4787
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 5,
+      "mode": "both",
+      "null": 0.639,
+      "ceiling": 0.5111,
+      "margin": 0.1279,
+      "ceiling_values": [
+        0.4876,
+        0.4798,
+        0.4667,
+        0.5097,
+        0.5111
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 6,
+      "mode": "kmer",
+      "null": 0.4623,
+      "ceiling": 0.5401,
+      "margin": -0.0778,
+      "ceiling_values": [
+        0.5115,
+        0.5401,
+        0.4971,
+        0.4725,
+        0.4799
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 6,
+      "mode": "both",
+      "null": 0.5983,
+      "ceiling": 0.5239,
+      "margin": 0.0744,
+      "ceiling_values": [
+        0.5029,
+        0.4995,
+        0.4647,
+        0.4875,
+        0.5239
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 7,
+      "mode": "kmer",
+      "null": 0.599,
+      "ceiling": 0.5447,
+      "margin": 0.0543,
+      "ceiling_values": [
+        0.543,
+        0.5447,
+        0.4698,
+        0.476,
+        0.5213
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 7,
+      "mode": "both",
+      "null": 0.6679,
+      "ceiling": 0.5865,
+      "margin": 0.0814,
+      "ceiling_values": [
+        0.5348,
+        0.5455,
+        0.4548,
+        0.5053,
+        0.5865
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 8,
+      "mode": "kmer",
+      "null": 0.583,
+      "ceiling": 0.5412,
+      "margin": 0.0418,
+      "ceiling_values": [
+        0.4854,
+        0.5012,
+        0.5412,
+        0.4991,
+        0.4827
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 8,
+      "mode": "both",
+      "null": 0.5674,
+      "ceiling": 0.5449,
+      "margin": 0.0225,
+      "ceiling_values": [
+        0.4969,
+        0.5044,
+        0.5449,
+        0.5157,
+        0.5044
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 9,
+      "mode": "kmer",
+      "null": 0.4823,
+      "ceiling": 0.5227,
+      "margin": -0.0404,
+      "ceiling_values": [
+        0.5227,
+        0.4738,
+        0.4928,
+        0.4838,
+        0.4994
+      ],
+      "n_eval": 600
+    },
+    {
+      "seed": 9,
+      "mode": "both",
+      "null": 0.6059,
+      "ceiling": 0.5217,
+      "margin": 0.0842,
+      "ceiling_values": [
+        0.5217,
+        0.4896,
+        0.4711,
+        0.4959,
+        0.4807
+      ],
+      "n_eval": 600
+    }
+  ],
+  "summary": {
+    "kmer": {
+      "n_seeds": 10,
+      "null_mean": 0.5302,
+      "null_sd": 0.0493,
+      "null_min": 0.4623,
+      "null_max": 0.599,
+      "ceiling_mean": 0.5422,
+      "ceiling_sd": 0.0201,
+      "margin_mean": -0.0121,
+      "margin_sd": 0.0455,
+      "margin_min": -0.0778,
+      "margin_max": 0.0543,
+      "seeds_with_positive_margin": 4,
+      "seeds_with_negative_margin": 6
+    },
+    "both": {
+      "n_seeds": 10,
+      "null_mean": 0.6383,
+      "null_sd": 0.041,
+      "null_min": 0.5674,
+      "null_max": 0.7024,
+      "ceiling_mean": 0.5419,
+      "ceiling_sd": 0.0249,
+      "margin_mean": 0.0964,
+      "margin_sd": 0.0451,
+      "margin_min": 0.0225,
+      "margin_max": 0.1883,
+      "seeds_with_positive_margin": 10,
+      "seeds_with_negative_margin": 0
+    }
+  },
+  "verdict_by_mode": {
+    "kmer": "NO_WINNABLE_REGION_ON_AVERAGE",
+    "both": "WINNABLE_REGION_AT_EVERY_SEED"
+  },
+  "honest_limits": [
+    "The nulls are READ from the committed grid, not re-run, so this inherits that grid generation. The ceilings are freshly computed here.",
+    "The ceiling is the MAX over 5 internal self-control seeds (the falsifier own rule), so it is a conservative floor by construction -- a mean-based floor would be lower and every margin correspondingly more positive.",
+    "This bounds the INSTRUMENT. It says nothing about any generator quality, and a mode with no winnable region does not mean the generator is good.",
+    "One geometry (150bp promoter windows, limit 1200) and one organism. The margin is a property of a (substrate, geometry, feature-mode) triple, not of discriminators in general."
+  ]
+}
