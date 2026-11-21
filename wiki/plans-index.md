@@ -1075,7 +1075,9 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 ---
 
 ## [plan_file: Is_The_Markov_Chain_Defeat_A_Property_Of_The_Bacterial_Substrate_Or_Of_Generators_Plan/] 2026-11-21
-**Status:** candidate
+**Status:** as-built
+**Archived to:** executed_plans/Is_The_Markov_Chain_Defeat_A_Property_Of_The_Bacterial_Substrate_Or_Of_Generators_Plan/
+**Outcome:** Primary geometry read CHAIN_IS_WEAKER_ON_HUMAN unanimously and was then MEASURED to be an adaptor artifact; secondary geometry read CHAIN_IS_COMPARABLE because the two cells contradict. Question NOT ESTABLISHED either way — a legitimate pre-registered outcome.
 **Summary:** The generator's one robust failure is losing to a 3-mer Markov chain (worse than its own seed-matched null at 10 of 10 seeds, mean gap +0.1186), and every measurement of it sits on ONE substrate: 4,340 E. coli upstream-of-CDS PROXY windows at 150 bp. The eukaryotic arm already measured that substrate as the weaker one (SUBSTRATE_LIMITED, 2026-11-01: conv encoder 0.4853 on human HepG2 lentiMPRA vs 0.3234 bacterial, human gain CI [+0.2399,+0.2536] entirely above the bacterial +0.0122). So this asks whether the Markov-chain defeat is a property of the bacterial substrate or of generators, by measuring each substrate's null-minus-self-control margin.
 **Key decisions:**
 - NO neural generator, by design. Adding one needs a new base model (the current generator is GENERator-v2-prokaryote-1.2b-base, prokaryote-locked), which would confound "is this substrate better" with "is this model family better". The Markov null plus uniform control characterise the OPPONENT for free, CPU-only, locally.

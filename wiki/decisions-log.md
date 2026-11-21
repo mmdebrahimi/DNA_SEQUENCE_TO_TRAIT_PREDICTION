@@ -1001,3 +1001,15 @@ when the mutation does not apply: confirm the edit landed before reading red-or-
 
 ---
 
+## [plan_file: Is_The_Markov_Chain_Defeat_A_Property_Of_The_Bacterial_Substrate_Or_Of_Generators_Plan] Executed 2026-11-21
+**Mode:** sequential (5 waves, parallel-eligible but deliberately overridden) | **Result:** All 6 steps completed
+**PRs:** N/A — committed to promoteratlas-exposure-2026-11-01, pushed to origin
+**Salience:** HIGH
+**Modules:** dna_decode/glm, scripts, tests, wiki
+**Notable:** The plan's question returned NOT ESTABLISHED, which was one of the four pre-registered outcomes. The frozen PRIMARY geometry gave a clean unanimous CHAIN_IS_WEAKER_ON_HUMAN that turned out to measure adaptor reproduction rather than regulatory structure; the geometry that bears on the question split, with HepG2 saying STRONGER and K562 WEAKER on the same panel.
+**Corrections:** My own pre-registered bar was internally inconsistent. It explicitly flagged that "constant flanks are trivially learnable and could inflate distinguishability for a reason that is not about regulatory structure" — and then named the flanked geometry PRIMARY anyway, on comparability grounds. The measurement exposed it; review had not.
+**Reversals:** None in approach. Primary and secondary were deliberately NOT swapped after seeing which was more favourable — swapping is precisely what the pre-registration exists to prevent — so the frozen primary is reported alongside a plain statement that it is uninformative.
+**Discoveries:** The publisher's 15 nt flanks are PERFECTLY constant (one distinct value across 3,000 sequences per cell, identical in both cell types, per-position max-base share 1.000 against 0.26-0.33 interior), and the Markov null reproduces them 0 times in 120. That refutes the rival "13% shorter sequence" explanation, because positions identical in every natural sequence carry zero natural variability and so cannot weaken a discriminator when removed — independently confirmed by the self-control floor barely moving across geometries.
+**Lesson:** When freezing an acceptance bar, read it back against the risks it itself names — a bar that flags a confound in its rationale and then enshrines that confound in its primary measurement will produce a clean, unanimous, and useless verdict. And before building an interpretation on a dataset property ("the flanks are constant"), measure the property; a column description is a hypothesis.
+
+---
