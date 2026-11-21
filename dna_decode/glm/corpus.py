@@ -268,3 +268,53 @@ def gc_fraction(seq: str) -> float:
     if not seq:
         return 0.0
     return (seq.count("G") + seq.count("C") + seq.count("g") + seq.count("c")) / len(seq)
+
+
+def build_natural_set(reference_dir, *, length: int, limit: int | None, seed: int,
+                      kind: str = "promoter"):
+    """The ONE definition of the natural reference set. `kind` MATTERS.
+
+    promoter = upstream-of-CDS windows (the reference for a CONDITIONAL promoter generator)
+    genomic  = uniform windows from anywhere (the reference for an UNCONDITIONAL generator, because an
+               unprompted genome-LM sample is drawn from the whole-genome prior, which is mostly coding)
+
+    This body used to live in `scripts/glm_generator_falsifier.py::build_natural`, which is still the
+    runner's entry point but is now a thin delegation to here. It was moved so the probes that measure the
+    instrument read the SAME corpus the runner scores on. Two parallel descriptions of one corpus build is
+    the precise hazard `geometry_from_args` exists to kill -- it was created after two hand-written
+    descriptions of the run geometry diverged on a single field -- and a second copy written for the probes
+    would have rebuilt it one layer down.
+
+    Returns `(windows, stats)`. No behaviour change from the original: same calls, same order, same
+    shuffle-then-truncate, so a window sequence from here is identical to one from the old body.
+    """
+    import random as _random
+    from pathlib import Path as _Path
+
+    ref = _Path(reference_dir)
+    genome = load_fasta(ref / "genome.fna")
+    if kind == "genomic":
+        wins, stats = random_genomic_windows(genome, length=length, n=limit or 2000, seed=seed)
+    elif kind == "promoter":
+        from dna_decode.data.annotations import parse_gff3
+        rows = parse_gff3(ref / "annotations.gff3")   # a pandas DataFrame; as_rows normalises it
+        wins, stats = extract_upstream_windows(genome, rows, length=length)
+    else:
+        raise ValueError(f"natural-set must be 'promoter' or 'genomic', got {kind!r}")
+    _random.Random(seed).shuffle(wins)
+    if limit:
+        wins = wins[:limit]
+    return wins, stats
+
+
+def fit_eval_halves(windows) -> tuple[list[str], list[str]]:
+    """Split a natural window list into the FIT half and the EVAL half, exactly as the runner does.
+
+    `half = len(windows) // 2`, fit first, eval second. Exported because every probe that wants to measure
+    the instrument has to score the SAME eval half the runner scores on; while this lived inline in the
+    runner's `main` a probe could only re-derive it, and a re-derivation that drifts by one window changes
+    every ceiling it reports.
+    """
+    h = len(windows) // 2
+    seqs = [w.seq for w in windows]
+    return seqs[:h], seqs[h:]

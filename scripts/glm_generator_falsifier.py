@@ -36,28 +36,15 @@ WIKI = ROOT / "wiki"
 
 
 def build_natural(length: int, limit: int | None, seed: int, kind: str = "promoter"):
-    """Build a natural reference set. `kind` MATTERS -- see random_genomic_windows' docstring.
+    """Thin delegation to `dna_decode.glm.corpus.build_natural_set` -- the ONE definition.
 
-    promoter = upstream-of-CDS windows (the reference for a CONDITIONAL promoter generator)
-    genomic  = uniform windows from anywhere (the reference for an UNCONDITIONAL generator, because an
-               unprompted genome-LM sample is drawn from the whole-genome prior, which is mostly coding)
+    The body moved there so the seed-role probes read the same corpus this runner scores on, rather than
+    growing a second description of it. This wrapper stays because it is this script's established entry
+    point and its signature is what `main` and the tests call.
     """
-    from dna_decode.glm.corpus import load_fasta, random_genomic_windows
+    from dna_decode.glm.corpus import build_natural_set
 
-    genome = load_fasta(REFSEQ / "genome.fna")
-    if kind == "genomic":
-        wins, stats = random_genomic_windows(genome, length=length, n=limit or 2000, seed=seed)
-    elif kind == "promoter":
-        from dna_decode.data.annotations import parse_gff3
-        from dna_decode.glm.corpus import extract_upstream_windows
-        rows = parse_gff3(REFSEQ / "annotations.gff3")   # a pandas DataFrame; as_rows normalises it
-        wins, stats = extract_upstream_windows(genome, rows, length=length)
-    else:
-        raise ValueError(f"natural-set must be 'promoter' or 'genomic', got {kind!r}")
-    random.Random(seed).shuffle(wins)
-    if limit:
-        wins = wins[:limit]
-    return wins, stats
+    return build_natural_set(REFSEQ, length=length, limit=limit, seed=seed, kind=kind)
 
 
 def geometry_from_args(a) -> dict:
@@ -186,11 +173,13 @@ def main(argv=None) -> int:
         if len(wins) < 200:
             print(f"REFUSE: {kind} corpus too small ({len(wins)}) to split into fit/eval halves")
             return 2
+        from dna_decode.glm.corpus import fit_eval_halves
+
         h = len(wins) // 2
-        seqs = [w.seq for w in wins]
-        naturals[kind] = {"fit": seqs[:h], "eval": seqs[h:], "stats": st,
+        fit, ev = fit_eval_halves(wins)
+        naturals[kind] = {"fit": fit, "eval": ev, "stats": st,
                           "eval_windows": wins[h:]}
-        print(f"natural[{kind}]: {len(seqs)} windows of {a.length}bp -> fit {h} / eval {len(seqs)-h}"
+        print(f"natural[{kind}]: {len(fit) + len(ev)} windows of {a.length}bp -> fit {h} / eval {len(ev)}"
               + (f"  ({st.n_cds_total} CDS, {st.n_overlapping_cds} overlapping)"
                  if kind == "promoter" else ""))
 
