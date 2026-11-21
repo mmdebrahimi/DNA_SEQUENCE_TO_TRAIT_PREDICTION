@@ -1,0 +1,350 @@
+{
+  "record": "human-falsifier-margin-v1",
+  "date": "2026-11-21",
+  "bar": "wiki/human_falsifier_bar_2026-11-21.json",
+  "substrate_artifact": "wiki/human_falsifier_substrate_2026-11-21.json",
+  "complete": true,
+  "no_generator_was_run": "By design. The opponent (3-mer Markov null) and the uniform control are characterised; no neural generator is involved, so substrate is not confounded with model family.",
+  "discriminator": {
+    "k": 4,
+    "bins": 6,
+    "n_generated": 120,
+    "n_natural_eval": 1200,
+    "seed": 7,
+    "markov_order": 3,
+    "ceiling_seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "held_fixed_because": "the margin involves the self-control, so changing discriminator capacity would move both terms and make the two substrates' margins incomparable"
+  },
+  "split": {
+    "eval_folds": [
+      1
+    ],
+    "source": "the publisher's own 10-fold assignment, carried through load_cell"
+  },
+  "bacterial_anchors": {
+    "both": {
+      "null": 0.6679,
+      "self_control": 0.5865,
+      "margin": 0.0814
+    },
+    "kmer": {
+      "null": 0.599,
+      "self_control": 0.5447,
+      "margin": 0.0543
+    }
+  },
+  "PROHIBITED_COMPARISON": "The raw human null level may NOT be compared to the bacterial 0.6679. Only the within-substrate MARGIN crosses the boundary.",
+  "rows": [
+    {
+      "cell": "HepG2",
+      "geometry": "full_230nt_as_shipped",
+      "bp": 230,
+      "mode": "kmer",
+      "n_fit": 55317,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.8757,
+      "uniform_control": 1.0,
+      "self_control_ceiling": 0.5016,
+      "self_control_values": [
+        0.4905,
+        0.5016,
+        0.4774,
+        0.4931,
+        0.5004
+      ],
+      "margin": 0.3742,
+      "self_control_seed_spread": 0.0242,
+      "bacterial_margin": 0.0543,
+      "margin_minus_bacterial": 0.3199,
+      "status": "SCORED"
+    },
+    {
+      "cell": "HepG2",
+      "geometry": "full_230nt_as_shipped",
+      "bp": 230,
+      "mode": "both",
+      "n_fit": 55317,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.9591,
+      "uniform_control": 1.0,
+      "self_control_ceiling": 0.5109,
+      "self_control_values": [
+        0.4815,
+        0.4996,
+        0.4674,
+        0.4822,
+        0.5109
+      ],
+      "margin": 0.4482,
+      "self_control_seed_spread": 0.0435,
+      "bacterial_margin": 0.0814,
+      "margin_minus_bacterial": 0.3668,
+      "status": "SCORED"
+    },
+    {
+      "cell": "HepG2",
+      "geometry": "element_200nt_adaptors_stripped",
+      "bp": 200,
+      "mode": "kmer",
+      "n_fit": 55317,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.5106,
+      "uniform_control": 0.996,
+      "self_control_ceiling": 0.507,
+      "self_control_values": [
+        0.4817,
+        0.507,
+        0.4828,
+        0.5009,
+        0.502
+      ],
+      "margin": 0.0036,
+      "self_control_seed_spread": 0.0254,
+      "bacterial_margin": 0.0543,
+      "margin_minus_bacterial": -0.0507,
+      "status": "SCORED"
+    },
+    {
+      "cell": "HepG2",
+      "geometry": "element_200nt_adaptors_stripped",
+      "bp": 200,
+      "mode": "both",
+      "n_fit": 55317,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.5295,
+      "uniform_control": 0.9964,
+      "self_control_ceiling": 0.5388,
+      "self_control_values": [
+        0.4974,
+        0.5025,
+        0.5,
+        0.4744,
+        0.5388
+      ],
+      "margin": -0.0093,
+      "self_control_seed_spread": 0.0644,
+      "bacterial_margin": 0.0814,
+      "margin_minus_bacterial": -0.0907,
+      "status": "SCORED"
+    },
+    {
+      "cell": "K562",
+      "geometry": "full_230nt_as_shipped",
+      "bp": 230,
+      "mode": "kmer",
+      "n_fit": 88499,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.8088,
+      "uniform_control": 0.9996,
+      "self_control_ceiling": 0.5455,
+      "self_control_values": [
+        0.4434,
+        0.496,
+        0.4721,
+        0.4982,
+        0.5455
+      ],
+      "margin": 0.2633,
+      "self_control_seed_spread": 0.1021,
+      "bacterial_margin": 0.0543,
+      "margin_minus_bacterial": 0.209,
+      "status": "SCORED"
+    },
+    {
+      "cell": "K562",
+      "geometry": "full_230nt_as_shipped",
+      "bp": 230,
+      "mode": "both",
+      "n_fit": 88499,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.9396,
+      "uniform_control": 0.9998,
+      "self_control_ceiling": 0.5274,
+      "self_control_values": [
+        0.4306,
+        0.5079,
+        0.4792,
+        0.5098,
+        0.5274
+      ],
+      "margin": 0.4122,
+      "self_control_seed_spread": 0.0968,
+      "bacterial_margin": 0.0814,
+      "margin_minus_bacterial": 0.3308,
+      "status": "SCORED"
+    },
+    {
+      "cell": "K562",
+      "geometry": "element_200nt_adaptors_stripped",
+      "bp": 200,
+      "mode": "kmer",
+      "n_fit": 88499,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.7711,
+      "uniform_control": 0.9788,
+      "self_control_ceiling": 0.547,
+      "self_control_values": [
+        0.4459,
+        0.5002,
+        0.4727,
+        0.4959,
+        0.547
+      ],
+      "margin": 0.2241,
+      "self_control_seed_spread": 0.1011,
+      "bacterial_margin": 0.0543,
+      "margin_minus_bacterial": 0.1698,
+      "status": "SCORED"
+    },
+    {
+      "cell": "K562",
+      "geometry": "element_200nt_adaptors_stripped",
+      "bp": 200,
+      "mode": "both",
+      "n_fit": 88499,
+      "n_eval": 1200,
+      "fit_folds": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "eval_folds": [
+        1
+      ],
+      "content_overlap": 0,
+      "null_distinguishability": 0.7495,
+      "uniform_control": 0.9812,
+      "self_control_ceiling": 0.5366,
+      "self_control_values": [
+        0.4437,
+        0.5134,
+        0.477,
+        0.5216,
+        0.5366
+      ],
+      "margin": 0.2129,
+      "self_control_seed_spread": 0.0929,
+      "bacterial_margin": 0.0814,
+      "margin_minus_bacterial": 0.1315,
+      "status": "SCORED"
+    }
+  ],
+  "wall_seconds": 235.4
+}
