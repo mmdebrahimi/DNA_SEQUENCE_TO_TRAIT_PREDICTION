@@ -107,6 +107,28 @@ def verify_organism(expected: str, header: str) -> dict:
             "expected": expected, "header_organism": " ".join(got)}
 
 
+def _expected_organism(entry: dict) -> str:
+    """The organism string to verify a download against, preferring NCBI AUTHORITATIVE over the spec.
+
+    Field order matters and is not cosmetic. A spec author names a species when SELECTING, then resolves
+    an accession and records what NCBI reports for it -- and those two can differ, because taxonomy gets
+    revised at genus level (Clostridium to Clostridioides, Borrelia to Borreliella are both real) and
+    because a resolver may return the current reference strain rather than the classic one. Verifying
+    against the selector name instead of the resolved name would false-reject exactly the entries where
+    a reclassification happened, which are the ones most worth keeping.
+
+    An earlier version read `ncbi_organism` while the handed-over spec writes `ncbi_organism_name`, so it
+    silently fell through to `species`. On that particular spec it was harmless -- the author had already
+    used the modern genus in both fields, so 0 of 16 would have mismatched -- but it ignored the
+    authoritative string the whole gate was built to compare against, and the next spec need not be so
+    forgiving. Both spellings are accepted now so a field rename cannot reintroduce the silence.
+    """
+    return (entry.get("ncbi_organism_name")
+            or entry.get("ncbi_organism")
+            or entry.get("species")
+            or "")
+
+
 def check_disk(cache_root: Path, n_genomes: int) -> dict:
     """Refuse before fetching if the disk cannot take it. Checked up front, not discovered."""
     usage = shutil.disk_usage(cache_root if cache_root.exists() else cache_root.parent)
@@ -165,7 +187,7 @@ def main(argv=None) -> int:
               "against.")
         return 3
 
-    missing_org = [g for g in genomes if not g.get("ncbi_organism") and not g.get("species")]
+    missing_org = [g for g in genomes if not _expected_organism(g)]
     if missing_org:
         print(f"REFUSE: {len(missing_org)} entries carry neither `ncbi_organism` nor `species`, so "
               "the downloaded assembly could not be checked against what it was selected as.")
@@ -189,7 +211,7 @@ def main(argv=None) -> int:
     rows, counts = [], {}
     for g in genomes:
         acc = g["accession"]
-        expected = g.get("ncbi_organism") or g["species"]
+        expected = _expected_organism(g)
         row = {"accession": acc, "species": g.get("species"), "strain": g.get("strain"),
                "domain": g.get("domain"), "lineage_key": g.get("lineage_key"),
                "expected_organism": expected}

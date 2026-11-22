@@ -1,0 +1,307 @@
+{
+  "record": "glm-corpus-fetch-v1",
+  "date": "2026-11-21",
+  "spec": "C:\\Users\\Laptop Portable\\pythonprojects\\dna-generator-research\\handoffs\\bacterial-expansion-species-spec.json",
+  "spec_name": "bacterial-expansion-species-selection",
+  "cache_root": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\refseq_cache",
+  "disk": {
+    "free_gb": 19.51,
+    "estimated_need_gb": 0.096,
+    "min_free_gb_required": 2.0,
+    "ok": true,
+    "note": "estimate assumes bacterial-scale assemblies; a eukaryotic batch is orders of magnitude larger and this check is what should stop it"
+  },
+  "counts_by_verification_state": {
+    "VERIFIED": 15,
+    "FLAG_SPECIES_MISMATCH": 1
+  },
+  "n_verified": 15,
+  "n_usable": 15,
+  "usable_accessions": [
+    "GCF_000009045.1",
+    "GCF_018885085.1",
+    "GCF_000013425.1",
+    "GCF_000195955.2",
+    "GCF_000203835.1",
+    "GCF_014131755.1",
+    "GCF_000009725.1",
+    "GCF_002151505.1",
+    "GCF_000008725.1",
+    "GCF_020546685.1",
+    "GCF_000230655.2",
+    "GCF_019552005.1",
+    "GCF_000006765.1",
+    "GCF_000012685.1",
+    "GCF_000008625.1"
+  ],
+  "rows": [
+    {
+      "accession": "GCF_000009045.1",
+      "species": "Bacillus subtilis",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Bacillota;Bacilli",
+      "expected_organism": "Bacillus subtilis subsp. subtilis str. 168",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_000964.3 Bacillus subtilis subsp. subtilis str. 168 complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Bacillus subtilis subsp. subtilis str. 168",
+        "header_organism": "Bacillus subtilis"
+      }
+    },
+    {
+      "accession": "GCF_018885085.1",
+      "species": "Clostridioides difficile",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Bacillota;Clostridia",
+      "expected_organism": "Clostridioides difficile",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NZ_CP076401.1 Clostridioides difficile strain S-0253 chromosome, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Clostridioides difficile",
+        "header_organism": "Clostridioides difficile"
+      }
+    },
+    {
+      "accession": "GCF_000013425.1",
+      "species": "Staphylococcus aureus",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Bacillota;Bacilli;Staphylococcales",
+      "expected_organism": "Staphylococcus aureus subsp. aureus NCTC 8325",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_007795.1 Staphylococcus aureus subsp. aureus NCTC 8325 chromosome, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Staphylococcus aureus subsp. aureus NCTC 8325",
+        "header_organism": "Staphylococcus aureus"
+      }
+    },
+    {
+      "accession": "GCF_000195955.2",
+      "species": "Mycobacterium tuberculosis",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Actinomycetota;Actinomycetia",
+      "expected_organism": "Mycobacterium tuberculosis H37Rv",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_000962.3 Mycobacterium tuberculosis H37Rv, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Mycobacterium tuberculosis H37Rv",
+        "header_organism": "Mycobacterium tuberculosis"
+      }
+    },
+    {
+      "accession": "GCF_000203835.1",
+      "species": "Streptomyces coelicolor",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Actinomycetota;Streptomycetales",
+      "expected_organism": "Streptomyces coelicolor A3(2)",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_003888.3 Streptomyces coelicolor A3(2), complete sequence",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Streptomyces coelicolor A3(2)",
+        "header_organism": "Streptomyces coelicolor"
+      }
+    },
+    {
+      "accession": "GCF_014131755.1",
+      "species": "Bacteroides thetaiotaomicron",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Bacteroidota;Bacteroidia",
+      "expected_organism": "Bacteroides thetaiotaomicron",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NZ_CP040530.1 Bacteroides thetaiotaomicron strain DSM 2079 chromosome, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Bacteroides thetaiotaomicron",
+        "header_organism": "Bacteroides thetaiotaomicron"
+      }
+    },
+    {
+      "accession": "GCF_000009725.1",
+      "species": "Synechocystis sp. PCC 6803",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Cyanobacteriota",
+      "expected_organism": "Synechocystis sp. PCC 6803",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_000911.1 Synechocystis sp. PCC 6803, complete sequence",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Synechocystis sp. PCC 6803",
+        "header_organism": "Synechocystis sp"
+      }
+    },
+    {
+      "accession": "GCF_002151505.1",
+      "species": "Borreliella burgdorferi",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Spirochaetota",
+      "expected_organism": "Borreliella burgdorferi",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NZ_CP019767.1 Borreliella burgdorferi strain B31_NRZ isolate B31 chromosome, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Borreliella burgdorferi",
+        "header_organism": "Borreliella burgdorferi"
+      }
+    },
+    {
+      "accession": "GCF_000008725.1",
+      "species": "Chlamydia trachomatis",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Chlamydiota",
+      "expected_organism": "Chlamydia trachomatis D/UW-3/CX",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_000117.1 Chlamydia trachomatis D/UW-3/CX chromosome, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Chlamydia trachomatis D/UW-3/CX",
+        "header_organism": "Chlamydia trachomatis"
+      }
+    },
+    {
+      "accession": "GCF_020546685.1",
+      "species": "Deinococcus radiodurans",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Deinococcota",
+      "expected_organism": "Deinococcus radiodurans R1 = ATCC 13939 = DSM 20539",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NZ_CP038663.1 Deinococcus radiodurans R1 = ATCC 13939 = DSM 20539 strain ATCC 13939 chromosome I, complete sequence",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Deinococcus radiodurans R1 = ATCC 13939 = DSM 20539",
+        "header_organism": "Deinococcus radiodurans"
+      }
+    },
+    {
+      "accession": "GCF_000230655.2",
+      "species": "Thermotoga maritima",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Thermotogota",
+      "expected_organism": "Thermotoga maritima MSB8",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_023151.1 Thermotoga maritima MSB8, complete sequence",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Thermotoga maritima MSB8",
+        "header_organism": "Thermotoga maritima"
+      }
+    },
+    {
+      "accession": "GCF_019552005.1",
+      "species": "Fusobacterium nucleatum",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Fusobacteriota",
+      "expected_organism": "Fusobacterium nucleatum",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NZ_CP071093.1 Fusobacterium nucleatum strain THCT14A3 chromosome, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Fusobacterium nucleatum",
+        "header_organism": "Fusobacterium nucleatum"
+      }
+    },
+    {
+      "accession": "GCF_000006765.1",
+      "species": "Pseudomonas aeruginosa",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Pseudomonadota;Gammaproteobacteria;Pseudomonadales",
+      "expected_organism": "Pseudomonas aeruginosa PAO1",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_002516.2 Pseudomonas aeruginosa PAO1, complete genome",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Pseudomonas aeruginosa PAO1",
+        "header_organism": "Pseudomonas aeruginosa"
+      }
+    },
+    {
+      "accession": "GCF_000022005.1",
+      "species": "Caulobacter vibrioides",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Pseudomonadota;Alphaproteobacteria",
+      "expected_organism": "Caulobacter vibrioides NA1000",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_011916.1 Caulobacter crescentus NA1000, complete genome",
+      "verification": {
+        "state": "FLAG_SPECIES_MISMATCH",
+        "reason": "genus Caulobacter matches but epithet differs (vibrioides vs crescentus); this is where a reclassification or synonym lands, so a human should decide",
+        "expected": "Caulobacter vibrioides NA1000",
+        "header_organism": "Caulobacter crescentus"
+      }
+    },
+    {
+      "accession": "GCF_000012685.1",
+      "species": "Myxococcus xanthus",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Myxococcota",
+      "expected_organism": "Myxococcus xanthus DK 1622",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_008095.1 Myxococcus xanthus DK 1622, complete sequence",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Myxococcus xanthus DK 1622",
+        "header_organism": "Myxococcus xanthus"
+      }
+    },
+    {
+      "accession": "GCF_000008625.1",
+      "species": "Aquifex aeolicus",
+      "strain": null,
+      "domain": "bacteria",
+      "lineage_key": "Aquificota",
+      "expected_organism": "Aquifex aeolicus VF5",
+      "fetch": "DOWNLOADED",
+      "fasta_header": ">NC_000918.1 Aquifex aeolicus VF5, complete sequence",
+      "verification": {
+        "state": "VERIFIED",
+        "reason": "genus and epithet match",
+        "expected": "Aquifex aeolicus VF5",
+        "header_organism": "Aquifex aeolicus"
+      }
+    }
+  ],
+  "verification_policy": {
+    "genus_mismatch": "REFUSE -- a different genus is not a naming variation",
+    "species_epithet_mismatch": "FLAG, kept on disk but excluded from the usable set; this is where reclassifications and synonyms land",
+    "no_binomial_in_header": "UNVERIFIABLE -- its own state, never counted as a pass; --allow-unverifiable opts it into the usable set explicitly",
+    "why": "download_genome takes an accession and cannot know which organism the caller believed it to be, so a mis-resolved accession is a fully successful download of the wrong genome that enters the corpus under the spec's label with nothing downstream to contradict it"
+  },
+  "honest_limits": [
+    "Name verification checks the organism string in the FASTA header. It catches a mis-resolved accession; it does NOT verify the assembly is the right STRAIN, nor that the sequence is what the accession claims.",
+    "The binomial parser takes the first capitalised-then-lowercase word pair in the header. That matched every real example checked in this cache, but header formats vary across submitters and a miss becomes UNVERIFIABLE rather than a wrong pass.",
+    "The disk estimate assumes bacterial-scale assemblies at about 6 MB each. It is not a safe guide for a eukaryotic batch, which is orders of magnitude larger.",
+    "A FLAG is not a rejection and a REFUSE is not a deletion: files stay on disk for a human to adjudicate, and only the usable set is offered to the corpus builder."
+  ]
+}

@@ -174,14 +174,36 @@ def test_a_missing_spec_file_is_refused(mod, tmp_path):
 # ------------------------------------------------------------------ against the REAL peer spec
 
 @pytest.mark.skipif(not PEER_SPEC.exists(), reason="peer handoff spec not present on this host")
-def test_the_real_peer_spec_is_refused_for_the_right_reason(mod, tmp_path, capsys):
-    """Non-vacuity on live data: the handed-over spec has accession null on every entry, so the gate
-    must fire -- and must fire for the resolvability reason rather than on disk or parsing."""
+def test_the_real_peer_spec_is_handled_correctly_in_whatever_state_it_is_in(mod, tmp_path, capsys):
+    """Non-vacuity on live data, written so it cannot go stale when the spec legitimately changes.
+
+    An earlier version asserted this spec is REFUSED, because every entry had `accession: null`. That
+    was true when written and false an hour later: the spec author resolved all 16 accessions, which
+    was exactly what had been asked of them. The test then went red because a teammate did their job
+    correctly -- which is a test defect, not a regression, and the kind that erodes trust in a suite
+    fastest because the red is indistinguishable from a real break.
+
+    **The real mistake was asserting on the mutable state of a file this repo does not own.** The
+    stable version of that assertion already exists as
+    `test_a_spec_with_null_accessions_is_refused_with_the_reason`, over a fixture written here. So this
+    test keeps only what the external file is genuinely good for: proving the driver handles the REAL
+    handoff, whichever state it happens to be in, and that the two states are told apart for the right
+    reason rather than by accident.
+    """
+    _rec, genomes = mod.load_spec(PEER_SPEC)
+    unresolved = [g for g in genomes if not g.get("accession")]
     rc = mod.main([str(PEER_SPEC), "--cache-root", str(tmp_path), "--dry-run"])
     out = capsys.readouterr().out
-    assert rc == 3
-    assert "NO taxon lookup" in out
-    assert "resolved GCF/GCA accessions" in out
+    if unresolved:
+        assert rc == 3, "a spec with null accessions must refuse"
+        assert "NO taxon lookup" in out, "and must say WHY it cannot resolve them"
+        assert "resolved GCF/GCA accessions" in out
+    else:
+        assert rc == 0, out
+        assert "dry run" in out
+        # every resolved entry must also carry something to verify the download against
+        assert all(mod._expected_organism(g) for g in genomes), (
+            "a resolved spec with no organism string would download unverifiably")
 
 
 @pytest.mark.skipif(not PEER_SPEC.exists(), reason="peer handoff spec not present on this host")
