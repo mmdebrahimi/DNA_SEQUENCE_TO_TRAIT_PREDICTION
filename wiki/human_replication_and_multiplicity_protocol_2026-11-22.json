@@ -3,9 +3,7 @@
   "date": "2026-11-22",
   "bar": "wiki/human_design_bar_2026-11-22.json",
   "status": "written BEFORE any scoring is wired, which is the only time it is cheap",
-
   "why_this_exists": "P2 re-tested its own statistics and found two defects that INFLATE significance, plus a third that invalidated the mechanism behind this arm's final-shard reservation. Its point estimates reproduced to within 0.0001 -- the uncertainty was wrong, not the measurement. All three are substrate-independent, so they land here whether or not they bit the bacterial arm. Written before the scorer exists because the alternative is retracting twice.",
-
   "CORRECTIONS_TO_THIS_ARMS_OWN_ARTIFACTS": {
     "1_the_final_shard_reservation_rested_on_a_RETRACTED_mechanism": {
       "artifact": "wiki/human_final_shard_reservation_2026-11-22.json",
@@ -30,7 +28,6 @@
       "detail": "see that file's honest_limits CORRECTION entry. The shard TSV and its md5 are untouched (94f2eef17a11900cd0d6fda901381860), so no re-export was needed."
     }
   },
-
   "RULE_1_THE_UNIT_OF_REPLICATION": {
     "peer_finding": "P2 pooled 20 generation seeds x 2 scoring-split seeds as 40 independent replicates. The two split seeds RE-SCORE THE SAME generated set, so the generated set is the unit and there were 20. That understates the sem by up to sqrt(2), in the direction that manufactures significance.",
     "does_it_bite_this_arm_as_stated": "Not yet -- no scoring is wired, and nothing here re-scores one generated set under several splits.",
@@ -48,7 +45,6 @@
       "cost_recorded_honestly": "This makes the tolerance harder to clear, so a true effect is more likely to be called unresolved. That is the correct trade when the alternative is reporting a spread that understates itself."
     }
   },
-
   "RULE_2_CORRECT_FOR_SELECTING_FROM_A_FAMILY": {
     "peer_finding": "Reporting whichever candidate cleared a per-candidate 95% CI among N examined prices nothing. A sign-flip permutation over WHOLE replicate rows keeps every candidate's value for that row together, so the cross-candidate correlation is carried into the null instead of assumed away, and yields one family-wise p with no independence assumption. Applied to P2's own numbers, 0 of 6 leakage estimates and 0 of 10 unit-vs-unit pairs survived.",
     "where_it_applies_HERE_and_where_it_does_NOT": {
@@ -59,7 +55,6 @@
     },
     "implementation": "Permute SIGNS over whole replicate rows (a row = one trained run's vector of per-size values), not over individual cells. Flipping a whole row preserves the within-row correlation across sizes, which is exactly the structure a per-candidate CI throws away."
   },
-
   "RULE_3_PRECONDITIONS_THAT_RAISE": {
     "peer_finding": "P2's heldout_auroc returned None on ImportError through the SAME channel as a legitimate 'too small to split', so an interpreter without sklearn produced zero replicates indistinguishable from zero scoreable replicates. None of its four controls catches this: a floor that never computes is not a failing floor, it is no floor. It is a PRECONDITION, not a fifth control, and it must raise rather than return an ignorable verdict.",
     "the_specific_channel_is_ABSENT_here_and_that_was_MEASURED": "This arm's scoring path has a hand-written spearman and a hand-written ridge in scripts/glm_human_activity_oracle.py and imports neither sklearn nor scipy nor numpy. So P2's exact ImportError channel cannot occur. Checked rather than assumed.",
@@ -74,28 +69,33 @@
     "preconditions_now_enforced_before_any_spend": [
       "CONDITIONING KNOB MOVES THE OUTPUT -- scripts/server1/glm_human_diffusion_server1.py refuses with exit 4 if two different bins on identical input give identical logits. Verified non-vacuous: wired knob max|delta| 0.926238, cond embedding zeroed 0 exactly. The bar's NO_TARGET_CONTROL text demands this check and nothing performed it; --shuffle-labels tests whether the LABEL carries information, never whether it REACHES the logits.",
       "SPEARMAN REFUSES RATHER THAN RETURNING A PLAUSIBLE ZERO -- see above.",
-      "STILL OWED when the scorer is written: assert the oracle actually scores a known fixture to a known value before the first generated sequence is passed to it. Named here so it is not discovered to be missing later."
+      "BUILT 2026-11-22 (was STILL OWED): scripts/glm_human_activity_oracle.py::assert_oracle_fixture() scores a known input to HAND-DERIVED values and RAISES OraclePreconditionFailed on any mismatch. Called first by both the oracle and the stratified null, and stamped into both artifacts so 'the precondition passed' is distinguishable from 'it never ran'. It catches CHANGED BEHAVIOUR -- a re-indexed k-mer table, a dropped normalisation, an ambiguous base counted instead of skipped, a transposed positional layout -- which is the limit P2 named of its own absence-detecting preflight. Non-vacuity: six perturbations of the feature builder, all refused; the attempt that did NOT fire exposed a blind spot in the fixture (an ACGT-periodic sequence at bins=4 gives a SYMMETRIC matrix, so a base-major/bin-major reshape flip passed), closed by a second asymmetric non-square fixture. LIMIT: it pins the FEATURE pipeline, not the fitted ridge."
     ],
     "known_limit_carried_from_the_peer": "A preflight detects ABSENCE, not a wrong-version dependency that imports and returns plausible numbers. No version pin exists for this arm's scoring path."
   },
-
   "RULE_4_CONTROLS_NEED_N_DRAWS_NOT_ONE": {
     "peer_finding": "P2's random-removal control was a single draw (random.Random(4242)), so every number from it is conditional on that draw -- the same criticism its own governance doc already made of its PERTURBATION control, not applied here. Build it as N draws from the start; cheaper than retracting twice.",
     "this_arm_had_the_identical_defect": "--shuffle-labels derived its permutation from `a.seed ^ 0x5EED`, so the no-information arm was ONE draw, and the tier plan scheduled exactly one shuffled point. Every NO_TARGET_CONTROL contrast would have been conditional on that single permutation.",
     "fixed": "a --shuffle-seed flag decoupled from --seed, so the arm runs at several permutation draws with the training seed held fixed, which also separates permutation variance from training variance. When it is omitted the run prints that it is a single draw and that the contrast must not be read from it.",
     "note": "Deriving the draw from --seed was doubly wrong: it gave one draw AND it moved the permutation, the init and the batch order together, so the two variances could not have been separated even across seeds."
   },
-
   "PEER_ITEMS_THAT_DO_NOT_APPLY_HERE": {
     "re_patching_is_not_free": "P2 withdrew 'annotation-anchored re-patching is FREE' as an equivalence claim, and only the large negative stands (single-nt re-patching catastrophic, |t| 23.65). INAPPLICABLE: this arm never re-patches. It is single-nucleotide throughout, BASES='ACGT' at both training and sampling time, with no generation-time retokenisation. Recorded explicitly rather than skipped, and NOT over-read -- P2's result is about re-patching quality preservation and says nothing about single-nt NATIVE training, which is what this arm does.",
     "prompt_leakage": "Already INAPPLICABLE BY CONSTRUCTION per the bar: the generator conditions on a scalar target, not on flanking sequence, so there is no sequence prompt to copy."
   },
-
   "honest_limits": [
     "This is a protocol, not a measurement. Nothing here has been run against a generator, because no human generator has been trained.",
     "RULE_1's resolution of the bar's ambiguity is an INTERPRETATION of frozen text, taken in the conservative direction and recorded rather than silently applied. A reader who disagrees should know the literal reading of 'the generated set's own seed spread' is the sampling-level one.",
     "The family-wise machinery in RULE_2 is specified but not implemented -- there is no code for it yet, because there are no replicate rows to permute.",
-    "RULE_3's third precondition (oracle scores a known fixture) is NAMED AND UNBUILT.",
+    "RULE_3's third precondition (oracle scores a known fixture) is BUILT as of 2026-11-22 -- see the RULE_3 list. The limit that REPLACES it: the fixture pins the feature pipeline only, so a changed linear-algebra backend that still builds identical features would pass it; that case is covered only by the artifact value pins in tests/test_human_oracle_precondition.py, which are drift pins on recorded numbers rather than an independent recomputation.",
     "P2's corrections were adopted on its own account of them. They were not independently re-derived on its data, which is not in this tree."
-  ]
+  ],
+  "FOLD_9_REMEASUREMENT_DISCHARGED": {
+    "date": "2026-11-22",
+    "artifact": "wiki/human_fold9_remeasurement_2026-11-22.json",
+    "what": "the oracle gate and the ceiling were both measured on folds 9+10 pooled, which includes the FINAL_ONLY shard; both are now re-measured on fold 9 ALONE and fold 10 is read by nothing in force",
+    "result": "no verdict changed. The shard change moved the K562 ceiling +0.0184 = 0.72 sd of its own sampling spread (not detectable) and every oracle arm by at most 0.0063.",
+    "the_finding_came_from_elsewhere": "running the ceiling arm again surfaced a biased subsample inside it: quintiles() returns each stratum sorted by activity ASCENDING and the arm took the first n, i.e. every stratum's LOWEST-activity members, truncating the top quintile's tail. Correcting that moved the ceiling +0.0999 in K562 (3.93 sd) -- five times the shard effect. Direction matters: the ceiling is the DENOMINATOR of every fraction-of-ceiling, so understating it OVERSTATED a generator's share of achievable signal.",
+    "relevance_to_RULE_1": "the ceiling now ships with a MEASURED draw spread (sd 0.0254 K562 / 0.0253 HepG2) rather than as a bare point, which is what this protocol's refusal of frozen numeric tolerances requires of the one quantity every fraction is divided by."
+  }
 }

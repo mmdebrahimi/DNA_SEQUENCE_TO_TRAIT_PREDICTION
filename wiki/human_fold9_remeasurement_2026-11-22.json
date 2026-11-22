@@ -1,0 +1,194 @@
+{
+  "record": "human-fold9-remeasurement-v1",
+  "date": "2026-11-22",
+  "bar": "wiki/human_design_bar_2026-11-22.json",
+  "protocol": "wiki/human_replication_and_multiplicity_protocol_2026-11-22.json",
+  "reservation": "wiki/human_final_shard_reservation_2026-11-22.json",
+  "why_this_ran": "The reservation's stated mechanism was retracted 2026-11-22: look-count is not what overfits, SELECTION is, counted over the candidates a split's feedback informed. Under the corrected mechanism the single real exposure on this arm is that the verdict RULE was changed from an absolute threshold to a fraction of a ceiling measured on folds 9+10 -- i.e. a rule tuned using the shard reserved to test it. That promoted the fold-9-alone re-measurement from tidy-up to the load-bearing remedy, and this is it.",
+  "headline": "The exposure was REAL but IMMATERIAL to the numbers; a DIFFERENT defect in the same function was five times larger. Re-measuring the ceiling on fold 9 alone moved it by +0.0184 in K562 = 0.72 sd of its own sampling spread, i.e. not detectable. Correcting a biased subsample inside the ceiling arm moved it by +0.0999 = 3.93 sd. No verdict changed in either case.",
+  "A_oracle_gate_re_measured_without_the_reserved_shard": {
+    "quantity": "held-out Spearman per feature arm, primary geometry, and the pre-registered gate derived from it",
+    "bars": {
+      "min_margin_over_gc": 0.05,
+      "min_abs_spearman": 0.2
+    },
+    "verdict": {
+      "folds_9_10": "ORACLE_VALID_PROCEED",
+      "fold_9_only": "ORACLE_VALID_PROCEED"
+    },
+    "per_cell": {
+      "HepG2": {
+        "n_scored": {
+          "folds_9_10": 12295,
+          "fold_9_only": 6146
+        },
+        "arms": {
+          "gc": {
+            "folds_9_10": 0.2402,
+            "fold_9_only": 0.2415,
+            "delta": 0.0013
+          },
+          "kmer4": {
+            "folds_9_10": 0.4245,
+            "fold_9_only": 0.4229,
+            "delta": -0.0016
+          },
+          "kmer6": {
+            "folds_9_10": 0.4598,
+            "fold_9_only": 0.4643,
+            "delta": 0.0045
+          },
+          "positional": {
+            "folds_9_10": 0.2733,
+            "fold_9_only": 0.2713,
+            "delta": -0.002
+          }
+        },
+        "best_learned": {
+          "folds_9_10": 0.4598,
+          "fold_9_only": 0.4643
+        },
+        "margin_over_gc": {
+          "folds_9_10": 0.2196,
+          "fold_9_only": 0.2228,
+          "delta": 0.0032
+        },
+        "passes_gate": {
+          "folds_9_10": true,
+          "fold_9_only": true
+        }
+      },
+      "K562": {
+        "n_scored": {
+          "folds_9_10": 19668,
+          "fold_9_only": 9833
+        },
+        "arms": {
+          "gc": {
+            "folds_9_10": 0.2157,
+            "fold_9_only": 0.2112,
+            "delta": -0.0045
+          },
+          "kmer4": {
+            "folds_9_10": 0.3973,
+            "fold_9_only": 0.3975,
+            "delta": 0.0002
+          },
+          "kmer6": {
+            "folds_9_10": 0.5086,
+            "fold_9_only": 0.5038,
+            "delta": -0.0048
+          },
+          "positional": {
+            "folds_9_10": 0.2112,
+            "fold_9_only": 0.2049,
+            "delta": -0.0063
+          }
+        },
+        "best_learned": {
+          "folds_9_10": 0.5086,
+          "fold_9_only": 0.5038
+        },
+        "margin_over_gc": {
+          "folds_9_10": 0.2929,
+          "fold_9_only": 0.2926,
+          "delta": -0.0003
+        },
+        "passes_gate": {
+          "folds_9_10": true,
+          "fold_9_only": true
+        }
+      }
+    },
+    "reading": "The gate's conclusion does not depend on having used the reserved shard. Every arm moves by at most 0.0063 and both cells clear the gate by roughly 4.5x on margin and 2.3x on absolute rho, so ORACLE_VALID_PROCEED stands on fold 9 alone. The oracle remains a MODERATE judge and every design verdict stays bounded by its precision."
+  },
+  "B_the_ceiling_and_the_defect_found_while_re_measuring_it": {
+    "the_defect": "quintiles() returns each stratum SORTED BY ACTIVITY ASCENDING, and the real_ceiling arm took held_strata[qi][:per_stratum] -- the n LOWEST-activity members of every stratum. That truncated each stratum's top edge, including the top quintile's tail where most of the activity signal lives. Visible directly in the sampled activity: K562's top stratum reads mean 0.8619 under the first-n sample against 1.6334 using all records.",
+    "direction_and_why_it_matters": "The ceiling is the DENOMINATOR of stratified_frac_of_ceiling, and a generator will be quoted as a fraction of it. Understating the ceiling OVERSTATES every generator's fraction of achievable signal -- the significance-manufacturing direction. The correction is conservative for the decision that matters.",
+    "it_was_the_ORDER_not_the_SAMPLE_SIZE": "matched-n random draws average 0.4923 (sd 0.0254) against an all-records 0.4912 in K562 -- agreement to 0.04 sd. So reducing n was never the problem and the fix is not 'use more data'; a first-n slice of a sorted list is a biased sample at any n.",
+    "per_cell": {
+      "K562": {
+        "committed_folds_9_10_biased_estimator": 0.3729,
+        "fold_9_biased_estimator": 0.3913,
+        "fold_9_corrected_estimator": 0.4912,
+        "matched_n_draw_sd": 0.0254,
+        "effect_of_the_SAMPLING_FIX_same_shard": {
+          "delta": 0.0999,
+          "in_sd_of_the_draw_spread": 3.93
+        },
+        "effect_of_the_SHARD_CHANGE_same_estimator": {
+          "delta": 0.0184,
+          "in_sd_of_the_draw_spread": 0.72
+        }
+      },
+      "HepG2": {
+        "committed_folds_9_10_biased_estimator": null,
+        "fold_9_biased_estimator": 0.4191,
+        "fold_9_corrected_estimator": 0.4537,
+        "matched_n_draw_sd": 0.0253,
+        "effect_of_the_SAMPLING_FIX_same_shard": {
+          "delta": 0.0346,
+          "in_sd_of_the_draw_spread": 1.37
+        },
+        "effect_of_the_SHARD_CHANGE_same_estimator": "NOT COMPUTABLE -- HepG2 has no committed folds-9+10 ceiling. The committed artifact holds K562 ONLY, so the ceiling-relative verdict rule had no denominator in HepG2 at all and could not have been applied there."
+      }
+    },
+    "verdict_quantity_stratified_frac_of_ceiling": {
+      "K562": {
+        "committed_folds_9_10": 0.5363,
+        "fold_9_corrected": 0.422,
+        "sd_from_the_denominator_alone": 0.0218
+      },
+      "HepG2": {
+        "committed_folds_9_10": null,
+        "fold_9_corrected": 0.5133,
+        "sd_from_the_denominator_alone": 0.0286
+      }
+    },
+    "verdict": {
+      "folds_9_10": "KMER_NULL_IS_SUBSTANTIAL_ROOM_REMAINS",
+      "fold_9_only": "KMER_NULL_IS_SUBSTANTIAL_ROOM_REMAINS"
+    },
+    "no_verdict_flipped": "The bucket is 0.25 <= frac < 0.80, and the fraction moves from 0.5363 (committed) to 0.4220 (K562, corrected) -- an 11-point drop in the headline percentage that stays inside the same bucket. KMER_NULL_IS_SUBSTANTIAL_ROOM_REMAINS stands.",
+    "second_correction_the_denominator_was_one_draw": "After fixing the bias the published ceiling was still a SINGLE matched-n draw, whose spread is ~5% relative, so the fraction moved with the seed. A verdict rule whose denominator depends on a seed is not a rule. The all-records ceiling is now the point estimate and the draw spread ships beside it as the stated uncertainty.",
+    "HepG2_had_no_ceiling_at_all": "The committed artifact holds K562 ONLY, despite the script defaulting to both cells. Since the bar forbids pooling cells, the ceiling-relative verdict rule was inapplicable in HepG2 and nothing said so. HepG2 is measured here for the first time: ceiling 0.4537, stratified fraction 0.5133."
+  },
+  "C_the_third_precondition_now_exists": {
+    "named_in": "the protocol's own outstanding-items list",
+    "what": "assert_oracle_fixture() in scripts/glm_human_activity_oracle.py scores a known input to hand-derived values and RAISES OraclePreconditionFailed on any mismatch. Called first by both the oracle and the null, and stamped into both artifacts so 'the precondition passed' is distinguishable from 'it never ran'.",
+    "why_it_raises": "a floor that never computes is not a failing floor, it is no floor. P2's scorer preflight returned None through the same channel as a legitimate 'too small to split', so a defensive `if vals:` produced a silent empty result.",
+    "what_it_catches_that_absence_checking_cannot": "changed BEHAVIOUR -- a re-indexed k-mer table, a dropped normalisation, an ambiguous base counted instead of skipped, a transposed positional layout. P2 named exactly this limit of its own preflight: it detects ABSENCE, not a wrong-version dependency.",
+    "non_vacuity": "six perturbations of the feature builder, all refused. The seventh attempt exposed a blind spot in the fixture itself: ACGTACGTACGT at bins=4 yields a SYMMETRIC 4x4 matrix, so a base-major/bin-major reshape flip passed unnoticed. A second asymmetric NON-SQUARE fixture (AAACCCGGGTTT at bins=3) closes it. Found by perturbing the guard, not by reading it.",
+    "limit": "it pins the FEATURE pipeline, not the fitted ridge. A changed linear-algebra backend that still builds identical features passes this and must be caught by the artifact value pins in tests/test_human_oracle_precondition.py."
+  },
+  "fold_10_status": {
+    "read_by_this_work": false,
+    "evidence": "wiki/glm_human_stratified_null_fold9_2026-11-22.json leak.folds_not_read_at_all == [10]",
+    "n_sequences": {
+      "HepG2": 6149,
+      "K562": 9835
+    },
+    "rule_unchanged": "queried EXACTLY ONCE for the headline design number, after every other decision is settled",
+    "what_this_work_changes_about_it": "The two previously-spent queries are not undone -- a retrospective reservation cannot manufacture a virgin shard. What changes is that every decision-grade quantity now has a fold-9-only value, so no threshold or verdict rule in force was derived using fold 10. The committed folds-9+10 artifacts are kept as the record of what was measured then, on their own paths."
+  },
+  "what_this_does_NOT_show": [
+    "That a generator can design to spec. No generator has been trained or scored; this is instrument work on the judge and the null.",
+    "That the oracle is a good judge in absolute terms. It is a MODERATE one (~0.46-0.50 held-out Spearman) and every design verdict stays bounded by that precision.",
+    "That the corrected ceiling is the true achievable monotonicity. It is the monotonicity REAL held-out sequence reaches against THIS oracle, so it is bounded by the oracle's own precision rather than by biology.",
+    "Anything in vivo. An MPRA measures reporter activity, not endogenous regulatory function."
+  ],
+  "honest_limits": [
+    "The fold-9-vs-folds-9+10 comparison cannot be checked against fold 10 without spending the reserved shard, so the 0.72 sd shard effect is measured against the ceiling's own draw spread rather than against a fold-to-fold spread. Those are different variances and the second one is not available without giving up the reservation.",
+    "The oracle arms' deltas have NO measured noise scale -- the ridge fit is deterministic and only one shard was scored, so the small movements are reported as-is and should not be read as evidence of stability beyond their size.",
+    "The ceiling's sd comes from re-drawing the matched-n sample on ONE shard with one fitted oracle. It is sampling noise of the estimator, not uncertainty over shards or over oracle fits.",
+    "Two cells is not a replication across cell types, and 7819 elements are shared between the two libraries with per-cell fold assignment, so any cross-cell headline must exclude them.",
+    "stratified_frac_of_ceiling's stated sd propagates the DENOMINATOR's spread only. The null arm's own seed spread is not included, so it is a floor on the uncertainty, not its total."
+  ],
+  "artifacts": {
+    "oracle_fold9": "wiki/glm_human_activity_oracle_fold9_2026-11-22.json",
+    "oracle_folds_9_10_committed_record": "wiki/glm_human_activity_oracle_2026-11-22.json",
+    "null_fold9": "wiki/glm_human_stratified_null_fold9_2026-11-22.json",
+    "null_folds_9_10_committed_record": "wiki/glm_human_stratified_null_2026-11-22.json",
+    "tests": "tests/test_human_oracle_precondition.py"
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "record": "glm-human-stratified-null-v1",
+  "date": "2026-11-22",
+  "bar": "wiki/human_design_bar_2026-11-22.json",
+  "purpose": "the null an activity-conditioned generator must beat, AND a measurement of whether the oracle's activity signal is k-mer-expressible at all",
+  "oracle_mode": "kmer6",
+  "precondition": {
+    "precondition": "oracle-feature-fixture-v1",
+    "status": "PASSED",
+    "fixture_seq": "ACGTACGTACGT",
+    "tol": 1e-06,
+    "checked": [
+      "gc",
+      "kmer4 indices+values+normalisation",
+      "kmer6 value multiset",
+      "positional bins=4",
+      "positional bin-major LAYOUT (asymmetric fixture)",
+      "positional refuses a non-dividing bin count",
+      "kmer4 ambiguous-base denominator"
+    ],
+    "why": "values are hand-derived from the definitions, so this is a CORRECTNESS check and not a record of current output. It RAISES rather than returning a verdict, because a floor that never computes is not a failing floor -- it is no floor.",
+    "limit": "it pins the FEATURE pipeline, not the fitted ridge: a changed linear-algebra backend that still builds identical features would pass this and must be caught by the end-to-end value pin in the test suite."
+  },
+  "geometry": "element_200nt_adaptors_stripped",
+  "leak": {
+    "chains_fit_on_folds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "oracle_fit_on_folds": [
+      7,
+      8
+    ],
+    "folds_read_by_real_ceiling_arm_never_fitted": [
+      9
+    ],
+    "folds_not_read_at_all": [
+      10
+    ],
+    "note": "the previous key was named folds_untouched, which was FALSE -- the real_ceiling arm reads these folds (scored, never fitted). Renamed rather than silently kept."
+  },
+  "cells": {
+    "K562": {
+      "n_chain_fit": 58998,
+      "n_oracle_fit": 19666,
+      "ceiling_diagnostics": {
+        "matched_n_rho_by_seed": [
+          0.5094,
+          0.521,
+          0.4651,
+          0.4808,
+          0.4773,
+          0.4667,
+          0.536,
+          0.5102,
+          0.4913,
+          0.4657
+        ],
+        "matched_n_mean": 0.4923,
+        "matched_n_sd": 0.0254,
+        "all_held_out_records_rho": 0.4912,
+        "n_held_out_records": 9833,
+        "why": "the ceiling is the DENOMINATOR of stratified_frac_of_ceiling, so its own sampling noise propagates into every fraction quoted against it. Reported as a measured spread because the bar refuses frozen numeric tolerances.",
+        "superseded_estimator_note": "a first-n subsample of an activity-SORTED stratum was used before 2026-11-22; it understated this quantity (K562 by 0.1095 = -4.14 sd, HepG2 by 0.0300 = -2.74 sd) by truncating each stratum's top edge"
+      },
+      "real_stratum_mean_activity": [
+        -1.1406,
+        -0.6069,
+        -0.218,
+        0.3425,
+        1.6098
+      ],
+      "real_top_minus_bottom": 2.7504,
+      "arms": {
+        "real_ceiling": {
+          "target_monotonicity_spearman": 0.5094,
+          "predicted_activity_by_target": [
+            -0.3885,
+            -0.3288,
+            -0.1454,
+            0.1605,
+            0.7687
+          ],
+          "top_minus_bottom_lift": 1.1572
+        },
+        "stratified": {
+          "target_monotonicity_spearman": 0.2073,
+          "predicted_activity_by_target": [
+            -0.3195,
+            -0.304,
+            -0.2625,
+            -0.1364,
+            0.0718
+          ],
+          "top_minus_bottom_lift": 0.3913
+        },
+        "pooled": {
+          "target_monotonicity_spearman": 0.0245,
+          "predicted_activity_by_target": [
+            -0.1875,
+            -0.1499,
+            -0.2025,
+            -0.1795,
+            -0.1562
+          ],
+          "top_minus_bottom_lift": 0.0313
+        },
+        "uniform": {
+          "target_monotonicity_spearman": 0.0301,
+          "predicted_activity_by_target": [
+            0.0023,
+            -0.0251,
+            -0.0694,
+            0.0221,
+            0.0292
+          ],
+          "top_minus_bottom_lift": 0.0269
+        }
+      }
+    },
+    "HepG2": {
+      "n_chain_fit": 36876,
+      "n_oracle_fit": 12292,
+      "ceiling_diagnostics": {
+        "matched_n_rho_by_seed": [
+          0.4494,
+          0.4538,
+          0.4188,
+          0.4832,
+          0.4377,
+          0.4113,
+          0.442,
+          0.4184,
+          0.4824,
+          0.4597
+        ],
+        "matched_n_mean": 0.4457,
+        "matched_n_sd": 0.0253,
+        "all_held_out_records_rho": 0.4537,
+        "n_held_out_records": 6146,
+        "why": "the ceiling is the DENOMINATOR of stratified_frac_of_ceiling, so its own sampling noise propagates into every fraction quoted against it. Reported as a measured spread because the bar refuses frozen numeric tolerances.",
+        "superseded_estimator_note": "a first-n subsample of an activity-SORTED stratum was used before 2026-11-22; it understated this quantity (K562 by 0.1095 = -4.14 sd, HepG2 by 0.0300 = -2.74 sd) by truncating each stratum's top edge"
+      },
+      "real_stratum_mean_activity": [
+        -1.1732,
+        -0.6197,
+        -0.1865,
+        0.3977,
+        1.5737
+      ],
+      "real_top_minus_bottom": 2.7469,
+      "arms": {
+        "real_ceiling": {
+          "target_monotonicity_spearman": 0.4494,
+          "predicted_activity_by_target": [
+            -0.49,
+            -0.2949,
+            -0.0681,
+            0.2436,
+            0.6226
+          ],
+          "top_minus_bottom_lift": 1.1126
+        },
+        "stratified": {
+          "target_monotonicity_spearman": 0.2329,
+          "predicted_activity_by_target": [
+            -0.5657,
+            -0.4025,
+            -0.1951,
+            -0.2407,
+            -0.0225
+          ],
+          "top_minus_bottom_lift": 0.5432
+        },
+        "pooled": {
+          "target_monotonicity_spearman": 0.0361,
+          "predicted_activity_by_target": [
+            -0.3538,
+            -0.1984,
+            -0.2202,
+            -0.2956,
+            -0.224
+          ],
+          "top_minus_bottom_lift": 0.1298
+        },
+        "uniform": {
+          "target_monotonicity_spearman": -0.0396,
+          "predicted_activity_by_target": [
+            -0.0273,
+            -0.0947,
+            -0.111,
+            -0.1903,
+            -0.1439
+          ],
+          "top_minus_bottom_lift": -0.1166
+        }
+      }
+    }
+  },
+  "ceiling_relative": {
+    "ceiling_spearman": {
+      "K562": 0.4912,
+      "HepG2": 0.4537
+    },
+    "ceiling_estimator": "all held-out records per stratum -- the lowest-variance estimate. Per-cell matched-n draws and their spread are in cells.*.ceiling_diagnostics.",
+    "ceiling_sd_from_matched_n_draws": {
+      "K562": 0.0254,
+      "HepG2": 0.0253
+    },
+    "stratified_frac_of_ceiling": {
+      "K562": 0.422,
+      "HepG2": 0.5133
+    },
+    "pooled_frac_of_ceiling": {
+      "K562": 0.0499,
+      "HepG2": 0.0796
+    },
+    "frac_sd_propagated_from_ceiling_only": {
+      "K562": 0.0218,
+      "HepG2": 0.0286
+    },
+    "frac_sd_note": "first-order propagation of the DENOMINATOR's spread only. The null arm's own seed spread is NOT included, so this is a floor on each fraction's uncertainty and not its total."
+  },
+  "verdict": "KMER_NULL_IS_SUBSTANTIAL_ROOM_REMAINS",
+  "verdict_detail": "The stratified 4-mer null captures K562 42.2%, HepG2 51.3% of the achievable monotonicity (ceiling K562 0.4912, HepG2 0.4537 from real sequence stratified by its own measured activity), while an UNCONDITIONED chain captures K562 5.0%, HepG2 8.0% -- so the signal is genuinely coming from the conditioning and not from the generation process. A real bar with real room left. A generator must be quoted against BOTH the null and the ceiling; beating the null while far below the ceiling is a partial result.",
+  "seconds": 209.4
+}

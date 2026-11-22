@@ -16,6 +16,26 @@
     "what_still_stands": "Reserving fold 10 remains worth doing as prudence and costs only discipline here. The retrospective-exposure accounting below also stands as a factual record of what was read and when. Only the causal story -- that look-count is the thing being guarded against -- is withdrawn.",
     "full_protocol": "wiki/human_replication_and_multiplicity_protocol_2026-11-22.json"
   },
+  "REMEDY_DISCHARGED": {
+    "date": "2026-11-22",
+    "remedy_as_named_above": "Re-derive the ceiling on fold 9 ALONE and keep every parameter of the ceiling-relative rule off fold 10.",
+    "status": "DONE",
+    "artifact": "wiki/human_fold9_remeasurement_2026-11-22.json",
+    "how": "the held-out fold set is now a PARAMETER of both scripts (--held-out-folds, default 9,10 so the committed numbers reproduce) and the output path is fold-tagged, so a fold-9 result cannot land on the folds-9+10 record",
+    "outcome_on_the_two_spent_queries": {
+      "oracle_gate": "re-measured on fold 9 alone in BOTH cells: ORACLE_VALID_PROCEED stands, every feature arm moves by at most 0.0063, and both cells still clear the gate by roughly 4.5x on margin and 2.3x on absolute rho. The decision this query informed does not depend on having used the reserved shard.",
+      "ceiling_and_the_rule_derived_from_it": "re-measured on fold 9 alone: K562 moved +0.0184, which is 0.72 sd of the ceiling's own sampling spread -- NOT detectable. The ceiling-relative verdict bucket (KMER_NULL_IS_SUBSTANTIAL_ROOM_REMAINS) is unchanged. So the adaptive exposure this artifact called 'real but small' was real, and measured small."
+    },
+    "THIS_ARTIFACTS_OWN_PREDICTION_GRADED": {
+      "it_predicted_verbatim": "The numbers will move slightly; that movement is the price of the reservation and is not a finding.",
+      "first_half_HELD": "the movement attributable to dropping fold 10 is 0.0184 on the ceiling (0.72 sd) and <=0.0063 on every oracle arm -- slight, as predicted",
+      "second_half_was_WRONG_about_the_exercise": "the re-measurement DID produce a finding, just not from the shard change. Re-running the ceiling arm surfaced a biased subsample inside it -- quintiles() returns each stratum sorted by activity ascending and the arm took the first n, i.e. every stratum's LOWEST-activity members, truncating the top quintile's tail. Correcting it moved the ceiling +0.0999 in K562 (3.93 sd), five times the shard effect and in the opposite direction from harmless: the ceiling is the DENOMINATOR of every fraction-of-ceiling, so understating it OVERSTATES a generator's achievement.",
+      "the_reusable_part": "'this re-measurement is bookkeeping, not a finding' is a prediction about the SHARD. It says nothing about the code path the re-measurement has to execute, and running that path is what found the defect. A re-measurement predicted to be uninformative is still worth running for the second reason."
+    },
+    "what_is_NOT_undone": "The two queries remain spent. A retrospective reservation cannot manufacture a virgin shard and this does not claim to. What is now true is that no threshold or verdict rule IN FORCE was derived using fold 10: every decision-grade quantity has a fold-9-only value, and the committed folds-9+10 artifacts are retained on their own paths as the record of what was measured then.",
+    "a_gap_this_exposed_in_the_accounting_above": "HONEST_ACCOUNTING lists the stratified-null query as K562-only and concludes HepG2 is the cleaner cell, which is correct. What it does not say is the consequence: with no HepG2 ceiling, the ceiling-relative verdict rule had NO DENOMINATOR in HepG2 and was inapplicable there, while the bar forbids pooling cells. HepG2's ceiling is measured for the first time in the fold-9 run (0.4537, stratified fraction 0.5133).",
+    "fold_10_untouched_by_this_work": "evidenced in the artifact rather than asserted: wiki/glm_human_stratified_null_fold9_2026-11-22.json leak.folds_not_read_at_all == [10]"
+  },
   "why_a_separate_artifact": "The bar is FROZEN. Amending a frozen bar to add a reservation it did not contain would defeat the point of freezing it, so this is a separate, later, additive commitment that references the bar rather than editing it.",
   "purpose": "[RATIONALE RETRACTED 2026-11-22 -- see RETRACTED_MECHANISM_READ_THIS_FIRST above. The action stands: fold 10 is reserved and queried once, as prudence. The mechanism originally given here named look-count, which is not what overfits; SELECTION is, counted over candidates the split's feedback informed.]",
   "HONEST_ACCOUNTING_THE_RESERVATION_IS_RETROSPECTIVE": {
@@ -82,7 +102,7 @@
         "K562": 9833
       }
     },
-    "consequence_to_apply": "The oracle accuracy and the ceiling were both measured on folds 9+10 combined. Going forward both are RE-MEASURED on fold 9 alone, and the combined 9+10 figures are retired to 'already spent' rather than quoted as held-out. The numbers will move slightly; that movement is the price of the reservation and is not a finding."
+    "consequence_to_apply": "The oracle accuracy and the ceiling were both measured on folds 9+10 combined. Going forward both are RE-MEASURED on fold 9 alone, and the combined 9+10 figures are retired to 'already spent' rather than quoted as held-out. The numbers will move slightly; that movement is the price of the reservation and is not a finding. [DISCHARGED 2026-11-22 -- see REMEDY_DISCHARGED. The re-measurement is done and the movement was indeed slight (ceiling 0.72 sd, oracle arms <=0.0063). The clause 'is not a finding' held for the shard change but NOT for the exercise: running the ceiling arm again surfaced a biased subsample worth 3.93 sd, five times the shard effect.]"
   },
   "why_this_is_affordable_here_and_was_not_on_E_coli": "On the E. coli arm the scoring split was pinned by nine frozen COMPARISON_GEOMETRY_FIELDS and every committed number was measured against it, so carving a shard out would have orphaned the existing anchors. The human track has no committed anchors yet, so a reservation costs nothing but discipline.",
   "honest_limits": [

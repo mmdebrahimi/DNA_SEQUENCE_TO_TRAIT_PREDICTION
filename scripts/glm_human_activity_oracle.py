@@ -59,11 +59,61 @@ from dna_decode.glm.lentimpra import load_cell  # noqa: E402
 #: which does not exist here, so a bare load_cell() reports "absent, fetch it" for data already on
 #: disk. Passing the directory explicitly is mandatory, not stylistic.
 LOCAL_DIR = ROOT / "data" / "mpra_human"
-OUT = ROOT / "wiki" / "glm_human_activity_oracle_2026-11-22.json"
+#: NO module-level OUT: see the fold_tag() note below -- the path depends on the held-out fold
+#: set and is built in main(), so a fold-9 result cannot overwrite the folds-9+10 record.
 
 ORACLE_TRAIN_FOLDS = {7, 8}
 HELD_OUT_FOLDS = {9, 10}
 GENERATOR_FOLDS = {1, 2, 3, 4, 5, 6}        # reserved, deliberately untouched here
+
+#: The held-out roles are SPLIT (wiki/human_final_shard_reservation_2026-11-22.json): fold 9 is
+#: WORKING_HELD_OUT and may be interrogated freely, fold 10 is FINAL_ONLY and is queried exactly
+#: once for the headline. So every quantity that INFORMS a decision -- this gate, the null's
+#: ceiling, any threshold -- must be measured on fold 9 ALONE, or the decision was informed by the
+#: shard reserved to test it. That is not a look-count argument (look-count is not what overfits);
+#: it is that a verdict RULE tuned on fold 10 makes fold 10 no longer a test of the rule.
+WORKING_HELD_OUT_FOLDS = {9}
+FINAL_ONLY_FOLDS = {10}
+
+
+def parse_fold_set(spec, default):
+    """Parse a comma-separated fold list, defaulting to `default` when the spec is empty.
+
+    REFUSES a fold outside the publishers' 1-10 assignment, and refuses any overlap with the
+    oracle's own training folds or the generator's -- scoring on a fold the oracle trained on is
+    precisely the leak the three-role contract exists to prevent, and it would raise every number
+    here while looking like a better oracle.
+    """
+    if not spec:
+        return set(default)
+    out = set()
+    for tok in str(spec).split(","):
+        tok = tok.strip()
+        if not tok:
+            continue
+        if not tok.isdigit():
+            raise ValueError(f"fold {tok!r} is not an integer")
+        f = int(tok)
+        if not 1 <= f <= 10:
+            raise ValueError(f"fold {f} is outside the publishers' 1-10 assignment")
+        out.add(f)
+    if not out:
+        raise ValueError("empty held-out fold set")
+    bad = out & (ORACLE_TRAIN_FOLDS | GENERATOR_FOLDS)
+    if bad:
+        raise ValueError(
+            f"folds {sorted(bad)} are oracle-train or generator folds; scoring on them is the leak "
+            f"the three-role fold contract exists to prevent")
+    return out
+
+
+def fold_tag(folds):
+    """'' for the default {9, 10}, so the committed artifact path is unchanged; '_fold9' otherwise.
+
+    A fold-9 number written to the fold-9-and-10 path would silently replace the record of what was
+    actually measured on 2026-11-22. They are two different measurements on two different shards.
+    """
+    return "" if set(folds) == HELD_OUT_FOLDS else "_fold" + "".join(str(f) for f in sorted(folds))
 
 ADAPTOR = 15                                 # 5' and 3', per the publishers' column name
 BASES = "ACGT"
@@ -74,6 +124,113 @@ BASES = "ACGT"
 MIN_MARGIN_OVER_GC = 0.05
 #: And it must reach at least this absolute Spearman, or "beats GC" is a race between two weak things.
 MIN_ABS_SPEARMAN = 0.20
+
+
+class OraclePreconditionFailed(RuntimeError):
+    """The feature pipeline does not reproduce a hand-derived fixture, so nothing downstream of it
+    can be trusted. RAISED, never returned: a precondition a caller can ignore is not one."""
+
+
+#: Hand-derived; see the module docstring's fixture table for the arithmetic.
+FIXTURE_SEQ = "ACGTACGTACGT"
+FIXTURE_KMER4 = {27: 3 / 9, 108: 2 / 9, 177: 2 / 9, 198: 2 / 9}
+FIXTURE_POSITIONAL = [1 / 3, 1 / 3, 1 / 3, 0.0,
+                      1 / 3, 1 / 3, 0.0, 1 / 3,
+                      1 / 3, 0.0, 1 / 3, 1 / 3,
+                      0.0, 1 / 3, 1 / 3, 1 / 3]
+
+#: A SECOND positional fixture, deliberately ASYMMETRIC and NON-SQUARE, because the first one is
+#: blind to layout. FIXTURE_SEQ at bins=4 yields a 4x4 matrix that is SYMMETRIC (the ACGT period
+#: and a width-3 bin conspire), so its transpose is identical and a base-major-vs-bin-major reshape
+#: flip passes unnoticed -- found by perturbing the builder and watching this check NOT fire. That
+#: flip changes what every positional feature MEANS (bin b's base composition vs base c's profile
+#: across bins) while leaving the value multiset intact, so a fitted ridge would simply learn
+#: different features and the oracle's rho would barely move. Invisible is the whole problem.
+#:
+#: Hand-derived for "AAACCCGGGTTT" at bins=3, width 4:
+#:   bin 0 = AAAC -> A 3/4, C 1/4, G 0,    T 0
+#:   bin 1 = CCGG -> A 0,   C 2/4, G 2/4,  T 0
+#:   bin 2 = GTTT -> A 0,   C 0,   G 1/4,  T 3/4
+#: 3 bins x 4 bases is non-square, so a transpose cannot coincide with it.
+FIXTURE_SEQ_ASYM = "AAACCCGGGTTT"
+FIXTURE_POSITIONAL_ASYM = [0.75, 0.25, 0.0, 0.0,
+                           0.0, 0.50, 0.50, 0.0,
+                           0.0, 0.0, 0.25, 0.75]
+
+
+def assert_oracle_fixture(tol: float = 1e-6) -> dict:
+    """Score a known input and check it against hand-derived values. Raises on any mismatch.
+
+    Returns a small record of what was checked, for stamping into the run's artifact -- so a reader
+    can tell "the precondition passed" from "the precondition never ran", which is the distinction
+    a floor that never computes destroys.
+    """
+    def bad(what, exp, got):
+        raise OraclePreconditionFailed(
+            f"{what}: expected {exp!r}, got {got!r}. The oracle's feature pipeline no longer "
+            f"reproduces a hand-derived fixture -- a dependency or a refactor has changed its "
+            f"behaviour. REFUSING to score anything until this is explained.")
+
+    g = build([FIXTURE_SEQ], "gc", 4)[0]
+    if len(g) != 1 or abs(g[0] - 0.5) > tol:
+        bad("gc(ACGTACGTACGT)", [0.5], g)
+
+    k4 = build([FIXTURE_SEQ], "kmer4", 4)[0]
+    if len(k4) != 256:
+        bad("kmer4 width", 256, len(k4))
+    nz = {i: v for i, v in enumerate(k4) if v}
+    if set(nz) != set(FIXTURE_KMER4):
+        bad("kmer4 nonzero INDICES (a re-indexed k-mer table is the silent failure this catches)",
+            sorted(FIXTURE_KMER4), sorted(nz))
+    for i, exp in FIXTURE_KMER4.items():
+        if abs(nz[i] - exp) > tol:
+            bad(f"kmer4[{i}]", exp, nz[i])
+    if abs(sum(k4) - 1.0) > tol:
+        bad("kmer4 normalisation (must sum to 1)", 1.0, sum(k4))
+
+    k6 = build([FIXTURE_SEQ], "kmer6", 4)[0]
+    if len(k6) != 4096:
+        bad("kmer6 width", 4096, len(k6))
+    got6 = sorted(round(v, 9) for v in k6 if v)
+    exp6 = sorted([round(1 / 7, 9)] + [round(2 / 7, 9)] * 3)
+    if len(got6) != 4 or any(abs(a - b) > tol for a, b in zip(got6, exp6)):
+        bad("kmer6 nonzero values (three 2/7 and one 1/7)", exp6, got6)
+
+    p = build([FIXTURE_SEQ], "positional", 4)[0]
+    if len(p) != 16 or any(abs(a - b) > tol for a, b in zip(p, FIXTURE_POSITIONAL)):
+        bad("positional(bins=4)", FIXTURE_POSITIONAL, p)
+
+    pa = build([FIXTURE_SEQ_ASYM], "positional", 3)[0]
+    if len(pa) != 12 or any(abs(a - b) > tol for a, b in zip(pa, FIXTURE_POSITIONAL_ASYM)):
+        bad("positional LAYOUT on the asymmetric fixture (bin-major, not base-major; the "
+            "symmetric fixture above cannot see this)", FIXTURE_POSITIONAL_ASYM, pa)
+
+    try:
+        build([FIXTURE_SEQ], "positional", 5)
+    except ValueError:
+        pass
+    else:
+        bad("positional(bins=5) must REFUSE a non-dividing bin count", "ValueError", "no error")
+
+    kn = build(["ACGTNCGTACGT"], "kmer4", 4)[0]
+    vals = sorted(round(v, 9) for v in kn if v)
+    exp_n = sorted([round(0.2, 9)] * 3 + [round(0.4, 9)])
+    if len(vals) != 4 or any(abs(a - b) > tol for a, b in zip(vals, exp_n)):
+        bad("kmer4 with one ambiguous base (N skips 4 windows, so the normaliser is 5, NOT 9)",
+            exp_n, vals)
+
+    return {"precondition": "oracle-feature-fixture-v1", "status": "PASSED",
+            "fixture_seq": FIXTURE_SEQ, "tol": tol,
+            "checked": ["gc", "kmer4 indices+values+normalisation", "kmer6 value multiset",
+                        "positional bins=4", "positional bin-major LAYOUT (asymmetric fixture)",
+                        "positional refuses a non-dividing bin count",
+                        "kmer4 ambiguous-base denominator"],
+            "why": ("values are hand-derived from the definitions, so this is a CORRECTNESS check "
+                    "and not a record of current output. It RAISES rather than returning a verdict, "
+                    "because a floor that never computes is not a failing floor -- it is no floor."),
+            "limit": ("it pins the FEATURE pipeline, not the fitted ridge: a changed linear-algebra "
+                      "backend that still builds identical features would pass this and must be "
+                      "caught by the end-to-end value pin in the test suite.")}
 
 
 class DegenerateSpearman(ValueError):
@@ -209,7 +366,27 @@ def main() -> int:
     ap.add_argument("--cells", default="HepG2,K562")
     ap.add_argument("--bins", type=int, default=10)
     ap.add_argument("--alpha", type=float, default=1.0)
+    ap.add_argument("--held-out-folds", default=None,
+                    help="comma-separated held-out fold set. Default 9,10 reproduces the committed "
+                         "2026-11-22 measurement. Pass 9 for the DECISION-GRADE measurement, which "
+                         "leaves fold 10 reserved as the final-only headline shard.")
     a = ap.parse_args()
+
+    try:
+        held_folds = parse_fold_set(a.held_out_folds, HELD_OUT_FOLDS)
+    except ValueError as exc:
+        print(f"REFUSE: {exc}", file=sys.stderr)
+        return 3
+    out_path = ROOT / "wiki" / f"glm_human_activity_oracle{fold_tag(held_folds)}_2026-11-22.json"
+
+    # THE THIRD PRECONDITION. Before any data is touched: does the feature pipeline still
+    # reproduce a hand-derived fixture? Raises rather than returning an ignorable verdict.
+    try:
+        precondition = assert_oracle_fixture()
+    except OraclePreconditionFailed as exc:
+        print(f"PRECONDITION FAILED: {exc}", file=sys.stderr)
+        return 5
+    print("precondition: oracle-feature-fixture-v1 PASSED")
 
     if not LOCAL_DIR.exists():
         print(f"REFUSE: {LOCAL_DIR} absent", file=sys.stderr)
@@ -225,10 +402,17 @@ def main() -> int:
                              "directory must be passed explicitly or the loader reports absent data"),
         "fold_contract": {"generator_reserved": sorted(GENERATOR_FOLDS),
                           "oracle_train": sorted(ORACLE_TRAIN_FOLDS),
-                          "held_out": sorted(HELD_OUT_FOLDS),
+                          "held_out": sorted(held_folds),
+                          "held_out_role": (
+                              "WORKING_HELD_OUT (fold 9) ONLY -- the decision-grade set. Fold 10 "
+                              "stays FINAL_ONLY and is not read here."
+                              if held_folds == WORKING_HELD_OUT_FOLDS else
+                              "folds 9+10 POOLED -- this INCLUDES the FINAL_ONLY shard, so any "
+                              "threshold or verdict rule informed by this number has spent it"),
                           "why": "publishers' own 10-fold assignment; the oracle never sees the "
                                  "generator's folds, which makes it an INDEPENDENT judge"},
         "primary_geometry": "element_200nt_adaptors_stripped",
+        "precondition": precondition,
         "gate": {"min_margin_over_gc": MIN_MARGIN_OVER_GC,
                  "min_abs_spearman": MIN_ABS_SPEARMAN,
                  "why": "a weak oracle cannot validate a generator's designs; its verdict would be "
@@ -240,7 +424,7 @@ def main() -> int:
     for cell in [c.strip() for c in a.cells.split(",") if c.strip()]:
         recs, stats = load_cell(cell, LOCAL_DIR)
         tr = [r for r in recs if r.fold in ORACLE_TRAIN_FOLDS]
-        te = [r for r in recs if r.fold in HELD_OUT_FOLDS]
+        te = [r for r in recs if r.fold in held_folds]
         print(f"{cell}: {len(recs)} records | oracle-train {len(tr)} | held-out {len(te)}")
         assert not ({r.fold for r in tr} & {r.fold for r in te}), "fold roles overlap"
 
@@ -293,8 +477,8 @@ def main() -> int:
     res["seconds"] = round(time.time() - t0, 1)
     print("\n" + "=" * 74)
     print(f"VERDICT: {res['verdict']}\n  {res['verdict_detail']}")
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
-    print(f"\n-> {OUT}")
+    out_path.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    print(f"\n-> {out_path}")
     return 0
 
 

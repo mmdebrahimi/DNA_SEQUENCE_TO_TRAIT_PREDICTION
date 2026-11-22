@@ -1,0 +1,122 @@
+{
+  "record": "glm-human-activity-oracle-v1",
+  "date": "2026-11-22",
+  "substrate": "Agarwal lentiMPRA (Zenodo 10558183, CC-BY-4.0), observed log2(RNA/DNA)",
+  "data_dir": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\mpra_human",
+  "default_dir_note": "lentimpra.DEFAULT_DIR is D:/dna_decode_cache/mpra_human and does NOT exist on this host; the data is on C: at data/mpra_human, so the directory must be passed explicitly or the loader reports absent data",
+  "fold_contract": {
+    "generator_reserved": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "oracle_train": [
+      7,
+      8
+    ],
+    "held_out": [
+      9
+    ],
+    "held_out_role": "WORKING_HELD_OUT (fold 9) ONLY -- the decision-grade set. Fold 10 stays FINAL_ONLY and is not read here.",
+    "why": "publishers' own 10-fold assignment; the oracle never sees the generator's folds, which makes it an INDEPENDENT judge"
+  },
+  "primary_geometry": "element_200nt_adaptors_stripped",
+  "precondition": {
+    "precondition": "oracle-feature-fixture-v1",
+    "status": "PASSED",
+    "fixture_seq": "ACGTACGTACGT",
+    "tol": 1e-06,
+    "checked": [
+      "gc",
+      "kmer4 indices+values+normalisation",
+      "kmer6 value multiset",
+      "positional bins=4",
+      "positional bin-major LAYOUT (asymmetric fixture)",
+      "positional refuses a non-dividing bin count",
+      "kmer4 ambiguous-base denominator"
+    ],
+    "why": "values are hand-derived from the definitions, so this is a CORRECTNESS check and not a record of current output. It RAISES rather than returning a verdict, because a floor that never computes is not a failing floor -- it is no floor.",
+    "limit": "it pins the FEATURE pipeline, not the fitted ridge: a changed linear-algebra backend that still builds identical features would pass this and must be caught by the end-to-end value pin in the test suite."
+  },
+  "gate": {
+    "min_margin_over_gc": 0.05,
+    "min_abs_spearman": 0.2,
+    "why": "a weak oracle cannot validate a generator's designs; its verdict would be uninterpretable the way a sub-chance eval set was on the E. coli arm"
+  },
+  "cells": {
+    "HepG2": {
+      "n_records": 61463,
+      "n_oracle_train": 12292,
+      "n_held_out": 6146,
+      "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+      "geometries": {
+        "element_200nt_adaptors_stripped": {
+          "length_bp": 200,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2415,
+            "kmer4": 0.4229,
+            "kmer6": 0.4643,
+            "positional": 0.2713
+          },
+          "best_learned": 0.4643,
+          "margin_over_gc": 0.2228,
+          "passes_gate": true
+        },
+        "full_230nt_as_shipped": {
+          "length_bp": 230,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2415,
+            "kmer4": 0.4271,
+            "kmer6": 0.4984,
+            "positional": 0.2709
+          },
+          "best_learned": 0.4984,
+          "margin_over_gc": 0.2569,
+          "passes_gate": true
+        }
+      }
+    },
+    "K562": {
+      "n_records": 98332,
+      "n_oracle_train": 19666,
+      "n_held_out": 9833,
+      "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+      "geometries": {
+        "element_200nt_adaptors_stripped": {
+          "length_bp": 200,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2112,
+            "kmer4": 0.3975,
+            "kmer6": 0.5038,
+            "positional": 0.2049
+          },
+          "best_learned": 0.5038,
+          "margin_over_gc": 0.2926,
+          "passes_gate": true
+        },
+        "full_230nt_as_shipped": {
+          "length_bp": 230,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2112,
+            "kmer4": 0.3963,
+            "kmer6": 0.5235,
+            "positional": 0.2062
+          },
+          "best_learned": 0.5235,
+          "margin_over_gc": 0.3123,
+          "passes_gate": true
+        }
+      }
+    }
+  },
+  "verdict": "ORACLE_VALID_PROCEED",
+  "verdict_detail": "Every cell clears the pre-registered gate on the primary geometry, so the oracle is a competent judge and a generator design question is interpretable against it. This does NOT show a generator can design to it -- only that the judge works.",
+  "seconds": 237.3
+}
