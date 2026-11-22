@@ -1,0 +1,660 @@
+{
+  "record": "glm-margin-gc-vs-lineage-v1",
+  "date": "2026-11-21",
+  "question": "Is the winnable margin driven by GC content or by lineage? The four-species cache could not separate them; this corpus can.",
+  "what_this_closes": "A declared limit: the cross-organism artifact reported margin-versus-GC at r = -0.941 and had to call it uninterpretable, because the two low-GC genomes were both Campylobacter and the three high-GC ones all Enterobacteriaceae -- effective n of 2 groups, not 5 points. It named what would be needed and said the set did not contain it.",
+  "geometry": {
+    "window_length_bp": 150,
+    "limit_natural": 1200,
+    "n_generated_per_candidate": 120,
+    "markov_order": 3,
+    "kmer_k": 4,
+    "positional_bins": 6,
+    "feature_modes": [
+      "kmer",
+      "positional",
+      "both"
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "note": "identical to the committed kernel, so the margin is the same quantity"
+  },
+  "n_species": 14,
+  "n_phyla": 10,
+  "gc_range": [
+    0.234,
+    0.6937
+  ],
+  "collinearity_precondition": {
+    "corr_gc_vs_phylum_mean": 0.983,
+    "n_phyla": 10,
+    "ceiling": 0.7,
+    "decoupled": false,
+    "reading": "a correlation near 1 means phylum predicts GC and the two cannot be separated; below the ceiling they vary independently enough to ask the question"
+  },
+  "rows": [
+    {
+      "accession": "GCF_000009045.1",
+      "species": "Bacillus subtilis",
+      "phylum": "Bacillota",
+      "lineage_key": "Bacillota;Bacilli",
+      "gc_spec": 0.436,
+      "gc_measured": 0.3838,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0248,
+          "sd": 0.0482,
+          "ci95": [
+            -0.0097,
+            0.0593
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.3015,
+          "sd": 0.0705,
+          "ci95": [
+            0.251,
+            0.3519
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.2344,
+          "sd": 0.0435,
+          "ci95": [
+            0.2033,
+            0.2656
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_018885085.1",
+      "species": "Clostridioides difficile",
+      "phylum": "Bacillota",
+      "lineage_key": "Bacillota;Clostridia",
+      "gc_spec": 0.291,
+      "gc_measured": 0.242,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0172,
+          "sd": 0.0532,
+          "ci95": [
+            -0.0208,
+            0.0553
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.2845,
+          "sd": 0.079,
+          "ci95": [
+            0.228,
+            0.341
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.2318,
+          "sd": 0.0677,
+          "ci95": [
+            0.1834,
+            0.2802
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000013425.1",
+      "species": "Staphylococcus aureus",
+      "phylum": "Bacillota",
+      "lineage_key": "Bacillota;Bacilli;Staphylococcales",
+      "gc_spec": 0.329,
+      "gc_measured": 0.2912,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0394,
+          "sd": 0.0659,
+          "ci95": [
+            -0.0077,
+            0.0866
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.2048,
+          "sd": 0.0499,
+          "ci95": [
+            0.169,
+            0.2405
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.1887,
+          "sd": 0.0696,
+          "ci95": [
+            0.1389,
+            0.2385
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000195955.2",
+      "species": "Mycobacterium tuberculosis",
+      "phylum": "Actinomycetota",
+      "lineage_key": "Actinomycetota;Actinomycetia",
+      "gc_spec": 0.656,
+      "gc_measured": 0.6346,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.04,
+          "sd": 0.0541,
+          "ci95": [
+            0.0013,
+            0.0788
+          ],
+          "resolvable_above_zero": true
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.0959,
+          "sd": 0.0933,
+          "ci95": [
+            0.0292,
+            0.1626
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.0874,
+          "sd": 0.0608,
+          "ci95": [
+            0.0439,
+            0.1308
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000203835.1",
+      "species": "Streptomyces coelicolor",
+      "phylum": "Actinomycetota",
+      "lineage_key": "Actinomycetota;Streptomycetales",
+      "gc_spec": 0.72,
+      "gc_measured": 0.6937,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0641,
+          "sd": 0.0661,
+          "ci95": [
+            0.0168,
+            0.1113
+          ],
+          "resolvable_above_zero": true
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.1539,
+          "sd": 0.0437,
+          "ci95": [
+            0.1226,
+            0.1851
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.1417,
+          "sd": 0.0421,
+          "ci95": [
+            0.1116,
+            0.1719
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_014131755.1",
+      "species": "Bacteroides thetaiotaomicron",
+      "phylum": "Bacteroidota",
+      "lineage_key": "Bacteroidota;Bacteroidia",
+      "gc_spec": 0.428,
+      "gc_measured": 0.356,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0142,
+          "sd": 0.0762,
+          "ci95": [
+            -0.0403,
+            0.0687
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.2427,
+          "sd": 0.039,
+          "ci95": [
+            0.2148,
+            0.2706
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.1858,
+          "sd": 0.0902,
+          "ci95": [
+            0.1212,
+            0.2503
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000009725.1",
+      "species": "Synechocystis sp. PCC 6803",
+      "phylum": "Cyanobacteriota",
+      "lineage_key": "Cyanobacteriota",
+      "gc_spec": 0.476,
+      "gc_measured": 0.4326,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.051,
+          "sd": 0.0452,
+          "ci95": [
+            0.0186,
+            0.0834
+          ],
+          "resolvable_above_zero": true
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.0555,
+          "sd": 0.06,
+          "ci95": [
+            0.0126,
+            0.0984
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.0749,
+          "sd": 0.0559,
+          "ci95": [
+            0.0349,
+            0.1149
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_020546685.1",
+      "species": "Deinococcus radiodurans",
+      "phylum": "Deinococcota",
+      "lineage_key": "Deinococcota",
+      "gc_spec": 0.667,
+      "gc_measured": 0.6357,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0029,
+          "sd": 0.0492,
+          "ci95": [
+            -0.0323,
+            0.038
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.1052,
+          "sd": 0.0313,
+          "ci95": [
+            0.0828,
+            0.1276
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.0653,
+          "sd": 0.0508,
+          "ci95": [
+            0.029,
+            0.1016
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000230655.2",
+      "species": "Thermotoga maritima",
+      "phylum": "Thermotogota",
+      "lineage_key": "Thermotogota",
+      "gc_spec": 0.464,
+      "gc_measured": 0.4439,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0437,
+          "sd": 0.0534,
+          "ci95": [
+            0.0055,
+            0.082
+          ],
+          "resolvable_above_zero": true
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.2757,
+          "sd": 0.0615,
+          "ci95": [
+            0.2317,
+            0.3196
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.2349,
+          "sd": 0.062,
+          "ci95": [
+            0.1905,
+            0.2792
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_019552005.1",
+      "species": "Fusobacterium nucleatum",
+      "phylum": "Fusobacteriota",
+      "lineage_key": "Fusobacteriota",
+      "gc_spec": 0.272,
+      "gc_measured": 0.234,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0209,
+          "sd": 0.0429,
+          "ci95": [
+            -0.0097,
+            0.0516
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.2912,
+          "sd": 0.054,
+          "ci95": [
+            0.2525,
+            0.3298
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.2545,
+          "sd": 0.0412,
+          "ci95": [
+            0.2251,
+            0.284
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000006765.1",
+      "species": "Pseudomonas aeruginosa",
+      "phylum": "Pseudomonadota",
+      "lineage_key": "Pseudomonadota;Gammaproteobacteria;Pseudomonadales",
+      "gc_spec": 0.664,
+      "gc_measured": 0.6323,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0524,
+          "sd": 0.0773,
+          "ci95": [
+            -0.0029,
+            0.1076
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.201,
+          "sd": 0.0667,
+          "ci95": [
+            0.1533,
+            0.2487
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.1665,
+          "sd": 0.0741,
+          "ci95": [
+            0.1134,
+            0.2195
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000022005.1",
+      "species": "Caulobacter vibrioides",
+      "phylum": "Pseudomonadota",
+      "lineage_key": "Pseudomonadota;Alphaproteobacteria",
+      "gc_spec": 0.673,
+      "gc_measured": 0.6377,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0358,
+          "sd": 0.0829,
+          "ci95": [
+            -0.0235,
+            0.0951
+          ],
+          "resolvable_above_zero": false
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.0805,
+          "sd": 0.0615,
+          "ci95": [
+            0.0366,
+            0.1245
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.0627,
+          "sd": 0.0494,
+          "ci95": [
+            0.0274,
+            0.098
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000012685.1",
+      "species": "Myxococcus xanthus",
+      "phylum": "Myxococcota",
+      "lineage_key": "Myxococcota",
+      "gc_spec": 0.688,
+      "gc_measured": 0.6682,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0539,
+          "sd": 0.0724,
+          "ci95": [
+            0.0022,
+            0.1057
+          ],
+          "resolvable_above_zero": true
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.113,
+          "sd": 0.0452,
+          "ci95": [
+            0.0807,
+            0.1453
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.0972,
+          "sd": 0.0548,
+          "ci95": [
+            0.058,
+            0.1364
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    },
+    {
+      "accession": "GCF_000008625.1",
+      "species": "Aquifex aeolicus",
+      "phylum": "Aquificota",
+      "lineage_key": "Aquificota",
+      "gc_spec": 0.433,
+      "gc_measured": 0.4017,
+      "margins": {
+        "kmer": {
+          "n": 10,
+          "mean": 0.0359,
+          "sd": 0.0458,
+          "ci95": [
+            0.0032,
+            0.0687
+          ],
+          "resolvable_above_zero": true
+        },
+        "positional": {
+          "n": 10,
+          "mean": 0.1371,
+          "sd": 0.0613,
+          "ci95": [
+            0.0933,
+            0.181
+          ],
+          "resolvable_above_zero": true
+        },
+        "both": {
+          "n": 10,
+          "mean": 0.1463,
+          "sd": 0.0521,
+          "ci95": [
+            0.1091,
+            0.1835
+          ],
+          "resolvable_above_zero": true
+        }
+      }
+    }
+  ],
+  "analysis": {
+    "kmer": {
+      "raw_corr_margin_vs_gc": 0.464,
+      "within_phylum": {
+        "corr": 0.327,
+        "n_groups_with_replicates": 3,
+        "reading": "if GC matters for its own sake the relationship survives centring; if it was lineage all along it collapses toward zero"
+      },
+      "margin_range": [
+        0.0029,
+        0.0641
+      ],
+      "n_resolvable": 6,
+      "n_species": 14
+    },
+    "positional": {
+      "raw_corr_margin_vs_gc": -0.669,
+      "within_phylum": {
+        "corr": 0.294,
+        "n_groups_with_replicates": 3,
+        "reading": "if GC matters for its own sake the relationship survives centring; if it was lineage all along it collapses toward zero"
+      },
+      "margin_range": [
+        0.0555,
+        0.3015
+      ],
+      "n_resolvable": 14,
+      "n_species": 14
+    },
+    "both": {
+      "raw_corr_margin_vs_gc": -0.732,
+      "within_phylum": {
+        "corr": 0.216,
+        "n_groups_with_replicates": 3,
+        "reading": "if GC matters for its own sake the relationship survives centring; if it was lineage all along it collapses toward zero"
+      },
+      "margin_range": [
+        0.0627,
+        0.2545
+      ],
+      "n_resolvable": 14,
+      "n_species": 14
+    }
+  },
+  "verdict": "STILL_CONFOUNDED__NO_GC_CLAIM_POSSIBLE",
+  "honest_limits": [
+    "Collinearity is tested BEFORE any GC reading is given, and the four-species case fails that test -- which is the non-vacuity check for the guard: it must reject the data that motivated building it.",
+    "One genome per species, so a within-PHYLUM correlation is undefined wherever a phylum contributes a single genome. That is reported as undefined rather than as zero, because an undefined statistic read as a null result is how a sampling design becomes a finding.",
+    "A correlation over a handful of phyla is a description of this corpus, not a law. GC is also only one axis of composition; it does not separate GC from codon usage, repeat content or gene density, all of which travel with it.",
+    "This bounds the INSTRUMENT's margin against substrate composition and says nothing about any generator.",
+    "Draft versus complete assemblies are mixed across the corpus, and contig fragmentation removes windows at breaks."
+  ],
+  "wall_seconds": 442.8
+}
