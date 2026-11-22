@@ -1089,6 +1089,18 @@ clause-3 test was unconstructible. Plan folder left in place, not archived.
 ---
 
 ## [plan_file: Can_This_Instrument_Resolve_The_Generator_Question_At_All_Plan/] 2026-11-21
+**Status:** `candidate` — partially executed and AMENDED 2026-11-21. Steps 1-3 ran; Step 4 ran in
+part (the artifact now records its seed); Steps 5 and 6 are recommended struck. The plan's central premise
+is answered and not in the direction it assumed, so read
+`wiki/glm_instrument_reconciled_2026-11-21.md` before executing anything here.
+**Correction:** Steps 2-4 were executed at `n_generated=400` while the committed kernel froze `n=120`
+(`scripts/kaggle/glm_paired_sweep_kernel.py:45`), so their first results described a geometry no committed
+artifact uses. Re-run at n=120 the harness reproduces the grid at 20 of 20 cells. Two consequences for the
+key decisions below: Step 2's `margin` is not a valid subtraction (it pairs a 600-vs-120 AUROC with a
+300-vs-300 one) and is replaced by a floor in the null's own geometry; and the premise behind Steps 4-6 --
+that splitting the seed buys precision -- is answered by the across-seed spread being the SAMPLING NOISE of
+a held-out AUROC (Mann-Whitney benchmark 0.0409 against the grid's own 0.0410), so a seed-role split has
+nothing to remove.
 **Summary:** Measure the noise floor the committed grid never recorded, decompose the across-seed variance into the part a seed-role split can remove, and freeze a bar before any re-run number exists.
 **Key decisions:**
 - Step 1 single-sources `build_natural` into `dna_decode/glm/corpus.py` so Steps 2/3/4 cannot grow a second description of the corpus, which is the hazard `geometry_from_args` already exists to prevent.

@@ -42,6 +42,29 @@ REFSEQ = ROOT / "data" / "cache" / "refseq" / "GCF_000005845.2"
 GRID = ROOT / "wiki" / "glm_generator_paired_sweep_2026-11-20.json"
 OUT = ROOT / "wiki" / "glm_instrument_levers_2026-11-21.json"
 
+# A SECOND substrate, used only to test whether the order-dependence pattern is STRUCTURAL.
+# The mechanism claim is that a Markov chain's sufficient statistic IS the k-mer conditional
+# distribution, so raising its order must saturate a k-mer discriminator in ANY substrate while leaving
+# a positional one alone. That is a strong prediction and it is cheap to falsify: Campylobacter jejuni
+# is GC 0.266 against E. coli's 0.453, a compact genome with different promoter composition. If the
+# pattern is an E. coli quirk it should break here; if it is structural it must reproduce.
+SECOND = ROOT / "data" / "refseq_cache" / "GCA_060772745.1"
+SECOND_LABEL = "Campylobacter jejuni GCA_060772745.1 (GC 0.266)"
+REF_LABEL = "Escherichia coli K-12 MG1655 (GC 0.453)"
+
+STRUCTURAL_PREDICTION = {
+    "registered_before_the_second_substrate_was_run": True,
+    "claim": ("the kmer margin collapses as the Markov null's order rises because the chain's "
+              "sufficient statistic IS the k-mer conditional distribution, while the positional margin "
+              "is order-invariant because no order of Markov chain models WHERE composition sits"),
+    "therefore": ("the pattern must be STRUCTURAL and must reproduce in any substrate: kmer range "
+                  "across orders much larger than positional range, and no positional order resolvably "
+                  "different from the committed one"),
+    "falsified_if": ("the second substrate shows a flat kmer profile, or a positional profile that "
+                     "varies with order -- either would make the E. coli result a substrate quirk and "
+                     "the mechanism claim unsupported"),
+}
+
 LENGTH = 150
 LIMIT = 1200
 N_GENERATED = 120
@@ -136,11 +159,22 @@ def main() -> int:
     print(f"modes {list(MODES)} x orders {list(ORDERS)}")
     print()
 
+    def measure(ref_dir: Path):
+        """All (mode, order, seed) nulls plus the order-independent floors, for one substrate."""
+        return _measure(ref_dir, build_natural_set, fit_eval_halves, MarkovGenerator, heldout_auroc)
+
     # floors: one per (mode, seed), independent of the null's order by construction
+    floors, nulls = measure(REFSEQ)
+    return _report(floors, nulls, measure, t0)
+
+
+def _measure(ref_dir, build_natural_set, fit_eval_halves, MarkovGenerator, heldout_auroc):
     floors: dict[tuple[str, int], float] = {}
     nulls: dict[tuple[str, int, int], float] = {}
     for s in SEEDS:
-        wins, _ = build_natural_set(REFSEQ, length=LENGTH, limit=None, seed=s, kind=KIND)
+        wins, _ = build_natural_set(ref_dir, length=LENGTH, limit=None, seed=s, kind=KIND)
+        if len(wins) < LIMIT + N_GENERATED:
+            raise SystemExit(f"REFUSE: only {len(wins)} windows at {ref_dir}")
         committed = wins[:LIMIT]
         fit, ev = fit_eval_halves(committed)
         used = set(fit) | set(ev)
@@ -165,7 +199,16 @@ def main() -> int:
                 v = heldout_auroc(ev, gens[o], **kw)
                 if v is not None:
                     nulls[(mode, o, s)] = v
+    return floors, nulls
 
+
+def _report(floors, nulls, measure, t0: float):
+    """Assemble, cross-check and write. Split out of `main` so the second substrate can reuse `measure`.
+
+    `t0` is threaded in explicitly rather than read from an enclosing scope: these are module-level
+    functions, not closures, so a wall-clock reference would raise NameError only at the very END of a
+    multi-minute run -- after every measurement had been made and before anything was written.
+    """
     # ---- assemble ----
     cells = {}
     for mode in MODES:
@@ -226,6 +269,47 @@ def main() -> int:
                 1 for v in vs_committed.values() if v["resolvably_nonzero"]),
         }
 
+    # ---- the structural cross-check, on a substrate chosen for being as different as available ----
+    second = None
+    if SECOND.exists() and (SECOND / "genome.fna").exists():
+        print(f"\nstructural cross-check on {SECOND_LABEL}...")
+        f2, n2 = measure(SECOND)
+        prof = {}
+        for mode in MODES:
+            ms = {}
+            for o in ORDERS:
+                m = [n2[(mode, o, s)] - f2[(mode, s)] for s in SEEDS
+                     if (mode, o, s) in n2 and (mode, s) in f2]
+                ms[o] = round(statistics.fmean(m), 4)
+            vs_committed = {}
+            for o in ORDERS:
+                if o == COMMITTED_ORDER:
+                    continue
+                va = [n2[(mode, o, s)] - f2[(mode, s)] for s in SEEDS]
+                vb = [n2[(mode, COMMITTED_ORDER, s)] - f2[(mode, s)] for s in SEEDS]
+                vs_committed[f"order{o}"] = paired_diff(va, vb)
+            prof[mode] = {
+                "margin_by_order": {str(k): v for k, v in ms.items()},
+                "range": round(max(ms.values()) - min(ms.values()), 4),
+                "n_orders_resolvably_different_from_committed": sum(
+                    1 for v in vs_committed.values() if v["resolvably_nonzero"]),
+            }
+            print(f"   {mode:10s} " + "  ".join(f"o{o}={ms[o]:+.4f}" for o in ORDERS)
+                  + f"   range {prof[mode]['range']:.4f}")
+        held = (prof["kmer"]["range"] > 5 * prof["positional"]["range"]
+                and prof["positional"]["n_orders_resolvably_different_from_committed"] == 0)
+        second = {
+            "substrate": SECOND_LABEL,
+            "profile": prof,
+            "kmer_over_positional_range_ratio": (
+                round(prof["kmer"]["range"] / prof["positional"]["range"], 2)
+                if prof["positional"]["range"] else None),
+            "prediction_held": bool(held),
+            "verdict": ("ORDER_DEPENDENCE_IS_STRUCTURAL__REPLICATES_ACROSS_SUBSTRATES" if held else
+                        "ORDER_DEPENDENCE_DID_NOT_REPLICATE__MECHANISM_CLAIM_UNSUPPORTED"),
+        }
+        print(f"   -> {second['verdict']}")
+
     rec = {
         "record": "glm-instrument-levers-v1",
         "date": date.today().isoformat(),
@@ -246,6 +330,9 @@ def main() -> int:
         "cells": cells,
         "q1_feature_blocks": q1,
         "q2_null_order": q2,
+        "structural_prediction": STRUCTURAL_PREDICTION,
+        "structural_cross_check_second_substrate": second,
+        "primary_substrate": REF_LABEL,
         "honest_limits": [
             "The positional block is `bins * 4**min(k,2)` = 96 features, NOT bins * 4**k. The clamp "
             "lives inside `positional_features` rather than at the call site, so `both` is 352 features "
@@ -256,8 +343,10 @@ def main() -> int:
             "training set, so a high-order null is not simply a 'better' null -- part of any change is "
             "overfitting the fit half rather than modelling the substrate. This sweep measures the "
             "effect and does NOT separate those two causes.",
-            "One organism, one window length, one geometry. The cross-organism behaviour of these "
-            "levers is not measured here.",
+            "The order sweep itself runs on E. coli K-12; the structural cross-check runs the same "
+            "sweep on ONE Campylobacter jejuni draft assembly. Two substrates test whether the pattern "
+            "is structural and do not characterise how it varies across organisms.",
+            "One window length, one geometry, one null family.",
             "A winnable region is necessary, NOT sufficient: all three feature sets see LOCAL "
             "composition, so the positional block adds WHERE composition sits, not long-range "
             "organisation.",

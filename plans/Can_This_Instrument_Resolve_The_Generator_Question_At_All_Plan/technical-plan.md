@@ -235,4 +235,39 @@ These are audit notes for human readers only. `/execute-plan` reads ONLY the pla
 - kmer-mode null measured below its own noise floor across 10 seeds
 - the underpowered quantity is the model-vs-model delta, not the model-vs-null gap
 - scope excludes the arms-ledger generator criterion pending the criterion decision
+
+## Correction to the save-time amendments
+
+Captured at: 2026-11-21 (later the same day, after the measurements below)
+Source: re-measurement; the three bullets above are preserved verbatim and deliberately unedited.
+
+Also audit notes only. Nothing here is an executable instruction.
+
+- **Amendment 1 is WITHDRAWN.** "kmer-mode null measured below its own noise floor across 10 seeds" rested
+  on `margin = null - ceiling`, which subtracts a 600-natural-vs-120-generated AUROC from a 300-vs-300
+  self-split. Those are different class balances and different test-set sizes, so the difference is not a
+  margin in any geometry. Against a floor measured in the null's own geometry -- the same eval half scored
+  against 120 real held-out natural windows -- the kmer margin is **+0.0329**, the opposite sign, with a
+  95% interval of **[-0.0131, 0.0788]**. The honest reading is *unresolved at this replicate count*, not
+  below the floor, and it resolves positive at four of five larger geometries and at two of five
+  organisms. See `wiki/glm_instrument_reconciled_2026-11-21.md`.
+- **Amendment 2 is SUPPORTED, at a weaker strength than a clean rule.** "the underpowered quantity is the
+  model-vs-model delta, not the model-vs-null gap" is now measured rather than asserted: across all ten
+  checkpoint/null pairs in the committed grid, a resolvable paired-delta benefit appears in **2 of 4**
+  model-vs-null pairs in `both` mode (median ratio 0.684) and **0 of 4** in kmer, against **1 of 6**
+  checkpoint-vs-checkpoint pairs (median ratio 0.928). The strongest case is zero-shot minus null in
+  `both`: paired sd **0.0275** against an unpaired **0.0643**, correlation **+0.832** with CI
+  **[0.424, 0.959]**. Four and six overlapping pairs drawn from five shared series cannot carry a clean
+  rule, so this is directional support, not a law.
+- **Amendment 3 STANDS.** Nothing has been written to `soraya_runs/arms-ledger.json`, and the generator
+  ceiling criterion remains the open authority decision it was.
+- **A fourth item the plan did not anticipate.** The plan's central hypothesis -- that splitting the single
+  `--seed` into named roles buys precision -- is answered, and not in either direction the plan or its
+  first write-up proposed. The across-seed spread is the **sampling noise of a held-out AUROC** at this
+  test-set size and class balance (Mann-Whitney benchmark **0.0409**; the committed grid's own ten nulls
+  spread **0.0410**; the all-coupled arm measured at 240 replicates gives **0.0435** kmer and **0.0448**
+  both, with both intervals containing the benchmark). So no seed role carries the spread and a role split
+  has nothing to remove. Steps 4 and 6 should still be struck, for this reason rather than the one given
+  earlier.
+
 <!-- toolkit: check=clean waves=clean gate=fired:open-questions,unverified,severity-high -->
