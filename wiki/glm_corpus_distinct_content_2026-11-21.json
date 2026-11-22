@@ -1,0 +1,440 @@
+{
+  "record": "glm-corpus-distinct-content-v1",
+  "date": "2026-11-21",
+  "question": "How much DISTINCT sequence do the cached assemblies hold, as opposed to how many bytes, and what model size does that support?",
+  "why": "A pretrain was sized against a 0.92 Gbp raw byte total over a directory where 400 of 459 assemblies are one species. An earlier one-representative-per-species estimate gave ~14.7 Mbp and was flagged as an upper bound with both failure directions named. This measures it instead.",
+  "method": {
+    "sketch": "FracMinHash (scaled MinHash), the sourmash construction",
+    "k": 21,
+    "scale": 200,
+    "canonical": "min(kmer, reverse_complement(kmer)), so strand does not double-count",
+    "hash": "2-bit packing plus a splitmix64 finalizer -- deterministic across processes, unlike CPython's randomised string hash",
+    "ambiguity": "sequence is split on any non-ACGT run; no k-mer spans an ambiguity code",
+    "estimator": "distinct ~= |sketch| * scale, unbiased because the sample is hash-driven",
+    "cap": "12 genomes per species, lexicographic, chosen blind"
+  },
+  "self_check": {
+    "random_sequence_bp": 200000,
+    "true_distinct_kmers_approx": 199980,
+    "scaled_estimate": 199400,
+    "ratio": 0.997,
+    "passed": true
+  },
+  "per_species": {
+    "Campylobacter coli": {
+      "n_available": 26,
+      "n_measured": 12,
+      "mean_single_genome_distinct_bp_est": 1705100,
+      "cumulative_distinct_bp_est": 3040000,
+      "growth_over_one_genome": 1.84,
+      "marginal_bp_from_last_genome": 55400,
+      "marginal_as_fraction_of_total": 0.0182,
+      "saturating": true,
+      "curve": [
+        {
+          "n_genomes": 1,
+          "accession": "GCA_060776685.1",
+          "genome_distinct_bp_est": 1655000,
+          "cumulative_distinct_bp_est": 1655000,
+          "added_bp_est": 1655000
+        },
+        {
+          "n_genomes": 2,
+          "accession": "GCA_060777785.1",
+          "genome_distinct_bp_est": 1787200,
+          "cumulative_distinct_bp_est": 2053000,
+          "added_bp_est": 398000
+        },
+        {
+          "n_genomes": 3,
+          "accession": "GCA_060778145.1",
+          "genome_distinct_bp_est": 1753800,
+          "cumulative_distinct_bp_est": 2279800,
+          "added_bp_est": 226800
+        },
+        {
+          "n_genomes": 4,
+          "accession": "GCA_060778565.1",
+          "genome_distinct_bp_est": 1728400,
+          "cumulative_distinct_bp_est": 2537200,
+          "added_bp_est": 257400
+        },
+        {
+          "n_genomes": 5,
+          "accession": "GCA_060779305.1",
+          "genome_distinct_bp_est": 1651000,
+          "cumulative_distinct_bp_est": 2654200,
+          "added_bp_est": 117000
+        },
+        {
+          "n_genomes": 6,
+          "accession": "GCA_060780865.1",
+          "genome_distinct_bp_est": 1839600,
+          "cumulative_distinct_bp_est": 2813000,
+          "added_bp_est": 158800
+        },
+        {
+          "n_genomes": 7,
+          "accession": "GCA_060780945.1",
+          "genome_distinct_bp_est": 1683400,
+          "cumulative_distinct_bp_est": 2857200,
+          "added_bp_est": 44200
+        },
+        {
+          "n_genomes": 8,
+          "accession": "GCA_060781365.1",
+          "genome_distinct_bp_est": 1659800,
+          "cumulative_distinct_bp_est": 2883800,
+          "added_bp_est": 26600
+        },
+        {
+          "n_genomes": 9,
+          "accession": "GCA_060781505.1",
+          "genome_distinct_bp_est": 1674200,
+          "cumulative_distinct_bp_est": 2922600,
+          "added_bp_est": 38800
+        },
+        {
+          "n_genomes": 10,
+          "accession": "GCA_060781525.1",
+          "genome_distinct_bp_est": 1695400,
+          "cumulative_distinct_bp_est": 2946400,
+          "added_bp_est": 23800
+        },
+        {
+          "n_genomes": 11,
+          "accession": "GCA_060781765.1",
+          "genome_distinct_bp_est": 1677200,
+          "cumulative_distinct_bp_est": 2984600,
+          "added_bp_est": 38200
+        },
+        {
+          "n_genomes": 12,
+          "accession": "GCA_060785935.1",
+          "genome_distinct_bp_est": 1656200,
+          "cumulative_distinct_bp_est": 3040000,
+          "added_bp_est": 55400
+        }
+      ]
+    },
+    "Campylobacter jejuni": {
+      "n_available": 400,
+      "n_measured": 12,
+      "mean_single_genome_distinct_bp_est": 1695150,
+      "cumulative_distinct_bp_est": 3181200,
+      "growth_over_one_genome": 1.76,
+      "marginal_bp_from_last_genome": 16000,
+      "marginal_as_fraction_of_total": 0.005,
+      "saturating": true,
+      "curve": [
+        {
+          "n_genomes": 1,
+          "accession": "GCA_060772745.1",
+          "genome_distinct_bp_est": 1807800,
+          "cumulative_distinct_bp_est": 1807800,
+          "added_bp_est": 1807800
+        },
+        {
+          "n_genomes": 2,
+          "accession": "GCA_060772765.1",
+          "genome_distinct_bp_est": 1669800,
+          "cumulative_distinct_bp_est": 2102200,
+          "added_bp_est": 294400
+        },
+        {
+          "n_genomes": 3,
+          "accession": "GCA_060772845.1",
+          "genome_distinct_bp_est": 1696600,
+          "cumulative_distinct_bp_est": 2477600,
+          "added_bp_est": 375400
+        },
+        {
+          "n_genomes": 4,
+          "accession": "GCA_060776105.1",
+          "genome_distinct_bp_est": 1602200,
+          "cumulative_distinct_bp_est": 2686000,
+          "added_bp_est": 208400
+        },
+        {
+          "n_genomes": 5,
+          "accession": "GCA_060776125.1",
+          "genome_distinct_bp_est": 1631600,
+          "cumulative_distinct_bp_est": 2786400,
+          "added_bp_est": 100400
+        },
+        {
+          "n_genomes": 6,
+          "accession": "GCA_060776185.1",
+          "genome_distinct_bp_est": 1720600,
+          "cumulative_distinct_bp_est": 2861400,
+          "added_bp_est": 75000
+        },
+        {
+          "n_genomes": 7,
+          "accession": "GCA_060776225.1",
+          "genome_distinct_bp_est": 1659800,
+          "cumulative_distinct_bp_est": 2899200,
+          "added_bp_est": 37800
+        },
+        {
+          "n_genomes": 8,
+          "accession": "GCA_060776265.1",
+          "genome_distinct_bp_est": 1692400,
+          "cumulative_distinct_bp_est": 2939600,
+          "added_bp_est": 40400
+        },
+        {
+          "n_genomes": 9,
+          "accession": "GCA_060776325.1",
+          "genome_distinct_bp_est": 1708000,
+          "cumulative_distinct_bp_est": 2984400,
+          "added_bp_est": 44800
+        },
+        {
+          "n_genomes": 10,
+          "accession": "GCA_060776345.1",
+          "genome_distinct_bp_est": 1750600,
+          "cumulative_distinct_bp_est": 3159600,
+          "added_bp_est": 175200
+        },
+        {
+          "n_genomes": 11,
+          "accession": "GCA_060776385.1",
+          "genome_distinct_bp_est": 1730200,
+          "cumulative_distinct_bp_est": 3165200,
+          "added_bp_est": 5600
+        },
+        {
+          "n_genomes": 12,
+          "accession": "GCA_060776405.1",
+          "genome_distinct_bp_est": 1672200,
+          "cumulative_distinct_bp_est": 3181200,
+          "added_bp_est": 16000
+        }
+      ]
+    },
+    "Escherichia coli": {
+      "n_available": 16,
+      "n_measured": 12,
+      "mean_single_genome_distinct_bp_est": 5240033,
+      "cumulative_distinct_bp_est": 13765400,
+      "growth_over_one_genome": 2.72,
+      "marginal_bp_from_last_genome": 665000,
+      "marginal_as_fraction_of_total": 0.0483,
+      "saturating": false,
+      "curve": [
+        {
+          "n_genomes": 1,
+          "accession": "GCA_059754755.1",
+          "genome_distinct_bp_est": 5060800,
+          "cumulative_distinct_bp_est": 5060800,
+          "added_bp_est": 5060800
+        },
+        {
+          "n_genomes": 2,
+          "accession": "GCA_059754775.1",
+          "genome_distinct_bp_est": 5024800,
+          "cumulative_distinct_bp_est": 6443600,
+          "added_bp_est": 1382800
+        },
+        {
+          "n_genomes": 3,
+          "accession": "GCA_059819935.1",
+          "genome_distinct_bp_est": 5295600,
+          "cumulative_distinct_bp_est": 8886600,
+          "added_bp_est": 2443000
+        },
+        {
+          "n_genomes": 4,
+          "accession": "GCA_059819965.1",
+          "genome_distinct_bp_est": 5240400,
+          "cumulative_distinct_bp_est": 10332200,
+          "added_bp_est": 1445600
+        },
+        {
+          "n_genomes": 5,
+          "accession": "GCA_059819985.1",
+          "genome_distinct_bp_est": 5217400,
+          "cumulative_distinct_bp_est": 10515800,
+          "added_bp_est": 183600
+        },
+        {
+          "n_genomes": 6,
+          "accession": "GCA_059819995.1",
+          "genome_distinct_bp_est": 5402800,
+          "cumulative_distinct_bp_est": 11670000,
+          "added_bp_est": 1154200
+        },
+        {
+          "n_genomes": 7,
+          "accession": "GCA_059820025.1",
+          "genome_distinct_bp_est": 4929600,
+          "cumulative_distinct_bp_est": 12099000,
+          "added_bp_est": 429000
+        },
+        {
+          "n_genomes": 8,
+          "accession": "GCA_059820045.1",
+          "genome_distinct_bp_est": 5203800,
+          "cumulative_distinct_bp_est": 12101200,
+          "added_bp_est": 2200
+        },
+        {
+          "n_genomes": 9,
+          "accession": "GCA_059820055.1",
+          "genome_distinct_bp_est": 5312800,
+          "cumulative_distinct_bp_est": 12143400,
+          "added_bp_est": 42200
+        },
+        {
+          "n_genomes": 10,
+          "accession": "GCA_059934255.1",
+          "genome_distinct_bp_est": 5412200,
+          "cumulative_distinct_bp_est": 13097600,
+          "added_bp_est": 954200
+        },
+        {
+          "n_genomes": 11,
+          "accession": "GCA_059934275.1",
+          "genome_distinct_bp_est": 5350400,
+          "cumulative_distinct_bp_est": 13100400,
+          "added_bp_est": 2800
+        },
+        {
+          "n_genomes": 12,
+          "accession": "GCA_059934285.1",
+          "genome_distinct_bp_est": 5429800,
+          "cumulative_distinct_bp_est": 13765400,
+          "added_bp_est": 665000
+        }
+      ]
+    },
+    "Klebsiella pneumoniae": {
+      "n_available": 17,
+      "n_measured": 12,
+      "mean_single_genome_distinct_bp_est": 5585767,
+      "cumulative_distinct_bp_est": 12167800,
+      "growth_over_one_genome": 2.23,
+      "marginal_bp_from_last_genome": 30600,
+      "marginal_as_fraction_of_total": 0.0025,
+      "saturating": true,
+      "curve": [
+        {
+          "n_genomes": 1,
+          "accession": "GCA_061544025.1",
+          "genome_distinct_bp_est": 5451000,
+          "cumulative_distinct_bp_est": 5451000,
+          "added_bp_est": 5451000
+        },
+        {
+          "n_genomes": 2,
+          "accession": "GCA_061544075.1",
+          "genome_distinct_bp_est": 5363600,
+          "cumulative_distinct_bp_est": 6562600,
+          "added_bp_est": 1111600
+        },
+        {
+          "n_genomes": 3,
+          "accession": "GCA_061544135.1",
+          "genome_distinct_bp_est": 5527600,
+          "cumulative_distinct_bp_est": 7454200,
+          "added_bp_est": 891600
+        },
+        {
+          "n_genomes": 4,
+          "accession": "GCA_061544155.1",
+          "genome_distinct_bp_est": 5220600,
+          "cumulative_distinct_bp_est": 7939200,
+          "added_bp_est": 485000
+        },
+        {
+          "n_genomes": 5,
+          "accession": "GCA_061544215.1",
+          "genome_distinct_bp_est": 5949400,
+          "cumulative_distinct_bp_est": 8915800,
+          "added_bp_est": 976600
+        },
+        {
+          "n_genomes": 6,
+          "accession": "GCA_061544305.1",
+          "genome_distinct_bp_est": 5708400,
+          "cumulative_distinct_bp_est": 9664600,
+          "added_bp_est": 748800
+        },
+        {
+          "n_genomes": 7,
+          "accession": "GCA_061544345.1",
+          "genome_distinct_bp_est": 5476600,
+          "cumulative_distinct_bp_est": 10110800,
+          "added_bp_est": 446200
+        },
+        {
+          "n_genomes": 8,
+          "accession": "GCA_061544375.1",
+          "genome_distinct_bp_est": 5789400,
+          "cumulative_distinct_bp_est": 10889400,
+          "added_bp_est": 778600
+        },
+        {
+          "n_genomes": 9,
+          "accession": "GCA_061544395.1",
+          "genome_distinct_bp_est": 5728200,
+          "cumulative_distinct_bp_est": 11054400,
+          "added_bp_est": 165000
+        },
+        {
+          "n_genomes": 10,
+          "accession": "GCA_061544445.1",
+          "genome_distinct_bp_est": 5648000,
+          "cumulative_distinct_bp_est": 11525000,
+          "added_bp_est": 470600
+        },
+        {
+          "n_genomes": 11,
+          "accession": "GCA_061544495.1",
+          "genome_distinct_bp_est": 5770600,
+          "cumulative_distinct_bp_est": 12137200,
+          "added_bp_est": 612200
+        },
+        {
+          "n_genomes": 12,
+          "accession": "GCA_061544575.1",
+          "genome_distinct_bp_est": 5395800,
+          "cumulative_distinct_bp_est": 12167800,
+          "added_bp_est": 30600
+        }
+      ]
+    }
+  },
+  "reference_cross_check": {
+    "accession": "GCF_000005845.2",
+    "distinct_bp_est": 4558600,
+    "shared_with_cached_union_bp_est": 4376600,
+    "fraction_of_reference_already_in_union": 0.9601
+  },
+  "union": {
+    "distinct_bp_est": 30903600,
+    "sum_of_per_species_bp_est": 32154400,
+    "cross_species_overlap_bp_est": 5809400,
+    "note": "the union is smaller than the sum of species because species share some k-mers; the difference is that shared content and is reported rather than assumed away"
+  },
+  "model_size_implied": {
+    "tokens_per_param_assumed": 20,
+    "supported_params": 1545180,
+    "supported_params_millions": 1.545,
+    "shortfall_for": {
+      "7M": 4.5,
+      "20M": 12.9,
+      "50M": 32.4
+    }
+  },
+  "honest_limits": [
+    "12 genomes per species, not all 459. The rarefaction curve's marginal addition at the last measured genome BOUNDS what the remainder can add, and no extrapolation beyond the measured points is made.",
+    "A scaled sketch is an estimator. At this scale each per-genome figure carries a few percent of sampling error, which is far below the effects being discussed but is not zero. The self-check pins the estimator against a known distinct count on random sequence.",
+    "Distinct k-mer content is a measure of SEQUENCE novelty, not of learnable regulatory signal. Two genomes can be k-mer-distinct and carry the same grammar, so this is an upper bound on useful training content and not a measure of it.",
+    "The 20-tokens-per-parameter ratio is a compute-optimal heuristic from language-model scaling work, imported here and NOT validated for DNA. It is used to make the shortfall legible, and a different ratio moves the supported model size proportionally.",
+    "k=21 is the conventional genome-comparison choice. A shorter k would find more sharing between species and a longer one less, so the cross-species overlap figure is k-dependent.",
+    "These are draft assemblies of clinical isolates; contig fragmentation removes some k-mers that span breaks, so the distinct count is a slight UNDER-estimate per genome."
+  ],
+  "wall_seconds": 154.1
+}
