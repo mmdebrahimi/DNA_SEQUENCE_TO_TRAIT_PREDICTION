@@ -973,3 +973,46 @@ largely **one** failure at different altitudes.
 - 2026-11-04 - **A tool's "cannot read this" verdict is a claim about the TOOL, not about the file, and the raw bytes settle which.** Two independent instances this week pushed the same way. The `rdata` reader raised on a PEAR workspace and the natural reading was "the data is not extractable" — but the failure was in its PARSER on a `WEAKREF` inside serialized bytecode, and the fitness tables were sitting there intact for R to read. Separately, `read_sidecar` mapped a malformed file to ABSENT, and the artifact it was declaring absent was a full-length file of 41 NUL bytes — present, named, and destroyed by a power cut rather than never written. **The two cases differ in direction and that is what makes the rule general:** one tool under-claimed what was reachable, the other mis-reported what was there, and in both the byte-level look was decisive and cost seconds (`cat -A`, a hexdump, a length check). **Reusable: when an extraction or reader tool reports absence, unreadability or unavailability, confirm it against the raw bytes before recording it as a property of the data — and keep MALFORMED distinct from ABSENT in any reader, because collapsing them turns recoverable work into repeated work and a destroyed artifact into a run that "never happened".**
 - 2026-11-04 - **CONSTRAINT, with its expiry test named: this laptop cannot be given a multi-day CPU-saturating job until its power path is serviced.** Measured: three unexpected hard power-offs in eighteen hours (11-03 18:22, 11-03 ~22:0x, 11-04 ~12:0x), the last about two minutes after a 4-thread torch job started, with the battery reporting 100% on AC. No BugCheck, no minidump, no WHEA error — a hard power-off, not a BSOD, so the OS never got to record a cause. Collateral damage was real and twice the same signature: a result sidecar and then git's own branch ref, each left as a full-length file of 41 NUL bytes. The leading hypothesis is a power-delivery path plus a battery that reports full and cannot carry load; it is **labelled as a hypothesis** because no instrument here confirms it. **The scope cut this forced:** the fine-tune arm moved to server2, which is the same torch build and the same four threads, so the run is relocated rather than altered. **EXPIRY TEST, so the constraint cannot outlive its cause:** after the adapter and battery are checked, run a two-hour 4-thread torch load on AC and confirm zero unexpected shutdowns in the System event log (`Kernel-Power 41` / `EventLog 6008`); if it passes, this constraint is retired. **Reusable: a constraint adopted from a host failure needs a named, runnable expiry test at the moment it is adopted — otherwise it quietly becomes a permanent belief about the machine, and the next session inherits a restriction nobody can discharge.**
 - 2026-11-04 - **TWO reachability checks reported a dead host as alive in one turn, and both read an exit code instead of the output.** (1) A relaunch launched as `ssh ... | grep -v ... | tail -5` **exited 0 while ssh failed** — a pipeline's status is the LAST stage's, so `tail` succeeding masked `Read from remote host: Connection reset by peer`; the harness then reported the background task "completed (exit code 0)". (2) Diagnosing that, `ping -n 2 <host> && echo UP` printed **UP** — Windows `ping` counts an ICMP `Destination host unreachable` **from the probing host's own IP stack** as a received reply, so it reported `Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)` and exit 0 for a host that is not on the network at all. The replies name a DIFFERENT address (`Reply from 192.168.2.25`, which is **this laptop's own Wi-Fi address** -- the gateway is 192.168.2.1, and an earlier version of this entry mis-attributed those replies to the gateway) and `arp -a` has no entry for the target — both visible only by READING the output. **Fix: assert on a positive token the remote itself produced** (`ssh host "echo SSH_OK"` and grep for `SSH_OK`; a TCP connect to a real port), never on `$?` and never on `ping`'s loss percentage. This is the same failure as the recorded `robocopy`/`cmd //c` traps — *exit 0 while doing nothing* — and it is worse for a reachability probe, because a false ALIVE sends work to a host that cannot receive it. Corollary: a pipeline wrapping a remote call needs `set -o pipefail` or the ssh exit captured before the filter.
+
+## 2026-11-21 - GLM instrument reconciliation, corpus expansion, and the first generator
+
+Full ledger with every number and its artifact: `wiki/glm_session_ledger_2026-11-21.md`.
+Reconciled memo: `wiki/glm_instrument_reconciled_2026-11-21.md`. Commits 44fe325c..d7bf80ba.
+
+**Seven lessons, each earned by a measurement rather than asserted.**
+
+1. **A probe that re-implements a runner must reproduce that runner before anything built on it is
+   read.** Two probes ran at `n_generated=400` against the kernel's frozen `n=120`. Every other
+   constant matched, so both ran clean, passed their own tests and described a geometry no artifact
+   uses. An off-geometry probe does not fail - it answers a different question in the same units.
+
+2. **Two AUROCs measured at different class balances cannot be subtracted.** `margin = null - ceiling`
+   paired a 600-vs-120 score with a 300-vs-300 one. Rebuilt with a baseline in the measurement's own
+   geometry, the floor lands at 0.4973/0.5007 - chance, as real-against-real must be - and the kmer
+   margin reverses sign to +0.0329.
+
+3. **Check the closed-form sampling null BEFORE naming a mechanism.** Two mechanisms were asserted for
+   the across-seed spread and both were refuted. The Mann-Whitney null sd predicts 0.0409 against an
+   observed 0.0410, and 0.0264 against 0.0266 at another geometry. No mechanism was needed.
+
+4. **A k-mer discriminator is saturated by a Markov null BY CONSTRUCTION**, because the chain's
+   sufficient statistic IS the k-mer conditional distribution. kmer margin range 0.3084 across null
+   orders 1-5; positional 0.0344 with no order resolvably different from the committed 3. Replicated at
+   GC 0.266. The small kmer margin is the correct answer, not a defect - and positional alone matches
+   `both` on a quarter of the features.
+
+5. **Never train on what you grade on.** A single-seed withhold leaves 82% of the scoring windows in
+   training; the union over seeds is required. Applied by SEQUENCE across every genome, it caught 1,389
+   windows from genomes that are not the reference at all, via byte-identical promoters in relatives.
+
+6. **Raw byte totals are not corpus size.** 0.92 Gbp of cached assemblies is 30.9 Mbp distinct - 63x
+   redundant, because 400 of 459 are one species and the directory was built where that was the point.
+
+7. **A guard must be shown to fire, and a verification that never reaches it reports a false pass.**
+   The collinearity guard rejects the four-species case it was built for; a `--smoke` flag silently
+   overwrote the setting used to create a config mismatch, so a guard with nothing to detect read as
+   one that did not fire.
+
+**Open and worth naming:** the architecture choice of diffusion over autoregressive is REASONED from
+the positional finding, not MEASURED - an AR baseline on the identical corpus and scorer has not been
+run, and that is the highest-value untested comparison in the arm.
