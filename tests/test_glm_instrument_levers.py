@@ -203,3 +203,59 @@ def test_the_new_cells_are_not_presented_as_a_reread_of_the_committed_grid():
     rec = json.loads(OUT.read_text(encoding="utf-8"))
     if "note_on_the_committed_grid" in rec:
         assert "NEW cells" in rec["note_on_the_committed_grid"]
+
+
+# ------------------------------------------------------------------ the structural cross-check
+
+def test_the_structural_prediction_is_registered_with_its_falsifier(mod):
+    """The mechanism claim is strong, so the attempt to break it must name what breaking looks like."""
+    p = mod.STRUCTURAL_PREDICTION
+    assert p["registered_before_the_second_substrate_was_run"] is True
+    assert "sufficient statistic" in p["claim"]
+    assert "falsified_if" in p and len(p["falsified_if"]) > 40
+    src = SCRIPT.read_text(encoding="utf-8")
+    assert "ORDER_DEPENDENCE_DID_NOT_REPLICATE__MECHANISM_CLAIM_UNSUPPORTED" in src, (
+        "the failing branch must be reachable, or the cross-check can only ever confirm")
+
+
+def test_the_second_substrate_is_chosen_for_being_different(mod):
+    """A second genome that resembled the first would not test whether the pattern is structural."""
+    assert "Campylobacter" in mod.SECOND_LABEL
+    assert "0.266" in mod.SECOND_LABEL and "0.453" in mod.REF_LABEL
+
+
+@pytest.mark.skipif(not OUT.exists(), reason="probe has not been run on this host")
+def test_the_order_dependence_replicates_in_a_very_different_genome():
+    """THE mechanism test. If a Markov chain's sufficient statistic IS the k-mer distribution, the
+    saturation is a property of the two objects and must reproduce at GC 0.266 as it does at 0.453."""
+    rec = json.loads(OUT.read_text(encoding="utf-8"))
+    cc = rec["structural_cross_check_second_substrate"]
+    assert cc is not None, "the cross-check did not run; the mechanism claim is then unsupported"
+    assert cc["prediction_held"] is True
+    assert cc["verdict"] == "ORDER_DEPENDENCE_IS_STRUCTURAL__REPLICATES_ACROSS_SUBSTRATES"
+    prof = cc["profile"]
+    assert prof["kmer"]["range"] > 5 * prof["positional"]["range"]
+    assert prof["positional"]["n_orders_resolvably_different_from_committed"] == 0
+    assert prof["kmer"]["n_orders_resolvably_different_from_committed"] >= 2
+
+
+@pytest.mark.skipif(not OUT.exists(), reason="probe has not been run on this host")
+def test_both_substrates_show_the_same_shape_not_the_same_numbers():
+    """The claim is about SHAPE. Demanding equal margins across two organisms would be the wrong test
+    -- the cross-organism probe already measured that Campylobacter carries a LARGER margin."""
+    rec = json.loads(OUT.read_text(encoding="utf-8"))
+    primary = rec["q2_null_order"]
+    second = rec["structural_cross_check_second_substrate"]["profile"]
+    for mode in ("kmer", "both"):
+        assert primary[mode]["range"] > 0.15 and second[mode]["range"] > 0.15, mode
+    assert primary["positional"]["range"] < 0.06 and second["positional"]["range"] < 0.06
+    # and the margins are genuinely NOT equal, so this is not accidentally a sameness test
+    assert primary["kmer"]["range"] != second["kmer"]["range"]
+
+
+@pytest.mark.skipif(not OUT.exists(), reason="probe has not been run on this host")
+def test_the_two_substrate_limit_is_declared():
+    rec = json.loads(OUT.read_text(encoding="utf-8"))
+    joined = " ".join(rec["honest_limits"])
+    assert "do not characterise how it varies" in joined or "not characterise" in joined
+    assert "ONE Campylobacter" in joined or "single draft" in joined

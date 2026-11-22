@@ -579,13 +579,62 @@
       "n_orders_resolvably_different_from_committed": 2
     }
   },
+  "structural_prediction": {
+    "registered_before_the_second_substrate_was_run": true,
+    "claim": "the kmer margin collapses as the Markov null's order rises because the chain's sufficient statistic IS the k-mer conditional distribution, while the positional margin is order-invariant because no order of Markov chain models WHERE composition sits",
+    "therefore": "the pattern must be STRUCTURAL and must reproduce in any substrate: kmer range across orders much larger than positional range, and no positional order resolvably different from the committed one",
+    "falsified_if": "the second substrate shows a flat kmer profile, or a positional profile that varies with order -- either would make the E. coli result a substrate quirk and the mechanism claim unsupported"
+  },
+  "structural_cross_check_second_substrate": {
+    "substrate": "Campylobacter jejuni GCA_060772745.1 (GC 0.266)",
+    "profile": {
+      "kmer": {
+        "margin_by_order": {
+          "1": 0.2774,
+          "2": 0.1786,
+          "3": 0.0291,
+          "4": 0.0424,
+          "5": 0.0398
+        },
+        "range": 0.2483,
+        "n_orders_resolvably_different_from_committed": 2
+      },
+      "positional": {
+        "margin_by_order": {
+          "1": 0.2368,
+          "2": 0.1989,
+          "3": 0.2098,
+          "4": 0.201,
+          "5": 0.1988
+        },
+        "range": 0.038,
+        "n_orders_resolvably_different_from_committed": 0
+      },
+      "both": {
+        "margin_by_order": {
+          "1": 0.3481,
+          "2": 0.2483,
+          "3": 0.1709,
+          "4": 0.1728,
+          "5": 0.1513
+        },
+        "range": 0.1968,
+        "n_orders_resolvably_different_from_committed": 2
+      }
+    },
+    "kmer_over_positional_range_ratio": 6.53,
+    "prediction_held": true,
+    "verdict": "ORDER_DEPENDENCE_IS_STRUCTURAL__REPLICATES_ACROSS_SUBSTRATES"
+  },
+  "primary_substrate": "Escherichia coli K-12 MG1655 (GC 0.453)",
   "honest_limits": [
     "The positional block is `bins * 4**min(k,2)` = 96 features, NOT bins * 4**k. The clamp lives inside `positional_features` rather than at the call site, so `both` is 352 features and not 1792. Every p-against-n reading here depends on that.",
     "Ten seeds per cell. Each comparison between cells is seed-PAIRED, which is what makes a difference of this size readable at n=10; the per-cell margins themselves are noisier.",
     "A higher-order Markov chain fitted on 600 windows of 150bp approaches memorising its training set, so a high-order null is not simply a 'better' null -- part of any change is overfitting the fit half rather than modelling the substrate. This sweep measures the effect and does NOT separate those two causes.",
-    "One organism, one window length, one geometry. The cross-organism behaviour of these levers is not measured here.",
+    "The order sweep itself runs on E. coli K-12; the structural cross-check runs the same sweep on ONE Campylobacter jejuni draft assembly. Two substrates test whether the pattern is structural and do not characterise how it varies across organisms.",
+    "One window length, one geometry, one null family.",
     "A winnable region is necessary, NOT sufficient: all three feature sets see LOCAL composition, so the positional block adds WHERE composition sits, not long-range organisation."
   ],
-  "wall_seconds": 48.2,
+  "wall_seconds": 145.6,
   "note_on_the_committed_grid": "The committed grid scores modes kmer and both at order 3 only. The positional-alone column and every non-3 order here are NEW cells, not a re-reading of that grid."
 }

@@ -614,7 +614,7 @@
         "var_A_all_coupled": 0.00197,
         "sum_B_plus_D_plus_E": 0.005282,
         "sum_over_A_ratio": 2.68,
-        "reading": "independent roles would make this about 1.0; well above 1 means the roles cancel inside one seed, well below means they reinforce"
+        "reading": "Independent roles would make this about 1.0. A ratio well above 1 is what a score DOMINATED BY TEST-SET SAMPLING NOISE produces, NOT evidence that the roles cancel: every arm re-measures the same noisy quantity, so each arm variance is near the sampling floor and summing three of them necessarily overshoots one of them. Do not read this ratio as cancellation -- wiki/glm_spread_vs_sampling_noise_2026-11-21.json shows the all-coupled arm is consistent with the Mann-Whitney sampling benchmark in both modes at 240 replicates."
       }
     },
     "both": {
@@ -694,13 +694,13 @@
         "var_A_all_coupled": 0.00124,
         "sum_B_plus_D_plus_E": 0.004153,
         "sum_over_A_ratio": 3.35,
-        "reading": "independent roles would make this about 1.0; well above 1 means the roles cancel inside one seed, well below means they reinforce"
+        "reading": "Independent roles would make this about 1.0. A ratio well above 1 is what a score DOMINATED BY TEST-SET SAMPLING NOISE produces, NOT evidence that the roles cancel: every arm re-measures the same noisy quantity, so each arm variance is near the sampling floor and summing three of them necessarily overshoots one of them. Do not read this ratio as cancellation -- wiki/glm_spread_vs_sampling_noise_2026-11-21.json shows the all-coupled arm is consistent with the Mann-Whitney sampling benchmark in both modes at 240 replicates."
       }
     }
   },
   "mechanism_verdict_by_mode": {
     "kmer": "MIXED_NO_CONSISTENT_DIRECTION",
-    "both": "COUPLED_BELOW_BOTH_DECOUPLED_ARMS__STREAM_SHARING_MATTERS"
+    "both": "COUPLED_BELOW_BOTH_DECOUPLED_ARMS__AT_THIS_ONE_OFFSET_PAIR_ONLY_SEE_SAMPLING_NOISE_PROBE"
   },
   "paired_delta_designs": {
     "kmer": {
@@ -774,7 +774,15 @@
       }
     }
   },
+  "SUPERSEDED_CONCLUSION": {
+    "status": "the ARM NUMBERS stand; the stream-sharing READING is withdrawn",
+    "what_stands": "every arm sd, the gate against the grid, and the fit-decoupled arm F returning an interval that contains 1 -- which refutes the v1 fit-set mechanism and is the durable result here",
+    "what_is_withdrawn": "the reading of arm A2's excluded interval as stream sharing suppressing the spread. A2 was run at ONE offset pair; across five pairs the inflation appears at that pair only in `both` and at none in kmer, and the all-coupled arm was a low draw at 60 replicates (0.0352 here against 0.0448 at 240 replicates)",
+    "what_replaced_it": "the all-coupled spread is consistent with the Mann-Whitney null sampling sd of a held-out AUROC at this test-set size and class balance (benchmark 0.0409; arm A 0.0435 kmer / 0.0448 both at 240 replicates, both intervals containing the benchmark). No seed role carries the spread, so a role split has nothing to remove -- which is a different and firmer reason to not build it than either earlier answer gave",
+    "see": "wiki/glm_spread_vs_sampling_noise_2026-11-21.json"
+  },
   "honest_limits": [
+    "The A2 stream-decoupling result in this file rests on ONE offset pair and does NOT replicate across five; see SUPERSEDED_CONCLUSION.",
     "Measured on the MARKOV candidate. It bounds the INSTRUMENT's nuisance variance and says nothing directly about the HF generator's own sampling variance. The generator's paired delta IS measurable from the committed grid and is reported in wiki/glm_grid_reconcile_2026-11-21.json instead of being estimated here.",
     "60 replicates per arm. Every arm-to-arm claim is reported as a bootstrap CI on the SD ratio rather than a point value, and a CI containing 1.0 is reported as such.",
     "The anchor is one seed. Arms B, D and E pin the corpus or split at it, so an anchor-specific property would show up as an arm effect; v1 swept the anchor for arm B and found the effect held at 0, 3, 7 and 9, but that sweep was at the wrong geometry and is NOT inherited here.",
@@ -782,5 +790,5 @@
     "The delta experiment uses Markov order 1 as the rival candidate. It establishes what the pairing does to a delta between two CHEAP candidates, which is the instrument question; it is not a statement about a delta between two fine-tuned checkpoints.",
     "One geometry, one organism, one null."
   ],
-  "wall_seconds": 578.5
+  "wall_seconds": 734.1
 }

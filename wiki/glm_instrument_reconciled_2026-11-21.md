@@ -167,6 +167,37 @@ uniform i.i.d. control it reaches **0.9295** (kmer) and **0.9473** (both). That 
 detectability, not the target a generator must beat — i.i.d. sequence is far more different from natural
 than any real generator, so high power against it does not imply power against a near-miss.
 
+### The k-mer saturation is structural, not an *E. coli* quirk
+
+The mechanism claim above is strong enough to be worth trying to break: if the `kmer` margin collapses with
+null order *because a Markov chain's sufficient statistic is the k-mer conditional distribution*, then the
+pattern is a property of the two objects and must reproduce in any substrate. The prediction was registered
+before the second substrate was run, with the falsifying outcome named — a flat `kmer` profile, or a
+`positional` profile that moves with order, would make the *E. coli* result a quirk and leave the mechanism
+unsupported.
+
+Re-run on **Campylobacter jejuni GCA_060772745.1 (GC 0.266)**, a draft genome at roughly a third less GC than *E. coli*, same geometry,
+same ten seeds (margin above floor; a SMALLER margin means a STRONGER null):
+
+| mode | order 1 | order 2 | order 3 | order 4 | order 5 | range | orders resolvably ≠ committed 3 |
+|---|---|---|---|---|---|---|---|
+| `kmer` | +0.2774 | +0.1786 | +0.0291 | +0.0424 | +0.0398 | **0.2483** | 2 |
+| `positional` | +0.2368 | +0.1989 | +0.2098 | +0.2010 | +0.1988 | **0.0380** | 0 |
+| `both` | +0.3481 | +0.2483 | +0.1709 | +0.1728 | +0.1513 | **0.1968** | 2 |
+
+The `kmer` range is **6.53×** the `positional` range, and **no**
+positional order is resolvably different from the committed 3 — the same shape as *E. coli*, where the
+ranges are **0.3084** against **0.0344**. Verdict:
+`ORDER_DEPENDENCE_IS_STRUCTURAL__REPLICATES_ACROSS_SUBSTRATES`.
+
+So the small `kmer` margin is not a weakness of the mode and not a feature of this organism. It is what a
+discriminator reads when the null it is scored against models exactly the statistic the discriminator
+measures. That is the clearest argument against the earlier "retire `kmer`" recommendation, and the clearest
+argument for scoring on `positional`, whose margin no order of Markov chain can erode.
+
+**Limit:** two substrates test whether the pattern is structural; they do not characterise how it varies
+across organisms, and the second is a single draft assembly.
+
 ## Two smaller things found on the way
 
 **The runner's disjointness promise is true only up to duplicate windows.** It states that the null is

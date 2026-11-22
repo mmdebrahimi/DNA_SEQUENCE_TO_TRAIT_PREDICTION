@@ -257,3 +257,29 @@ def test_the_runner_disjointness_caveat_is_recorded_in_proportion(flat):
     assert "4323" in flat and "4340" in flat
     assert "0 to 3 of 600" in flat
     assert "too small to move a score" in flat
+
+
+# ------------------------------------------------------------------ the structural cross-check section
+
+def test_the_memo_reports_the_structural_cross_check_with_the_artifact_s_numbers(memo):
+    """Every figure in that section is read from the artifact by script, so drift is the only risk."""
+    rec = _load(LEVERS)
+    cc = rec["structural_cross_check_second_substrate"]
+    assert cc is not None
+    assert cc["verdict"] in memo
+    assert f"{cc['kmer_over_positional_range_ratio']}" in memo
+    for mode in ("kmer", "positional", "both"):
+        assert f"{cc['profile'][mode]['range']:.4f}" in memo, mode
+        for v in cc["profile"][mode]["margin_by_order"].values():
+            assert f"{v:+.4f}" in memo, (mode, v)
+
+
+def test_the_memo_states_the_falsifying_outcome_for_that_cross_check(flat):
+    """A cross-check whose failure mode is unstated can only confirm."""
+    assert "falsifying outcome was named" in flat or "falsifying outcome" in flat
+    assert "quirk" in flat
+
+
+def test_the_memo_does_not_claim_the_two_substrates_agree_numerically(flat):
+    """The claim is about SHAPE. Campylobacter carries a larger margin and the memo must not blur that."""
+    assert "same shape" in flat
