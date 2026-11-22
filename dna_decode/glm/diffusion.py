@@ -181,8 +181,15 @@ def sample(model, n: int, cfg: DiffusionConfig, steps: int = 64, seed: int = 0,
     import torch
 
     model.eval()
-    g = torch.Generator(device="cpu").manual_seed(seed)
-    x = torch.full((n, cfg.length), MASK_ID, dtype=torch.long)
+    # The generator and every draw must live on the MODEL's device. A cpu Generator with a cuda `x`
+    # raises, so before this the sampler worked on CPU only -- and the failure landed at SAMPLING,
+    # i.e. after a full training spend, which is the most expensive place to discover it.
+    # On CPU this is the same call with the same stream, so CPU output is bit-identical (asserted by
+    # tests/test_diffusion_sampler_device.py). CUDA and CPU RNG streams differ, so a seed reproduces
+    # on the SAME device only.
+    dev = next(model.parameters()).device
+    g = torch.Generator(device=dev.type).manual_seed(seed)
+    x = torch.full((n, cfg.length), MASK_ID, dtype=torch.long, device=dev)
     ts = torch.linspace(1.0, 0.0, steps + 1)
     with torch.no_grad():
         for i in range(steps):
@@ -198,11 +205,10 @@ def sample(model, n: int, cfg: DiffusionConfig, steps: int = 64, seed: int = 0,
                 reveal = masked
             else:
                 p = (t - s) / max(t, 1e-9)
-                reveal = masked & (torch.rand(x.shape, generator=g) < p)
+                reveal = masked & (torch.rand(x.shape, device=dev, generator=g) < p)
             x = torch.where(reveal, draw, x)
-    out = decode(x)
     assert_no_mask_remains(x)
-    return out
+    return decode(x.cpu())
 
 
 def assert_no_mask_remains(x) -> None:
