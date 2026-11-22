@@ -1,0 +1,760 @@
+{
+  "record": "glm-grid-reconcile-v1",
+  "date": "2026-11-21",
+  "question": "Do the seed-role probes reproduce the grid they were scored against, and what is the winnable region when the floor is measured in the NULL's own geometry?",
+  "geometry": {
+    "window_length_bp": 150,
+    "limit_natural": 1200,
+    "n_generated_per_candidate": 120,
+    "natural_set_arg": "promoter",
+    "kmer_k": 4,
+    "positional_bins": 6,
+    "markov_order": 3,
+    "feature_modes": [
+      "kmer",
+      "both"
+    ],
+    "source": "scripts/kaggle/glm_paired_sweep_kernel.py:45 RECORDED"
+  },
+  "the_defect_this_found": {
+    "what": "Both seed-role probes used n_generated=400; the committed kernel froze n=120.",
+    "consequence": "The all-coupled arm claimed to reproduce the status quo and did not. At n=400 it reports `both` sd 0.0140; the grid's own ten nulls have sd 0.0410, so the arm it was compared against was never the status quo.",
+    "detected_by": "reconciling the arm's per-seed values against the grid, which was never done"
+  },
+  "the_second_defect": {
+    "what": "`margin = null - ceiling` subtracted a 600-vs-120 AUROC from a 300-vs-300 one.",
+    "why_it_matters": "A held-out AUROC's sampling variation depends on test-set size and class balance, so the two numbers are not commensurable and their difference is not a margin in any geometry.",
+    "fix": "score the same eval half against 120 REAL held-out natural windows -- the score a PERFECT generator earns at the null's own balance."
+  },
+  "gate": {
+    "reconciled_per_mode": {
+      "kmer": 10,
+      "both": 10
+    },
+    "n_seeds": 10,
+    "tol": 0.0005,
+    "passed": true,
+    "meaning": "the hand-written null path is byte-equivalent to the runner's at every seed, so arms built on it describe the committed geometry"
+  },
+  "rows": [
+    {
+      "seed": 0,
+      "mode": "kmer",
+      "null_committed": 0.5009,
+      "null_reproduced": 0.5009,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4832,
+      "like_for_like_margin": 0.0177,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 0,
+      "mode": "both",
+      "null_committed": 0.6388,
+      "null_reproduced": 0.6388,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5072,
+      "like_for_like_margin": 0.1316,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 1,
+      "mode": "kmer",
+      "null_committed": 0.5022,
+      "null_reproduced": 0.5022,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5033,
+      "like_for_like_margin": -0.0011,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 1
+    },
+    {
+      "seed": 1,
+      "mode": "both",
+      "null_committed": 0.6284,
+      "null_reproduced": 0.6284,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4862,
+      "like_for_like_margin": 0.1422,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 1
+    },
+    {
+      "seed": 2,
+      "mode": "kmer",
+      "null_committed": 0.4834,
+      "null_reproduced": 0.4834,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5425,
+      "like_for_like_margin": -0.0591,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 2,
+      "mode": "both",
+      "null_committed": 0.6491,
+      "null_reproduced": 0.6491,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5108,
+      "like_for_like_margin": 0.1383,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 3,
+      "mode": "kmer",
+      "null_committed": 0.5778,
+      "null_reproduced": 0.5778,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5133,
+      "like_for_like_margin": 0.0645,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 2
+    },
+    {
+      "seed": 3,
+      "mode": "both",
+      "null_committed": 0.6861,
+      "null_reproduced": 0.6861,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5095,
+      "like_for_like_margin": 0.1766,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 2
+    },
+    {
+      "seed": 4,
+      "mode": "kmer",
+      "null_committed": 0.5618,
+      "null_reproduced": 0.5618,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4413,
+      "like_for_like_margin": 0.1205,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 1
+    },
+    {
+      "seed": 4,
+      "mode": "both",
+      "null_committed": 0.7024,
+      "null_reproduced": 0.7024,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4678,
+      "like_for_like_margin": 0.2346,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 1
+    },
+    {
+      "seed": 5,
+      "mode": "kmer",
+      "null_committed": 0.549,
+      "null_reproduced": 0.549,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4876,
+      "like_for_like_margin": 0.0614,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 5,
+      "mode": "both",
+      "null_committed": 0.639,
+      "null_reproduced": 0.639,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4614,
+      "like_for_like_margin": 0.1776,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 6,
+      "mode": "kmer",
+      "null_committed": 0.4623,
+      "null_reproduced": 0.4623,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5258,
+      "like_for_like_margin": -0.0635,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 6,
+      "mode": "both",
+      "null_committed": 0.5983,
+      "null_reproduced": 0.5983,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5693,
+      "like_for_like_margin": 0.029,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 7,
+      "mode": "kmer",
+      "null_committed": 0.599,
+      "null_reproduced": 0.599,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4871,
+      "like_for_like_margin": 0.1119,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 7,
+      "mode": "both",
+      "null_committed": 0.6679,
+      "null_reproduced": 0.6679,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4863,
+      "like_for_like_margin": 0.1816,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 8,
+      "mode": "kmer",
+      "null_committed": 0.583,
+      "null_reproduced": 0.583,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5115,
+      "like_for_like_margin": 0.0715,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 1
+    },
+    {
+      "seed": 8,
+      "mode": "both",
+      "null_committed": 0.5674,
+      "null_reproduced": 0.5674,
+      "reconciles": true,
+      "perfect_generator_floor": 0.5229,
+      "like_for_like_margin": 0.0445,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 1
+    },
+    {
+      "seed": 9,
+      "mode": "kmer",
+      "null_committed": 0.4823,
+      "null_reproduced": 0.4823,
+      "reconciles": true,
+      "perfect_generator_floor": 0.4773,
+      "like_for_like_margin": 0.005,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    },
+    {
+      "seed": 9,
+      "mode": "both",
+      "null_committed": 0.6059,
+      "null_reproduced": 0.6059,
+      "reconciles": true,
+      "perfect_generator_floor": 0.486,
+      "like_for_like_margin": 0.1199,
+      "n_eval": 600,
+      "n_generated": 120,
+      "n_spare": 120,
+      "n_spare_skipped_as_duplicates": 0
+    }
+  ],
+  "summary": {
+    "kmer": {
+      "n_seeds": 10,
+      "null_mean": 0.5302,
+      "null_sd": 0.0493,
+      "perfect_floor_mean": 0.4973,
+      "perfect_floor_sd": 0.0284,
+      "perfect_floor_min": 0.4413,
+      "perfect_floor_max": 0.5425,
+      "like_for_like_margin_mean": 0.0329,
+      "like_for_like_margin_sd": 0.0642,
+      "seeds_positive": 7,
+      "seeds_negative": 3
+    },
+    "both": {
+      "n_seeds": 10,
+      "null_mean": 0.6383,
+      "null_sd": 0.041,
+      "perfect_floor_mean": 0.5007,
+      "perfect_floor_sd": 0.0311,
+      "perfect_floor_min": 0.4614,
+      "perfect_floor_max": 0.5693,
+      "like_for_like_margin_mean": 0.1376,
+      "like_for_like_margin_sd": 0.0626,
+      "seeds_positive": 10,
+      "seeds_negative": 0
+    }
+  },
+  "verdict_by_mode": {
+    "kmer": "WINNABLE_REGION_UNRESOLVED_AT_THIS_N",
+    "both": "WINNABLE_REGION_AT_EVERY_SEED"
+  },
+  "margin_significance": {
+    "kmer": {
+      "n": 10,
+      "mean": 0.0329,
+      "sd": 0.0642,
+      "stderr": 0.0203,
+      "t": 1.619,
+      "p_two_sided_normal_approx": 0.1055,
+      "ci95": [
+        -0.0131,
+        0.0788
+      ],
+      "resolvable_above_zero": false,
+      "sd_over_mean": 1.95
+    },
+    "both": {
+      "n": 10,
+      "mean": 0.1376,
+      "sd": 0.0626,
+      "stderr": 0.0198,
+      "t": 6.948,
+      "p_two_sided_normal_approx": 0.0,
+      "ci95": [
+        0.0928,
+        0.1824
+      ],
+      "resolvable_above_zero": true,
+      "sd_over_mean": 0.46
+    }
+  },
+  "power_control_uniform": {
+    "kmer": {
+      "n": 10,
+      "mean": 0.9295,
+      "min": 0.9126,
+      "max": 0.9433,
+      "seed7": 0.9408
+    },
+    "both": {
+      "n": 10,
+      "mean": 0.9473,
+      "min": 0.9279,
+      "max": 0.9645,
+      "seed7": 0.9641
+    }
+  },
+  "corpus_redundancy": {
+    "n_windows": 4340,
+    "n_distinct_sequences": 4323,
+    "n_duplicated_sequences": 7,
+    "n_windows_involved_in_a_duplicate": 24,
+    "max_copies_of_one_sequence": 6,
+    "eval_windows_also_in_fit_by_seed": {
+      "0": 1,
+      "1": 1,
+      "2": 0,
+      "3": 0,
+      "4": 0,
+      "5": 1,
+      "6": 0,
+      "7": 0,
+      "8": 1,
+      "9": 3
+    },
+    "worst_case_leak_fraction_of_eval": 0.005,
+    "reading": "The runner claim that no generator is scored against sequences it was trained on holds up to duplicate upstream windows: at most 3 of 600 eval windows (0.5%) also appear in the fit half. Recorded as a real caveat on the promise, and far too small to move a score."
+  },
+  "floor_rule_sensitivity": {
+    "kmer": {
+      "per_seed": [
+        {
+          "seed": 0,
+          "max": 0.5262,
+          "mean": 0.4948,
+          "min": 0.4813,
+          "null": 0.5009,
+          "margin_vs_max": -0.0253,
+          "margin_vs_mean": 0.0061
+        },
+        {
+          "seed": 1,
+          "max": 0.5595,
+          "mean": 0.5241,
+          "min": 0.4848,
+          "null": 0.5022,
+          "margin_vs_max": -0.0573,
+          "margin_vs_mean": -0.0219
+        },
+        {
+          "seed": 2,
+          "max": 0.5338,
+          "mean": 0.4981,
+          "min": 0.456,
+          "null": 0.4834,
+          "margin_vs_max": -0.0504,
+          "margin_vs_mean": -0.0147
+        },
+        {
+          "seed": 3,
+          "max": 0.5897,
+          "mean": 0.5231,
+          "min": 0.4729,
+          "null": 0.5778,
+          "margin_vs_max": -0.0119,
+          "margin_vs_mean": 0.0547
+        },
+        {
+          "seed": 4,
+          "max": 0.5416,
+          "mean": 0.4819,
+          "min": 0.3893,
+          "null": 0.5618,
+          "margin_vs_max": 0.0202,
+          "margin_vs_mean": 0.0799
+        },
+        {
+          "seed": 5,
+          "max": 0.5229,
+          "mean": 0.498,
+          "min": 0.4562,
+          "null": 0.549,
+          "margin_vs_max": 0.0261,
+          "margin_vs_mean": 0.051
+        },
+        {
+          "seed": 6,
+          "max": 0.5401,
+          "mean": 0.5002,
+          "min": 0.4725,
+          "null": 0.4623,
+          "margin_vs_max": -0.0778,
+          "margin_vs_mean": -0.0379
+        },
+        {
+          "seed": 7,
+          "max": 0.5447,
+          "mean": 0.511,
+          "min": 0.4698,
+          "null": 0.599,
+          "margin_vs_max": 0.0543,
+          "margin_vs_mean": 0.088
+        },
+        {
+          "seed": 8,
+          "max": 0.5412,
+          "mean": 0.5019,
+          "min": 0.4827,
+          "null": 0.583,
+          "margin_vs_max": 0.0418,
+          "margin_vs_mean": 0.0811
+        },
+        {
+          "seed": 9,
+          "max": 0.5227,
+          "mean": 0.4945,
+          "min": 0.4738,
+          "null": 0.4823,
+          "margin_vs_max": -0.0404,
+          "margin_vs_mean": -0.0122
+        }
+      ],
+      "ceiling_max_mean": 0.5422,
+      "ceiling_mean_mean": 0.5028,
+      "margin_vs_max_mean": -0.0121,
+      "margin_vs_mean_mean": 0.0274,
+      "positive_vs_max": 4,
+      "positive_vs_mean": 6,
+      "n_seeds": 10,
+      "verdict_flips_on_floor_rule": true
+    },
+    "both": {
+      "per_seed": [
+        {
+          "seed": 0,
+          "max": 0.5494,
+          "mean": 0.5021,
+          "min": 0.4747,
+          "null": 0.6388,
+          "margin_vs_max": 0.0894,
+          "margin_vs_mean": 0.1367
+        },
+        {
+          "seed": 1,
+          "max": 0.5692,
+          "mean": 0.5195,
+          "min": 0.4311,
+          "null": 0.6284,
+          "margin_vs_max": 0.0592,
+          "margin_vs_mean": 0.1089
+        },
+        {
+          "seed": 2,
+          "max": 0.5383,
+          "mean": 0.5095,
+          "min": 0.4474,
+          "null": 0.6491,
+          "margin_vs_max": 0.1108,
+          "margin_vs_mean": 0.1396
+        },
+        {
+          "seed": 3,
+          "max": 0.56,
+          "mean": 0.5224,
+          "min": 0.4625,
+          "null": 0.6861,
+          "margin_vs_max": 0.1261,
+          "margin_vs_mean": 0.1637
+        },
+        {
+          "seed": 4,
+          "max": 0.5141,
+          "mean": 0.4718,
+          "min": 0.3919,
+          "null": 0.7024,
+          "margin_vs_max": 0.1883,
+          "margin_vs_mean": 0.2306
+        },
+        {
+          "seed": 5,
+          "max": 0.5111,
+          "mean": 0.491,
+          "min": 0.4667,
+          "null": 0.639,
+          "margin_vs_max": 0.1279,
+          "margin_vs_mean": 0.148
+        },
+        {
+          "seed": 6,
+          "max": 0.5239,
+          "mean": 0.4957,
+          "min": 0.4647,
+          "null": 0.5983,
+          "margin_vs_max": 0.0744,
+          "margin_vs_mean": 0.1026
+        },
+        {
+          "seed": 7,
+          "max": 0.5865,
+          "mean": 0.5254,
+          "min": 0.4548,
+          "null": 0.6679,
+          "margin_vs_max": 0.0814,
+          "margin_vs_mean": 0.1425
+        },
+        {
+          "seed": 8,
+          "max": 0.5449,
+          "mean": 0.5133,
+          "min": 0.4969,
+          "null": 0.5674,
+          "margin_vs_max": 0.0225,
+          "margin_vs_mean": 0.0541
+        },
+        {
+          "seed": 9,
+          "max": 0.5217,
+          "mean": 0.4918,
+          "min": 0.4711,
+          "null": 0.6059,
+          "margin_vs_max": 0.0842,
+          "margin_vs_mean": 0.1141
+        }
+      ],
+      "ceiling_max_mean": 0.5419,
+      "ceiling_mean_mean": 0.5042,
+      "margin_vs_max_mean": 0.0964,
+      "margin_vs_mean_mean": 0.1341,
+      "positive_vs_max": 10,
+      "positive_vs_mean": 10,
+      "n_seeds": 10,
+      "verdict_flips_on_floor_rule": false
+    }
+  },
+  "generator_distance_to_null": {
+    "kmer": {
+      "by_model": {
+        "epoch1": {
+          "mean": 0.1687,
+          "sd": 0.0651,
+          "min": 0.0424,
+          "max": 0.2982,
+          "n_positive": 10,
+          "n": 10
+        },
+        "epoch2": {
+          "mean": 0.2036,
+          "sd": 0.0522,
+          "min": 0.117,
+          "max": 0.2944,
+          "n_positive": 10,
+          "n": 10
+        },
+        "epoch3": {
+          "mean": 0.2188,
+          "sd": 0.0556,
+          "min": 0.1254,
+          "max": 0.297,
+          "n_positive": 10,
+          "n": 10
+        },
+        "zeroshot": {
+          "mean": 0.1785,
+          "sd": 0.0662,
+          "min": 0.0127,
+          "max": 0.2445,
+          "n_positive": 10,
+          "n": 10
+        }
+      },
+      "all_models_mean": 0.1924,
+      "all_models_min": 0.0127,
+      "n_cells_generator_above_null": 40,
+      "n_cells": 40
+    },
+    "both": {
+      "by_model": {
+        "epoch1": {
+          "mean": 0.1201,
+          "sd": 0.0279,
+          "min": 0.0813,
+          "max": 0.1611,
+          "n_positive": 10,
+          "n": 10
+        },
+        "epoch2": {
+          "mean": 0.1388,
+          "sd": 0.0408,
+          "min": 0.0853,
+          "max": 0.2181,
+          "n_positive": 10,
+          "n": 10
+        },
+        "epoch3": {
+          "mean": 0.1643,
+          "sd": 0.0537,
+          "min": 0.0966,
+          "max": 0.2555,
+          "n_positive": 10,
+          "n": 10
+        },
+        "zeroshot": {
+          "mean": 0.1185,
+          "sd": 0.0275,
+          "min": 0.0794,
+          "max": 0.166,
+          "n_positive": 10,
+          "n": 10
+        }
+      },
+      "all_models_mean": 0.1355,
+      "all_models_min": 0.0794,
+      "n_cells_generator_above_null": 40,
+      "n_cells": 40
+    }
+  },
+  "paired_delta_on_the_real_generator": {
+    "kmer": {
+      "zeroshot_minus_null": {
+        "n_seeds": 10,
+        "mean_delta": 0.1785,
+        "sd_paired_delta": 0.0662,
+        "sd_unpaired_sum": 0.0738,
+        "paired_over_unpaired": 0.898,
+        "correlation": 0.195,
+        "pairing_helps": true
+      },
+      "epoch3_minus_zeroshot": {
+        "n_seeds": 10,
+        "mean_delta": 0.0403,
+        "sd_paired_delta": 0.0757,
+        "sd_unpaired_sum": 0.0647,
+        "paired_over_unpaired": 1.169,
+        "correlation": -0.409,
+        "pairing_helps": false
+      },
+      "epoch3_minus_null": {
+        "n_seeds": 10,
+        "mean_delta": 0.2188,
+        "sd_paired_delta": 0.0556,
+        "sd_unpaired_sum": 0.0601,
+        "paired_over_unpaired": 0.925,
+        "correlation": 0.153,
+        "pairing_helps": true
+      }
+    },
+    "both": {
+      "zeroshot_minus_null": {
+        "n_seeds": 10,
+        "mean_delta": 0.1185,
+        "sd_paired_delta": 0.0275,
+        "sd_unpaired_sum": 0.0643,
+        "paired_over_unpaired": 0.427,
+        "correlation": 0.832,
+        "pairing_helps": true
+      },
+      "epoch3_minus_zeroshot": {
+        "n_seeds": 10,
+        "mean_delta": 0.0458,
+        "sd_paired_delta": 0.0658,
+        "sd_unpaired_sum": 0.0577,
+        "paired_over_unpaired": 1.14,
+        "correlation": -0.339,
+        "pairing_helps": false
+      },
+      "epoch3_minus_null": {
+        "n_seeds": 10,
+        "mean_delta": 0.1643,
+        "sd_paired_delta": 0.0537,
+        "sd_unpaired_sum": 0.0507,
+        "paired_over_unpaired": 1.06,
+        "correlation": -0.129,
+        "pairing_helps": false
+      }
+    }
+  },
+  "honest_limits": [
+    "The perfect-generator floor uses 120 REAL windows, so it is the floor for a generator that emits genuine promoter sequence. It is an EMPIRICAL floor at one draw per seed, not an analytic one, and carries its own sampling variation.",
+    "Spares are filtered by SEQUENCE against both halves of the committed draw. The corpus holds 7 sequences duplicated across 24 of 4340 windows, so an index-disjoint spare can be sequence-identical to an eval window; the count filtered out is reported per seed.",
+    "The spare windows come from the same organism and the same extraction, so they share any systematic property of the corpus. That is the point -- a floor must not be more different from the eval set than a perfect generator would be -- but it does mean this floor cannot detect a corpus-level artifact.",
+    "The nulls are READ from the grid and separately REPRODUCED here; the reproduction is what licenses the comparison, and it is reported per seed rather than asserted.",
+    "`model - null` and the paired delta are read from the committed grid, whose own verdict is INSTRUMENT_INVALID for an unrelated reason (a per-cell null gate that could only ever pass at seed 7; corrected in scripts/glm_paired_sweep_verdict.py). The per-cell scores are not in dispute; the verdict label is.",
+    "A winnable region is necessary, NOT sufficient: a k-mer-plus-positional discriminator sees LOCAL composition, so clearing it would not establish functional realism.",
+    "The margin significance test uses a normal approximation to the t p-value and the t(0.975, df=9) critical value for the interval. Stated rather than hidden; at n=10 it changes no reading here, and the interval is what the verdict depends on.",
+    "The uniform power control bounds the instrument's CEILING of detectability, not the target a generator must beat: i.i.d. sequence is far more different from natural than any real generator, so high power against it does not imply power against a near-miss.",
+    "One organism, one geometry, one null."
+  ],
+  "wall_seconds": 103.5
+}
