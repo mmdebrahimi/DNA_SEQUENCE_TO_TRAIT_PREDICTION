@@ -1,0 +1,93 @@
+{
+  "record": "human-final-only-shard-reservation-v1",
+  "date": "2026-11-22",
+  "bar": "wiki/human_design_bar_2026-11-22.json",
+  "RETRACTED_MECHANISM_READ_THIS_FIRST": {
+    "date": "2026-11-22",
+    "status": "the ACTION stands; the RATIONALE below is WITHDRAWN",
+    "retracted_text_verbatim": "Reserve a shard queried EXACTLY ONCE for the headline design number. Repeated interrogation of a single frozen scoring split overfits invisibly -- each decision taken after looking at it tunes to it, without any step that looks like fitting.",
+    "why_it_is_wrong": "The shared-split offset does not grow with the number of looks, and it CANCELS in a candidate-versus-candidate difference. What grows is SELECTION, with multiplier M = the number of candidates the split's feedback INFORMED -- not the number of times the split was read. So 'repeated interrogation overfits invisibly' names the wrong quantity, and a query cap does not address the real one.",
+    "source": "Correction relayed 2026-11-22 from the P2 tokenization-axis session, which had supplied the original query-budget guidance and withdrew it: 'please don't implement what I told you ... Reserving a final shard is still fine as prudence, but it is not the mechanism and shouldn't drive the design.'",
+    "what_the_corrected_accounting_says_about_THIS_artifact": {
+      "the_two_spent_queries_are_NOT_equivalent": "This file counted two spent queries on folds 9-10 and treated them alike. They are not alike. The oracle gate was PRE-SPECIFIED in its own script before it ran, so it contributes ~nothing to M and should not have been counted. The verdict-threshold change -- absolute to ceiling-relative, using a ceiling derived from folds 9-10 -- is an ADAPTIVE follow-on and is the single real exposure here. It is worse than a query: the verdict RULE was informed by the held-out data.",
+      "so_the_correction_cuts_both_ways": "Sharper on the item that matters, more forgiving on the item being counted. Not a wash, and it must not be reported as one.",
+      "the_remedy_changes_accordingly": "Not 'query fold 10 exactly once', which addresses nothing. Re-derive the ceiling on fold 9 ALONE and keep every parameter of the ceiling-relative rule off fold 10. That was already this arm's outstanding re-measurement item; the corrected mechanism promotes it from tidy-up to load-bearing."
+    },
+    "what_still_stands": "Reserving fold 10 remains worth doing as prudence and costs only discipline here. The retrospective-exposure accounting below also stands as a factual record of what was read and when. Only the causal story -- that look-count is the thing being guarded against -- is withdrawn.",
+    "full_protocol": "wiki/human_replication_and_multiplicity_protocol_2026-11-22.json"
+  },
+  "why_a_separate_artifact": "The bar is FROZEN. Amending a frozen bar to add a reservation it did not contain would defeat the point of freezing it, so this is a separate, later, additive commitment that references the bar rather than editing it.",
+  "purpose": "[RATIONALE RETRACTED 2026-11-22 -- see RETRACTED_MECHANISM_READ_THIS_FIRST above. The action stands: fold 10 is reserved and queried once, as prudence. The mechanism originally given here named look-count, which is not what overfits; SELECTION is, counted over candidates the split's feedback informed.]",
+  "HONEST_ACCOUNTING_THE_RESERVATION_IS_RETROSPECTIVE": {
+    "problem": "A final-only shard must be untouched BEFORE scoring begins. Folds 9-10 had already been queried twice when this reservation was made, so a genuinely virgin shard cannot be manufactured retroactively. Recording that rather than asserting a cleanliness that does not exist.",
+    "queries_already_spent_on_folds_9_10": [
+      {
+        "what": "oracle held-out accuracy",
+        "artifact": "wiki/glm_human_activity_oracle_2026-11-22.json",
+        "cells": [
+          "HepG2",
+          "K562"
+        ],
+        "folds_used": [
+          9,
+          10
+        ],
+        "fit_anything_to_them": false,
+        "note": "the oracle was fit on folds 7-8 ONLY; folds 9-10 served as its test set"
+      },
+      {
+        "what": "real_ceiling arm of the activity-stratified null",
+        "artifact": "wiki/glm_human_stratified_null_2026-11-22.json",
+        "cells": [
+          "K562"
+        ],
+        "folds_used": [
+          9,
+          10
+        ],
+        "fit_anything_to_them": false,
+        "note": "real sequence stratified by its own measured activity, scored by the folds-7-8 oracle"
+      }
+    ],
+    "decisions_taken_after_seeing_those_numbers": [
+      "the oracle gate PASS (control zero cleared)",
+      "replacing an absolute verdict threshold with a ceiling-relative one, where the ceiling itself came from folds 9-10"
+    ],
+    "bounded_because": "both queries produced AGGREGATE statistics (a Spearman, a monotonicity) rather than per-sequence decisions, and neither fit parameters to folds 9-10. So the adaptive exposure is real but small. It is NOT zero and must not be described as zero.",
+    "HepG2_is_cleaner_than_K562": "the stratified null ran on K562 only, so HepG2 folds 9-10 carry ONE spent query (the oracle gate) rather than two."
+  },
+  "reservation_going_forward": {
+    "FINAL_ONLY": {
+      "folds": [
+        10
+      ],
+      "cells": [
+        "HepG2",
+        "K562"
+      ],
+      "rule": "queried EXACTLY ONCE, for the headline design number, after every other decision is settled. No tuning, no threshold selection, no geometry choice, and no verdict-rule change may be informed by it.",
+      "spent_queries_before_reservation": 2,
+      "n_sequences": {
+        "HepG2": 6149,
+        "K562": 9835
+      }
+    },
+    "WORKING_HELD_OUT": {
+      "folds": [
+        9
+      ],
+      "rule": "the set every intermediate decision is made against -- oracle re-validation, null calibration, geometry grid, threshold derivation. Interrogate freely; it is spent by design.",
+      "n_sequences": {
+        "HepG2": 6146,
+        "K562": 9833
+      }
+    },
+    "consequence_to_apply": "The oracle accuracy and the ceiling were both measured on folds 9+10 combined. Going forward both are RE-MEASURED on fold 9 alone, and the combined 9+10 figures are retired to 'already spent' rather than quoted as held-out. The numbers will move slightly; that movement is the price of the reservation and is not a finding."
+  },
+  "why_this_is_affordable_here_and_was_not_on_E_coli": "On the E. coli arm the scoring split was pinned by nine frozen COMPARISON_GEOMETRY_FIELDS and every committed number was measured against it, so carving a shard out would have orphaned the existing anchors. The human track has no committed anchors yet, so a reservation costs nothing but discipline.",
+  "honest_limits": [
+    "A retrospective reservation is weaker than a prospective one. The right time to carve this was before the oracle ran.",
+    "Fold 10 is ~6.1k (HepG2) and ~9.8k (K562) sequences, so a single headline query on it is adequately powered for a monotonicity statistic but gives no second chance if the run is misconfigured. The run must be rehearsed end-to-end on fold 9 first.",
+    "7819 elements are shared between the two cell libraries and fold assignment is per-cell, so fold 10 of HepG2 and fold 10 of K562 are NOT independent shards. A cross-cell headline must exclude the shared elements."
+  ]
+}

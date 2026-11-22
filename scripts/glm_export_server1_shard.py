@@ -170,10 +170,21 @@ def main(argv=None) -> int:
         "source_md5": {S3_FILE: md5(data_dir / S3_FILE), S6_FILE: md5(data_dir / S6_FILE)},
         "loader_stats": st.as_dict(),
         "honest_limits": [
-            "Equal-count bins are computed over folds 1-6 ONLY. They are the generator's own "
-            "conditioning scale and are NOT the scoring strata; the scorer re-derives its strata on "
-            "the fold it scores. Reusing these boundaries at scoring time would be fitting the "
-            "readout to the training set.",
+            "Equal-count bins are computed over folds 1-6 ONLY -- the generator's own "
+            "conditioning scale. The frozen bar fits the activity-stratified null per activity "
+            "quintile of folds 1-6 TOO, and that is deliberate, not leakage: the null exists to "
+            "ask whether a 4-mer model conditioned on the SAME target reproduces the "
+            "activity-sequence relationship, which it cannot do from a different conditioning "
+            "scale. It mirrors the strong null, fit on the generator's own training folds for "
+            "the reason the bar records.",
+            "What keeps the readout independent is a DIFFERENT separation: the judge is the "
+            "folds-7-8 oracle, which never saw folds 1-6, and the scored sequence is held out. "
+            "Nothing here is fit to folds 9 or 10.",
+            "CORRECTION 2026-11-22: an earlier version of this field claimed the scorer "
+            "re-derives its strata on the fold it scores, and that reusing these boundaries "
+            "would be fitting the readout to the training set. Both are wrong. The bar says "
+            "folds 1-6, and a reader following the old text would have built a null the bar "
+            "does not specify, then read the generator against it.",
             "The shard carries no fold column: every row is a generator fold by construction, so a "
             "column would only create the chance of filtering on it wrongly.",
         ],

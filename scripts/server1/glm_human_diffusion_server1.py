@@ -270,6 +270,12 @@ def main(argv=None) -> int:
     ap.add_argument("--shuffle-labels", action="store_true",
                     help="THE NO-INFORMATION ARM. Permutes the bin column across rows, preserving "
                          "the marginal, destroying the association. Not a debug flag.")
+    ap.add_argument("--shuffle-seed", type=int, default=None,
+                    help="Draw index for --shuffle-labels, DECOUPLED from --seed. A permutation is a "
+                         "random draw, so a single draw leaves every no-information number conditional "
+                         "on that one permutation. Hold --seed fixed and vary --shuffle-seed to separate "
+                         "permutation variance from training variance. Default derives it from --seed, "
+                         "which is ONE draw and is not enough.")
     ap.add_argument("--sample-per-bin", type=int, default=240)
     ap.add_argument("--sample-steps", type=int, default=64)
     ap.add_argument("--ckpt-every", type=int, default=250)
@@ -309,10 +315,16 @@ def main(argv=None) -> int:
     print("[data] %d rows from %s (md5 %s)" % (len(seqs), Path(a.shard).name, shard_md5), flush=True)
 
     if a.shuffle_labels:
-        rng = random.Random(a.seed ^ 0x5EED)
+        draw = a.shuffle_seed if a.shuffle_seed is not None else (a.seed ^ 0x5EED)
+        rng = random.Random(draw)
         bins = bins[:]
         rng.shuffle(bins)
-        print("[arm] NO-INFORMATION: bin column permuted (marginal preserved)", flush=True)
+        print("[arm] NO-INFORMATION: bin column permuted, marginal preserved (shuffle draw %d%s)"
+              % (draw, "" if a.shuffle_seed is not None else ", derived from --seed"), flush=True)
+        if a.shuffle_seed is None:
+            print("[arm] NOTE: ONE permutation draw. Every number from this arm is conditional on "
+                  "it. Repeat with several --shuffle-seed values before reading the contrast.",
+                  flush=True)
 
     lut = {c: i for i, c in enumerate(BASES)}
     x_all = torch.tensor([[lut[ch] for ch in s] for s in seqs], dtype=torch.long)
@@ -334,9 +346,31 @@ def main(argv=None) -> int:
     print("[model] size=%s %s  params=%d (estimate %d)"
           % (a.size, cfg, n_real, n_params_estimate(cfg["d_model"], cfg["n_layers"], cfg["d_ff"])),
           flush=True)
+    # PRECONDITION, not a control. The bar's NO_TARGET_CONTROL reading says to check the
+    # conditioning signal MOVES the output before concluding anything about capacity -- "an
+    # invariance from an unverified knob is plumbing, not a null result". --shuffle-labels tests
+    # whether the LABEL carries information; nothing tested whether the label REACHES the logits.
+    # A dead nn.Embedding would make both arms read zero and look like a clean negative. A floor
+    # that never computes is not a failing floor, it is no floor -- so this runs BEFORE the spend
+    # and exits non-zero rather than returning a verdict a caller can ignore.
+    with torch.no_grad():
+        probe_x = torch.full((1, ELEMENT_LEN), MASK_ID, dtype=torch.long, device=dev)
+        lo = model(probe_x, torch.tensor([0], dtype=torch.long, device=dev))
+        hi = model(probe_x, torch.tensor([N_BINS - 1], dtype=torch.long, device=dev))
+        moved = float((lo - hi).abs().max())
+    if not moved > 0.0:
+        print("REFUSE: the conditioning input does not change the logits (max|delta| = %r for bins "
+              "0 vs %d on identical input). The quintile embedding is not reaching the output, so "
+              "every target would generate identically and the run would report a FALSE "
+              "NO_TARGET_CONTROL after the entire training spend."
+              % (moved, N_BINS - 1), file=sys.stderr)
+        return 4
+    print("[preflight] conditioning knob moves the logits (max|delta| %.4g, bins 0 vs %d)"
+          % (moved, N_BINS - 1), flush=True)
+
     opt = torch.optim.AdamW(model.parameters(), lr=a.lr, weight_decay=0.01)
 
-    step0, history = 0, []
+    step0, history, rng_resume = 0, [], None
     if a.resume == "auto" and ckpt_path.is_file():
         ck = torch.load(ckpt_path, map_location=dev, weights_only=False)
         if ck.get("cfg") != cfg or ck.get("shard_md5") != shard_md5:
@@ -349,24 +383,63 @@ def main(argv=None) -> int:
         model.load_state_dict(ck["model"])
         opt.load_state_dict(ck["opt"])
         step0, history = ck["step"], ck.get("history", [])
+        rng_resume = ck.get("rng")
         print("[resume] from step %d" % step0, flush=True)
+        if rng_resume is None:
+            print("[resume] WARNING: this checkpoint predates RNG capture, so batch order and "
+                  "masking RESTART from step 0 while the step counter carries on. This run is not "
+                  "comparable to an uninterrupted seed -- delete the checkpoint to start clean.",
+                  flush=True)
 
     def save(step: int) -> None:
         tmp = ckpt_path.with_suffix(".pt.tmp")
+        # The RNG state is load-bearing, not housekeeping. Without it a resumed run replays the
+        # batch order and the masking noise from step 0 while the step counter carries on, so a seed
+        # interrupted five times is a systematically DIFFERENT experiment from one never
+        # interrupted. This box is EXPECTED to be reclaimed mid-run, and these runs ARE the bar's
+        # seed spread, so that difference lands on the tolerance itself.
         torch.save({"model": model.state_dict(), "opt": opt.state_dict(), "step": step,
                     "cfg": cfg, "shard_md5": shard_md5, "history": history,
-                    "args": vars(a)}, tmp)
+                    "args": vars(a),
+                    "rng": {"py": g_cpu.getstate(),
+                            "torch_cpu": torch.get_rng_state(),
+                            "torch_cuda": (torch.cuda.get_rng_state_all()
+                                           if dev.type == "cuda" else None)}}, tmp)
         os.replace(tmp, ckpt_path)      # atomic: a torn checkpoint is worse than none
 
     def eval_loss() -> float:
+        """Fixed corruption draw so eval loss is comparable step to step.
+
+        The seeding is BRACKETED by a save/restore of the global torch RNG state, and the bracket is
+        the whole point. This runs every --log-every steps INSIDE the training loop, so a bare
+        torch.manual_seed(999) made the training corruption draws and dropout periodic with the
+        LOGGING interval -- a logging parameter silently steering training dynamics -- and reset
+        every seed to the same 999-derived stream between evals. Measured before the fix: draws
+        taken after two successive evals were bit-identical. That attacks the exact quantity these
+        runs exist to produce, because the bar's tolerance IS the generated set's seed spread.
+        """
+        cpu_state = torch.get_rng_state()
+        cuda_state = torch.cuda.get_rng_state_all() if dev.type == "cuda" else None
         model.eval()
-        with torch.no_grad():
-            torch.manual_seed(999)      # fixed corruption draw, so eval loss is comparable per step
-            v = float(loss_fn(torch, model, x_val, c_val))
-        model.train()
+        try:
+            with torch.no_grad():
+                torch.manual_seed(999)
+                v = float(loss_fn(torch, model, x_val, c_val))
+        finally:
+            torch.set_rng_state(cpu_state)        # manual_seed touches CPU *and* every CUDA device
+            if cuda_state is not None:
+                torch.cuda.set_rng_state_all(cuda_state)
+            model.train()
         return v
 
     g_cpu = random.Random(a.seed)
+    if rng_resume is not None:
+        g_cpu.setstate(rng_resume["py"])
+        torch.set_rng_state(rng_resume["torch_cpu"])
+        if rng_resume.get("torch_cuda") is not None and dev.type == "cuda":
+            torch.cuda.set_rng_state_all(rng_resume["torch_cuda"])
+        print("[resume] RNG state restored: batch order and masking continue, not restart",
+              flush=True)
     n_trn = x_trn.shape[0]
     model.train()
     t_start, t_mark, step = time.time(), time.time(), step0

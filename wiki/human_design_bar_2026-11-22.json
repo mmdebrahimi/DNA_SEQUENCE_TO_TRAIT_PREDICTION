@@ -1,0 +1,111 @@
+{
+  "record": "human-activity-conditioned-design-bar-v1",
+  "frozen": "2026-11-22",
+  "frozen_before": "any activity-conditioned generator exists. No human generator has been trained, no design number has been computed, and the only human numbers in the repo are (a) the distinguishability margins in wiki/human_falsifier_margin_2026-11-21.json, which answer a DIFFERENT question, and (b) the oracle's own held-out accuracy in wiki/glm_human_activity_oracle_2026-11-22.json, which was itself gated by a bar declared in its script before it ran. This is the pre-registration, not a post-hoc reading.",
+
+  "question": "Can a generator DESIGN TO SPEC? Given a target activity level, does it emit human regulatory sequence that an INDEPENDENT oracle predicts to have that activity -- monotonically across targets, and beyond what a 4-mer model conditioned on the same target achieves?",
+
+  "why_this_question_replaces_the_previous_one": "The prior arm asked whether a generator's sequence is DISTINGUISHABLE from natural. That question is instrument-bound: k=4 features are saturated by an order-3 Markov null BY CONSTRUCTION (the chain's sufficient statistic IS the 4-mer conditional distribution), positional-only fails the committed power gate at 0.8611 against MIN_POWER_AUROC 0.90, and clearing the discriminator is explicitly necessary-but-not-sufficient. Measured 2026-11-21, the defeat FOLLOWED the project across the prokaryote/eukaryote boundary (CHAIN_IS_COMPARABLE on the honest 200 nt geometry, with the two cell types contradicting), so it is a property of the instrument rather than the substrate. Measured activity labels make a different and better question askable.",
+
+  "INHERITED_PROHIBITED_COMPARISON": {
+    "inherited_from": "wiki/human_falsifier_bar_2026-11-21.json",
+    "text_verbatim": "The raw human distinguishability level may NOT be compared to the bacterial 0.6679, in this artifact, in the memo, or anywhere downstream. The substrates differ in length, assay, kingdom and library construction, and only a within-substrate contrast crosses that boundary. This prohibition is recorded because the invalid comparison is ONE SUBTRACTION AWAY at all times and is the intuitive thing to reach for. A test asserts the memo contains no such comparison.",
+    "extended_here_to": "The oracle's Spearman and any design-success rate are likewise within-substrate quantities. They may NOT be compared to the E. coli designed-grid oracle's 0.59, the genomic-tile 0.30, or the PromoterAtlas 0.5076. Different assays, different noise ceilings, different kingdoms. Only within-substrate contrasts cross.",
+    "why_restated_rather_than_referenced": "A prohibition that lives only in a superseded artifact is one a future reader never loads. Carrying it verbatim is the cheap insurance."
+  },
+
+  "substrate": {
+    "source": "Agarwal lentiMPRA, Zenodo 10558183, CC-BY-4.0, DOI 10.1101/2023.03.05.531189",
+    "label": "observed log2(RNA/DNA)",
+    "usable": {"HepG2": 61463, "K562": 98332, "WTC11": "REFUSED, joins at 0.0000 (ENSG vs element-name keys)"},
+    "sequence_column_verbatim": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+    "data_dir_trap": "lentimpra.DEFAULT_DIR is D:/dna_decode_cache/mpra_human and does NOT exist on this host. The data is on C: at data/mpra_human. A bare load_cell('HepG2') reports absent-data-fetch-it for data already on disk. EVERY call must pass the directory explicitly."
+  },
+
+  "primary_geometry": {
+    "value": "element_200nt_adaptors_stripped",
+    "fixed_in_advance_on_a_priori_grounds": "The 15 nt flanks are MEASURED constant -- one distinct value each, share 1.0000, identical in both cell types, and an order-3 chain reproduced them 0 of 120 times (wiki/human_adaptor_probe_2026-11-21.json). Constant positions carry zero natural variability, so they cannot contribute to characterising real sequence; they can only supply a constant-versus-not signal a stochastic generator fails. Leaving them in inflated a distinguishability margin by up to 0.4296.",
+    "known_to_be_the_LESS_flattering_choice": "The oracle scores HIGHER on the full 230 nt (HepG2 0.4929 vs 0.4598; K562 0.5302 vs 0.5086). The primary is kept at 200 nt anyway. The mechanism for the gap is that 6-mers spanning the adaptor/element junction act as a positional probe of the element edges -- library construction, not regulatory biology. Recorded so nobody later 'corrects' the primary toward the better number.",
+    "secondary": "full_230nt_as_shipped, reported in every table so the choice is auditable"
+  },
+
+  "fold_contract": {
+    "source": "the PUBLISHERS' own 10-fold assignment, never invented here",
+    "generator_training": [1, 2, 3, 4, 5, 6],
+    "oracle_training": [7, 8],
+    "held_out": [9, 10],
+    "why_three_roles": "the oracle trains on folds the generator never sees, which makes it an INDEPENDENT judge. That was structurally impossible on the E. coli arm, where the only scorer was trained on the same genome family, and it is the single reason a design question is askable here.",
+    "verified_2026-11-22": "sequence-level, not name-level: HepG2 61463/61463 distinct and K562 98332/98332 distinct at both 230 nt and 200 nt; 0 elements span fold roles; 0 generator-held-out and 0 oracle-held-out collisions in either cell.",
+    "CROSS_CELL_CONSTRAINT": "7819 elements appear in BOTH cell libraries (HepG2-only 53644, K562-only 90513). Fold assignment is per-cell, so any CROSS-CELL comparison must exclude those 7819 or a generator-fold sequence in one cell leaks into the held-out set of the other. Within-cell pipelines are unaffected."
+  },
+
+  "cells_are_never_pooled": "HepG2 and K562 are different assays in different cells and have already been measured CONTRADICTING each other on a related verdict. Pooling would average a disagreement into a number describing neither. Every quantity is reported per cell.",
+
+  "control_zero_oracle_validity": {
+    "status": "CLEARED 2026-11-22",
+    "artifact": "wiki/glm_human_activity_oracle_2026-11-22.json",
+    "gate_was": "best learned feature beats GC by >= 0.05 AND reaches absolute Spearman >= 0.20, on held-out folds 9-10, primary geometry",
+    "result": {"HepG2": {"best_learned": 0.4598, "gc": 0.2402, "margin": 0.2196},
+               "K562": {"best_learned": 0.5086, "gc": 0.2157, "margin": 0.2929}},
+    "why_it_is_control_zero": "A weak oracle cannot validate a generator's designs; its verdict would be uninterpretable exactly as a sub-chance eval set was on the E. coli arm, where the model and both Markov nulls all scored WORSE than uniform and the model-vs-null delta carried no information.",
+    "MANDATORY_CO_REPORTING": "Any design-success claim MUST be reported together with the oracle's own held-out Spearman for that cell. The oracle is a MODERATE judge at ~0.46-0.51; a design verdict is validated only to the judge's own precision, and a 0.5-correlation oracle must never be read as a perfect one."
+  },
+
+  "nulls": {
+    "uniform_sanity_gate": {
+      "evaluated": "FIRST, before any model-vs-null delta is interpreted",
+      "rule": "if the generator OR the null scores worse than the appropriate chance level, REFUSE a verdict rather than report the delta",
+      "why": "measured on the E. coli arm 2026-11-22: a positive delta between two SUB-CHANCE predictors reads as a result and is not one"
+    },
+    "strong_null": {
+      "definition": "order-3 Markov chain fit on the GENERATOR'S OWN training folds (1-6) of the same cell, scored on held-out folds",
+      "why_fit_on_the_scored_distribution": "measured on the E. coli arm: a chain fit on a pooled 18-lineage corpus barely beat uniform even in-sample (1.3522 against ln4 = 1.3863), so 'beating an order-3 chain means beating 4-mers' was FALSE for that chain. The claim only holds when the chain models the distribution being scored."
+    },
+    "activity_stratified_null": {
+      "definition": "an order-3 chain fit per activity quintile of folds 1-6, sampled at the quintile matching each requested target",
+      "why_this_is_the_null_that_matters": "the generator is CONDITIONED on activity. If a 4-mer model conditioned on the same target reproduces the activity-sequence relationship, the generator has added nothing over 4-mer statistics, however well it hits the target in absolute terms."
+    }
+  },
+
+  "controls_that_transfer": {
+    "copying": "longest verbatim substring shared with the generator's training folds, against the held-out real level and the chance level. Three states (verbatim-reproduction / elevated / at-chance), with an ABSOLUTE verbatim-reproduction rule evaluated BEFORE any ratio -- measured 2026-11-22, a ratio rule missed total memorisation (150 of 150 bp) because 150/90.5 = 1.66 fell short of a 2x margin. The real-held-out reference is VALID here for the first time: a designed library has no orthologues, unlike the E. coli reference which was orthology-inflated at median 55 bp, max 148.",
+    "trivially_learnable_content": "constant positions, shared fixed prefixes, duplicate outputs. CRITICAL on this substrate -- it is where the human arm already got burned.",
+    "prompt_leakage": "INAPPLICABLE BY CONSTRUCTION, not merely controlled: the generator conditions on a SCALAR target activity, not on flanking sequence, so there is no sequence prompt to copy. Asserted rather than assumed.",
+    "pending_from_P2": "P2 owns the canonical control enumeration (referred to as the 4 controls, with V5 = prompt leakage). Its definitions are to be implemented verbatim rather than reconstructed; requested 2026-11-22."
+  },
+
+  "decision_quantities": {
+    "primary": "TARGET MONOTONICITY -- Spearman between the requested activity target and the oracle-predicted activity of the generated sequence, per cell, on the primary geometry",
+    "secondary": "TOP-TARGET LIFT -- oracle-predicted activity of sequence generated at the top target, minus that of sequence generated at the bottom target, compared against the same contrast for the activity-stratified null",
+    "why_not_absolute_predicted_activity": "an absolute level is uninterpretable without the oracle's own calibration, and the oracle is a rank-based scorer. A contrast within one oracle and one cell is the quantity that survives."
+  },
+
+  "no_numeric_tolerance_is_frozen_here": "Deliberate, and taken from the predecessor bar's reasoning. The tolerance is the generated set's own seed spread, derived in the run. Freezing a constant now would be guessing at the scale, which is the documented way a bar gets mis-specified.",
+
+  "outcomes_ordered_first_match_wins": {
+    "INSTRUMENT_INVALID": {
+      "condition": "the uniform sanity gate fires, OR the oracle fails its gate for that cell, OR any cell-by-target cell is missing, OR a copying check returns verbatim-reproduction",
+      "reading": "No design number is reported for that cell. A missing cell is not averaged over."
+    },
+    "DESIGNS_TO_SPEC_BEYOND_4MERS": {
+      "condition": "target monotonicity is resolved and positive, AND the top-target lift exceeds the activity-stratified null's lift by more than the generated set's seed spread",
+      "reading": "The generator designs to an activity target using structure a 4-mer model conditioned on the same target does not capture. This is the arm's success condition.",
+      "explicitly_does_not_show": "That the sequence is functional IN VIVO. The oracle is a ~0.5-correlation predictor trained on an MPRA, not an assay. No wet-lab claim follows."
+    },
+    "DESIGNS_TO_SPEC_NOT_BEYOND_4MERS": {
+      "condition": "monotonicity resolved and positive, but the lift does not exceed the activity-stratified null's",
+      "reading": "The generator hits the target, and so does a 4-mer model. Target-hitting is real and the architecture is not earning its keep. Report both; do not quote the monotonicity alone."
+    },
+    "NO_TARGET_CONTROL": {
+      "condition": "target monotonicity is unresolved or non-positive while the oracle and uniform gates both passed",
+      "reading": "Conditioning did not take. Check that the conditioning signal MOVES the output before concluding anything about capacity -- an invariance from an unverified knob is plumbing, not a null result."
+    }
+  },
+
+  "honest_limits_fixed_in_advance": [
+    "The oracle is a MODERATE judge (~0.46-0.51 held-out Spearman). Every design verdict is bounded by its precision.",
+    "An MPRA measures episomal/integrated reporter activity, not endogenous regulatory function in a native locus. A design that scores well is a design the assay would like.",
+    "Two cell types is not a replication across cell types in general, and 7819 of their elements are shared.",
+    "Nothing here tests long-range or chromatin context; the elements are 200 nt."
+  ]
+}

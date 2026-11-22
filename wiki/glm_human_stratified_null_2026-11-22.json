@@ -1,0 +1,106 @@
+{
+  "record": "glm-human-stratified-null-v1",
+  "date": "2026-11-22",
+  "bar": "wiki/human_design_bar_2026-11-22.json",
+  "purpose": "the null an activity-conditioned generator must beat, AND a measurement of whether the oracle's activity signal is k-mer-expressible at all",
+  "oracle_mode": "kmer6",
+  "geometry": "element_200nt_adaptors_stripped",
+  "leak": {
+    "chains_fit_on_folds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "oracle_fit_on_folds": [
+      7,
+      8
+    ],
+    "folds_untouched": [
+      9,
+      10
+    ]
+  },
+  "cells": {
+    "K562": {
+      "n_chain_fit": 58998,
+      "n_oracle_fit": 19666,
+      "real_stratum_mean_activity": [
+        -1.1406,
+        -0.6069,
+        -0.218,
+        0.3425,
+        1.6098
+      ],
+      "real_top_minus_bottom": 2.7504,
+      "arms": {
+        "real_ceiling": {
+          "target_monotonicity_spearman": 0.3729,
+          "predicted_activity_by_target": [
+            -0.4458,
+            -0.3354,
+            -0.2427,
+            -0.0623,
+            0.3183
+          ],
+          "top_minus_bottom_lift": 0.7641
+        },
+        "stratified": {
+          "target_monotonicity_spearman": 0.2,
+          "predicted_activity_by_target": [
+            -0.3199,
+            -0.3257,
+            -0.2921,
+            -0.1638,
+            0.0631
+          ],
+          "top_minus_bottom_lift": 0.383
+        },
+        "pooled": {
+          "target_monotonicity_spearman": 0.0051,
+          "predicted_activity_by_target": [
+            -0.1913,
+            -0.1347,
+            -0.2034,
+            -0.1609,
+            -0.1871
+          ],
+          "top_minus_bottom_lift": 0.0042
+        },
+        "uniform": {
+          "target_monotonicity_spearman": 0.0267,
+          "predicted_activity_by_target": [
+            -0.0069,
+            -0.0189,
+            -0.0486,
+            -0.0355,
+            0.0448
+          ],
+          "top_minus_bottom_lift": 0.0517
+        }
+      }
+    }
+  },
+  "verdict": "KMER_NULL_IS_SUBSTANTIAL_ROOM_REMAINS",
+  "verdict_detail": "The stratified 4-mer null captures 53.6% of the ACHIEVABLE monotonicity (ceiling 0.3729 from real sequence stratified by its own measured activity), while an UNCONDITIONED chain captures 1.4% -- so the signal genuinely comes from the conditioning and not from the generation process. A real bar with 46.4% room left. A generator must be quoted against BOTH the null and the ceiling; beating the null while far below the ceiling is a partial result.",
+  "seconds": 101.8,
+  "ceiling_relative": {
+    "ceiling_spearman": {
+      "K562": 0.3729
+    },
+    "stratified_frac_of_ceiling": {
+      "K562": 0.5363
+    },
+    "pooled_frac_of_ceiling": {
+      "K562": 0.0137
+    },
+    "uniform_noise_floor_lift": 0.0517
+  },
+  "verdict_recomputed": {
+    "superseded_label": "STRATIFIED_NULL_IS_WEAK",
+    "date": "2026-11-22",
+    "why": "The original rule used an ABSOLUTE threshold of rho>=0.30 for k-mer-expressibility, frozen before the ceiling was known. The measured ceiling is 0.3729, so that bar sat at 80% of achievable and labelled a null capturing 53.6% of achievable signal WEAK. The verdict is now a fraction of the measured ceiling, which has no such failure mode. FOURTH threshold this session to misdescribe its data the same way: an absolute bar set before the scale was measured."
+  }
+}

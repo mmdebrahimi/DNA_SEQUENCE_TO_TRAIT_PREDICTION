@@ -1,0 +1,105 @@
+{
+  "record": "glm-human-activity-oracle-v1",
+  "date": "2026-11-22",
+  "substrate": "Agarwal lentiMPRA (Zenodo 10558183, CC-BY-4.0), observed log2(RNA/DNA)",
+  "data_dir": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\mpra_human",
+  "default_dir_note": "lentimpra.DEFAULT_DIR is D:/dna_decode_cache/mpra_human and does NOT exist on this host; the data is on C: at data/mpra_human, so the directory must be passed explicitly or the loader reports absent data",
+  "fold_contract": {
+    "generator_reserved": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "oracle_train": [
+      7,
+      8
+    ],
+    "held_out": [
+      9,
+      10
+    ],
+    "why": "publishers' own 10-fold assignment; the oracle never sees the generator's folds, which makes it an INDEPENDENT judge"
+  },
+  "primary_geometry": "element_200nt_adaptors_stripped",
+  "gate": {
+    "min_margin_over_gc": 0.05,
+    "min_abs_spearman": 0.2,
+    "why": "a weak oracle cannot validate a generator's designs; its verdict would be uninterpretable the way a sub-chance eval set was on the E. coli arm"
+  },
+  "cells": {
+    "HepG2": {
+      "n_records": 61463,
+      "n_oracle_train": 12292,
+      "n_held_out": 12295,
+      "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+      "geometries": {
+        "element_200nt_adaptors_stripped": {
+          "length_bp": 200,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2402,
+            "kmer4": 0.4245,
+            "kmer6": 0.4598,
+            "positional": 0.2733
+          },
+          "best_learned": 0.4598,
+          "margin_over_gc": 0.2196,
+          "passes_gate": true
+        },
+        "full_230nt_as_shipped": {
+          "length_bp": 230,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2402,
+            "kmer4": 0.4278,
+            "kmer6": 0.4929,
+            "positional": 0.2718
+          },
+          "best_learned": 0.4929,
+          "margin_over_gc": 0.2527,
+          "passes_gate": true
+        }
+      }
+    },
+    "K562": {
+      "n_records": 98332,
+      "n_oracle_train": 19666,
+      "n_held_out": 19668,
+      "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+      "geometries": {
+        "element_200nt_adaptors_stripped": {
+          "length_bp": 200,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2157,
+            "kmer4": 0.3973,
+            "kmer6": 0.5086,
+            "positional": 0.2112
+          },
+          "best_learned": 0.5086,
+          "margin_over_gc": 0.2929,
+          "passes_gate": true
+        },
+        "full_230nt_as_shipped": {
+          "length_bp": 230,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.2157,
+            "kmer4": 0.3953,
+            "kmer6": 0.5302,
+            "positional": 0.2119
+          },
+          "best_learned": 0.5302,
+          "margin_over_gc": 0.3145,
+          "passes_gate": true
+        }
+      }
+    }
+  },
+  "verdict": "ORACLE_VALID_PROCEED",
+  "verdict_detail": "Every cell clears the pre-registered gate on the primary geometry, so the oracle is a competent judge and a generator design question is interpretable against it. This does NOT show a generator can design to it -- only that the judge works.",
+  "seconds": 270.4
+}
