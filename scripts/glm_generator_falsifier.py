@@ -309,24 +309,51 @@ def main(argv=None) -> int:
         # could not be traced to the draw that produced it. Additive and deliberately NOT a geometry
         # field -- no entry of COMPARISON_GEOMETRY_FIELDS is a seed, so `--compare-to` is unaffected.
         #
-        # ONE seed drives all five roles below. That coupling was investigated as a precision problem
-        # and is NOT one: splitting it was measured to WIDEN the spread, not narrow it
-        # (wiki/glm_seed_role_variance_2026-11-21.json -- all-coupled sd 0.0140 against
-        # generation-only 0.0280 in `both` mode, because the Markov null is fitted on the fit half of
-        # the same corpus draw it is scored against, so the roles cancel inside one seed). Recording
-        # the roles is therefore documentation of a matched design, not a to-do.
+        # ONE seed drives all five roles below.
+        #
+        # An earlier version of this comment cited `all-coupled sd 0.0140 against generation-only
+        # 0.0280` and attributed the gap to the Markov null being fitted on the fit half of the very
+        # corpus draw it is scored against. BOTH halves of that are withdrawn. The figures came from a
+        # probe running at n_generated=400 while this runner's committed geometry is n=120, so they
+        # described a geometry no artifact uses; and the fit-set mechanism could not have been measured
+        # by that probe at all, because every one of its arms drew fit and eval from a single corpus
+        # call, leaving the matching constant across arms and therefore unable to explain a difference
+        # between them. The arm built to test it directly returns an sd ratio of 1.129 with a bootstrap
+        # interval of [0.891, 1.445], which contains 1.
+        #
+        # What IS established, and it is the part that matters for a paired sweep: scoring two
+        # candidates at the SAME seed buys a large, resolvable precision gain on a model-vs-NULL
+        # comparison, and none on a model-vs-MODEL one. Measured on the real generator from the
+        # committed grid, `both` mode: zero-shot minus null has a paired-delta sd of 0.0275 against an
+        # unpaired 0.0643 (ratio 0.427) with a correlation of +0.832, CI [0.424, 0.959]; epoch3 minus
+        # zero-shot has ratio 1.14 and a correlation interval spanning zero. So the coupling is a
+        # genuine feature of the design for the null comparison and is NOT doing the work for a
+        # checkpoint-against-checkpoint delta. See wiki/glm_grid_reconcile_2026-11-21.json and
+        # wiki/glm_seed_role_variance_v2_2026-11-21.json; the v1 artifacts carry supersession stamps.
         "seeds": {"master": a.seed,
                   "drives": ["corpus shuffle + limit truncation", "generator RNG", "Markov null RNG",
                              "uniform null RNG", "discriminator fit/eval split"],
                   "coupled": True,
-                  "note": "coupling is a FEATURE of the within-seed paired comparison: both arms of a "
-                          "delta see the same windows, the same split and the same null, so the "
-                          "confound cancels inside each delta"},
+                  "note": "coupling is a measured FEATURE of a within-seed model-vs-NULL comparison "
+                          "(paired delta sd 0.0275 vs unpaired 0.0643 in mode both, correlation +0.832 "
+                          "CI [0.424, 0.959]) and buys nothing resolvable on a model-vs-MODEL delta "
+                          "(ratio 1.14, correlation interval spans zero). Do not quote it as a general "
+                          "benefit of pairing.",
+                  "withdrawn_claim": "an earlier artifact attributed the coupling's effect to the null "
+                                     "being fitted on the fit half of the corpus draw it is scored "
+                                     "against; the arm that tests that directly returns an interval "
+                                     "containing 1. See the v1 supersession stamps."},
         "natural_sets": {k: naturals[k]["stats"].as_dict() for k in kinds},
         "fit_eval_split": {"n_fit": len(naturals[kinds[0]]["fit"]),
                            "n_eval": len(naturals[kinds[0]]["eval"]),
                            "note": "Markov null fitted on FIT only; all discrimination on EVAL only, so "
-                                   "no generator is scored against sequences it was trained on"},
+                                   "no generator is scored against sequences it was trained on -- up to "
+                                   "duplicate upstream windows, which are real: the E. coli promoter "
+                                   "corpus holds 7 sequences repeated across 24 of 4340 windows "
+                                   "(operons, duplicated genes, repeated elements), so at the committed "
+                                   "geometry 0 to 3 of 600 eval windows also appear in the fit half. "
+                                   "Measured, not assumed; too small to move a score and stated because "
+                                   "the unqualified claim is not exactly true"},
         "device": dev,
         "knob_contract": (knob_record if a.model else
                           {"requested_non_default": False, "knob_wired": False,

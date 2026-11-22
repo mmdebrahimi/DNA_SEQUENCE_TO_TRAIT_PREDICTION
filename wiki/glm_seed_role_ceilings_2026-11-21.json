@@ -1,4 +1,19 @@
 {
+  "SUPERSESSION": {
+    "status": "PARTIALLY_SUPERSEDED_2026-11-21",
+    "what_is_still_valid": "The per-seed CEILINGS are correct and are not affected by the geometry error below. falsifier.self_control_ceiling reads only the eval half, which is determined by limit_natural and the seed and not by n_generated, so every ceiling and every ceiling_value here stands, including the seed-7 reproduction of the committed 0.5447 / 0.5865.",
+    "what_is_WITHDRAWN": "Every `margin` field, the per-mode margin summary, and both entries of `verdict_by_mode`. margin = null - ceiling subtracts two AUROCs measured on different comparisons: the null is 600 natural EVAL windows against 120 GENERATED sequences (about 300 vs 60 in the held-out half), while the ceiling splits those 600 eval windows 300 against 300. A held-out AUROC's sampling variation depends on test-set size and class balance, so the two are not commensurable and their difference is not a margin in any geometry.",
+    "the_verdict_that_was_withdrawn": "kmer NO_WINNABLE_REGION_ON_AVERAGE at margin -0.0121. Measured against a floor in the null's own geometry the kmer margin is +0.0329 with a 95% interval of [-0.0131, 0.0788], so the honest reading is UNRESOLVED at this replicate count, not absent -- and it resolves positive at four of five larger geometries. The sign of the committed figure also flips on the floor RULE alone: against the mean of the same five self-control values rather than their maximum the committed margin is +0.0274.",
+    "superseded_by": [
+      "wiki/glm_grid_reconcile_2026-11-21.json",
+      "wiki/glm_margin_sample_size_sweep_2026-11-21.json"
+    ],
+    "do_not_quote": [
+      "margin",
+      "summary.*.margin_mean",
+      "verdict_by_mode"
+    ]
+  },
   "record": "glm-seed-role-ceilings-v1",
   "date": "2026-11-21",
   "question": "At each of the committed grid seeds, is the Markov null actually ABOVE the discriminator own noise floor -- i.e. is there a winnable region at all?",

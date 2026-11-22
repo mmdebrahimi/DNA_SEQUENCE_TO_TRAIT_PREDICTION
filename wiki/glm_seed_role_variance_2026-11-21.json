@@ -1,4 +1,19 @@
 {
+  "SUPERSESSION": {
+    "status": "SUPERSEDED_2026-11-21",
+    "why": "Off-geometry throughout. Every arm ran at n_generated=400; the committed sweep kernel froze n=120 (scripts/kaggle/glm_paired_sweep_kernel.py:45). The all-coupled arm is documented in this file as reproducing the status quo and was never reconciled against it: at n=400 it reports `both` sd 0.0140, while the committed grid's own ten nulls have sd 0.0410. Because the comparison BETWEEN arms was the entire finding, no number here describes the committed geometry.",
+    "what_is_WITHDRAWN": "All of it: every arm sd, the decomposition, both verdicts, the 7.18x additivity ratio and the anchor sweep. The anchor sweep in particular must not be cited as a surviving control, because it ran at the same wrong geometry as the arm it was validating.",
+    "the_mechanism_that_was_withdrawn": "This file attributes a coupled variance below the sum of the decoupled ones to the Markov null being fitted on the fit half of the very corpus draw it is scored against. That is true of the runner -- and it is equally true in EVERY arm here, because each arm took fit and eval from one corpus call. A property held constant across all arms cannot explain a difference between them, so this file could not have measured its own stated mechanism. The arm that does test it directly (F_fit_decoupled in v2) returns an sd ratio of 1.129 with a bootstrap interval of [0.891, 1.445], which contains 1.",
+    "superseded_by": [
+      "wiki/glm_seed_role_variance_v2_2026-11-21.json"
+    ],
+    "do_not_quote": [
+      "summary",
+      "decomposition",
+      "mechanism_variance_additivity",
+      "mechanism_anchor_sensitivity"
+    ]
+  },
   "record": "glm-seed-role-variance-v1",
   "date": "2026-11-21",
   "question": "Of the across-seed spread in generator distinguishability, how much is nuisance (corpus draw + discriminator split) that a seed-role split would remove, and how much is the candidate's own sampling?",
