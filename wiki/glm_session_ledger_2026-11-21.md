@@ -14,8 +14,26 @@ is the reason they are one decision wearing four hats.
 geometry: `positional` alone scores **+0.1740** above the floor against `both`'s **+0.1376**, and
 `both − positional` is **−0.0364, CI [−0.0804, 0.0077]** — not resolvable, and pointing the wrong way for
 `both`. `positional − kmer` is **+0.1411**, resolvable, 9/10 seeds. So the 256 k-mer features are 73% of
-the vector and contribute nothing measurable. Recommendation: move. Same or better margin on a quarter of
-the features, and it relieves `both` fitting 352 features on ~360 training rows.
+the vector and contribute nothing measurable.
+
+**RECOMMENDATION REVERSED 2026-11-21, by running the scorer rather than reasoning about it. Keep
+`both`.** Positional-ONLY mode **fails the committed falsifier's own power gate**: its uniform control
+measures **0.8611** over 5 seeds against `MIN_POWER_AUROC = 0.90`, so `run_falsifier` returns
+`INSTRUMENT_UNDERPOWERED` and emits **no number at all** for that mode. I discovered this when the first
+real scoring run printed `kmer` and `both` rows and silently omitted `positional`.
+
+The mechanism is worth keeping, because it is the same shape as the k-mer saturation finding inverted:
+the power gate is calibrated on UNIFORM sequence, which is an easy target that a 256-dimensional k-mer
+histogram crushes (kmer 0.9317, both 0.9494). Positional features are **weaker against uniform and
+stronger against the Markov null** — the target that actually matters. So the gate rejects the mode that
+is best at the hard task because it is worse at the easy one.
+
+**`both` is therefore the practical route to positional signal**, since it passes the gate at 0.9494 and
+carries the positional block. The case for positional-alone was always feature economy rather than score
+— its advantage over `both` was never resolvable (−0.0364, interval crossing zero) — and that does not
+justify a mode the committed scorer refuses to score. Whether `MIN_POWER_AUROC` or the uniform control is
+the right calibration for positional features is an instrument question and remains open; it is not
+settled by preferring the answer that is convenient.
 
 **Two. Strike plan Steps 4 and 6?** Yes, and for a reason unrelated to the one originally given. The
 across-seed spread is the sampling noise of a held-out AUROC, so a seed-role split has nothing to remove.
