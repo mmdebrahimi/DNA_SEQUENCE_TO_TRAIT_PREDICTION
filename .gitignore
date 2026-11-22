@@ -181,3 +181,7 @@ wiki/fragment_null_batches/MORNING_REPORT.md
 # local hand-made backups; the live file is what is tracked
 *.v1bak
 *.bak
+data/glm_diffusion_ckpt/
+wiki/glm_diffusion_samples_smoke.txt
+wiki/glm_diffusion_train_smoke.json
+wiki/glm_training_corpus_2026-11-21.txt
