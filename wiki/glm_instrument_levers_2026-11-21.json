@@ -1,0 +1,591 @@
+{
+  "record": "glm-instrument-levers-v1",
+  "date": "2026-11-21",
+  "questions": {
+    "q1": "Does the positional feature block alone match `both`, or do the two blocks add?",
+    "q2": "How much of the Markov null's strength is a property of its ORDER, which is fixed at 3 by a CLI default and has never been swept?"
+  },
+  "geometry": {
+    "window_length_bp": 150,
+    "limit_natural": 1200,
+    "n_generated_per_candidate": 120,
+    "natural_set_arg": "promoter",
+    "kmer_k": 4,
+    "positional_bins": 6,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ],
+    "committed_markov_order": 3,
+    "feature_counts": {
+      "kmer": 256,
+      "positional": 96,
+      "both": 352
+    }
+  },
+  "floor_is_order_independent_by_construction": "The perfect-generator floor scores real sequence against real sequence and never involves the null, so it cannot depend on the null's order. It is computed once per (mode, seed) and reused, which keeps any apparent order effect entirely in the null term.",
+  "cells": {
+    "kmer_order1": {
+      "mode": "kmer",
+      "order": 1,
+      "n_features": 256,
+      "null_mean": 0.8232,
+      "null_sd": 0.048,
+      "floor_mean": 0.4973,
+      "margin": {
+        "n": 10,
+        "mean": 0.3259,
+        "sd": 0.0704,
+        "stderr": 0.0223,
+        "ci95": [
+          0.2755,
+          0.3763
+        ],
+        "t": 14.636,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "kmer_order2": {
+      "mode": "kmer",
+      "order": 2,
+      "n_features": 256,
+      "null_mean": 0.6648,
+      "null_sd": 0.0471,
+      "floor_mean": 0.4973,
+      "margin": {
+        "n": 10,
+        "mean": 0.1675,
+        "sd": 0.0454,
+        "stderr": 0.0144,
+        "ci95": [
+          0.135,
+          0.1999
+        ],
+        "t": 11.668,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "kmer_order3": {
+      "mode": "kmer",
+      "order": 3,
+      "n_features": 256,
+      "null_mean": 0.5302,
+      "null_sd": 0.0493,
+      "floor_mean": 0.4973,
+      "margin": {
+        "n": 10,
+        "mean": 0.0329,
+        "sd": 0.0642,
+        "stderr": 0.0203,
+        "ci95": [
+          -0.0131,
+          0.0788
+        ],
+        "t": 1.619,
+        "resolvable_above_zero": false,
+        "n_positive": 7
+      },
+      "is_committed_cell": true
+    },
+    "kmer_order4": {
+      "mode": "kmer",
+      "order": 4,
+      "n_features": 256,
+      "null_mean": 0.5148,
+      "null_sd": 0.0332,
+      "floor_mean": 0.4973,
+      "margin": {
+        "n": 10,
+        "mean": 0.0175,
+        "sd": 0.0472,
+        "stderr": 0.0149,
+        "ci95": [
+          -0.0163,
+          0.0513
+        ],
+        "t": 1.173,
+        "resolvable_above_zero": false,
+        "n_positive": 8
+      },
+      "is_committed_cell": false
+    },
+    "kmer_order5": {
+      "mode": "kmer",
+      "order": 5,
+      "n_features": 256,
+      "null_mean": 0.5242,
+      "null_sd": 0.0537,
+      "floor_mean": 0.4973,
+      "margin": {
+        "n": 10,
+        "mean": 0.0269,
+        "sd": 0.0551,
+        "stderr": 0.0174,
+        "ci95": [
+          -0.0126,
+          0.0663
+        ],
+        "t": 1.541,
+        "resolvable_above_zero": false,
+        "n_positive": 6
+      },
+      "is_committed_cell": false
+    },
+    "positional_order1": {
+      "mode": "positional",
+      "order": 1,
+      "n_features": 96,
+      "null_mean": 0.69,
+      "null_sd": 0.0461,
+      "floor_mean": 0.5049,
+      "margin": {
+        "n": 10,
+        "mean": 0.185,
+        "sd": 0.0598,
+        "stderr": 0.0189,
+        "ci95": [
+          0.1423,
+          0.2278
+        ],
+        "t": 9.787,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "positional_order2": {
+      "mode": "positional",
+      "order": 2,
+      "n_features": 96,
+      "null_mean": 0.6597,
+      "null_sd": 0.053,
+      "floor_mean": 0.5049,
+      "margin": {
+        "n": 10,
+        "mean": 0.1547,
+        "sd": 0.061,
+        "stderr": 0.0193,
+        "ci95": [
+          0.1111,
+          0.1983
+        ],
+        "t": 8.027,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "positional_order3": {
+      "mode": "positional",
+      "order": 3,
+      "n_features": 96,
+      "null_mean": 0.6789,
+      "null_sd": 0.0465,
+      "floor_mean": 0.5049,
+      "margin": {
+        "n": 10,
+        "mean": 0.174,
+        "sd": 0.0738,
+        "stderr": 0.0233,
+        "ci95": [
+          0.1212,
+          0.2267
+        ],
+        "t": 7.458,
+        "resolvable_above_zero": true,
+        "n_positive": 9
+      },
+      "is_committed_cell": false
+    },
+    "positional_order4": {
+      "mode": "positional",
+      "order": 4,
+      "n_features": 96,
+      "null_mean": 0.6877,
+      "null_sd": 0.0317,
+      "floor_mean": 0.5049,
+      "margin": {
+        "n": 10,
+        "mean": 0.1828,
+        "sd": 0.0527,
+        "stderr": 0.0167,
+        "ci95": [
+          0.1451,
+          0.2205
+        ],
+        "t": 10.975,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "positional_order5": {
+      "mode": "positional",
+      "order": 5,
+      "n_features": 96,
+      "null_mean": 0.6555,
+      "null_sd": 0.0514,
+      "floor_mean": 0.5049,
+      "margin": {
+        "n": 10,
+        "mean": 0.1506,
+        "sd": 0.0449,
+        "stderr": 0.0142,
+        "ci95": [
+          0.1184,
+          0.1827
+        ],
+        "t": 10.597,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "both_order1": {
+      "mode": "both",
+      "order": 1,
+      "n_features": 352,
+      "null_mean": 0.8608,
+      "null_sd": 0.039,
+      "floor_mean": 0.5007,
+      "margin": {
+        "n": 10,
+        "mean": 0.3601,
+        "sd": 0.0599,
+        "stderr": 0.019,
+        "ci95": [
+          0.3172,
+          0.403
+        ],
+        "t": 18.998,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "both_order2": {
+      "mode": "both",
+      "order": 2,
+      "n_features": 352,
+      "null_mean": 0.7331,
+      "null_sd": 0.0503,
+      "floor_mean": 0.5007,
+      "margin": {
+        "n": 10,
+        "mean": 0.2324,
+        "sd": 0.0536,
+        "stderr": 0.017,
+        "ci95": [
+          0.194,
+          0.2707
+        ],
+        "t": 13.702,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "both_order3": {
+      "mode": "both",
+      "order": 3,
+      "n_features": 352,
+      "null_mean": 0.6383,
+      "null_sd": 0.041,
+      "floor_mean": 0.5007,
+      "margin": {
+        "n": 10,
+        "mean": 0.1376,
+        "sd": 0.0626,
+        "stderr": 0.0198,
+        "ci95": [
+          0.0928,
+          0.1824
+        ],
+        "t": 6.945,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": true
+    },
+    "both_order4": {
+      "mode": "both",
+      "order": 4,
+      "n_features": 352,
+      "null_mean": 0.6458,
+      "null_sd": 0.0457,
+      "floor_mean": 0.5007,
+      "margin": {
+        "n": 10,
+        "mean": 0.1451,
+        "sd": 0.0605,
+        "stderr": 0.0191,
+        "ci95": [
+          0.1018,
+          0.1883
+        ],
+        "t": 7.587,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    },
+    "both_order5": {
+      "mode": "both",
+      "order": 5,
+      "n_features": 352,
+      "null_mean": 0.6198,
+      "null_sd": 0.0583,
+      "floor_mean": 0.5007,
+      "margin": {
+        "n": 10,
+        "mean": 0.1191,
+        "sd": 0.0474,
+        "stderr": 0.015,
+        "ci95": [
+          0.0852,
+          0.153
+        ],
+        "t": 7.95,
+        "resolvable_above_zero": true,
+        "n_positive": 10
+      },
+      "is_committed_cell": false
+    }
+  },
+  "q1_feature_blocks": {
+    "both_minus_positional": {
+      "n": 10,
+      "mean_diff": -0.0364,
+      "sd_diff": 0.0616,
+      "ci95": [
+        -0.0804,
+        0.0077
+      ],
+      "resolvably_nonzero": false,
+      "n_positive": 2
+    },
+    "both_minus_kmer": {
+      "n": 10,
+      "mean_diff": 0.1047,
+      "sd_diff": 0.057,
+      "ci95": [
+        0.0639,
+        0.1455
+      ],
+      "resolvably_nonzero": true,
+      "n_positive": 9
+    },
+    "positional_minus_kmer": {
+      "n": 10,
+      "mean_diff": 0.1411,
+      "sd_diff": 0.0988,
+      "ci95": [
+        0.0704,
+        0.2118
+      ],
+      "resolvably_nonzero": true,
+      "n_positive": 9
+    },
+    "verdict": "POSITIONAL_ALONE_MATCHES_BOTH__KMER_BLOCK_ADDS_NOTHING_RESOLVABLE"
+  },
+  "q2_null_order": {
+    "kmer": {
+      "margin_by_order": {
+        "1": 0.3259,
+        "2": 0.1675,
+        "3": 0.0329,
+        "4": 0.0175,
+        "5": 0.0269
+      },
+      "range": 0.3084,
+      "strongest_null_order": 4,
+      "weakest_null_order": 1,
+      "vs_committed_order": {
+        "order1_minus_order3": {
+          "n": 10,
+          "mean_diff": 0.293,
+          "sd_diff": 0.0563,
+          "ci95": [
+            0.2528,
+            0.3333
+          ],
+          "resolvably_nonzero": true,
+          "n_positive": 10
+        },
+        "order2_minus_order3": {
+          "n": 10,
+          "mean_diff": 0.1346,
+          "sd_diff": 0.0646,
+          "ci95": [
+            0.0884,
+            0.1808
+          ],
+          "resolvably_nonzero": true,
+          "n_positive": 10
+        },
+        "order4_minus_order3": {
+          "n": 10,
+          "mean_diff": -0.0154,
+          "sd_diff": 0.0503,
+          "ci95": [
+            -0.0513,
+            0.0206
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 5
+        },
+        "order5_minus_order3": {
+          "n": 10,
+          "mean_diff": -0.006,
+          "sd_diff": 0.0574,
+          "ci95": [
+            -0.0471,
+            0.035
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 5
+        }
+      },
+      "n_orders_resolvably_different_from_committed": 2
+    },
+    "positional": {
+      "margin_by_order": {
+        "1": 0.185,
+        "2": 0.1547,
+        "3": 0.174,
+        "4": 0.1828,
+        "5": 0.1506
+      },
+      "range": 0.0344,
+      "strongest_null_order": 5,
+      "weakest_null_order": 1,
+      "vs_committed_order": {
+        "order1_minus_order3": {
+          "n": 10,
+          "mean_diff": 0.0111,
+          "sd_diff": 0.0671,
+          "ci95": [
+            -0.0369,
+            0.0591
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 7
+        },
+        "order2_minus_order3": {
+          "n": 10,
+          "mean_diff": -0.0192,
+          "sd_diff": 0.0462,
+          "ci95": [
+            -0.0522,
+            0.0138
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 4
+        },
+        "order4_minus_order3": {
+          "n": 10,
+          "mean_diff": 0.0089,
+          "sd_diff": 0.0571,
+          "ci95": [
+            -0.032,
+            0.0497
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 5
+        },
+        "order5_minus_order3": {
+          "n": 10,
+          "mean_diff": -0.0234,
+          "sd_diff": 0.0757,
+          "ci95": [
+            -0.0775,
+            0.0308
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 3
+        }
+      },
+      "n_orders_resolvably_different_from_committed": 0
+    },
+    "both": {
+      "margin_by_order": {
+        "1": 0.3601,
+        "2": 0.2324,
+        "3": 0.1376,
+        "4": 0.1451,
+        "5": 0.1191
+      },
+      "range": 0.241,
+      "strongest_null_order": 5,
+      "weakest_null_order": 1,
+      "vs_committed_order": {
+        "order1_minus_order3": {
+          "n": 10,
+          "mean_diff": 0.2225,
+          "sd_diff": 0.0493,
+          "ci95": [
+            0.1872,
+            0.2578
+          ],
+          "resolvably_nonzero": true,
+          "n_positive": 10
+        },
+        "order2_minus_order3": {
+          "n": 10,
+          "mean_diff": 0.0948,
+          "sd_diff": 0.0485,
+          "ci95": [
+            0.0601,
+            0.1295
+          ],
+          "resolvably_nonzero": true,
+          "n_positive": 9
+        },
+        "order4_minus_order3": {
+          "n": 10,
+          "mean_diff": 0.0075,
+          "sd_diff": 0.0356,
+          "ci95": [
+            -0.018,
+            0.033
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 6
+        },
+        "order5_minus_order3": {
+          "n": 10,
+          "mean_diff": -0.0185,
+          "sd_diff": 0.0805,
+          "ci95": [
+            -0.0761,
+            0.0391
+          ],
+          "resolvably_nonzero": false,
+          "n_positive": 4
+        }
+      },
+      "n_orders_resolvably_different_from_committed": 2
+    }
+  },
+  "honest_limits": [
+    "The positional block is `bins * 4**min(k,2)` = 96 features, NOT bins * 4**k. The clamp lives inside `positional_features` rather than at the call site, so `both` is 352 features and not 1792. Every p-against-n reading here depends on that.",
+    "Ten seeds per cell. Each comparison between cells is seed-PAIRED, which is what makes a difference of this size readable at n=10; the per-cell margins themselves are noisier.",
+    "A higher-order Markov chain fitted on 600 windows of 150bp approaches memorising its training set, so a high-order null is not simply a 'better' null -- part of any change is overfitting the fit half rather than modelling the substrate. This sweep measures the effect and does NOT separate those two causes.",
+    "One organism, one window length, one geometry. The cross-organism behaviour of these levers is not measured here.",
+    "A winnable region is necessary, NOT sufficient: all three feature sets see LOCAL composition, so the positional block adds WHERE composition sits, not long-range organisation."
+  ],
+  "wall_seconds": 48.2,
+  "note_on_the_committed_grid": "The committed grid scores modes kmer and both at order 3 only. The positional-alone column and every non-3 order here are NEW cells, not a re-reading of that grid."
+}

@@ -136,3 +136,47 @@ def test_the_memo_does_not_self_execute_its_own_scope_recommendation(flat):
     """Striking plan steps and retiring a scoring mode are authority calls, not executor actions."""
     assert "not" in flat and "self-executed" in flat
     assert "I have **not** edited the plan" in flat or "have not edited the plan" in flat
+
+
+# ------------------------------------------------------------------ the supersession (added 2026-11-21)
+
+def test_the_memo_is_marked_superseded_in_its_first_lines(flat, memo):
+    """The whole file is withdrawn, and the banner must be the FIRST thing a reader meets.
+
+    Position is load-bearing, not cosmetic: `doc_validity` scans the first 30 lines for a status header,
+    `continuity` injection is cut at 4,000 characters, and compaction retains a measured ~17% of injected
+    constraints. A correction below the fold is a correction nobody receives. The body is deliberately
+    left unedited -- the sequence of corrections is itself the finding -- so the banner is the only thing
+    standing between a reader and a withdrawn number.
+    """
+    first = "\n".join(memo.splitlines()[:30])
+    assert "SUPERSEDED 2026-11-21" in first
+    assert "do not quote a number from this file" in first
+    assert "glm_instrument_reconciled_2026-11-21.md" in first
+
+
+def test_the_banner_names_the_geometry_defect_numerically(flat):
+    """Prose alone would not survive a tidy-up; the numbers are what make the record checkable."""
+    assert "n_generated=400" in flat and "n=120" in flat
+    assert "glm_paired_sweep_kernel.py:45" in flat
+
+
+def test_the_banner_withdraws_all_three_headline_claims(flat):
+    """Each of the three must be named as withdrawn, with the figure that replaces it."""
+    assert "+0.0329" in flat, "the corrected kmer margin must appear"
+    assert "1.129" in flat, "the fit-decoupled arm's refuting ratio must appear"
+    assert "0.0409" in flat, "the sampling benchmark that replaces the decoupling claim must appear"
+    # Matched on a phrase that sits within ONE line of the banner. The `flat` fixture collapses
+    # whitespace, which folds the markdown blockquote prefix of the next line into the text, so a
+    # phrase spanning a line break becomes "... has nothing > to remove" rather than the plain string.
+    assert "seed-role split has nothing" in flat
+
+
+def test_the_banner_says_what_SURVIVES_not_only_what_fell(flat):
+    """A supersession that withdraws everything indiscriminately destroys a valid measurement.
+
+    The per-seed ceilings are untouched by the geometry error, because `self_control_ceiling` reads only
+    the eval half, which depends on limit and seed and NOT on n_generated.
+    """
+    assert "What survives" in flat
+    assert "ceilings" in flat

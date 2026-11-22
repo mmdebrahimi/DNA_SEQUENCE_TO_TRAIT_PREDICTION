@@ -384,8 +384,14 @@ def main() -> int:
                                            + statistics.variance(get("D_corpus_only"))
                                            + statistics.variance(get("E_split_only")))
                                           / statistics.variance(va), 2),
-                "reading": ("independent roles would make this about 1.0; well above 1 means the roles "
-                            "cancel inside one seed, well below means they reinforce"),
+                "reading": ("Independent roles would make this about 1.0. A ratio well above 1 is what "
+                            "a score DOMINATED BY TEST-SET SAMPLING NOISE produces, NOT evidence that "
+                            "the roles cancel: every arm re-measures the same noisy quantity, so each "
+                            "arm variance is near the sampling floor and summing three of them "
+                            "necessarily overshoots one of them. Do not read this ratio as "
+                            "cancellation -- wiki/glm_spread_vs_sampling_noise_2026-11-21.json shows "
+                            "the all-coupled arm is consistent with the Mann-Whitney sampling "
+                            "benchmark in both modes at 240 replicates."),
             },
         }
 
@@ -406,7 +412,12 @@ def main() -> int:
         else:
             base = "MIXED_NO_CONSISTENT_DIRECTION"
         if a2["excludes_one"]:
-            base += "__STREAM_SHARING_MATTERS"
+            # Deliberately NOT "__STREAM_SHARING_MATTERS". This arm uses ONE pair of stream offsets,
+            # chosen for being round numbers. Re-run at five pairs, the inflation appears at only that
+            # original pair in `both` and at none in kmer, and the all-coupled arm it is compared
+            # against was a low draw at 60 replicates (0.0352 against 0.0448 at 240). So a single
+            # excluded interval here is a property of one offset choice, not a mechanism.
+            base += "__AT_THIS_ONE_OFFSET_PAIR_ONLY_SEE_SAMPLING_NOISE_PROBE"
         if f["excludes_one"]:
             base += "__FIT_SET_MATCHING_MATTERS"
         return base
@@ -453,7 +464,28 @@ def main() -> int:
         "comparisons": comparisons,
         "mechanism_verdict_by_mode": {m: mech_verdict(m) for m in MODES},
         "paired_delta_designs": deltas,
+        "SUPERSEDED_CONCLUSION": {
+            "status": "the ARM NUMBERS stand; the stream-sharing READING is withdrawn",
+            "what_stands": ("every arm sd, the gate against the grid, and the fit-decoupled arm F "
+                            "returning an interval that contains 1 -- which refutes the v1 fit-set "
+                            "mechanism and is the durable result here"),
+            "what_is_withdrawn": ("the reading of arm A2's excluded interval as stream sharing "
+                                  "suppressing the spread. A2 was run at ONE offset pair; across five "
+                                  "pairs the inflation appears at that pair only in `both` and at none "
+                                  "in kmer, and the all-coupled arm was a low draw at 60 replicates "
+                                  "(0.0352 here against 0.0448 at 240 replicates)"),
+            "what_replaced_it": ("the all-coupled spread is consistent with the Mann-Whitney null "
+                                 "sampling sd of a held-out AUROC at this test-set size and class "
+                                 "balance (benchmark 0.0409; arm A 0.0435 kmer / 0.0448 both at 240 "
+                                 "replicates, both intervals containing the benchmark). No seed role "
+                                 "carries the spread, so a role split has nothing to remove -- which "
+                                 "is a different and firmer reason to not build it than either earlier "
+                                 "answer gave"),
+            "see": "wiki/glm_spread_vs_sampling_noise_2026-11-21.json",
+        },
         "honest_limits": [
+            "The A2 stream-decoupling result in this file rests on ONE offset pair and does NOT "
+            "replicate across five; see SUPERSEDED_CONCLUSION.",
             "Measured on the MARKOV candidate. It bounds the INSTRUMENT's nuisance variance and says "
             "nothing directly about the HF generator's own sampling variance. The generator's paired "
             "delta IS measurable from the committed grid and is reported in "

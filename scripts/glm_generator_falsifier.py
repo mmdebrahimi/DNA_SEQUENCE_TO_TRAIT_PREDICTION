@@ -321,24 +321,34 @@ def main(argv=None) -> int:
         # between them. The arm built to test it directly returns an sd ratio of 1.129 with a bootstrap
         # interval of [0.891, 1.445], which contains 1.
         #
-        # What IS established, and it is the part that matters for a paired sweep: scoring two
-        # candidates at the SAME seed buys a large, resolvable precision gain on a model-vs-NULL
-        # comparison, and none on a model-vs-MODEL one. Measured on the real generator from the
-        # committed grid, `both` mode: zero-shot minus null has a paired-delta sd of 0.0275 against an
-        # unpaired 0.0643 (ratio 0.427) with a correlation of +0.832, CI [0.424, 0.959]; epoch3 minus
-        # zero-shot has ratio 1.14 and a correlation interval spanning zero. So the coupling is a
-        # genuine feature of the design for the null comparison and is NOT doing the work for a
-        # checkpoint-against-checkpoint delta. See wiki/glm_grid_reconcile_2026-11-21.json and
+        # What the across-seed spread actually IS: the sampling noise of a held-out AUROC at this
+        # test-set size and class balance. The Mann-Whitney null sd for about 300 natural against 60
+        # generated in the held-out half is 0.0409; the committed grid's own ten nulls spread 0.0410,
+        # and the all-coupled arm measured at 240 replicates gives 0.0435 (kmer) and 0.0448 (both),
+        # both intervals containing the benchmark. So no seed ROLE carries the spread and splitting the
+        # seed has nothing to remove -- the only lever on the error bar is test-set size.
+        #
+        # On pairing, stated at the strength it was measured and no higher: across all ten
+        # checkpoint/null pairs in the committed grid, a resolvable paired-delta benefit appears in 2 of
+        # 4 model-vs-NULL pairs in `both` mode (median ratio 0.684) and 0 of 4 in kmer, against 1 of 6
+        # checkpoint-vs-checkpoint pairs (median ratio 0.928). The strongest single case is zero-shot
+        # minus null in `both`: paired sd 0.0275 against an unpaired 0.0643, correlation +0.832 with CI
+        # [0.424, 0.959]. That is suggestive that pairing helps more against the null than between
+        # checkpoints, and it is NOT established as a clean rule -- four and six overlapping pairs drawn
+        # from five shared series cannot carry one. See wiki/glm_grid_reconcile_2026-11-21.json,
+        # wiki/glm_spread_vs_sampling_noise_2026-11-21.json and
         # wiki/glm_seed_role_variance_v2_2026-11-21.json; the v1 artifacts carry supersession stamps.
         "seeds": {"master": a.seed,
                   "drives": ["corpus shuffle + limit truncation", "generator RNG", "Markov null RNG",
                              "uniform null RNG", "discriminator fit/eval split"],
                   "coupled": True,
-                  "note": "coupling is a measured FEATURE of a within-seed model-vs-NULL comparison "
-                          "(paired delta sd 0.0275 vs unpaired 0.0643 in mode both, correlation +0.832 "
-                          "CI [0.424, 0.959]) and buys nothing resolvable on a model-vs-MODEL delta "
-                          "(ratio 1.14, correlation interval spans zero). Do not quote it as a general "
-                          "benefit of pairing.",
+                  "note": "the across-seed spread is the SAMPLING NOISE of a held-out AUROC at this "
+                          "test-set size and class balance (Mann-Whitney benchmark 0.0409; grid 0.0410; "
+                          "all-coupled arm 0.0435/0.0448 at 240 replicates), so no seed role carries it "
+                          "and the only lever on the error bar is test-set size. Pairing shows a "
+                          "resolvable benefit in 2 of 4 model-vs-null pairs in mode both (median ratio "
+                          "0.684) against 1 of 6 checkpoint pairs (0.928) -- suggestive, NOT a "
+                          "established rule, and not to be quoted as a general benefit of pairing.",
                   "withdrawn_claim": "an earlier artifact attributed the coupling's effect to the null "
                                      "being fitted on the fit half of the corpus draw it is scored "
                                      "against; the arm that tests that directly returns an interval "

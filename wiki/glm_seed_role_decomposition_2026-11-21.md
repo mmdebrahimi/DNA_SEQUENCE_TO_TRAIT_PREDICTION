@@ -1,3 +1,25 @@
+> **SUPERSEDED 2026-11-21 — do not quote a number from this file.**
+> Superseded by `wiki/glm_instrument_reconciled_2026-11-21.md`. Kept unedited below as the record of what
+> was believed and when, because the sequence of corrections is itself the finding.
+>
+> **Why.** Both probes behind this memo ran at `n_generated=400`; the committed sweep kernel froze
+> `n=120` (`scripts/kaggle/glm_paired_sweep_kernel.py:45`). Every other constant matched, so both produced
+> plausible numbers describing a geometry no committed artifact uses, and the all-coupled arm claimed to
+> reproduce the status quo without ever being compared against it.
+>
+> **The three headline claims below are all withdrawn.** (1) The kmer margin is **+0.0329**, not −0.0121 —
+> `margin = null - ceiling` subtracted a 600-vs-120 AUROC from a 300-vs-300 one, which is not a margin in
+> any geometry; against a floor in the null's own geometry the sign reverses and the honest verdict is
+> *unresolved at this n*, not absent. (2) The coupling mechanism named here (the null fitted on the fit
+> half of the draw it is scored against) is refuted by the arm built to test it, which returns an SD ratio
+> of 1.129 with CI [0.891, 1.445]. (3) "Decoupling would widen the error bar" is withdrawn in both
+> directions: the across-seed spread is the sampling noise of a held-out AUROC (Mann-Whitney benchmark
+> 0.0409; grid 0.0410; all-coupled arm 0.0435/0.0448 at 240 replicates), so a seed-role split has nothing
+> to remove.
+>
+> What survives: the per-seed **ceilings** are correct and untouched by the geometry error, and the
+> retraction of the earlier 0.0543 band stands.
+
 # The instrument CAN resolve the generator question — in one feature mode, and the seed lever I planned is dead
 
 **Status:** `DIAGNOSTIC`. Artifacts: `wiki/glm_seed_role_ceilings_2026-11-21.json` (per-seed noise floor) and
