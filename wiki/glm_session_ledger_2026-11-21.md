@@ -116,6 +116,62 @@ Deliberately NOT on this list: more seed-role work (answered), more GC phyla (th
 replicates, not breadth), and anything requiring Server1's GPU (the corpus, not compute, is the binding
 constraint, and that stays true until the fork is settled).
 
+## AMENDED 2026-11-21, after a field-literature sweep and a design review
+
+Four changes. Two correct numbers I published, one corrects a claim I made about the field, and one is
+a defect in the training design that the sweep led me to find.
+
+**1. The scored run trains 95% on organisms it is never scored against. CRITICAL.** The falsifier scores
+only against *E. coli* MG1655 eval windows, and *E. coli* is **3,463 of 63,925 corpus windows = 5.4%**.
+The corpus was built for lineage diversity, which is right for a PRETRAINING corpus and wrong for a
+SCORED one, and I did not notice the mismatch when I pointed the scorer at it. Left alone it yields a
+poor score for a reason unrelated to the architecture, which is one step from being misattributed to
+diffusion. **Fix costs nothing and is half-done:** the pooled run IS stage one of a pretrain-broad then
+fine-tune-per-organism recipe. Finish it, fine-tune on *E. coli*'s own windows, then score. The leak gate
+is unaffected — fine-tuning on the fit half is legitimate and the eval windows stay withheld by sequence.
+
+**2. The `20 tokens/param` heuristic is wrong for this domain by roughly an order of magnitude.** I used
+it throughout while recording in every artifact that it is imported from language-model scaling and NOT
+validated for DNA. A published prokaryotic promoter generator sits at **~1.74 tok/param** (7.4M params on
+~12.9M tokens) and produced in-vivo-functional sequence. Recomputed at that density our 9.59 Mbp supports
+**~5.5M params, not 0.479M**, and our 813,700-param model at 11.8 tok/param is conservatively sized
+rather than starved. **Every "N-times short" figure in this ledger and in the all-domains spec is soft by
+about 10x.** The direction holds — promoter corpora are small, cross-domain needs many species — the
+magnitudes do not. Marked here rather than silently restated.
+
+**3. "Our positional instrument is ahead of the field's norm" is WITHDRAWN.** I generalised from one
+paper's 6-mer validation metric to the field. The specialist promoter-generation work does score
+positionally: two bacterial-promoter diffusion papers measure the -10/-35 inter-motif spacing. Corrected
+claim: we are ALIGNED with the best promoter work on the canonical spacing, and broader only in that our
+instrument measures positional composition across the whole window rather than one known motif pair.
+
+**4. The promoter-vs-whole-genome fork is RESOLVED to promoter mode, and it costs us nothing** because
+the corpus was already built that way (`natural_set_arg: "promoter"`, 63,925 x 150 bp). Recorded because
+a peer message described our 9.59 Mbp as whole-genome and proposed building the extraction we already
+have — the two figures are the same object, and the confusion is worth pinning so it does not recur.
+
+**What this does NOT change.** Every instrument result stands: k-mer saturation is structural and
+replicated at a second GC extreme, the positional margin resolves at 14/14 species, the leak gate caught
+1,389 real leaks, the overfit test proves the loop learns, and the morning's reconciliation of two
+off-geometry probes is untouched.
+
+**One new option, with a practical obstacle.** An open, MIT-licensed, CPU-capable pretrained bacterial
+promoter diffusion model exists and uses rotary positional encoding plus inpainting-based targeted
+design. It generates **50 bp**; our falsifier scores **150 bp**, and `window_length_bp` is one of the
+nine `COMPARISON_GEOMETRY_FIELDS` — so it is not a drop-in scoreable baseline. It is a third arm with its
+own geometry, not a resolution of the autoregressive-versus-diffusion question, which still needs matched
+size, matched corpus and matched scorer.
+
+**Revised next-VOI order:** (1) finish the pretrain, fine-tune on *E. coli*, score — the design fix and
+the north-star number in one move; (2) the autoregressive baseline at matched size, which now has a
+published 7.4M character-level template to match rather than a strawman; (3) the authority decisions;
+(4) within-phylum GC replicates; (5) evaluate the pretrained external model as a separate arm.
+
+**Provenance:** the literature findings here are a colleague's summaries of papers I have NOT read. The
+architecture templates and the transfer-learning reframe are actionable regardless, but the specific
+figures are second-hand and unverified in this session — the same standard applied to the GPU reading
+earlier today.
+
 ## PROCESS LESSONS, EARNED NOT ASSERTED
 
 **I asserted a mechanism, had it refuted, asserted a replacement, had that refuted too — and only then
