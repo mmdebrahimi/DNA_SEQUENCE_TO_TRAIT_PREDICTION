@@ -694,7 +694,14 @@
         "sd_unpaired_sum": 0.0738,
         "paired_over_unpaired": 0.898,
         "correlation": 0.195,
-        "pairing_helps": true
+        "correlation_ci95": [
+          -0.495,
+          0.735
+        ],
+        "correlation_resolvably_positive": false,
+        "correlation_resolvably_negative": false,
+        "pairing_helps": true,
+        "pairing_benefit_is_resolvable": false
       },
       "epoch3_minus_zeroshot": {
         "n_seeds": 10,
@@ -703,7 +710,14 @@
         "sd_unpaired_sum": 0.0647,
         "paired_over_unpaired": 1.169,
         "correlation": -0.409,
-        "pairing_helps": false
+        "correlation_ci95": [
+          -0.826,
+          0.298
+        ],
+        "correlation_resolvably_positive": false,
+        "correlation_resolvably_negative": false,
+        "pairing_helps": false,
+        "pairing_benefit_is_resolvable": false
       },
       "epoch3_minus_null": {
         "n_seeds": 10,
@@ -712,7 +726,14 @@
         "sd_unpaired_sum": 0.0601,
         "paired_over_unpaired": 0.925,
         "correlation": 0.153,
-        "pairing_helps": true
+        "correlation_ci95": [
+          -0.527,
+          0.714
+        ],
+        "correlation_resolvably_positive": false,
+        "correlation_resolvably_negative": false,
+        "pairing_helps": true,
+        "pairing_benefit_is_resolvable": false
       }
     },
     "both": {
@@ -723,7 +744,14 @@
         "sd_unpaired_sum": 0.0643,
         "paired_over_unpaired": 0.427,
         "correlation": 0.832,
-        "pairing_helps": true
+        "correlation_ci95": [
+          0.424,
+          0.959
+        ],
+        "correlation_resolvably_positive": true,
+        "correlation_resolvably_negative": false,
+        "pairing_helps": true,
+        "pairing_benefit_is_resolvable": true
       },
       "epoch3_minus_zeroshot": {
         "n_seeds": 10,
@@ -732,7 +760,14 @@
         "sd_unpaired_sum": 0.0577,
         "paired_over_unpaired": 1.14,
         "correlation": -0.339,
-        "pairing_helps": false
+        "correlation_ci95": [
+          -0.798,
+          0.37
+        ],
+        "correlation_resolvably_positive": false,
+        "correlation_resolvably_negative": false,
+        "pairing_helps": false,
+        "pairing_benefit_is_resolvable": false
       },
       "epoch3_minus_null": {
         "n_seeds": 10,
@@ -741,9 +776,69 @@
         "sd_unpaired_sum": 0.0507,
         "paired_over_unpaired": 1.06,
         "correlation": -0.129,
-        "pairing_helps": false
+        "correlation_ci95": [
+          -0.702,
+          0.545
+        ],
+        "correlation_resolvably_positive": false,
+        "correlation_resolvably_negative": false,
+        "pairing_helps": false,
+        "pairing_benefit_is_resolvable": false
       }
     }
+  },
+  "generator_above_like_for_like_floor": {
+    "kmer": {
+      "epoch1": {
+        "mean_above_floor": 0.2016,
+        "min": 0.1139,
+        "n": 10
+      },
+      "epoch2": {
+        "mean_above_floor": 0.2365,
+        "min": 0.1852,
+        "n": 10
+      },
+      "epoch3": {
+        "mean_above_floor": 0.2517,
+        "min": 0.1764,
+        "n": 10
+      },
+      "zeroshot": {
+        "mean_above_floor": 0.2114,
+        "min": 0.0842,
+        "n": 10
+      },
+      "null_above_floor_mean": 0.0329
+    },
+    "both": {
+      "epoch1": {
+        "mean_above_floor": 0.2577,
+        "min": 0.1901,
+        "n": 10
+      },
+      "epoch2": {
+        "mean_above_floor": 0.2764,
+        "min": 0.1915,
+        "n": 10
+      },
+      "epoch3": {
+        "mean_above_floor": 0.3019,
+        "min": 0.2031,
+        "n": 10
+      },
+      "zeroshot": {
+        "mean_above_floor": 0.2561,
+        "min": 0.1314,
+        "n": 10
+      },
+      "null_above_floor_mean": 0.1376
+    }
+  },
+  "supersedes_figure": {
+    "retired": "+0.2150, the zero-shot generator's distance above the floor in mode both",
+    "why": "that was the distance above the max-of-five self-control CEILING (0.5419), which is measured at a different class balance and is not commensurable with the generator's own 600-vs-120 score",
+    "replacement_key": "generator_above_like_for_like_floor.both.zeroshot.mean_above_floor"
   },
   "honest_limits": [
     "The perfect-generator floor uses 120 REAL windows, so it is the floor for a generator that emits genuine promoter sequence. It is an EMPIRICAL floor at one draw per seed, not an analytic one, and carries its own sampling variation.",
@@ -754,7 +849,8 @@
     "A winnable region is necessary, NOT sufficient: a k-mer-plus-positional discriminator sees LOCAL composition, so clearing it would not establish functional realism.",
     "The margin significance test uses a normal approximation to the t p-value and the t(0.975, df=9) critical value for the interval. Stated rather than hidden; at n=10 it changes no reading here, and the interval is what the verdict depends on.",
     "The uniform power control bounds the instrument's CEILING of detectability, not the target a generator must beat: i.i.d. sequence is far more different from natural than any real generator, so high power against it does not imply power against a near-miss.",
+    "Every correlation here is measured at ten seeds, so each carries a Fisher-z interval and a flag for whether it is resolvably non-zero. A point r of -0.34 at n=10 spans roughly -0.80 to +0.36 and is NOT evidence of anti-correlation; only the positive model-vs-null correlations are resolvable.",
     "One organism, one geometry, one null."
   ],
-  "wall_seconds": 103.5
+  "wall_seconds": 79.9
 }

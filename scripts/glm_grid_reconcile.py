@@ -251,16 +251,68 @@ def paired_delta_from_grid(grid: dict) -> dict:
             d = [p - q for p, q in zip(xa, xb)]
             sd_a, sd_b = statistics.stdev(xa), statistics.stdev(xb)
             unpaired = math.sqrt(sd_a ** 2 + sd_b ** 2)
+            r = statistics.correlation(xa, xb) if len(seeds) > 2 else None
+            ci = fisher_z_ci(r, len(seeds))
             res[f"{a}_minus_{b}"] = {
                 "n_seeds": len(seeds),
                 "mean_delta": round(statistics.fmean(d), 4),
                 "sd_paired_delta": round(statistics.stdev(d), 4),
                 "sd_unpaired_sum": round(unpaired, 4),
                 "paired_over_unpaired": round(statistics.stdev(d) / unpaired, 3) if unpaired else None,
-                "correlation": round(statistics.correlation(xa, xb), 3) if len(seeds) > 2 else None,
+                "correlation": round(r, 3) if r is not None else None,
+                "correlation_ci95": ci,
+                "correlation_resolvably_positive": bool(ci and ci[0] > 0),
+                "correlation_resolvably_negative": bool(ci and ci[1] < 0),
                 "pairing_helps": statistics.stdev(d) < unpaired,
+                "pairing_benefit_is_resolvable": bool(
+                    statistics.stdev(d) < unpaired and ci and ci[0] > 0),
             }
         out[mode] = res
+    return out
+
+
+def fisher_z_ci(r: float | None, n: int) -> list[float] | None:
+    """95% interval for a correlation via the Fisher z transform.
+
+    This exists because the pairing reading rests entirely on correlations measured at ten seeds, where a
+    point r is nearly uninformative: r = -0.34 at n = 10 has an interval running from about -0.80 to
+    +0.36, so it is NOT evidence of anti-correlation, while r = +0.83 at the same n is comfortably
+    positive. Reporting the point values alone would let a sign be read as a mechanism.
+    """
+    if r is None or n < 4 or abs(r) >= 1.0:
+        return None
+    z = 0.5 * math.log((1 + r) / (1 - r))
+    se = 1.0 / math.sqrt(n - 3)
+    lo, hi = z - 1.96 * se, z + 1.96 * se
+    return [round(math.tanh(lo), 3), round(math.tanh(hi), 3)]
+
+
+def generator_above_like_for_like_floor(grid: dict, rows: list[dict]) -> dict:
+    """How far the generator sits above a floor measured in the NULL's own geometry.
+
+    Supersedes a figure carried as "+0.2150 above the floor", which was the distance above the max-of-five
+    self-control CEILING (0.5419) rather than above a commensurable floor. Against the perfect-generator
+    floor the same quantity is larger, because that ceiling was inflated by taking a maximum over five
+    splits at a different class balance. Reported per seed and then averaged, so the two terms are always
+    from the same seed.
+    """
+    floors = {(r["seed"], r["mode"]): r["perfect_generator_floor"] for r in rows}
+    out = {}
+    for mode in MODES:
+        per_model: dict[str, list[float]] = {}
+        for c in grid["grid"]:
+            f = floors.get((c["seed"], mode))
+            if f is None:
+                continue
+            per_model.setdefault(c["model"], []).append(c[mode] - f)
+        out[mode] = {
+            m: {"mean_above_floor": round(statistics.fmean(v), 4),
+                "min": round(min(v), 4), "n": len(v)}
+            for m, v in sorted(per_model.items())
+        }
+        nulls = [c["null"][mode] - floors[(c["seed"], mode)]
+                 for c in grid["grid"] if (c["seed"], mode) in floors]
+        out[mode]["null_above_floor_mean"] = round(statistics.fmean(nulls), 4)
     return out
 
 
@@ -466,6 +518,7 @@ def main() -> int:
     mb = mean_based_ceiling(ceil_rec)
     mmn = model_minus_null_from_grid(grid)
     pd = paired_delta_from_grid(grid)
+    above = generator_above_like_for_like_floor(grid, rows)
 
     def mode_verdict(mode: str) -> str:
         """Ordered, first match wins.
@@ -521,6 +574,14 @@ def main() -> int:
         "floor_rule_sensitivity": mb,
         "generator_distance_to_null": mmn,
         "paired_delta_on_the_real_generator": pd,
+        "generator_above_like_for_like_floor": above,
+        "supersedes_figure": {
+            "retired": "+0.2150, the zero-shot generator's distance above the floor in mode both",
+            "why": ("that was the distance above the max-of-five self-control CEILING (0.5419), which is "
+                    "measured at a different class balance and is not commensurable with the generator's "
+                    "own 600-vs-120 score"),
+            "replacement_key": "generator_above_like_for_like_floor.both.zeroshot.mean_above_floor",
+        },
         "honest_limits": [
             "The perfect-generator floor uses 120 REAL windows, so it is the floor for a generator that "
             "emits genuine promoter sequence. It is an EMPIRICAL floor at one draw per seed, not an "
@@ -546,6 +607,10 @@ def main() -> int:
             "The uniform power control bounds the instrument's CEILING of detectability, not the target "
             "a generator must beat: i.i.d. sequence is far more different from natural than any real "
             "generator, so high power against it does not imply power against a near-miss.",
+            "Every correlation here is measured at ten seeds, so each carries a Fisher-z interval and "
+            "a flag for whether it is resolvably non-zero. A point r of -0.34 at n=10 spans roughly "
+            "-0.80 to +0.36 and is NOT evidence of anti-correlation; only the positive model-vs-null "
+            "correlations are resolvable.",
             "One organism, one geometry, one null.",
         ],
         "wall_seconds": round(time.time() - t0, 1),
@@ -572,6 +637,20 @@ def main() -> int:
         g = mmn[mode]
         print(f"         generator ABOVE null in {g['n_cells_generator_above_null']}/{g['n_cells']} "
               f"cells, mean distance {g['all_models_mean']:+.4f} (min {g['all_models_min']:+.4f})")
+    print()
+    print("pairing on the REAL generator (sd of the paired delta vs the unpaired sum):")
+    for mode in MODES:
+        for pair, d in pd[mode].items():
+            verdict = ("HELPS" if d["pairing_benefit_is_resolvable"]
+                       else ("helps (corr not resolvable)" if d["pairing_helps"] else "does NOT help"))
+            print(f"  [{mode:5s}] {pair:22s} ratio {d['paired_over_unpaired']}  "
+                  f"corr {d['correlation']} CI {d['correlation_ci95']}  -> {verdict}")
+    print()
+    for mode in MODES:
+        z = above[mode]
+        print(f"  [{mode:5s}] above the like-for-like floor: zeroshot "
+              f"{z['zeroshot']['mean_above_floor']:+.4f}, epoch3 {z['epoch3']['mean_above_floor']:+.4f}, "
+              f"null {z['null_above_floor_mean']:+.4f}")
     print(f"\n{rec['wall_seconds']}s -> {OUT.relative_to(ROOT).as_posix()}")
     return 0 if gate_ok else 3
 
