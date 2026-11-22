@@ -98,6 +98,51 @@ Copy this directory to Server1 (12 MB):
 **Do not point the job at the stale `dna_decode` checkout on that box** (128 commits behind, with
 another session's uncommitted edit). Nothing in the package reads it.
 
+## Getting the package onto Server1 - the shard is NOT in git
+
+**Verified, not assumed:** commit `31d68d2f` contains exactly three files -- the export script, the
+trainer and this memo. `git ls-files` matches `train_K562_folds1-6.tsv` nowhere in the repo.
+
+**It is deliberately not committed, and the repo's own convention is the reason.** No multi-MB file
+is tracked under `wiki/` anywhere in this repository; every generated corpus
+(`glm_training_corpus_*.txt` and siblings) is left untracked. Committing a 12 MB derived table would
+break that convention rather than follow it. So a fresh clone of `31d68d2f` gives Server1 the
+scripts and this memo and **no data** -- the clone is necessary and not sufficient.
+
+**It also cannot be solved by letting Server1 build the shard itself.** Running the export there
+needs the full deposit on that box, which puts the reserved FINAL_ONLY fold back on a third machine
+-- the one control this whole shard design exists to enforce. Do not take that shortcut because the
+copy is awkward.
+
+**Push from the repo host is not available.** Measured 2026-11-22 against 192.168.2.197:
+port 22 closed, 445 closed, 139 closed, **11434 open** (Ollama only), ICMP no reply. No scp, no SMB.
+
+**So Server1 pulls.** Both boxes are on the same `/24` (repo host is `192.168.2.25`). Serve the
+package from the repo host:
+
+```
+python -m http.server 8765 --bind 192.168.2.25 --directory "C:\Users\Laptop Portable\dna_decode_server1_handoff_2026-11-22"
+```
+
+Then on Server1:
+
+```
+mkdir C:\s1
+cd C:\s1
+curl -o train_K562_folds1-6.tsv       http://192.168.2.25:8765/train_K562_folds1-6.tsv
+curl -o shard_manifest_K562.json      http://192.168.2.25:8765/shard_manifest_K562.json
+curl -o glm_human_diffusion_server1.py http://192.168.2.25:8765/glm_human_diffusion_server1.py
+certutil -hashfile train_K562_folds1-6.tsv MD5
+```
+
+`certutil` must print `94f2eef17a11900cd0d6fda901381860`. Passing `--shard-md5` to the job re-checks
+it anyway and refuses on mismatch, so a truncated transfer cannot reach training.
+
+**Limitation, stated plainly:** that HTTP server lives only as long as the repo-host session serving
+it. It is a transfer window, not infrastructure. If it is down, the fallback is an ordinary manual
+copy of the same 12 MB directory by any means the user prefers -- nothing about the job depends on
+how the bytes arrive, only on the md5 matching.
+
 ## Run command
 
 One line, with the data path explicit — there is no default data path, because a defaulted one
@@ -105,9 +150,9 @@ reports absent for data that is present.
 
 ```
 python glm_human_diffusion_server1.py ^
-  --shard      D:\s1\train_K562_folds1-6.tsv ^
+  --shard      C:\s1\train_K562_folds1-6.tsv ^
   --shard-md5  94f2eef17a11900cd0d6fda901381860 ^
-  --out-dir    D:\s1\runs ^
+  --out-dir    C:\s1\runs ^
   --size l --seed 1 --steps 20000 --batch 64 --device cuda
 ```
 
