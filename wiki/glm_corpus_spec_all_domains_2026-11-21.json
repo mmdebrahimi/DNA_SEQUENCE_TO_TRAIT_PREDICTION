@@ -1,0 +1,235 @@
+{
+  "record": "glm-corpus-spec-all-domains-v1",
+  "date": "2026-11-21",
+  "status": "PLAN, not a measurement. No corpus is downloaded or built by this script.",
+  "scope_correction": "The generator's scope is ALL LIFE FORMS. A bacterial framing had entered my corpus planning because the locally cached assemblies are bacterial -- the available substrate quietly became the stated goal. Corrected here. The project's north star already said bacteria is a stage, not the subject.",
+  "the_fork": {
+    "question": "Does the generator emit PROMOTER WINDOWS or ANY GENOMIC WINDOW?",
+    "why_it_dominates": "Promoter-mode corpus scales with GENE COUNT, which barely moves across domains (1,744-5,501 CDS measured per bacterial genome against roughly 20,000 for an animal). Whole-genome corpus scales with GENOME SIZE, which spans three orders of magnitude (1.8-5.7 Mbp measured against roughly 3,100 Mbp for a mammal). So going cross-domain buys about 5x per genome in one mode and about 700x in the other.",
+    "why_the_700x_is_mostly_the_wrong_sequence": "A large eukaryotic genome is dominated by repetitive elements and intergenic distance; coding is a few percent and regulatory regions a small fraction. A promoter generator trained on it would train mostly on transposons. This is the already-declared caveat that distinct k-mer content measures sequence NOVELTY and not learnable regulatory signal -- and the gap between those two widens sharply once genomes stop being gene-dense.",
+    "consequence": "The download size differs by roughly 70x between the two modes, and the mode also decides whether the committed falsifier can score the output at all, since it is built on 150 bp upstream windows.",
+    "not_chosen_here": "the target is an authority call, so both arms are computed and neither is selected"
+  },
+  "measured_rows": [
+    {
+      "domain": "bacteria",
+      "exemplar": "Escherichia coli K-12 MG1655 (REFERENCE)",
+      "genome_mbp": 5.24,
+      "n_genes": 4340,
+      "source": "MEASURED",
+      "note": "4340 usable upstream windows; GC 0.4529",
+      "promoter_mbp": 0.651,
+      "regulatory_fraction": 0.12424
+    },
+    {
+      "domain": "bacteria",
+      "exemplar": "Campylobacter coli (GCA_060776685.1, draft)",
+      "genome_mbp": 1.705,
+      "n_genes": 1744,
+      "source": "MEASURED",
+      "note": "1692 usable upstream windows; GC 0.2717",
+      "promoter_mbp": 0.2616,
+      "regulatory_fraction": 0.15343
+    },
+    {
+      "domain": "bacteria",
+      "exemplar": "Campylobacter jejuni (GCA_060772745.1, draft)",
+      "genome_mbp": 1.695,
+      "n_genes": 2032,
+      "source": "MEASURED",
+      "note": "1930 usable upstream windows; GC 0.2664",
+      "promoter_mbp": 0.3048,
+      "regulatory_fraction": 0.17982
+    },
+    {
+      "domain": "bacteria",
+      "exemplar": "Escherichia coli (GCA_059754755.1, draft)",
+      "genome_mbp": 5.24,
+      "n_genes": 5003,
+      "source": "MEASURED",
+      "note": "4925 usable upstream windows; GC 0.457",
+      "promoter_mbp": 0.7504,
+      "regulatory_fraction": 0.14322
+    },
+    {
+      "domain": "bacteria",
+      "exemplar": "Klebsiella pneumoniae (GCA_061544025.1, draft)",
+      "genome_mbp": 5.586,
+      "n_genes": 5501,
+      "source": "MEASURED",
+      "note": "5407 usable upstream windows; GC 0.5054",
+      "promoter_mbp": 0.8252,
+      "regulatory_fraction": 0.14772
+    }
+  ],
+  "illustrative_rows_UNVERIFIED": [
+    {
+      "domain": "archaea",
+      "exemplar": "a halophile or methanogen",
+      "genome_mbp": 3.0,
+      "n_genes": 2800,
+      "source": "UNVERIFIED_APPROX",
+      "note": "gene-dense like bacteria; expected to behave as a bacterial-like rung",
+      "promoter_mbp": 0.42,
+      "regulatory_fraction": 0.14
+    },
+    {
+      "domain": "fungi",
+      "exemplar": "a budding yeast",
+      "genome_mbp": 12.0,
+      "n_genes": 6000,
+      "source": "UNVERIFIED_APPROX",
+      "note": "first rung where introns and chromatin enter; still relatively gene-dense",
+      "promoter_mbp": 0.9,
+      "regulatory_fraction": 0.075
+    },
+    {
+      "domain": "plant",
+      "exemplar": "a small model plant",
+      "genome_mbp": 135.0,
+      "n_genes": 27000,
+      "source": "UNVERIFIED_APPROX",
+      "note": "highest gene count of these exemplars, so the best promoter-mode yield per genome",
+      "promoter_mbp": 4.05,
+      "regulatory_fraction": 0.03
+    },
+    {
+      "domain": "animal",
+      "exemplar": "a nematode",
+      "genome_mbp": 100.0,
+      "n_genes": 20000,
+      "source": "UNVERIFIED_APPROX",
+      "note": "compact animal genome",
+      "promoter_mbp": 3.0,
+      "regulatory_fraction": 0.03
+    },
+    {
+      "domain": "animal",
+      "exemplar": "a mammal",
+      "genome_mbp": 3100.0,
+      "n_genes": 20000,
+      "source": "UNVERIFIED_APPROX",
+      "note": "the extreme case: ~700x a bacterial genome in whole-genome mode and only ~4x in promoter mode, because gene count barely moves while genome size explodes",
+      "promoter_mbp": 3.0,
+      "regulatory_fraction": 0.00097
+    }
+  ],
+  "scaling_from_MEASURED_bacteria": {
+    "promoter_mode": {
+      "mode": "promoter windows, bacteria (MEASURED)",
+      "per_genome_mbp": 0.559,
+      "rungs": {
+        "1.5M_params": {
+          "corpus_needed_mbp": 30.0,
+          "genomes_needed": 53.7
+        },
+        "7M_params": {
+          "corpus_needed_mbp": 140.0,
+          "genomes_needed": 250.6
+        },
+        "20M_params": {
+          "corpus_needed_mbp": 400.0,
+          "genomes_needed": 716.1
+        },
+        "50M_params": {
+          "corpus_needed_mbp": 1000.0,
+          "genomes_needed": 1790.2
+        }
+      }
+    },
+    "whole_genome_mode": {
+      "mode": "whole genome, bacteria (MEASURED)",
+      "per_genome_mbp": 3.893,
+      "rungs": {
+        "1.5M_params": {
+          "corpus_needed_mbp": 30.0,
+          "genomes_needed": 7.7
+        },
+        "7M_params": {
+          "corpus_needed_mbp": 140.0,
+          "genomes_needed": 36.0
+        },
+        "20M_params": {
+          "corpus_needed_mbp": 400.0,
+          "genomes_needed": 102.7
+        },
+        "50M_params": {
+          "corpus_needed_mbp": 1000.0,
+          "genomes_needed": 256.9
+        }
+      }
+    }
+  },
+  "scaling_from_ILLUSTRATIVE_eukaryotes": {
+    "caveat": "every input here is UNVERIFIED_APPROX; this block shows the SHAPE of the fork and must not be quoted as a corpus plan",
+    "promoter_mode": {
+      "mode": "promoter windows, eukaryotes (UNVERIFIED)",
+      "per_genome_mbp": 2.737,
+      "rungs": {
+        "1.5M_params": {
+          "corpus_needed_mbp": 30.0,
+          "genomes_needed": 11.0
+        },
+        "7M_params": {
+          "corpus_needed_mbp": 140.0,
+          "genomes_needed": 51.1
+        },
+        "20M_params": {
+          "corpus_needed_mbp": 400.0,
+          "genomes_needed": 146.1
+        },
+        "50M_params": {
+          "corpus_needed_mbp": 1000.0,
+          "genomes_needed": 365.3
+        }
+      }
+    },
+    "whole_genome_mode": {
+      "mode": "whole genome, eukaryotes (UNVERIFIED)",
+      "per_genome_mbp": 836.75,
+      "rungs": {
+        "1.5M_params": {
+          "corpus_needed_mbp": 30.0,
+          "genomes_needed": 0.0
+        },
+        "7M_params": {
+          "corpus_needed_mbp": 140.0,
+          "genomes_needed": 0.2
+        },
+        "20M_params": {
+          "corpus_needed_mbp": 400.0,
+          "genomes_needed": 0.5
+        },
+        "50M_params": {
+          "corpus_needed_mbp": 1000.0,
+          "genomes_needed": 1.2
+        }
+      }
+    }
+  },
+  "corpus_spec_requirements": {
+    "domain_label_per_genome": "REQUIRED, as a first-class field: bacteria | archaea | fungi | plant | animal. Cross-domain regulatory grammar differs structurally -- bacterial -10/-35 boxes and operons against eukaryotic TATA, enhancers, chromatin and splicing -- so an undifferentiated pool asks one model to learn mutually inconsistent grammars with no signal telling it which applies. Domain conditioning or a staged curriculum needs the label to exist from the start, and retrofitting it after a corpus is built is the expensive way to get it.",
+    "lineage_dedup": "REQUIRED, and measured as necessary rather than assumed: the local cache holds 400 Campylobacter jejuni assemblies whose 12th genome adds 0.50% new distinct content. Deduplicate by LINEAGE, not by accession. Un-deduplicated, a corpus over-represents whichever lineage happens to be best sampled, and the model memorises it -- the confound that has already closed four arms in this project.",
+    "diversity_over_depth": "At the measured bacterial yield, distinct content comes from adding SPECIES, not strains. One representative per lineage, many lineages.",
+    "scoring_geometry": "Whatever the corpus, the generator must emit something the committed falsifier can score, or a new instrument is needed before any number means anything. Today that is 150 bp upstream windows.",
+    "positional_architecture_is_the_target": "Measured today: a k-mer discriminator is saturated BY CONSTRUCTION because a Markov chain's sufficient statistic IS the k-mer conditional distribution, while the positional margin holds at +0.1740 and is invariant to the null's order, replicated at GC 0.266 and 0.453. So a generator that matches only local composition clears the k-mer view and is caught flat by the positional one. Train for WHERE motifs sit."
+  },
+  "a_closed_negative_that_is_NOT_a_blocker_here": {
+    "what": "the Arabidopsis flowering-time arm, a de-confounded EUKARYOTIC negative where the embedding learned population structure rather than the trait",
+    "why_it_does_not_block_this": "it is about DISCRIMINATIVE zero-shot scoring on natural populations, not about GENERATION. The project's own orientation notes flag conflating those as error 0. A eukaryotic generator is not foreclosed by it, and citing it as a blocker would be the exact misreading that file warns against."
+  },
+  "local_substrate_status": {
+    "bacterial_genomes_with_annotation": 459,
+    "measured_distinct_bacterial_content_mbp": 30.9,
+    "eukaryotic_genomes_available_locally": 0,
+    "note": "data/arabidopsis/ holds phenotype tables and the 1001-genomes flowering data, not an assembly. So any all-domains corpus requires downloads for every non-bacterial domain, in both modes."
+  },
+  "honest_limits": [
+    "This is a PLAN. Nothing here is a measurement of a eukaryotic corpus, because no eukaryotic assembly is available locally to measure.",
+    "Every eukaryotic figure is UNVERIFIED_APPROX and order-of-magnitude. They are confined to an illustrative block and excluded from every headline, following the ECOFF precedent in this repo: a wrong constant produces a fully self-consistent plan that is entirely wrong, with nothing downstream able to catch it. Verify each against the real assembly before use.",
+    "Gene COUNT is used as a proxy for promoter-corpus yield. That ignores alternative promoters, bidirectional promoters and unannotated transcription start sites, so it is a lower bound in eukaryotes and close to exact in gene-dense bacteria.",
+    "The 20-tokens-per-parameter ratio is a language-model scaling heuristic, imported and NOT validated for DNA. A different ratio moves every genome count proportionally.",
+    "Genome size is taken as distinct content in whole-genome mode, which OVERSTATES it: repetitive elements are a large fraction of big genomes and compress heavily under distinct-k-mer counting. So the 700x figure is itself an upper bound on the real gain.",
+    "No claim is made that cross-domain training helps. Mixing grammars could easily hurt, which is precisely why the domain label and a staged curriculum are specified as requirements rather than options."
+  ]
+}
