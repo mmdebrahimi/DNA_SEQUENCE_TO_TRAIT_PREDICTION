@@ -1,0 +1,105 @@
+{
+  "record": "glm-beyond-kmer-v1",
+  "date": "2026-11-22",
+  "question": "does the diffusion model capture structure an order-3 Markov chain cannot?",
+  "why_order3": "an order-3 chain's sufficient statistic IS the 4-mer conditional distribution",
+  "checkpoint_step": 6000,
+  "eval": {
+    "set": "orthology-free held-out MG1655 promoter windows",
+    "n_windows": 6,
+    "positions_per_window": 8,
+    "strain_note": "corpus E. coli is GCA_059754755.1 (draft); eval is GCF_000005845.2 (MG1655), and eval genes have NO draft counterpart",
+    "copying_cleared_by": "wiki/glm_copying_penalty_2026-11-22.json"
+  },
+  "cells": {
+    "left_only|markov_ecoli": {
+      "arm": "left_only",
+      "null": "markov_ecoli",
+      "n_windows": 6,
+      "diffusion_ce_nats": 1.4098,
+      "null_ce_nats": 1.4291,
+      "paired_delta_nats": 0.0192,
+      "ci95": [
+        -0.0107,
+        0.0494
+      ],
+      "resolved": false,
+      "n_windows_diffusion_better": 4
+    },
+    "left_only|markov_pooled": {
+      "arm": "left_only",
+      "null": "markov_pooled",
+      "n_windows": 6,
+      "diffusion_ce_nats": 1.4098,
+      "null_ce_nats": 1.4447,
+      "paired_delta_nats": 0.0349,
+      "ci95": [
+        0.0079,
+        0.0731
+      ],
+      "resolved": true,
+      "n_windows_diffusion_better": 5
+    },
+    "left_only|uniform": {
+      "arm": "left_only",
+      "null": "uniform",
+      "n_windows": 6,
+      "diffusion_ce_nats": 1.4098,
+      "null_ce_nats": 1.3863,
+      "paired_delta_nats": -0.0235,
+      "ci95": [
+        -0.038,
+        -0.0047
+      ],
+      "resolved": true,
+      "n_windows_diffusion_better": 1
+    },
+    "bidirectional|markov_ecoli": {
+      "arm": "bidirectional",
+      "null": "markov_ecoli",
+      "n_windows": 6,
+      "diffusion_ce_nats": 1.4196,
+      "null_ce_nats": 1.4291,
+      "paired_delta_nats": 0.0095,
+      "ci95": [
+        -0.0369,
+        0.0486
+      ],
+      "resolved": false,
+      "n_windows_diffusion_better": 3
+    },
+    "bidirectional|markov_pooled": {
+      "arm": "bidirectional",
+      "null": "markov_pooled",
+      "n_windows": 6,
+      "diffusion_ce_nats": 1.4196,
+      "null_ce_nats": 1.4447,
+      "paired_delta_nats": 0.0252,
+      "ci95": [
+        -0.0132,
+        0.0686
+      ],
+      "resolved": false,
+      "n_windows_diffusion_better": 4
+    },
+    "bidirectional|uniform": {
+      "arm": "bidirectional",
+      "null": "uniform",
+      "n_windows": 6,
+      "diffusion_ce_nats": 1.4196,
+      "null_ce_nats": 1.3863,
+      "paired_delta_nats": -0.0333,
+      "ci95": [
+        -0.0715,
+        -0.0016
+      ],
+      "resolved": true,
+      "n_windows_diffusion_better": 2
+    }
+  },
+  "primary_cell": "left_only|markov_ecoli",
+  "why_primary": "left_only matches the information budget (both see only the unmasked left prefix) and markov_ecoli is the STRONG 4-mer null, fit on the E. coli the model actually trained on. The pooled chain is reported because it is the same-data pairing, but it barely beats uniform and is the WEAK null.",
+  "seconds": 1.0,
+  "verdict": "EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM",
+  "verdict_detail": "On this eval set the model scores 1.4098 nats and the strong null 1.4291, both against uniform 1.3863 -- so neither beats a random guess. The model-vs-null delta is therefore a comparison between sub-chance predictors and carries NO information about structure beyond 4-mers. REFUSING a verdict rather than reporting the delta. This is the accessory-gene out-of-distribution failure the staged plan predicted: filtering orthology by gene necessarily selects strain-specific (prophage / plasmid / HGT) loci, so no eval-side shortcut can be both orthology-free and representative. The representative re-pretrain -- excluding draft E. coli so that ALL MG1655 windows are orthology-free without any gene filtering -- is the only route to an informative measurement."
+}

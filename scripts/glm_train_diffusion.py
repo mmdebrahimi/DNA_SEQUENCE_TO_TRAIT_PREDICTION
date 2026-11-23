@@ -104,6 +104,9 @@ def main(argv=None) -> int:
     p.add_argument("--smoke", action="store_true",
                    help="tiny model, tiny corpus, few steps: proves the pipeline in seconds")
     p.add_argument("--allow-leaky-corpus", action="store_true")
+    p.add_argument("--tag", default="",
+                   help="suffix for the output artifact names, so a re-run cannot silently "
+                        "overwrite a previous run's record. Empty keeps the original names.")
     p.add_argument("--n-samples", type=int, default=120,
                    help="sequences to generate at the end, in the falsifier's geometry")
     a = p.parse_args(argv)
@@ -213,7 +216,7 @@ def main(argv=None) -> int:
     print(f"  GC generated {gc:.4f} vs corpus {gc_nat:.4f}")
 
     samples_path = OUT_DIR / ("glm_diffusion_samples_smoke.txt" if a.smoke
-                              else "glm_diffusion_samples_2026-11-21.txt")
+                              else f"glm_diffusion_samples_2026-11-21{('_' + a.tag) if a.tag else ''}.txt")
     samples_path.write_text("\n".join(gen) + "\n", encoding="utf-8")
 
     rec = {
@@ -247,7 +250,7 @@ def main(argv=None) -> int:
         "wall_seconds": round(time.time() - t0, 1),
     }
     out = OUT_DIR / ("glm_diffusion_train_smoke.json" if a.smoke
-                     else "glm_diffusion_train_2026-11-21.json")
+                     else f"glm_diffusion_train_2026-11-21{('_' + a.tag) if a.tag else ''}.json")
     out.write_text(json.dumps(rec, indent=2), encoding="utf-8")
     print(f"\n{rec['wall_seconds']}s -> {out.relative_to(ROOT).as_posix()}")
     print(f"              -> {samples_path.relative_to(ROOT).as_posix()}")

@@ -1,0 +1,167 @@
+{
+  "record": "glm-diffusion-train-v1",
+  "date": "2026-11-22",
+  "mode": "full",
+  "config": {
+    "length": 150,
+    "d_model": 128,
+    "n_layers": 4,
+    "n_heads": 4,
+    "d_ff": 512,
+    "dropout": 0.1,
+    "seed": 0,
+    "vocab": 5,
+    "mask_id": 4,
+    "n_params_estimate": 806784
+  },
+  "n_params": 813700,
+  "corpus": {
+    "file": "glm_training_corpus_2026-11-21.txt",
+    "n_windows": 63925,
+    "n_train": 62647,
+    "n_eval": 1278,
+    "length_bp": 150,
+    "tokens_per_param": 11.55,
+    "leak_gate": {
+      "enforced": true,
+      "n_sequences_withheld": 3349,
+      "meaning": "windows the committed falsifier scores against are excluded from training, so a generator cannot be trained on the sequences it is graded on"
+    }
+  },
+  "optim": {
+    "steps": 6000,
+    "batch": 64,
+    "lr": 0.0003,
+    "optimizer": "AdamW",
+    "weight_decay": 0.01,
+    "grad_clip": 1.0
+  },
+  "history": [
+    {
+      "step": 1750,
+      "train_loss": 2.5894,
+      "eval_loss": 2.7994,
+      "seconds": 657.2
+    },
+    {
+      "step": 2000,
+      "train_loss": 2.3904,
+      "eval_loss": 2.8061,
+      "seconds": 1238.7
+    },
+    {
+      "step": 2250,
+      "train_loss": 2.6398,
+      "eval_loss": 2.8053,
+      "seconds": 1983.3
+    },
+    {
+      "step": 2500,
+      "train_loss": 2.5615,
+      "eval_loss": 2.8062,
+      "seconds": 2660.4
+    },
+    {
+      "step": 2750,
+      "train_loss": 2.4696,
+      "eval_loss": 2.8025,
+      "seconds": 3257.0
+    },
+    {
+      "step": 3000,
+      "train_loss": 2.8066,
+      "eval_loss": 2.8014,
+      "seconds": 3840.3
+    },
+    {
+      "step": 3250,
+      "train_loss": 3.1731,
+      "eval_loss": 2.7952,
+      "seconds": 4429.8
+    },
+    {
+      "step": 3500,
+      "train_loss": 2.6237,
+      "eval_loss": 2.7881,
+      "seconds": 5031.0
+    },
+    {
+      "step": 3750,
+      "train_loss": 2.2901,
+      "eval_loss": 2.7878,
+      "seconds": 5636.0
+    },
+    {
+      "step": 4000,
+      "train_loss": 2.447,
+      "eval_loss": 2.7794,
+      "seconds": 6222.9
+    },
+    {
+      "step": 4250,
+      "train_loss": 2.6217,
+      "eval_loss": 2.7842,
+      "seconds": 6809.2
+    },
+    {
+      "step": 4500,
+      "train_loss": 2.9014,
+      "eval_loss": 2.7796,
+      "seconds": 7397.6
+    },
+    {
+      "step": 4750,
+      "train_loss": 2.8971,
+      "eval_loss": 2.7841,
+      "seconds": 7983.1
+    },
+    {
+      "step": 5000,
+      "train_loss": 2.7762,
+      "eval_loss": 2.7779,
+      "seconds": 8571.2
+    },
+    {
+      "step": 5250,
+      "train_loss": 2.7469,
+      "eval_loss": 2.78,
+      "seconds": 9154.4
+    },
+    {
+      "step": 5500,
+      "train_loss": 2.8819,
+      "eval_loss": 2.7813,
+      "seconds": 9742.6
+    },
+    {
+      "step": 5750,
+      "train_loss": 2.7077,
+      "eval_loss": 2.7784,
+      "seconds": 10331.8
+    },
+    {
+      "step": 6000,
+      "train_loss": 2.7691,
+      "eval_loss": 2.7754,
+      "seconds": 10915.8
+    }
+  ],
+  "final": {
+    "step": 6000,
+    "train_loss": 2.7691,
+    "eval_loss": 2.7754,
+    "seconds": 10915.8
+  },
+  "samples_file": "glm_diffusion_samples_2026-11-21.txt",
+  "gc": {
+    "generated": 0.5399,
+    "corpus_subset": 0.5068
+  },
+  "honest_limits": [
+    "GC agreement is a necessary sanity check and nothing more -- a model that matched GC and nothing else would pass it. The real score is the falsifier's held-out AUROC against the withheld natural windows, which is a separate run.",
+    "Eval loss is computed on a held-out slice of the TRAINING corpus, not on the falsifier's windows. It tracks overfitting to the training distribution and is not a generator score.",
+    "Tokens per parameter is reported against a heuristic imported from language-model scaling and NOT validated for DNA. It is not enforced.",
+    "One architecture, one corpus, one seed. Nothing here establishes that diffusion beats an autoregressive model on this substrate; it establishes that the pipeline runs end to end and produces well-formed sequence in the geometry the falsifier scores."
+  ],
+  "wall_seconds": 10951.2
+}

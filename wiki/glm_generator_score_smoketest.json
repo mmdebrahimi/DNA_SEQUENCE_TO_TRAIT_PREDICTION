@@ -1,0 +1,181 @@
+{
+  "record": "glm-generator-score-v1",
+  "date": "2026-11-21",
+  "label": "pretrain_midrun",
+  "source": {
+    "kind": "checkpoint",
+    "path": "C:\\Users\\Laptop Portable\\pythonprojects\\dna_decode\\data\\glm_diffusion_ckpt\\latest.pt",
+    "step": 1000,
+    "sampling_steps": 64
+  },
+  "geometry": {
+    "window_length_bp": 150,
+    "limit_natural": 1200,
+    "n_generated_per_candidate": 120,
+    "natural_set_arg": "promoter",
+    "kmer_k": 4,
+    "positional_bins": 6,
+    "markov_order": 3,
+    "feature_modes": [
+      "kmer",
+      "positional",
+      "both"
+    ],
+    "seeds": [
+      0,
+      1,
+      2
+    ]
+  },
+  "scored_by": "dna_decode.glm.falsifier.run_falsifier (the committed scorer, not a copy)",
+  "direction": "distinguishability from natural sequence; LOWER IS BETTER",
+  "training_composition": {
+    "status": "ok",
+    "n_windows_total": 63925,
+    "n_windows_scoring_organism": 3463,
+    "share": 0.0542,
+    "organism_substring": "Escherichia",
+    "leak_gate": {
+      "enforced": true,
+      "n_sequences_withheld": 3349,
+      "meaning": "windows the committed falsifier scores against are excluded from training, so a generator cannot be trained on the sequences it is graded on"
+    }
+  },
+  "interpretive_guard": {
+    "verdict": "CONFOUNDED_BY_TRAINING_COMPOSITION",
+    "scoring_organism_share": 0.0542,
+    "floor": 0.25,
+    "why": "a model trained mostly on organisms it is never scored against will score poorly for a reason unrelated to its architecture; attributing that to the model is the mistake this guard exists to prevent"
+  },
+  "rows": [
+    {
+      "seed": 0,
+      "mode": "kmer",
+      "generator": 0.8888,
+      "markov_null": 0.5009,
+      "perfect_floor": 0.4832,
+      "uniform_control": 0.9237,
+      "self_control_max": 0.5262,
+      "verdict": "WORSE_THAN_MARKOV_NULL",
+      "beats_null": false
+    },
+    {
+      "seed": 0,
+      "mode": "positional",
+      "generator": null,
+      "markov_null": null,
+      "perfect_floor": 0.4632,
+      "uniform_control": 0.8447,
+      "self_control_max": 0.5384,
+      "verdict": "INSTRUMENT_UNDERPOWERED_NO_SEPARATING_POWER",
+      "beats_null": false
+    },
+    {
+      "seed": 0,
+      "mode": "both",
+      "generator": 0.8894,
+      "markov_null": 0.6388,
+      "perfect_floor": 0.5072,
+      "uniform_control": 0.9407,
+      "self_control_max": 0.5494,
+      "verdict": "WORSE_THAN_MARKOV_NULL",
+      "beats_null": false
+    },
+    {
+      "seed": 1,
+      "mode": "kmer",
+      "generator": 0.9055,
+      "markov_null": 0.5022,
+      "perfect_floor": 0.5033,
+      "uniform_control": 0.9337,
+      "self_control_max": 0.5595,
+      "verdict": "WORSE_THAN_MARKOV_NULL",
+      "beats_null": false
+    },
+    {
+      "seed": 1,
+      "mode": "positional",
+      "generator": null,
+      "markov_null": null,
+      "perfect_floor": 0.4923,
+      "uniform_control": 0.8792,
+      "self_control_max": 0.5491,
+      "verdict": "INSTRUMENT_UNDERPOWERED_NO_SEPARATING_POWER",
+      "beats_null": false
+    },
+    {
+      "seed": 1,
+      "mode": "both",
+      "generator": 0.9137,
+      "markov_null": 0.6284,
+      "perfect_floor": 0.4862,
+      "uniform_control": 0.958,
+      "self_control_max": 0.5692,
+      "verdict": "WORSE_THAN_MARKOV_NULL",
+      "beats_null": false
+    },
+    {
+      "seed": 2,
+      "mode": "kmer",
+      "generator": 0.8851,
+      "markov_null": 0.4834,
+      "perfect_floor": 0.5425,
+      "uniform_control": 0.9168,
+      "self_control_max": 0.5338,
+      "verdict": "WORSE_THAN_MARKOV_NULL",
+      "beats_null": false
+    },
+    {
+      "seed": 2,
+      "mode": "positional",
+      "generator": null,
+      "markov_null": null,
+      "perfect_floor": 0.547,
+      "uniform_control": 0.86,
+      "self_control_max": 0.5511,
+      "verdict": "INSTRUMENT_UNDERPOWERED_NO_SEPARATING_POWER",
+      "beats_null": false
+    },
+    {
+      "seed": 2,
+      "mode": "both",
+      "generator": 0.8959,
+      "markov_null": 0.6491,
+      "perfect_floor": 0.5108,
+      "uniform_control": 0.9424,
+      "self_control_max": 0.5383,
+      "verdict": "WORSE_THAN_MARKOV_NULL",
+      "beats_null": false
+    }
+  ],
+  "summary": {
+    "kmer": {
+      "n_seeds": 3,
+      "generator_mean": 0.8931,
+      "markov_null_mean": 0.4955,
+      "perfect_floor_mean": 0.5097,
+      "generator_minus_null_mean": 0.3976,
+      "generator_minus_null_sd": 0.0085,
+      "seeds_beating_null": 0,
+      "generator_above_floor": 0.3835
+    },
+    "both": {
+      "n_seeds": 3,
+      "generator_mean": 0.8997,
+      "markov_null_mean": 0.6388,
+      "perfect_floor_mean": 0.5014,
+      "generator_minus_null_mean": 0.2609,
+      "generator_minus_null_sd": 0.0212,
+      "seeds_beating_null": 0,
+      "generator_above_floor": 0.3983
+    }
+  },
+  "honest_limits": [
+    "A low distinguishability means the discriminator could not separate generated from natural sequence ON THE FEATURES IT SEES. All three modes see LOCAL composition and positional composition; none sees long-range organisation, so clearing them is NECESSARY and not sufficient for functional realism.",
+    "The generator produces one sample set per run at a single sampling seed; the per-seed variation reported here is the SCORING seed, not generator sampling variance. A full account would resample the generator too.",
+    "The perfect-generator floor is empirical at one draw per seed and carries its own sampling variation.",
+    "positional mode is NOT in the committed grid, which scores kmer and both. Its numbers here are new cells, not a re-reading of any recorded result.",
+    "Beating the Markov null on these features is the arm's stated bar. It is not evidence that generated sequence is biologically functional, which needs a wet-lab or an oracle-scored design task."
+  ],
+  "wall_seconds": 94.0
+}

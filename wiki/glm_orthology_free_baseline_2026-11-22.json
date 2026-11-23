@@ -1,0 +1,43 @@
+{
+  "record": "glm-orthology-free-baseline-v1",
+  "date": "2026-11-22",
+  "question": "is the real-held-out copying baseline inflated by cross-strain orthology?",
+  "strains": {
+    "scored": "GCF_000005845.2 (MG1655)",
+    "in_corpus": "GCA_059754755.1 (draft)"
+  },
+  "symbols": {
+    "mg1655": 4308,
+    "draft": 3912,
+    "mg1655_only": 651,
+    "draft_gene_coverage_note": "draft gene= coverage 80.7%, so MG1655-only is an UPPER bound on strain-specific; contamination inflates this baseline, making the test one-sided"
+  },
+  "windows": {
+    "total": 4340,
+    "held_out": 3923,
+    "orthology_free": 648,
+    "profiled": 120,
+    "gene_id_resolved_frac": 1.0
+  },
+  "orthology_free_real": {
+    "n": 120,
+    "median_bp": 16.0,
+    "mean_bp": 38.83,
+    "max_bp": 149,
+    "frac_at_or_above_long": 0.3417,
+    "long_bp_threshold": 30,
+    "seconds": 369.9
+  },
+  "reference_medians": {
+    "generated": 15.5,
+    "uniform_chance": 15.0,
+    "real_all_windows": 55.0
+  },
+  "verdict": "ORTHOLOGY_EXPLAINS_THE_MAJORITY_RESIDUAL_TAIL",
+  "verdict_detail": "The MEDIAN falls to chance (16.0 bp vs 15.0) so orthology explains the baseline for most windows -- but 34.2% still share >=30 bp (mean 38.83 bp, max 149), so the distribution is BIMODAL and the claim does not extend to all real sequence. Most plausibly residual UNANNOTATED orthologues, since draft gene= coverage is 80.7% and this set is an upper bound on strain-specific -- but that is not proven, and a generator producing 0% long shares does not reproduce this subpopulation whatever its cause. Report the median result and this tail together; neither alone is the finding.",
+  "verdict_recomputed": {
+    "superseded_label": "ORTHOLOGY_EXPLAINS_THE_BASELINE",
+    "date": "2026-11-22",
+    "why": "The original rule keyed on the MEDIAN alone and returned a DECISIVE verdict on a BIMODAL distribution: median 16.0 at chance, but mean 38.83 against a chance mean of 14.64 and 34.2% of windows sharing >=30 bp, one of them 149 of 150 bases. A longest-match statistic is driven by its tail, which the module docstring itself says, and the verdict rule ignored it. The decisive reading now requires median AND tail to both sit at chance. Numbers unchanged; only the label."
+  }
+}

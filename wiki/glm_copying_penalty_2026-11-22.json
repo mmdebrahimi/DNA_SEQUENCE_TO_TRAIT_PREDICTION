@@ -1,0 +1,43 @@
+{
+  "record": "glm-copying-penalty-v1",
+  "corpus": {
+    "path": "wiki/glm_training_corpus_2026-11-21.txt",
+    "n_windows": 63925,
+    "n_chars": 9652674
+  },
+  "separator": "newline (non-ACGT, so no match spans a window junction)",
+  "generated": {
+    "n": 120,
+    "median_bp": 15.5,
+    "mean_bp": 15.72,
+    "max_bp": 20,
+    "frac_at_or_above_long": 0.0,
+    "long_bp_threshold": 30,
+    "seconds": 395.2
+  },
+  "uniform_chance": {
+    "n": 120,
+    "median_bp": 15.0,
+    "mean_bp": 14.64,
+    "max_bp": 18,
+    "frac_at_or_above_long": 0.0,
+    "long_bp_threshold": 30,
+    "seconds": 451.8
+  },
+  "real_held_out": {
+    "n": 120,
+    "median_bp": 55.0,
+    "mean_bp": 57.3,
+    "max_bp": 148,
+    "frac_at_or_above_long": 0.5333,
+    "long_bp_threshold": 30,
+    "seconds": 406.2
+  },
+  "verdict": "AT_CHANCE_LEVEL_NO_SHARED_CONTENT",
+  "verdict_detail": "median verbatim share 15.5 bp against real held-out 55.0 bp and uniform chance 15.0 bp. NOT copying -- but also no more verbatim overlap with the corpus than random sequence has, so the generator has not captured the shared motif/paralogue content that makes real promoters resemble a promoter corpus. Report both facts.",
+  "verdict_recomputed": {
+    "superseded_label": "AT_OR_BELOW_REAL_LEVEL",
+    "why": "The first label came from a knife-edge state-3 test (generated <= uniform). These are integer-valued medians, so generated 15.5 vs uniform 15.0 -- half a base -- decided which of two QUALITATIVELY different states was reported. The test now asks where generated sits in the uniform->real RANGE; within its bottom quarter is at-chance in any useful sense. Numbers unchanged; only the label is recomputed.",
+    "date": "2026-11-22"
+  }
+}
