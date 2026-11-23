@@ -360,6 +360,26 @@
         "P2_also_confirmed_the_authority_boundary": "promoting a comparator is an acceptance-bar change and therefore the user's, even though adding a secondary null changes no frozen figure. P2 notes it would have been tempted to blur that line.",
         "the_symmetry_is_the_evidence_for_the_rule": "this arm's band is in COMPOSITION and zero in position; P2's is zero in composition and large in POSITION. Same rule, orthogonal axes, two independently-built instruments. That is better evidence the rule is about feature families generally than either case alone, and neither of us would have found our own band without the other's."
       }
+    },
+    "WORDING_TRIGGER_A_CORRECTION_MAY_NOT_STRENGTHEN_A_VERDICT": {
+      "adopted": "2026-11-22, from P2",
+      "the_rule": "when a correction REDUCES power or NARROWS scope, the verdict WORDING may not strengthen. Checkable without interpreting intent.",
+      "why_it_is_worth_having": "P2 reports five instances in one run of the same error mode, and it was not miscalculation -- the arithmetic was correct every single time, which is precisely why no numerical check caught any of them. The failure was NARRATIVE COMPRESSION toward the strongest available story: 'cleaner', 'full stop', 'nothing to explain away', a reviewer's directional concern rendered as a mechanism the code did not support, and a peer's design declared clean from one axis. A trigger on WORDING catches what a trigger on NUMBERS cannot, and P2 reports it would have fired on four of its five.",
+      "how_to_apply_here": "after any correction that shrinks a claim -- a retraction, an underpowering finding, a narrowed scope, a withdrawn survivor -- diff the verdict sentence against the one it replaces. If the new wording is more confident, more general or more final than the old one, the compression happened in the prose rather than in the evidence.",
+      "a_worked_instance_from_this_exchange": "my own 'their band is EXACTLY ZERO' strengthened a verdict while my evidence covered one feature family of two. The trigger would have fired: the claim got more final as its support got narrower.",
+      "where_it_does_NOT_apply": "a measurement with no prior verdict has nothing to strengthen from. The obs_per_nonzero_cell run below is that case, so the trigger is silent there rather than vacuously satisfied."
+    },
+    "OBS_PER_NONZERO_CELL_MEASUREMENT_RUN_FOR_P2": {
+      "date": "2026-11-22",
+      "artifact": "wiki/human_obs_per_nonzero_cell_2026-11-22.json",
+      "spec_owner": "P2 (definition); this arm owned the data only",
+      "why_the_earlier_decline_expired": "this arm recorded, WITH ITS REASON, that the measurement had no consumer and that the question was about tokenization units while this arm is single-nucleotide throughout. P2 then reported a committed prerequisite, so the recorded reason expired and the item reopened cleanly. Recording a decline with its expiry condition is what made that possible; a bare 'not doing this' would have had to be re-argued.",
+      "headline": "the crossing of the usable bar sits between 10 and 11 bp in K562 and between 8 and 10 bp in HepG2; at 12 bp the ratios are 1.840 and 1.547 against a bar of 10",
+      "the_cells_disagree_at_exactly_10bp": "K562 11.44 marginally above the bar, HepG2 7.65 below it -- reported as a disagreement rather than averaged, which is the case the never-pool rule anticipates",
+      "internal_check_that_passed": "a corpus 134x larger should buy log4(134) = 3.53 bp of extra reach; the observed shift is about 3-4 bp, so the human corpus is exactly as dense as the alphabet scaling predicts and no denser",
+      "one_point_left_open_for_P2": "the spec names the degenerate VALUE 1.002 but not the WIDTH it was observed at. This repo's E. coli corpus reaches it at k=14, not k=12, and the theoretical random-occupancy value at k=12 is also 1.0025, so both readings stay live until P2 confirms.",
+      "why_the_human_number_was_reported_despite_that": "the ~10 bar is ABSOLUTE, derived from the next-base distribution having four outcomes, not calibrated off E. coli",
+      "NO_VERDICT_ON_P2s_ARMS_WAS_OFFERED": "the spec reserves that inference to P2"
     }
   }
 }
