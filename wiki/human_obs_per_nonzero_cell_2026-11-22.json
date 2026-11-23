@@ -783,7 +783,7 @@
     "Single strand as given. Pooling both strands would raise the ratio and is not done here.",
     "This is a property of the generator's training folds only. Folds 9 and 10 were not read.",
     "A count-model occupancy statistic says nothing about what a NEURAL model could extract from the same corpus; it bounds the count-model class the question was posed about.",
-    "The calibration gap is now known NOT to be definitional: computing P2's own unit-emission statistic on this repo's E. coli corpus gives 1.0156 against their 1.002. Stride is the remaining unresolved parameter and is named rather than assumed."
+    "The calibration gap is CLOSED: it was neither definitional nor a corpus difference but STRIDE. Under P2's actual non-overlapping convention this implementation reproduces 1.002 within the statistic's own across-sample spread."
   ],
   "CALIBRATION_POINT_CLOSED": {
     "date": "2026-11-22",
@@ -834,5 +834,35 @@
       "it_does_not_change_the_human_result": "the ~10 bar is absolute, derived from the next-base distribution having four outcomes. Human sits at 1.84 and 1.55 on either statistic."
     },
     "WHAT_P2_DID_WITH_THE_RESULT_recorded_because_it_inverts_their_own_test": "P2 reports that this arm's limit note -- that count-model occupancy says nothing about what a NEURAL model could extract, and bounds only the class the question was posed about -- overturned its own re-open test, on two grounds it states: that parking neural arms on count occupancy is the proxy-kill pattern (a proxy's failure is not the claim's failure), and that its implication was BACKWARDS, since a persisting cliff is the argument FOR neural arms rather than against them, the count class being unable to answer the reach question. Recorded here only as P2's reasoning. No verdict on their arms is offered from this arm, and their fate is a user-authority decision."
+  },
+  "MANDATORY_CALIBRATION_NOW_SATISFIED": {
+    "date": "2026-11-22",
+    "status": "DISCHARGED. The spec required reproducing the E. coli figure before reporting any human number; that precondition was previously reported as UNMET, with the human number justified instead by the absoluteness of the ~10 bar. It is now met.",
+    "what_was_missing_was_STRIDE": "P2 confirmed from arms/unit_arms.py:258 -- units = [s[i:i+w] for i in range(0, len(s), w)] -- that units are NON-OVERLAPPING, stride 6. Every earlier attempt here assumed stride 1.",
+    "reproduction": {
+      "convention": "(previous 6-mer unit, this 6-mer unit), units non-overlapping, stride 6",
+      "N_obs_per_600_window_sample": 14400,
+      "units_per_sequence": 25,
+      "sample_ratios": [
+        1.00188,
+        1.00209,
+        1.00272,
+        1.00699,
+        1.00272
+      ],
+      "min": 1.00188,
+      "median": 1.00272,
+      "mean": 1.00328,
+      "P2_reported": 1.002,
+      "verdict": "REPRODUCES. 1.002 lies inside the sample spread [1.00188, 1.00699], between the two lowest samples. The spread ACROSS 600-window samples of one corpus is itself about 0.005, larger than the gap to P2's value, so the reproduction is within the statistic's own sampling variability -- which is the only precision a claim of reproduction can honestly carry here.",
+      "the_outlier_is_real_not_an_error": "the windows-20000 sample reads 1.00699 at 16.3x the random excess, against 4.4-6.3x for the others: a more repetitive region of the genome, which is a property of the corpus rather than of the code"
+    },
+    "A_GENUINE_NUMERICAL_COINCIDENCE_WORTH_NAMING": {
+      "what_happened": "under the WRONG stride-1 assumption, the random-occupancy ratio for this corpus is 1.00249, which rounds to almost exactly P2's reported 1.002. So the wrong convention made their value appear to sit PRECISELY at the random expectation -- the most suspicious possible reading -- when under the correct stride it sits comfortably ABOVE it at about 4.6x the random excess, which is the ordinary direction for real DNA.",
+      "stride_1_random_ratio": 1.00249,
+      "stride_6_random_ratio": 1.00043,
+      "why_it_is_worth_recording": "two different quantities agreed to three decimal places by accident, and neither session could have told them apart from the number alone. This is the class of trap that survives careful work: it does not look like an error, it looks like a finding."
+    },
+    "what_closed_it": "naming stride as the unresolved parameter instead of adopting the convenient reading. Had either side assumed, the corpora would have been recorded as disagreeing when they agree."
   }
 }
