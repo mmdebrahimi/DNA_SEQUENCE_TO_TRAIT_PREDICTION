@@ -3,7 +3,7 @@
   "date": "2026-11-23",
   "question": "the peer measured the candidate oracle's training activity distribution over all 798,064 rows and assigned the comparison: does our corpus's activity distribution differ from it?",
   "ANSWER": "THE COMPARISON CANNOT RUN AS FRAMED. Our activity values are per-cell STANDARDISED while the oracle's are raw log2 fold-change, so the two are not on a common scale and no difference between them is interpretable as a distribution shift. On the one statistic that survives rescaling, the two AGREE.",
-  "verdict": "SCALE_MISMATCH_COMPARISON_VOID_SKEW_DIRECTION_CONSISTENT_BUT_UNPOWERED",
+  "verdict": "SCALE_MISMATCH_VOIDS_LEVEL_SKEW_OFFSET_REAL_PER_CELL_GENERALITY_AND_CAUSE_UNRESOLVED",
   "THE_SUBSTRATE_FACT_WORTH_CARRYING": {
     "finding": "Table S6's activity column is labelled 'Observed log2(RNA/DNA)' and the loader carries that label faithfully, but the values are PER-CELL STANDARDISED: mean 0 and sample sd exactly 1.0 in all three cells.",
     "mechanism_proved_not_asserted": "a sd of 'about 1' could be coincidence. The POPULATION sd is not 1 -- it is sqrt((n-1)/n), because the publishers divided by the SAMPLE sd (ddof=1). Predicted from n ALONE and compared against the measured value, the residual is 1.11e-16 (HepG2, n=61,463), 0 (K562, n=98,332) and 1.11e-16 (WTC11, n=23,064) -- machine precision, in three cells of DIFFERENT size. A coincidence cannot track n.",
@@ -186,6 +186,23 @@
       "Two matched cell lines. A consistent direction across two pairs is suggestive, NOT a powered estimate, and must not be quoted as a measured skew difference.",
       "Nonparametric skew is one scale-free summary; agreement or disagreement on it does not establish that the distributions match or differ in shape generally.",
       "Our values are standardised and the oracle's are raw, which skew tolerates by construction -- but that tolerance is exactly why skew cannot speak to activity LEVEL."
+    ]
+  },
+  "WHERE_THE_UNCERTAINTY_ACTUALLY_LIVES": {
+    "added": "2026-11-23",
+    "supersedes": {
+      "field": "verdict",
+      "previous_value": "SCALE_MISMATCH_COMPARISON_VOID_SKEW_DIRECTION_CONSISTENT_BUT_UNPOWERED",
+      "why": "the previous string said UNPOWERED, which is measurably wrong about the per-cell difference and puts the uncertainty in the wrong place. Corrected on measurement, one commit after writing it."
+    },
+    "measured": "bootstrap standard error of nonparametric skew, 200 resamples per cell: 0.00243 (HepG2, n=61,463) and 0.00218 (K562, n=98,332). The oracle-minus-ours offsets of +0.0650 and +0.0588 are therefore 26.7 and 26.9 standard errors. The oracle side carries an even smaller error on ~440k rows, so the difference SE is dominated by ours.",
+    "consequence_1_the_offset_is_NOT_noise": "at n in the tens of thousands each skew is pinned to about +/-0.002, so MEASUREMENT noise was never the binding limit and the 10.5% magnitude concordance is NOT evidence against it -- there was no meaningful noise to rule out. In each of the two matched cells the difference is statistically unambiguous.",
+    "consequence_2_so_UNPOWERED_was_the_wrong_word": "the per-cell difference IS resolved. What two pairs cannot establish is (a) that it GENERALISES beyond these two cell lines, and (b) its CAUSE -- the two corpora differ in element selection (variant-centred vs cCRE/DNase/TSS) AND in assay and lab, and two pairs cannot separate those. That is where the uncertainty lives.",
+    "the_firewall_is_UNCHANGED_by_this": "skew is distribution SHAPE, not activity LEVEL. A real, precisely-measured, 27-SE skew offset is still not an activity shift, and the scale mismatch voiding the level comparison is untouched. The selection-criterion finding remains the sole distribution-matching argument. Nothing here reinstates an activity claim.",
+    "honest_limits": [
+      "The bootstrap is on OUR values only; the oracle SE is inferred from its row count, not measured.",
+      "Two cell lines. Precision within a cell says nothing about generality across cells.",
+      "Selection and assay/lab are confounded across the two corpora and cannot be separated here."
     ]
   }
 }
