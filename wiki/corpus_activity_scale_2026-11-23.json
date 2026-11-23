@@ -1,0 +1,133 @@
+{
+  "record": "corpus-activity-scale-2026-11-23",
+  "date": "2026-11-23",
+  "question": "the peer measured the candidate oracle's training activity distribution over all 798,064 rows and assigned the comparison: does our corpus's activity distribution differ from it?",
+  "ANSWER": "THE COMPARISON CANNOT RUN AS FRAMED. Our activity values are per-cell STANDARDISED while the oracle's are raw log2 fold-change, so the two are not on a common scale and no difference between them is interpretable as a distribution shift. On the one statistic that survives rescaling, the two AGREE.",
+  "verdict": "SCALE_MISMATCH_COMPARISON_VOID_BUT_SKEW_AGREES",
+  "THE_SUBSTRATE_FACT_WORTH_CARRYING": {
+    "finding": "Table S6's activity column is labelled 'Observed log2(RNA/DNA)' and the loader carries that label faithfully, but the values are PER-CELL STANDARDISED: mean 0 and sample sd exactly 1.0 in all three cells.",
+    "mechanism_proved_not_asserted": "a sd of 'about 1' could be coincidence. The POPULATION sd is not 1 -- it is sqrt((n-1)/n), because the publishers divided by the SAMPLE sd (ddof=1). Predicted from n ALONE and compared against the measured value, the residual is 1.11e-16 (HepG2, n=61,463), 0 (K562, n=98,332) and 1.11e-16 (WTC11, n=23,064) -- machine precision, in three cells of DIFFERENT size. A coincidence cannot track n.",
+    "per_cell": {
+      "HepG2": {
+        "n": 61463,
+        "mean_15dp": "-0.000000000000000",
+        "sample_sd_ddof1_15dp": "1.000000000000000",
+        "population_sd_ddof0_15dp": "0.999991864991397",
+        "predicted_population_sd_if_standardised_with_sample_sd": "0.999991864991397",
+        "ddof_mechanism_residual": "1.11e-16",
+        "median": -0.192656,
+        "nonparametric_skew": 0.1927
+      },
+      "K562": {
+        "n": 98332,
+        "mean_15dp": "0.000000000000000",
+        "sample_sd_ddof1_15dp": "1.000000000000000",
+        "population_sd_ddof0_15dp": "0.999994915172363",
+        "predicted_population_sd_if_standardised_with_sample_sd": "0.999994915172363",
+        "ddof_mechanism_residual": "0",
+        "median": -0.225002,
+        "nonparametric_skew": 0.225
+      },
+      "WTC11": {
+        "n": 23064,
+        "mean_15dp": "-0.000000000000000",
+        "sample_sd_ddof1_15dp": "1.000000000000000",
+        "population_sd_ddof0_15dp": "0.999978320958211",
+        "predicted_population_sd_if_standardised_with_sample_sd": "0.999978320958211",
+        "ddof_mechanism_residual": "1.11e-16",
+        "median": -0.267175,
+        "nonparametric_skew": 0.2672
+      }
+    },
+    "who_is_wrong": "not the loader. The publishers' own column label understates the transform; our loader reproduces the label and the values verbatim."
+  },
+  "THE_FALSE_POSITIVE_THIS_PREVENTED": {
+    "what_the_naive_comparison_says": "our median is -0.19 / -0.23 / -0.27 against the oracle's 0.17-0.20, so the naive reading is 'our corpus is systematically LESS ACTIVE than the data the oracle was trained on' -- a confident distribution-shift claim, with numbers, that would have argued against adopting the oracle on grounds that do not exist.",
+    "why_it_is_false": "a standardised distribution has mean 0 BY CONSTRUCTION and a right-skewed one then has a negative median by construction. The sign carries no information about activity.",
+    "frac_gt_1_is_the_same_trap_under_one_name": "ours 0.164-0.165, theirs 0.19-0.20, which looks like a mild difference. It is not a comparison at all: for us the threshold 1 is ONE STANDARD DEVIATION, for them it is ONE LOG2 UNIT of fold change. Same name, different quantity -- the shape this repo has already recorded for a sensitivity matching a specificity of equal value.",
+    "our_distribution_as_measured": {
+      "HepG2": {
+        "n": 61463,
+        "median": -0.1927,
+        "mean": -0.0,
+        "sd": 1.0,
+        "min": -3.0036,
+        "max": 6.8933,
+        "p01": -1.7191,
+        "p99": 2.7808,
+        "frac_gt_1": 0.1642,
+        "frac_negative": 0.5765
+      },
+      "K562": {
+        "n": 98332,
+        "median": -0.225,
+        "mean": 0.0,
+        "sd": 1.0,
+        "min": -2.9905,
+        "max": 5.8063,
+        "p01": -1.7754,
+        "p99": 2.7437,
+        "frac_gt_1": 0.1651,
+        "frac_negative": 0.5963
+      },
+      "WTC11": {
+        "n": 23064,
+        "median": -0.2672,
+        "mean": -0.0,
+        "sd": 1.0,
+        "min": -3.2319,
+        "max": 4.5246,
+        "p01": -1.6362,
+        "p99": 2.8043,
+        "frac_gt_1": 0.1644,
+        "frac_negative": 0.625
+      }
+    },
+    "oracle_reference_quoted_not_reproduced": {
+      "source": "peer measurement over all 798,064 rows of the oracle's own training table, 0 non-numeric cells; quoted as across-cell ranges as reported",
+      "ranges": {
+        "median": [
+          0.17,
+          0.2
+        ],
+        "mean": [
+          0.43,
+          0.51
+        ],
+        "sd": [
+          1.07,
+          1.2
+        ],
+        "frac_gt_1": [
+          0.19,
+          0.2
+        ]
+      },
+      "not_re_derived_here": true
+    }
+  },
+  "WHAT_SURVIVES_AND_IT_AGREES": {
+    "statistic": "nonparametric skew = (mean - median) / sd, invariant under positive affine rescaling",
+    "ours_per_cell": {
+      "HepG2": 0.1927,
+      "K562": 0.225,
+      "WTC11": 0.2672
+    },
+    "oracle_bounded_from_reported_ranges": [
+      0.192,
+      0.318
+    ],
+    "overlap": true,
+    "reading": "on the one statistic the two conventions cannot distort, the distributions are comparable: both are right-skewed by a similar amount. So there is no evidence of an activity-distribution shift -- which leaves the peer's SELECTION-criterion difference (98.23% variant-centred vs our cCRE/DNase/TSS) standing on its own, unsupported by and unrefuted by activity."
+  },
+  "CONSEQUENCE_FOR_THE_ORACLE_DECISION": "the peer's SELECTION-criterion difference stands on its own and is unaffected: the oracle's training rows are 98.23% variant-centred (GTEX 55.83% + UKBB 42.40%) against 1.77% element-selected, while our corpus is cCRE / DNase / TSS-selected throughout. What this measurement adds is that activity neither supports NOR refutes a shift -- so the distribution-matching argument for fitting our own head rests on the selection criterion alone, not on an activity difference. Anyone citing an activity gap would be citing an artifact.",
+  "none_of_todays_published_numbers_depend_on_this": "the oracle gate is Spearman, which is rank-based and invariant under any monotone transform, so standardisation cannot move it. The WTC11 figures (0.3607 best arm against a GC baseline of 0.0858) are unaffected either way.",
+  "honest_limits": [
+    "The oracle's skew is BOUNDED from across-cell ranges, not computed per cell, because that is how it was reported -- so the overlap is a bound, not a per-cell match.",
+    "Nonparametric skew is one scale-free summary. Two distributions can share it and still differ in shape; this does not establish the distributions are the same.",
+    "A rank-based oracle metric (Spearman) is unaffected by standardisation either way, so none of today's published oracle figures depend on which convention holds.",
+    "That the values are standardised is inferred from mean 0 / sd 1 at 1e-9 across three independent cells, not from a statement by the publishers.",
+    "The oracle's activity reference is the peer's measurement, quoted and NOT reproduced here; its skew is therefore bounded from across-cell ranges rather than computed per cell, so the overlap is a bound and not a per-cell match.",
+    "A scale bridge would settle it properly: the 100 sequences present in BOTH datasets have one true activity each, so comparing them pairwise separates convention from shift. That needs the oracle's per-sequence values, which the hash sets do not carry. Those 100 are also promoter-enriched 2.17x, so they would bound rather than settle it."
+  ]
+}
