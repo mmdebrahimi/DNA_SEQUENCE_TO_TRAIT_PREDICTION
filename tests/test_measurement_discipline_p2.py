@@ -345,3 +345,94 @@ def test_the_record_states_the_power_convention_and_the_reading_order():
     assert "statement about the DESIGN" in guidance
     assert "before reading family_wise_p" in guidance
     assert blk["median_family_wise_mdd"] is not None
+
+
+# ------------------------------------------------- the capacity-scaling confound (P2, 2026-11-22)
+
+def _protocol():
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[1] / "wiki" / \
+        "human_replication_and_multiplicity_protocol_2026-11-22.json"
+    return json.loads(p.read_text(encoding="utf-8"))["P2_FINAL_LESSONS_2026_11_22"]
+
+
+def _oracle_fold9():
+    import json
+    from pathlib import Path
+    p = Path(__file__).resolve().parents[1] / "wiki" / \
+        "glm_human_activity_oracle_fold9_2026-11-22.json"
+    return json.loads(p.read_text(encoding="utf-8"))
+
+
+def test_the_recorded_band_matches_the_oracle_artifact_it_is_derived_from():
+    """The band is kmer6 minus kmer4 on held-out fold 9. Pinned against the artifact so the two
+    cannot drift -- a transcribed number would go stale silently the next time the oracle is
+    re-measured."""
+    blk = _protocol()["CAPACITY_SCALING_CONFOUND"]
+    rec = blk["THE_SHARPER_FORM_ON_THIS_ARM_THE_CHANNEL_IS_COMPOSITION_NOT_SUBSTRINGS"][
+        "THE_BAND_IS_MEASURED_NOT_SPECULATED"]["per_cell"]
+    o = _oracle_fold9()
+    for cell in ("HepG2", "K562"):
+        arms = o["cells"][cell]["geometries"]["element_200nt_adaptors_stripped"]["arms"]
+        assert rec[cell]["kmer4"] == pytest.approx(arms["kmer4"])
+        assert rec[cell]["kmer6"] == pytest.approx(arms["kmer6"])
+        assert rec[cell]["band_above_4mers"] == pytest.approx(arms["kmer6"] - arms["kmer4"], abs=1e-4)
+        assert rec[cell]["band_as_fraction_of_oracle_total"] == pytest.approx(
+            (arms["kmer6"] - arms["kmer4"]) / arms["kmer6"], abs=1e-3)
+
+
+def test_the_band_is_large_enough_in_K562_to_matter():
+    """If this ever falls to nothing the confound stops mattering and the reporting rule can be
+    relaxed. While it is a fifth of the oracle's signal, it cannot be."""
+    o = _oracle_fold9()
+    arms = o["cells"]["K562"]["geometries"]["element_200nt_adaptors_stripped"]["arms"]
+    frac = (arms["kmer6"] - arms["kmer4"]) / arms["kmer6"]
+    assert frac > 0.15, (
+        f"the 5-6-mer band is {frac:.1%} of the K562 oracle's signal; the reporting rule below "
+        f"exists because a generator could occupy it without exceeding composition")
+
+
+def test_the_reporting_rule_says_beyond_4MER_and_never_beyond_composition():
+    """THE load-bearing pin. The frozen verdict is named DESIGNS_TO_SPEC_BEYOND_4MERS and is
+    accurate; the exposure is entirely in prose that rounds it up to 'beyond composition'."""
+    blk = _protocol()["CAPACITY_SCALING_CONFOUND"]
+    rule = blk["the_reporting_rule_adopted_here"]
+    assert "4-MER" in rule
+    assert "not be phrased as beyond composition" in rule
+    assert "flatters the larger models" in rule, (
+        "a size-curve reading must state the confound's DIRECTION, since it runs opposite to the "
+        "usual one")
+
+
+def test_the_protocol_records_that_copying_does_NOT_bound_this_channel():
+    """The tempting and wrong inference: copying at chance does not close a composition channel.
+    A model can match 6-mer frequencies while never quoting more than a few bases verbatim."""
+    blk = _protocol()["CAPACITY_SCALING_CONFOUND"]
+    sharp = blk["THE_SHARPER_FORM_ON_THIS_ARM_THE_CHANNEL_IS_COMPOSITION_NOT_SUBSTRINGS"]
+    assert "COPYING CONTROL DOES NOT BOUND THIS" in sharp["the_consequence_that_matters"]
+    assert "must NOT be read as closing this channel" in sharp["the_consequence_that_matters"]
+
+
+def test_the_trigger_condition_is_recorded_as_MET_not_hypothetical():
+    blk = _protocol()["CAPACITY_SCALING_CONFOUND"]
+    assert "THE_TRIGGER_IS_MET_HERE" in blk
+    assert "four-size curve" in blk["THE_TRIGGER_IS_MET_HERE"]["how"]
+    # The emphasis lives in the KEY; the substance has to live in the VALUE. Asserting the key's
+    # own wording against its value is the second instance of that mistake in this session, so
+    # this pins what the sentence has to ESTABLISH instead.
+    linked = blk["THE_TRIGGER_IS_MET_HERE"]["and_it_is_the_EXPOSED_family"]
+    assert "RULE_2" in linked, "it must name the rule that marks this family as exposed"
+    assert "sign-flip" in linked
+    assert "both biases point the same way" in linked, (
+        "the two biases compounding is the reason this matters, not merely coinciding")
+
+
+def test_the_order_5_remedy_is_recorded_as_a_user_authority_option_not_taken():
+    """Amending the comparator named by a frozen bar is not this session's call; adding a secondary
+    null is additive. The distinction has to survive in the record."""
+    blk = _protocol()["CAPACITY_SCALING_CONFOUND"]
+    opt = blk["the_empirical_option_is_a_USER_AUTHORITY_call"]
+    assert "order-5" in opt["what_would_close_it"]
+    assert "ALONGSIDE" in opt["what_would_close_it"]
+    assert "amend a frozen bar" in opt["why_it_is_not_taken_unilaterally"]

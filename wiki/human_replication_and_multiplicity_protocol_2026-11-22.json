@@ -188,7 +188,8 @@
       "8_PYTHONDONTWRITEBYTECODE": "noted; this arm imports from no read-only tree, and the one bytecode file P2 disclosed in this tree is gitignored and was left in place deliberately",
       "9_verdict_and_action_separate": "already in this protocol",
       "10_prefer_measurements_over_threshold_crossings": "adopted. Today's fold-9 findings are shaped as measurements -- the ceiling is 0.4912 with a measured draw sd of 0.0254, the subsample bias is -0.1095 = -4.14 sd -- rather than as threshold crossings. Honest caveat: stratified_frac_of_ceiling's verdict BUCKETS are still threshold crossings, so they stay as fragile as the sem behind them.",
-      "0_compute_the_MDD_before_reading_a_null": "BUILT 2026-11-22 (null_family_p95 / per_candidate_sem / family_wise_mdd, with a DESIGN-LIMITED verdict when a caller-supplied spread is exceeded)"
+      "0_compute_the_MDD_before_reading_a_null": "BUILT 2026-11-22 (null_family_p95 / per_candidate_sem / family_wise_mdd, with a DESIGN-LIMITED verdict when a caller-supplied spread is exceeded)",
+      "capacity_scaling_confound": "TRIGGER MET by the planned four-size curve. Channel here is COMPOSITION, not substrings, so copying does not bound it; the bound is the null's order-3 against the oracle's 6-mer features, a band measured at 0.0414 (HepG2, 8.9%) and 0.1063 (K562, 21.1%). Reporting rule adopted; an order-5 secondary null is a user-authority option."
     },
     "DO_NOT_CITE_AS_SURVIVORS": {
       "figures": [
@@ -273,6 +274,55 @@
           "re_check_condition": "if this arm ever conditions on upstream sequence rather than on a scalar, this stops being inapplicable and must be measured"
         }
       }
+    },
+    "CAPACITY_SCALING_CONFOUND": {
+      "received": "2026-11-22 from P2, as the part of its retracted defect 3 that survives",
+      "P2s_general_form": "where distinguishability is scored against HELD-OUT windows while copying is measured against the FIT corpus, better fit-memorisation inflates apparent quality in proportion to how much the two resemble each other. The confound SCALES WITH CAPACITY, so it penalises the cheap arms and flatters the expensive ones -- the opposite of the usual direction -- which makes copying a control for a CAPACITY ARTEFACT rather than hygiene.",
+      "P2s_trigger_condition": "if your arm ever compares models of materially different capacity against a fixed held-out set while measuring copying against the training set, the same asymmetry applies even though your prompt mechanism is immune",
+      "THE_TRIGGER_IS_MET_HERE": {
+        "how": "the planned four-size curve (s d_model 128/4 layers through xl 384/10) compares models of materially different capacity, scored against a fixed held-out set, with copying measured against the training folds 1-6. That is the condition verbatim.",
+        "and_it_is_the_EXPOSED_family": "RULE_2 already marks the four-size curve as the family requiring the sign-flip correction, so the one comparison that needs family-wise correction is also the one this confound biases -- and both biases point the same way, toward an apparent winner."
+      },
+      "THE_SHARPER_FORM_ON_THIS_ARM_THE_CHANNEL_IS_COMPOSITION_NOT_SUBSTRINGS": {
+        "why_P2s_channel_does_not_transfer_directly": "P2's channel is verbatim quoting of fit windows. This arm's judge is a 6-MER RIDGE, so the channel is k-mer COMPOSITION: a generator can match 6-mer frequencies almost perfectly while never quoting more than a handful of bases verbatim.",
+        "the_consequence_that_matters": "the COPYING CONTROL DOES NOT BOUND THIS. Copying measures the longest verbatim substring shared with the training folds; a model that reproduces 6-mer composition without quoting long substrings passes copying at chance and still collects the oracle's reward. So copying at chance must NOT be read as closing this channel.",
+        "what_DOES_bound_it_is_the_null_ORDER_against_the_oracle_FEATURE_ORDER": "the activity-stratified null is an order-3 chain, whose sufficient statistic IS the 4-mer conditional distribution. The oracle's winning arm is kmer6. So there is a composition band -- 5-mers and 6-mers -- that the null cannot represent and the oracle does reward.",
+        "THE_BAND_IS_MEASURED_NOT_SPECULATED": {
+          "source": "wiki/glm_human_activity_oracle_fold9_2026-11-22.json, already on disk",
+          "per_cell": {
+            "HepG2": {
+              "gc": 0.2415,
+              "kmer4": 0.4229,
+              "kmer6": 0.4643,
+              "band_above_4mers": 0.0414,
+              "band_as_fraction_of_oracle_total": 0.0892
+            },
+            "K562": {
+              "gc": 0.2112,
+              "kmer4": 0.3975,
+              "kmer6": 0.5038,
+              "band_above_4mers": 0.1063,
+              "band_as_fraction_of_oracle_total": 0.211
+            }
+          },
+          "reading": "in K562 the band above 4-mers carries 0.1063 of held-out Spearman, 21.1% of the oracle's own total; in HepG2 0.0414, or 8.9%. A generator occupying that band would beat the order-3 null while adding nothing beyond composition at the oracle's own feature resolution."
+        }
+      },
+      "THE_FROZEN_BAR_IS_ALREADY_HONEST_ABOUT_THIS_AND_THE_RISK_IS_IN_THE_PROSE": "the success verdict is named DESIGNS_TO_SPEC_BEYOND_4MERS -- not 'beyond composition'. That name is exactly right and needs no amendment. The exposure is entirely in how a result would be READ and written up: 'beat the 4-mer null' will be heard as 'learned real regulatory structure', when up to 21.1% of the oracle's signal sits in a composition band above 4-mers that a higher-ORDER composition model would also reach. So the fix owed is a REPORTING rule, not a bar change.",
+      "the_reporting_rule_adopted_here": "any claim that the generator beat the activity-stratified null must be stated as 'beyond 4-MER composition', must quote the measured 5-6-mer band for that cell beside it, and must not be phrased as beyond composition in general. A size-curve reading must additionally state that the confound scales with capacity and therefore flatters the larger models.",
+      "the_empirical_option_is_a_USER_AUTHORITY_call": {
+        "what_would_close_it": "an order-5 chain -- 6-mer conditionals -- fit per activity quintile, saturating the oracle's own feature order, reported ALONGSIDE the frozen order-3 null",
+        "why_it_is_not_taken_unilaterally": "the frozen bar names the order-3 chain as the comparator for its decision quantity. Adding a secondary null is additive and changes no frozen number, but promoting it to the comparator would amend a frozen bar and is not this session's call.",
+        "cost": "one extra chain fit per quintile per cell; cheap relative to a training run"
+      },
+      "P2s_REFINEMENT_TO_MY_OWN_p95_EXPLANATION": {
+        "what_I_said": "the candidates are correlated, which reduces the effective number of tests",
+        "P2s_refinement": "the dependence is MIXED IN SIGN, not uniformly positive. Pairs sharing an arm in the same position, (A,B) and (A,C), covary at +Var(A); pairs sharing it in opposite positions, (A,B) and (B,C), covary at -Var(B); disjoint pairs like (A,B) and (C,D) are uncorrelated.",
+        "checked_here": "the algebra holds for independent arms: Cov(A-B, B-C) = -Var(B). So 'correlated candidates' undersold how structured the dependence is, though the net still reduces effective tests and the direction of my conclusion stands.",
+        "the_consequence": "the effective number of tests is not a simple function of the arm count, so it cannot be read off the design and has to come from the permutation null itself -- which is the argument for discipline 0 rather than for a closed-form correction."
+      },
+      "P2s_DEFECT_3_RETRACTED_ON_MECHANISM": "P2 verified at three call sites that prompts are built from FIT windows only, never scoring windows, and that copying is already measured against the fit corpus. Since every unit arm is fitted on those windows, 'a prompt's continuation is a fit window' is the existing contract rather than a leak genome pretraining introduces. P2 reports it had rendered a reviewer's directional concern as a stronger mechanism than the code supports, for the second time in that run, and that only the call sites separated the two. Recorded because the retraction is what makes the surviving half -- the capacity confound above -- trustworthy.",
+      "what_is_genuinely_new_in_P2s_half_a": "excluding the SCORING windows from pretraining is mandatory and new for a neural arm, because the count arms never saw the genome at all. The analogue here is already enforced: the generator's shard is folds 1-6 only, the oracle is folds 7-8, and fold 10 is read by nothing in force."
     }
   }
 }
