@@ -1,0 +1,580 @@
+{
+  "record": "human-fold-coordinate-leak-v1",
+  "date": "2026-11-23",
+  "hypothesis_owner": "P3 (Soraya Development) named it; the data and every measurement here",
+  "question": "the publishers assign folds RANDOMLY OVER ELEMENTS, not by chromosome. Do genomically overlapping elements therefore straddle fold-role boundaries, and does that move any number already committed?",
+  "why_a_sequence_level_dedup_could_not_see_it": "two elements 50 bp apart share 150 of 200 bp without being byte-identical. The earlier '0 elements span fold roles / 0 collisions in either cell' check was byte-identity and is blind to partial overlap by construction.",
+  "VERDICT_the_hypothesis_is_SUPPORTED": {
+    "rule_frozen_before_any_number_was_read": true,
+    "verdict": "HYPOTHESIS_SUPPORTED_COORDINATE_AWARE_REBUILD_IS_A_USER_CALL",
+    "totals": {
+      "crossing_pairs": 625,
+      "crossing_pairs_deep": 215,
+      "worst_frac_coords_missing": 0.0
+    },
+    "deep_bp_threshold": 50,
+    "identical_intervals_in_any_cell": 0,
+    "per_cell": {
+      "HepG2": {
+        "n_records": 61463,
+        "n_coords_resolved": 61463,
+        "n_coords_missing": 0,
+        "frac_coords_missing": 0.0,
+        "n_overlapping_pairs_total": 173,
+        "n_overlapping_pairs_WITHIN_one_role": 84,
+        "n_overlapping_pairs_CROSSING_roles": 89,
+        "n_crossing_pairs_sharing_at_least_50_bp": 30,
+        "n_crossing_pairs_IDENTICAL_interval": 0,
+        "shared_bp_median": 33,
+        "shared_bp_max": 151
+      },
+      "K562": {
+        "n_records": 98332,
+        "n_coords_resolved": 98332,
+        "n_coords_missing": 0,
+        "frac_coords_missing": 0.0,
+        "n_overlapping_pairs_total": 876,
+        "n_overlapping_pairs_WITHIN_one_role": 364,
+        "n_overlapping_pairs_CROSSING_roles": 512,
+        "n_crossing_pairs_sharing_at_least_50_bp": 172,
+        "n_crossing_pairs_IDENTICAL_interval": 0,
+        "shared_bp_median": 33.0,
+        "shared_bp_max": 192
+      },
+      "WTC11": {
+        "n_records": 23064,
+        "n_coords_resolved": 23064,
+        "n_coords_missing": 0,
+        "frac_coords_missing": 0.0,
+        "n_overlapping_pairs_total": 45,
+        "n_overlapping_pairs_WITHIN_one_role": 21,
+        "n_overlapping_pairs_CROSSING_roles": 24,
+        "n_crossing_pairs_sharing_at_least_50_bp": 13,
+        "n_crossing_pairs_IDENTICAL_interval": 0,
+        "shared_bp_median": 53.0,
+        "shared_bp_max": 178
+      }
+    }
+  },
+  "THE_REAL_MECHANISM_is_narrower_than_crossing_a_role_boundary": {
+    "S6_carries_no_orientation_marker_for_any_cell": true,
+    "the_asymmetry_is_on_the_DESIGN_side": "S3 HepG2 and S3 K562 name the forward strand BARE and the reverse under '_Reversed:'; S3 WTC11 suffixes BOTH strands. That is a NAMING fact and is unrelated to the fold overlap -- recorded here only so the two findings of 2026-11-23 are not conflated.",
+    "largest_cross_role_bucket_is_generator_vs_oracle_train": {
+      "HepG2": {
+        "generator|oracle_train": 35,
+        "final_only|generator": 20,
+        "generator|working_held_out": 19,
+        "oracle_train|working_held_out": 8,
+        "final_only|oracle_train": 5,
+        "final_only|working_held_out": 2
+      },
+      "K562": {
+        "generator|oracle_train": 231,
+        "generator|working_held_out": 98,
+        "final_only|generator": 97,
+        "final_only|oracle_train": 42,
+        "oracle_train|working_held_out": 34,
+        "final_only|working_held_out": 10
+      },
+      "WTC11": {
+        "generator|oracle_train": 10,
+        "final_only|generator": 5,
+        "generator|working_held_out": 4,
+        "oracle_train|working_held_out": 2,
+        "final_only|oracle_train": 2,
+        "final_only|working_held_out": 1
+      }
+    },
+    "why_that_bucket_matters_SEPARATELY": "generator-vs-oracle_train is the train-on-what-you-grade-on path. It lands on the NUMERATOR side of stratified_frac_of_ceiling and would FLATTER a generator, the opposite direction to a held-out leak. It is UNMEASURED. An earlier report of this work gave a blanket 'conservative direction' claim; that was argued for the held-out path only and is corrected here."
+  },
+  "MAGNITUDE_on_the_numbers_already_committed": {
+    "held_out_elements_touched": {
+      "HepG2": {
+        "working_held_out": {
+          "at_least_1bp": {
+            "by_source": {
+              "generator": 19,
+              "oracle_train": 8
+            },
+            "union": 27,
+            "fold_size": 6146,
+            "frac_of_fold": 0.004393
+          },
+          "at_least_50bp": {
+            "by_source": {
+              "generator": 7,
+              "oracle_train": 5
+            },
+            "union": 12,
+            "fold_size": 6146,
+            "frac_of_fold": 0.001952
+          },
+          "at_least_100bp": {
+            "by_source": {
+              "oracle_train": 2
+            },
+            "union": 2,
+            "fold_size": 6146,
+            "frac_of_fold": 0.000325
+          }
+        },
+        "final_only": {
+          "at_least_1bp": {
+            "by_source": {
+              "oracle_train": 5,
+              "generator": 20
+            },
+            "union": 25,
+            "fold_size": 6149,
+            "frac_of_fold": 0.004066
+          },
+          "at_least_50bp": {
+            "by_source": {
+              "generator": 4,
+              "oracle_train": 1
+            },
+            "union": 5,
+            "fold_size": 6149,
+            "frac_of_fold": 0.000813
+          },
+          "at_least_100bp": {
+            "by_source": {
+              "generator": 1
+            },
+            "union": 1,
+            "fold_size": 6149,
+            "frac_of_fold": 0.000163
+          }
+        }
+      },
+      "K562": {
+        "working_held_out": {
+          "at_least_1bp": {
+            "by_source": {
+              "generator": 97,
+              "oracle_train": 34
+            },
+            "union": 131,
+            "fold_size": 9833,
+            "frac_of_fold": 0.013322
+          },
+          "at_least_50bp": {
+            "by_source": {
+              "oracle_train": 10,
+              "generator": 27
+            },
+            "union": 37,
+            "fold_size": 9833,
+            "frac_of_fold": 0.003763
+          },
+          "at_least_100bp": {
+            "by_source": {
+              "oracle_train": 3,
+              "generator": 10
+            },
+            "union": 13,
+            "fold_size": 9833,
+            "frac_of_fold": 0.001322
+          }
+        },
+        "final_only": {
+          "at_least_1bp": {
+            "by_source": {
+              "generator": 97,
+              "oracle_train": 41
+            },
+            "union": 136,
+            "fold_size": 9835,
+            "frac_of_fold": 0.013828
+          },
+          "at_least_50bp": {
+            "by_source": {
+              "oracle_train": 11,
+              "generator": 34
+            },
+            "union": 44,
+            "fold_size": 9835,
+            "frac_of_fold": 0.004474
+          },
+          "at_least_100bp": {
+            "by_source": {
+              "generator": 14,
+              "oracle_train": 6
+            },
+            "union": 19,
+            "fold_size": 9835,
+            "frac_of_fold": 0.001932
+          }
+        }
+      },
+      "WTC11": {
+        "working_held_out": {
+          "at_least_1bp": {
+            "by_source": {
+              "generator": 4,
+              "oracle_train": 2
+            },
+            "union": 6,
+            "fold_size": 2306,
+            "frac_of_fold": 0.002602
+          },
+          "at_least_50bp": {
+            "by_source": {
+              "generator": 3,
+              "oracle_train": 1
+            },
+            "union": 4,
+            "fold_size": 2306,
+            "frac_of_fold": 0.001735
+          },
+          "at_least_100bp": {
+            "by_source": {
+              "generator": 1,
+              "oracle_train": 1
+            },
+            "union": 2,
+            "fold_size": 2306,
+            "frac_of_fold": 0.000867
+          }
+        },
+        "final_only": {
+          "at_least_1bp": {
+            "by_source": {
+              "generator": 5,
+              "oracle_train": 2
+            },
+            "union": 7,
+            "fold_size": 2310,
+            "frac_of_fold": 0.00303
+          },
+          "at_least_50bp": {
+            "by_source": {
+              "generator": 2,
+              "oracle_train": 1
+            },
+            "union": 3,
+            "fold_size": 2310,
+            "frac_of_fold": 0.001299
+          },
+          "at_least_100bp": {
+            "by_source": {},
+            "union": 0,
+            "fold_size": 2310,
+            "frac_of_fold": 0.0
+          }
+        }
+      }
+    },
+    "fold9_vs_oracle_train_exposure": {
+      "HepG2": {
+        "1": 8,
+        "50": 5,
+        "100": 2,
+        "fold_size": 6146
+      },
+      "K562": {
+        "1": 34,
+        "50": 10,
+        "100": 3,
+        "fold_size": 9833
+      },
+      "WTC11": {
+        "1": 2,
+        "50": 1,
+        "100": 1,
+        "fold_size": 2306
+      }
+    }
+  },
+  "RESCORE_the_committed_numbers_STAND_and_this_is_measured_not_predicted": {
+    "quantity": "oracle fold-9 Spearman, deployed config: kmer6 on the 200 nt adaptor-stripped element, alpha 1.0, trained on folds [7, 8]",
+    "NOT_the_stratified_ceiling": "the null artifact's 0.4457/0.4923 is a per-stratum matched-n estimator and is not reproduced here",
+    "control_gate_reproduced_before_reading_deltas": true,
+    "verdict": "EXPOSURE_IMMATERIAL_AT_THIS_SCALE",
+    "worst_abs_delta": 0.001391,
+    "worst_delta_over_sd": 0.0547,
+    "per_cell": {
+      "HepG2": {
+        "n_held_out": 6146,
+        "rho_full": 0.464349,
+        "rho_committed": 0.4643,
+        "control_reproduced": true,
+        "n_touched_by_oracle_train": 8,
+        "n_touched_by_generator_or_oracle": 27,
+        "rho_without_oracle_touched": 0.463491,
+        "n_without_oracle_touched": 6138,
+        "delta_oracle_touched": -0.000858,
+        "rho_without_union_touched": 0.463335,
+        "n_without_union_touched": 6119,
+        "delta_union_touched": -0.001014,
+        "matched_n_sd_scale_reference": 0.0253,
+        "delta_as_fraction_of_that_sd": 0.0401
+      },
+      "K562": {
+        "n_held_out": 9833,
+        "rho_full": 0.503849,
+        "rho_committed": 0.5038,
+        "control_reproduced": true,
+        "n_touched_by_oracle_train": 34,
+        "n_touched_by_generator_or_oracle": 131,
+        "rho_without_oracle_touched": 0.503576,
+        "n_without_oracle_touched": 9799,
+        "delta_oracle_touched": -0.000273,
+        "rho_without_union_touched": 0.502458,
+        "n_without_union_touched": 9702,
+        "delta_union_touched": -0.001391,
+        "matched_n_sd_scale_reference": 0.0254,
+        "delta_as_fraction_of_that_sd": 0.0547
+      }
+    },
+    "reading": "dropping EVERY coordinate-touched held-out element moves the oracle's fold-9 Spearman by at most 0.0014, about 5 percent of the matched-n sd. The sign is negative, the direction consistent with mild inflation, but at that scale it is indistinguishable from noise. So the finding is real and the committed fold-9 numbers are unaffected -- a scope result, not a retraction."
+  },
+  "THE_CROSS_CELL_FINDING_which_is_far_larger_and_which_the_within_cell_sweep_could_not_see": {
+    "per_pair": {
+      "HepG2|K562": {
+        "shared_ids": 7321,
+        "same_fold": 718,
+        "DIFFERENT_fold": 6603,
+        "frac_different": 0.901926,
+        "examples": [
+          "ENSG00000000460",
+          "ENSG00000000938",
+          "ENSG00000000971",
+          "ENSG00000001460",
+          "ENSG00000001461"
+        ]
+      },
+      "HepG2|WTC11": {
+        "shared_ids": 2381,
+        "same_fold": 238,
+        "DIFFERENT_fold": 2143,
+        "frac_different": 0.900042,
+        "examples": [
+          "ENSG00000000460",
+          "ENSG00000000938",
+          "ENSG00000004478",
+          "ENSG00000004779",
+          "ENSG00000004897"
+        ]
+      },
+      "K562|WTC11": {
+        "shared_ids": 4237,
+        "same_fold": 388,
+        "DIFFERENT_fold": 3849,
+        "frac_different": 0.908426,
+        "examples": [
+          "ENSG00000000003",
+          "ENSG00000000460",
+          "ENSG00000000938",
+          "ENSG00000001167",
+          "ENSG00000002726"
+        ]
+      }
+    },
+    "n_ids_measured_in_all_three_cells": 2379,
+    "shared_ids_carry_IDENTICAL_sequence": {
+      "n": 3000,
+      "identical": 3000
+    },
+    "the_90_percent_is_not_a_coincidence": "independent random fold assignment per cell predicts P(same fold) = 1/10, so 90% different is exactly the expectation. All three pairs land within a point of it, which independently corroborates the publishers' stated method AND shows it was applied per cell independently.",
+    "SCOPE_this_does_not_touch_any_committed_number": "every committed measurement is PER-CELL, and the replication bar forbids pooling. This bites only an arm that POOLS cells -- which a cross-cell conditioning arm would be. Flagged to P3 before such an arm is built, not after.",
+    "severity_relative_to_the_within_cell_finding": "byte-IDENTICAL sequence in two roles, versus a median 33 bp partial overlap"
+  },
+  "assumption_checks": {
+    "interval_widths": {
+      "HepG2": {
+        "200": 163248,
+        "201": 54,
+        "202": 19,
+        "204": 12,
+        "210": 2
+      },
+      "K562": {
+        "200": 243376,
+        "201": 36,
+        "202": 12,
+        "204": 10,
+        "254": 2
+      },
+      "WTC11": {
+        "200": 75269,
+        "229": 148,
+        "201": 14,
+        "204": 4,
+        "202": 4
+      }
+    },
+    "reading": "every bp threshold assumes 200 bp elements; >99.7% are exactly 200 in all three cells. WTC11 carries 148 intervals of width 229, which appear to record the full 230 nt construct rather than the element. Recorded, not swept.",
+    "coords_resolved_for_every_scored_record": {
+      "HepG2": 0,
+      "K562": 0,
+      "WTC11": 0
+    }
+  },
+  "fold_10_is_STILL_UNSPENT": {
+    "every_probe_today_was_key_only_on_fold_10": "names, folds and coordinates were read; NO activity was scored against fold 10, so the FINAL_ONLY reservation is intact",
+    "its_exposure_measured_in_advance": {
+      "HepG2": {
+        "by_source": {
+          "oracle_train": 5,
+          "generator": 20
+        },
+        "union": 25,
+        "fold_size": 6149,
+        "frac_of_fold": 0.004066
+      },
+      "K562": {
+        "by_source": {
+          "generator": 97,
+          "oracle_train": 41
+        },
+        "union": 136,
+        "fold_size": 9835,
+        "frac_of_fold": 0.013828
+      },
+      "WTC11": {
+        "by_source": {
+          "generator": 5,
+          "oracle_train": 2
+        },
+        "union": 7,
+        "fold_size": 2310,
+        "frac_of_fold": 0.00303
+      }
+    },
+    "why_this_ordering_matters": "knowing the contamination of a single-query set BEFORE spending it is strictly better than after"
+  },
+  "WHAT_IS_A_USER_AUTHORITY_DECISION_and_is_NOT_taken_here": {
+    "both_options_amend_a_frozen_contract": true,
+    "option_costs": {
+      "measurement": "fold-split-option-costs-v1",
+      "date": "2026-11-23",
+      "status": "NEITHER OPTION APPLIED -- this costs them out for a user-authority decision",
+      "option_A": "purge the coordinate-touched held-out elements; keep the publishers' folds",
+      "option_B": "chromosome-held-out rebuild; abandons the publishers' fold alignment",
+      "cells": {
+        "HepG2": {
+          "n_scored": 61463,
+          "fold_sizes": {
+            "1": 6146,
+            "2": 6146,
+            "3": 6146,
+            "4": 6146,
+            "5": 6146,
+            "6": 6146,
+            "7": 6146,
+            "8": 6146,
+            "9": 6146,
+            "10": 6149
+          },
+          "option_A_purge": {
+            "n_purged_total": 56,
+            "per_fold": {
+              "9": 29,
+              "10": 27
+            },
+            "worst_fold_loss_frac": 0.004719,
+            "publisher_folds_preserved": true,
+            "benchmark_comparability_preserved": true
+          },
+          "option_B_chromosome": {
+            "n_chromosomes": 30,
+            "largest_chrom_frac": 0.100369,
+            "external_split_val_chr19_21_X": 4304,
+            "external_split_val_frac": 0.070026,
+            "external_split_test_chr7_13": 4144,
+            "external_split_test_frac": 0.067423,
+            "train_remainder": 53015,
+            "publisher_folds_preserved": false,
+            "benchmark_comparability_preserved": false,
+            "note": "the publishers' per-fold scores for Enformer / Sei / MPRAnn / MPRALegNet are defined on THEIR folds, so a chromosome rebuild forfeits the one external comparison this substrate currently has"
+          }
+        },
+        "K562": {
+          "n_scored": 98332,
+          "fold_sizes": {
+            "1": 9833,
+            "2": 9833,
+            "3": 9833,
+            "4": 9833,
+            "5": 9833,
+            "6": 9833,
+            "7": 9833,
+            "8": 9833,
+            "9": 9833,
+            "10": 9835
+          },
+          "option_A_purge": {
+            "n_purged_total": 287,
+            "per_fold": {
+              "9": 141,
+              "10": 146
+            },
+            "worst_fold_loss_frac": 0.014845,
+            "publisher_folds_preserved": true,
+            "benchmark_comparability_preserved": true
+          },
+          "option_B_chromosome": {
+            "n_chromosomes": 26,
+            "largest_chrom_frac": 0.112863,
+            "external_split_val_chr19_21_X": 8250,
+            "external_split_val_frac": 0.083899,
+            "external_split_test_chr7_13": 7213,
+            "external_split_test_frac": 0.073354,
+            "train_remainder": 82869,
+            "publisher_folds_preserved": false,
+            "benchmark_comparability_preserved": false,
+            "note": "the publishers' per-fold scores for Enformer / Sei / MPRAnn / MPRALegNet are defined on THEIR folds, so a chromosome rebuild forfeits the one external comparison this substrate currently has"
+          }
+        },
+        "WTC11": {
+          "n_scored": 23064,
+          "fold_sizes": {
+            "1": 2306,
+            "2": 2306,
+            "3": 2306,
+            "4": 2306,
+            "5": 2306,
+            "6": 2306,
+            "7": 2306,
+            "8": 2306,
+            "9": 2306,
+            "10": 2310
+          },
+          "option_A_purge": {
+            "n_purged_total": 15,
+            "per_fold": {
+              "9": 7,
+              "10": 8
+            },
+            "worst_fold_loss_frac": 0.003463,
+            "publisher_folds_preserved": true,
+            "benchmark_comparability_preserved": true
+          },
+          "option_B_chromosome": {
+            "n_chromosomes": 24,
+            "largest_chrom_frac": 0.099462,
+            "external_split_val_chr19_21_X": 2112,
+            "external_split_val_frac": 0.091571,
+            "external_split_test_chr7_13": 1750,
+            "external_split_test_frac": 0.075876,
+            "train_remainder": 19202,
+            "publisher_folds_preserved": false,
+            "benchmark_comparability_preserved": false,
+            "note": "the publishers' per-fold scores for Enformer / Sei / MPRAnn / MPRALegNet are defined on THEIR folds, so a chromosome rebuild forfeits the one external comparison this substrate currently has"
+          }
+        }
+      }
+    },
+    "sequencing_constraint": "a chromosome-held-out rebuild changes folds 1-6, which IS the generator's training set, so P3's note that 'the generator pretrain is unaffected either way' holds only under the purge option. If the rebuild is live at all, the split decision belongs BEFORE a generator training launch.",
+    "nothing_frozen_was_modified": "no wiki artifact and no fold contract was changed by this measurement; it is additive and read-only"
+  },
+  "honest_limits": [
+    "The generator-vs-oracle_train bucket -- the LARGEST in every cell -- is unmeasured. It would act on the numerator side and flatter a generator, the opposite direction to the held-out exposure that WAS measured.",
+    "The rescored quantity is the oracle's fold-9 Spearman under the deployed configuration, NOT the per-stratum matched-n ceiling the null artifact reports. The matched-n sd is used only as a scale reference for reading a delta.",
+    "Overlap is computed on hg38 coordinates as published. A mis-stated coordinate in the deposit would be invisible to this and to any check built on it.",
+    "The cross-cell count is on element NAME with sequence identity verified on a 3,000-id sample, not on all 7,321 shared HepG2/K562 ids.",
+    "Fold 10's exposure is reported from keys only. No activity was scored, so nothing here states what a fold-10 number would be.",
+    "This measures the SPLIT, not the oracle. A clean split does not make a 0.46-0.50 Spearman oracle strong."
+  ]
+}

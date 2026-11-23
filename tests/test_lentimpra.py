@@ -259,7 +259,14 @@ def test_every_sequence_is_the_documented_uniform_length(cell):
 @needs_data
 @pytest.mark.parametrize("cell", sorted(JOINED))
 def test_the_published_ten_fold_assignment_comes_through(cell):
-    """The authors' folds are what make this leakage-safe AND comparable to their benchmark."""
+    """The authors' folds are what make this comparable to their published benchmark.
+
+    SCOPE, corrected 2026-11-23: this docstring used to say the folds make the cohort
+    "leakage-safe", unqualified. They are leakage-safe at SEQUENCE IDENTITY only. The publishers
+    assign folds randomly over ELEMENTS rather than by chromosome, and 625 genomically overlapping
+    pairs straddle a fold-role boundary across the three cells (median 33 bp shared, max 192).
+    Carrying through is a structural property of the join; it is not a leakage claim.
+    """
     recs, st = load_cell(cell, DATA_DIR)
     assert st.n_folds == 10
     assert set(st.fold_sizes) == set(range(1, 11))

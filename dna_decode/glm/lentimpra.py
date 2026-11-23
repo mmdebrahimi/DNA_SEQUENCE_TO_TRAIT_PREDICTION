@@ -276,7 +276,11 @@ def load_activity(cell: str, data_dir: Path | str = DEFAULT_DIR) -> tuple[dict, 
         if j_f is None:
             raise LentiMpraDataError(
                 "%s has no `Fold` column; the published fold assignment is what makes this cohort "
-                "leakage-safe and comparable to the published benchmark, so it is required"
+                "comparable to the published benchmark, so it is required. NOTE the scope: the "
+                "publishers assign folds RANDOMLY OVER ELEMENTS, not by chromosome, so the split "
+                "is leakage-safe at SEQUENCE IDENTITY and NOT at coordinate overlap -- measured "
+                "2026-11-23, 625 genomically overlapping pairs straddle a fold-role boundary "
+                "across the three cells. Do not call these folds leakage-safe unqualified."
                 % st.s6_sheet)
         out = {}
         for row in ws.iter_rows(min_row=st.s6_header_row + 1, values_only=True):
