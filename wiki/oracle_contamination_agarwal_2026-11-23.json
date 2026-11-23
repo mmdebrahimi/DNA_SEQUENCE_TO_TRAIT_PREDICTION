@@ -378,5 +378,121 @@
     },
     "our_corpus": "data/mpra_human Tables S3 + S6, loaded through dna_decode.glm.lentimpra"
   },
-  "SCOPE_TODAYS_COMMITTED_NUMBERS_ARE_UNAFFECTED": "This is FORWARD-LOOKING and does not touch any number already published. The oracle validated on fold 9 earlier today (wiki/glm_human_activity_oracle_fold9_2026-11-22.json, WTC11 0.3607 vs GC 0.0858) is OUR OWN k-mer ridge, trained on folds 7+8 of our own corpus with no Gosai model involved -- so none of those figures are contaminated by this finding. What this bears on is the PENDING decision to adopt the Gosai oracle as a scorer. Of the 16 held-out records, 10 are in fold 9 and 6 in fold 10, which has never been queried."
+  "SCOPE_TODAYS_COMMITTED_NUMBERS_ARE_UNAFFECTED": "This is FORWARD-LOOKING and does not touch any number already published. The oracle validated on fold 9 earlier today (wiki/glm_human_activity_oracle_fold9_2026-11-22.json, WTC11 0.3607 vs GC 0.0858) is OUR OWN k-mer ridge, trained on folds 7+8 of our own corpus with no Gosai model involved -- so none of those figures are contaminated by this finding. What this bears on is the PENDING decision to adopt the Gosai oracle as a scorer. Of the 16 held-out records, 10 are in fold 9 and 6 in fold 10, which has never been queried.",
+  "CLASS_BIAS_THE_CONTAMINATION_IS_NOT_CLASS_NEUTRAL": {
+    "added": "2026-11-23",
+    "verdict": "CLASS_BIAS_PRESENT_PROMOTER_ENRICHED",
+    "question": "the rate and the fold placement both treat the 100 as interchangeable. Are they? The peer measured that the oracle trained almost exclusively on tidy variant-centric libraries, so its coverage of our corpus need not be class-neutral.",
+    "finding": "it is NOT neutral. Pooled, PROMOTERS are enriched 2.17x among contaminated records (31 observed against 14.31 expected, exact binomial p=1.96e-05) and enhancers are correspondingly depleted at 0.81x.",
+    "it_replicates_in_ALL_THREE_CELLS_independently": {
+      "HepG2": {
+        "promoter_enrichment": 2.61,
+        "observed": 10,
+        "expected": 3.83,
+        "p": 0.00317
+      },
+      "K562": {
+        "promoter_enrichment": 1.95,
+        "observed": 16,
+        "expected": 8.21,
+        "p": 0.00695
+      },
+      "WTC11": {
+        "promoter_enrichment": 2.19,
+        "observed": 5,
+        "expected": 2.29,
+        "p": 0.0608
+      },
+      "reading": "three independent cells, same direction, 1.95-2.61x. Two are individually significant; WTC11 is directionally identical but NOT individually significant at n=12, and is reported as underpowered rather than counted as a third confirmation."
+    },
+    "WHY_IT_MATTERS": "promoters are the class models of this family already score BEST -- this repo records Enformer zero-shot at 0.81 on promoters against 0.137 on enhancers in one assay. So the oracle has preferentially seen our EASY class, and an aggregate score computed without exclusion would be flattered twice: once by memorisation, and once by the class mix of what it memorised.",
+    "SCOPE_IT_CHANGES_THE_CHARACTER_NOT_THE_MAGNITUDE": "this does NOT overturn 'immaterial at this scale'. 31 promoter records out of 182,859 still cannot move an aggregate correlation. What it changes is that the contamination cannot be treated as a random 0.0547% sample -- so a PER-CLASS claim, or any argument that the leak is self-cancelling, is unsafe. The exclusion fix already recommended handles both.",
+    "pooled": {
+      "enhancer": {
+        "observed": 69,
+        "expected": 85.69,
+        "corpus_share": 0.85687,
+        "enrichment": 0.81,
+        "binom_p_two_sided": 1.96e-05
+      },
+      "promoter": {
+        "observed": 31,
+        "expected": 14.31,
+        "corpus_share": 0.14313,
+        "enrichment": 2.17,
+        "binom_p_two_sided": 1.96e-05
+      }
+    },
+    "per_cell": {
+      "HepG2": {
+        "n_contaminated": 32,
+        "n_corpus": 61463,
+        "by_class": {
+          "enhancer": {
+            "observed": 22,
+            "expected": 28.17,
+            "corpus_share": 0.8804,
+            "enrichment": 0.78,
+            "binom_p_two_sided": 0.00317
+          },
+          "promoter": {
+            "observed": 10,
+            "expected": 3.83,
+            "corpus_share": 0.1196,
+            "enrichment": 2.61,
+            "binom_p_two_sided": 0.00317
+          }
+        }
+      },
+      "K562": {
+        "n_contaminated": 56,
+        "n_corpus": 98332,
+        "by_class": {
+          "enhancer": {
+            "observed": 40,
+            "expected": 47.79,
+            "corpus_share": 0.85331,
+            "enrichment": 0.84,
+            "binom_p_two_sided": 0.00695
+          },
+          "promoter": {
+            "observed": 16,
+            "expected": 8.21,
+            "corpus_share": 0.14669,
+            "enrichment": 1.95,
+            "binom_p_two_sided": 0.00695
+          }
+        }
+      },
+      "WTC11": {
+        "n_contaminated": 12,
+        "n_corpus": 23064,
+        "by_class": {
+          "enhancer": {
+            "observed": 7,
+            "expected": 9.71,
+            "corpus_share": 0.80936,
+            "enrichment": 0.72,
+            "binom_p_two_sided": 0.0608
+          },
+          "promoter": {
+            "observed": 5,
+            "expected": 2.29,
+            "corpus_share": 0.19064,
+            "enrichment": 2.19,
+            "binom_p_two_sided": 0.0608
+          }
+        }
+      }
+    },
+    "two_process_notes_recorded_rather_than_smoothed": [
+      "The first run returned WTC11 as 12 of 12 UNMAPPED, because S3 WTC11 suffixes both strands (`seq1000_F`) while our records carry bare names -- so a bare-name category lookup missed every WTC11 record. That is a failure to apply THIS REPO'S OWN shipped join rule (identity, else name + `_F`) inside a new script. Fixed, and WTC11 then mapped cleanly with no unmapped bucket at all; the pooled promoter figure moved 2.18 -> 2.17.",
+      "The promoter and enhancer p-values are identical within each cell. That is not a coincidence or a bug: after the fix there are exactly two classes, so the two tests are complements of one binomial."
+    ],
+    "honest_limits": [
+      "n=100 contaminated records pooled across three cells. Expected counts per class are single digits in places, so an enrichment ratio here is indicative and NOT a powered estimate. Treat a null as 'not detected at this power', never as 'absent'.",
+      "Categories are S3's own vocabulary collapsed onto a promoter/enhancer axis; the collapse is a judgement and a different collapse could move marginal classes.",
+      "This measures class composition of VERBATIM matches only. It inherits the lower-bound limit of exact sequence identity."
+    ]
+  }
 }
