@@ -1,10 +1,23 @@
 """Guards for the human lentiMPRA loader.
 
-The load-bearing test is `test_WTC11_REFUSES_rather_than_returning_its_3_percent_overlap`. Two of
-three cell types join at 1.0000 and one joins at 0.0000, so a loader that returned "what it could"
-would hand back a 3%-complete WTC11 cohort indistinguishable in shape from a complete one. That is
-the failure this module exists to prevent, and it is also why `min_join_rate` is tested
-BEHAVIOURALLY: relaxing the bar must not manufacture rows.
+All THREE cell types now join at 1.0000. WTC11 previously joined at 0.0000 and refused; corrected
+2026-11-23 once the mechanism was measured rather than restated -- S6 ids are bare for every cell,
+and S3 WTC11 is the only sheet that suffixes the FORWARD strand (`seq1000_F`), so identity alone
+could never match it. See the loader docstring for the three measurements that settle the strand.
+
+THE REFUSAL DISCIPLINE IS NOT RELAXED, it is re-pointed. The load-bearing tests are now:
+
+  * `test_the_forward_suffix_is_LOAD_BEARING_and_the_bar_still_bites` -- with the suffix set to a
+    value that matches nothing, WTC11 falls back to 0.0000 and REFUSES. One test shows the rule is
+    doing real work AND that `min_join_rate` still catches a key gap, so neither claim rests on a
+    guard that might have quietly stopped firing.
+  * `test_a_bare_id_pairs_with_the_FORWARD_strand_not_the_reverse` -- `_F` and `_R` differ for every
+    measured row while the join rate reads 1.0000 either way, so a rate assertion cannot catch a
+    wrong-strand cohort. This pins the sequence.
+  * `test_the_two_previously_shipped_cells_are_UNTOUCHED_by_the_new_rule` -- the fix may only ADD
+    rows; HepG2/K562 must still join by identity with zero suffix hits.
+
+`min_join_rate` stays tested BEHAVIOURALLY: relaxing the bar must not manufacture rows.
 
 The real tables live on D: and are gitignored, so every data-dependent test skips when they are
 absent rather than failing. The pure-logic tests always run.
@@ -39,11 +52,30 @@ from dna_decode.glm.lentimpra import (  # noqa: E402
 
 pytest.importorskip("openpyxl", reason="openpyxl not installed")
 
-HAVE_DATA = (DEFAULT_DIR / S3_FILE).is_file() and (DEFAULT_DIR / S6_FILE).is_file()
-needs_data = pytest.mark.skipif(not HAVE_DATA, reason="lentiMPRA tables absent (D: / gitignored)")
+def _resolve_data_dir():
+    """`DEFAULT_DIR`, else the repo-local copy -- mirroring `glm_human_activity_oracle.LOCAL_DIR`.
 
-#: Measured 2026-10-27 against the MD5-verified deposit.
-JOINED = {"HepG2": 61463, "K562": 98332}
+    This existed as a bug rather than a decision: the gate below read DEFAULT_DIR
+    (`D:/dna_decode_cache/mpra_human`), D: is the empty card-reader slot on this host, and the
+    tables actually sit at `data/mpra_human`. So EVERY data-dependent test in this module skipped,
+    and the loader's load-bearing guards were not guarding anything on the machine the work happens
+    on. The scripts already pass an explicit local dir for exactly this reason; the tests now do too.
+    """
+    for cand in (DEFAULT_DIR, REPO / "data" / "mpra_human"):
+        if (cand / S3_FILE).is_file() and (cand / S6_FILE).is_file():
+            return cand
+    return DEFAULT_DIR
+
+
+DATA_DIR = _resolve_data_dir()
+HAVE_DATA = (DATA_DIR / S3_FILE).is_file() and (DATA_DIR / S6_FILE).is_file()
+needs_data = pytest.mark.skipif(not HAVE_DATA, reason="lentiMPRA tables absent (gitignored)")
+
+#: Measured 2026-10-27 against the MD5-verified deposit; WTC11 added 2026-11-23 with the name rule.
+JOINED = {"HepG2": 61463, "K562": 98332, "WTC11": 23064}
+#: The two that join on a bare id alone. Kept separate from JOINED so the regression guard below
+#: cannot silently start covering WTC11 and report "untouched" about the cell the rule changed.
+IDENTITY_CELLS = ("HepG2", "K562")
 DESIGNED = {"HepG2": 164307, "K562": 243778, "WTC11": 75542}
 #: The S3 header row MOVES between sheets of one workbook. Measured per sheet.
 S3_HEADER_ROW = {"HepG2": 4, "K562": 2, "WTC11": 1}
@@ -74,51 +106,152 @@ def test_stats_round_trip_through_their_dict():
 # --------------------------------------------------------------------- the refusal
 
 @needs_data
-def test_WTC11_REFUSES_rather_than_returning_its_3_percent_overlap():
-    """THE load-bearing guard.
+def test_identity_alone_still_cannot_join_WTC11():
+    """The PREMISE of the name rule, kept as a standing measurement rather than prose.
 
-    WTC11's activity rows are keyed by Ensembl gene id and its design rows by element name, so the
-    intersection is empty; Table S7 rescues only 699 of 23,064. A loader that returned the overlap
-    would produce a cohort that LOOKS like a cohort.
+    If this ever starts passing on bare ids, the deposit changed its naming and the rule below is no
+    longer describing the substrate -- which is the thing the old, misstated docstring got wrong by
+    asserting a mechanism nobody re-measured.
     """
-    with pytest.raises(LentiMpraDataError) as exc:
-        load_cell("WTC11")
-    msg = str(exc.value)
-    assert "0.0000" in msg or "joins at 0" in msg
-    assert "KEY problem" in msg, "the message must say WHY, or the next session re-derives it"
-    assert "gene id" in msg.lower()
+    seqs, _ = load_design("WTC11", DATA_DIR)
+    acts, _ = load_activity("WTC11", DATA_DIR)
+    assert len(seqs) == DESIGNED["WTC11"]
+    assert len(acts) == JOINED["WTC11"]
+    assert not (set(seqs) & set(acts)), "the BARE intersection must be empty; that is why _F exists"
+    # ...and it is empty for the whole measured set, not just its 19% ENSG part.
+    assert sum(1 for k in acts if k.startswith("ENSG")) == 4397
+    assert sum(1 for k in acts if k.startswith("seq")) == 18667
 
 
 @needs_data
-def test_relaxing_the_join_bar_does_NOT_manufacture_WTC11_rows():
-    """Behavioural: the bar is a REPORT of a key mismatch, not the cause of the empty join."""
+def test_the_forward_suffix_is_LOAD_BEARING_and_the_bar_still_bites(monkeypatch):
+    """ONE test for two claims that must not be allowed to rest on each other.
+
+    Point the suffix at something the sheet does not contain: WTC11 must fall back to 0.0000 and
+    REFUSE. That shows the rule is doing real work (not coincidentally agreeing with identity) and
+    that `min_join_rate` still catches a key gap now that the headline cell no longer trips it.
+    """
+    import dna_decode.glm.lentimpra as mod
+
+    # No clear_cache: the cache holds PARSED SHEETS keyed by (kind, cell, dir), and the suffix is
+    # read at join time in load_cell, which is not cached. Clearing would force a fresh 56 MB parse
+    # per test for no behavioural difference.
+    monkeypatch.setattr(mod, "ORIENTATION_SUFFIX", "_NOT_A_REAL_SUFFIX")
+    with pytest.raises(LentiMpraDataError) as exc:
+        mod.load_cell("WTC11", DATA_DIR)
+    msg = str(exc.value)
+    assert "0.0000" in msg or "joins at 0" in msg
+    assert "KEY problem" in msg, "the message must say WHY, or the next session re-derives it"
+    assert "do not relax the bar" in msg
+
+
+@needs_data
+def test_relaxing_the_join_bar_does_NOT_manufacture_rows(monkeypatch):
+    """Behavioural: the bar REPORTS a key gap, it does not cause it. Relaxing it adds nothing."""
+    import dna_decode.glm.lentimpra as mod
+
+    monkeypatch.setattr(mod, "ORIENTATION_SUFFIX", "_NOT_A_REAL_SUFFIX")
     with pytest.raises(LentiMpraDataError):
-        load_cell("WTC11", min_join_rate=0.0001)
-    # The design and activity sides each load fine on their own -- the failure is the JOIN.
-    seqs, _ = load_design("WTC11")
-    acts, _ = load_activity("WTC11")
-    assert len(seqs) == DESIGNED["WTC11"]
-    assert len(acts) == 23064
-    assert not (set(seqs) & set(acts)), "the intersection must be empty, not merely small"
+        mod.load_cell("WTC11", DATA_DIR, min_join_rate=0.0001)
+
+
+@needs_data
+def test_a_bare_id_pairs_with_the_FORWARD_strand_not_the_reverse():
+    """THE load-bearing guard now.
+
+    `_F` and `_R` are different sequences for all 23,064 measured rows, so the join rate is 1.0000
+    whichever is chosen and CANNOT detect a wrong-strand cohort. Settled on sequence identity: the
+    shared promoters the two shipped cells pair by identity equal WTC11's `_F` for 4,397 of 4,397
+    and `_R` for 0. This pins that result against the deployed loader.
+    """
+    recs, st = load_cell("WTC11", DATA_DIR)
+    seqs, _ = load_design("WTC11", DATA_DIR)
+    assert st.name_rule == "identity_then_forward_suffix"
+    assert st.n_joined_forward == JOINED["WTC11"], "every WTC11 row comes via the suffix"
+    assert st.n_joined_identity == 0
+
+    checked = 0
+    for r in recs[:400]:
+        f, rev = seqs.get(r.name + "_F"), seqs.get(r.name + "_R")
+        assert f is not None and rev is not None and f != rev
+        assert r.seq == f, f"{r.name} paired with the REVERSE strand"
+        assert r.seq != rev
+        checked += 1
+    assert checked == 400
+
+
+@needs_data
+def test_the_forward_and_reverse_inserts_are_reverse_complements():
+    """Corroborates that _F/_R are orientations of ONE element, not unrelated oligos -- and pins the
+    adaptor coordinates, since comparing the full 230 nt finds zero revcomp pairs (the 15 nt
+    adaptors are constant on both strands) and would read as a refutation."""
+    seqs, _ = load_design("WTC11", DATA_DIR)
+    comp = str.maketrans("ACGTN", "TGCAN")
+    pairs = 0
+    for name in list(seqs)[:2000]:
+        if not name.endswith("_F"):
+            continue
+        rev = seqs.get(name[:-2] + "_R")
+        if rev is None:
+            continue
+        f_ins, r_ins = seqs[name][15:215], rev[15:215]
+        assert f_ins.translate(comp)[::-1] == r_ins, f"{name} inserts are not revcomp partners"
+        pairs += 1
+    assert pairs > 100, "the sample must actually contain F/R pairs"
+
+
+@needs_data
+@pytest.mark.parametrize("cell", IDENTITY_CELLS)
+def test_the_two_previously_shipped_cells_are_UNTOUCHED_by_the_new_rule(cell):
+    """The fix may only ADD rows. If a suffix hit appears here, the lookup is reaching rows that
+    identity already had -- which is how a 'rescue' silently rewrites a shipped cohort."""
+    _, st = load_cell(cell, DATA_DIR)
+    assert st.name_rule == "identity"
+    assert st.n_joined_forward == 0
+    assert st.n_joined_identity == JOINED[cell]
+
+
+@needs_data
+def test_an_ambiguous_id_REFUSES_rather_than_choosing_a_strand(monkeypatch):
+    """If an id resolves both bare and `_F` to DIFFERENT sequences, neither is knowably the measured
+    construct and BOTH score a complete join. Synthetic: the real deposit has no such id, so this
+    guard would never fire on the data and is the one case that must be constructed to be tested."""
+    import dna_decode.glm.lentimpra as mod
+
+    seqs = {"dup1": "A" * 230, "dup1_F": "C" * 230}
+    monkeypatch.setattr(mod, "load_design", lambda c, d=None: (seqs, mod.LentiStats(cell=c)))
+    monkeypatch.setattr(mod, "load_activity",
+                        lambda c, d=None: ({"dup1": (1.0, 1)}, mod.LentiStats(cell=c, n_measured=1)))
+    with pytest.raises(LentiMpraDataError, match="resolves BOTH"):
+        mod.load_cell("WTC11", DATA_DIR)
+
+
+@needs_data
+def test_the_total_usable_cohort_is_the_three_cell_sum():
+    """Pins the docstring's 182,859 against the loader, so the two cannot drift apart."""
+    assert sum(JOINED.values()) == 182859
+    assert sum(v["n"] for v in usable_cells(DATA_DIR).values() if v["usable"]) == 182859
 
 
 # --------------------------------------------------------------------- the usable cells
 
 @needs_data
 @pytest.mark.parametrize("cell", sorted(JOINED))
-def test_the_two_usable_cells_join_completely(cell):
-    recs, st = load_cell(cell)
+def test_all_three_cells_join_completely(cell):
+    recs, st = load_cell(cell, DATA_DIR)
     assert len(recs) == JOINED[cell]
     assert st.join_rate == pytest.approx(1.0, abs=1e-9), "every measured row must find its sequence"
     assert st.n_designed == DESIGNED[cell]
     assert st.n_measured == JOINED[cell]
+    # The two counters must account for every row, or one rule is being credited for the other's.
+    assert st.n_joined_identity + st.n_joined_forward == JOINED[cell]
 
 
 @needs_data
 @pytest.mark.parametrize("cell", sorted(JOINED))
 def test_every_sequence_is_the_documented_uniform_length(cell):
     """Uniform length is why this panel needs no masked pooling, unlike the E. coli fragment rung."""
-    recs, st = load_cell(cell)
+    recs, st = load_cell(cell, DATA_DIR)
     assert st.length_min == st.length_max == EXPECTED_LEN
     assert all(len(r.seq) == EXPECTED_LEN for r in recs[:500])
 
@@ -127,7 +260,7 @@ def test_every_sequence_is_the_documented_uniform_length(cell):
 @pytest.mark.parametrize("cell", sorted(JOINED))
 def test_the_published_ten_fold_assignment_comes_through(cell):
     """The authors' folds are what make this leakage-safe AND comparable to their benchmark."""
-    recs, st = load_cell(cell)
+    recs, st = load_cell(cell, DATA_DIR)
     assert st.n_folds == 10
     assert set(st.fold_sizes) == set(range(1, 11))
     assert sum(st.fold_sizes.values()) == len(recs)
@@ -139,13 +272,13 @@ def test_the_published_ten_fold_assignment_comes_through(cell):
 @pytest.mark.parametrize("cell", sorted(S3_HEADER_ROW))
 def test_the_header_row_is_DISCOVERED_because_it_moves_between_sheets(cell):
     """A fixed min_row would read a 327-char design note as a column name on the HepG2 sheet."""
-    _, st = load_design(cell)
+    _, st = load_design(cell, DATA_DIR)
     assert st.s3_header_row == S3_HEADER_ROW[cell]
 
 
 @needs_data
 def test_the_header_rows_are_genuinely_different_so_the_discovery_is_not_decorative():
-    rows = {c: load_design(c)[1].s3_header_row for c in CELL_TYPES}
+    rows = {c: load_design(c, DATA_DIR)[1].s3_header_row for c in CELL_TYPES}
     assert len(set(rows.values())) > 1, (
         "if every sheet shared a header row, discovery would be ceremony: %r" % rows)
 
@@ -153,20 +286,37 @@ def test_the_header_rows_are_genuinely_different_so_the_discovery_is_not_decorat
 @needs_data
 def test_the_sequence_column_RECORDS_that_adapters_are_included():
     """The 230 nt is 15 + 200 + 15. A silent trim would change what every number is about."""
-    _, st = load_design("HepG2")
+    _, st = load_design("HepG2", DATA_DIR)
     col = st.sequence_column
     assert "230nt" in col and "adaptor" in col
     assert "200nt element" in col, "the biological element length must stay legible in the record"
 
 
 @needs_data
-def test_usable_cells_REPORTS_the_failure_rather_than_omitting_it():
-    u = usable_cells()
-    assert set(u) == set(CELL_TYPES), "a cell that fails must still appear"
-    assert u["HepG2"]["usable"] and u["K562"]["usable"]
+def test_usable_cells_reports_all_three_as_usable():
+    u = usable_cells(DATA_DIR)
+    assert set(u) == set(CELL_TYPES), "every cell must appear, usable or not"
+    assert all(u[c]["usable"] for c in CELL_TYPES)
+    assert sum(u[c]["n"] for c in CELL_TYPES) == 182859
+
+
+@needs_data
+def test_usable_cells_REPORTS_a_failure_rather_than_omitting_it(monkeypatch):
+    """The discipline this function exists for, kept testable now that no real cell fails.
+
+    Previously this rode on WTC11 genuinely refusing. A guard that depends on a real failure stops
+    being a guard the moment the failure is fixed -- and would then pass vacuously -- so the failure
+    is induced instead, by pointing the suffix at nothing.
+    """
+    import dna_decode.glm.lentimpra as mod
+
+    monkeypatch.setattr(mod, "ORIENTATION_SUFFIX", "_NOT_A_REAL_SUFFIX")
+    u = mod.usable_cells(DATA_DIR)
+    assert set(u) == set(mod.CELL_TYPES), "a cell that fails must still APPEAR"
+    assert u["HepG2"]["usable"] and u["K562"]["usable"], "the other two must be unaffected"
     assert not u["WTC11"]["usable"]
-    assert "reason" in u["WTC11"]
-    assert u["HepG2"]["n"] + u["K562"]["n"] == 159795
+    assert "reason" in u["WTC11"] and "KEY problem" in u["WTC11"]["reason"]
+    assert "n" not in u["WTC11"], "a failing cell must not report a count"
 
 
 # --------------------------------------------------------------------- the incumbents
@@ -179,13 +329,13 @@ def test_the_published_metric_is_declared_UNSPECIFIED_rather_than_guessed():
     Guessing the likely answer would license a cross-readout comparison, which this repo has
     already been bitten by.
     """
-    inc = published_incumbents()
+    inc = published_incumbents(DATA_DIR)
     assert inc["metric"] == "UNSPECIFIED_IN_SOURCE"
 
 
 @needs_data
 def test_the_incumbent_table_carries_all_three_cells_and_ten_folds_each():
-    inc = published_incumbents()["by_cell"]
+    inc = published_incumbents(DATA_DIR)["by_cell"]
     assert set(inc) == set(CELL_TYPES)
     for cell, methods in inc.items():
         assert len(methods) >= 5, "five benchmarked methods were published"
@@ -198,7 +348,7 @@ def test_the_best_published_incumbent_is_named_per_cell():
     """Recorded so the arm's bar is written against a real incumbent, not an invented one."""
     import statistics
 
-    inc = published_incumbents()["by_cell"]
+    inc = published_incumbents(DATA_DIR)["by_cell"]
     best = {c: max(ms.items(), key=lambda kv: statistics.fmean(kv[1].values()))[0]
             for c, ms in inc.items()}
     assert best["HepG2"] == "MPRALegNet"

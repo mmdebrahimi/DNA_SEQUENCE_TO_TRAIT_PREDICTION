@@ -6,18 +6,57 @@ SUBSTRATE, measured 2026-10-27 from the verified deposit (Zenodo 10558183, CC-BY
 |-------|---------------|---------------|---------------|--------|
 | HepG2 | 164,307       | 61,463        | 61,463 (1.000)| yes    |
 | K562  | 243,778       | 98,332        | 98,332 (1.000)| yes    |
-| WTC11 |  75,542       | 23,064        |      0 (0.000)| **NO** |
+| WTC11 |  75,542       | 23,064        | 23,064 (1.000)| yes    |
 
-So the usable labelled set is **159,795 pairs** over two cell types, every sequence exactly 230 bp,
+So the usable labelled set is **182,859 pairs** over three cell types, every sequence exactly 230 bp,
 with the authors' own **10-fold assignment** carried through.
 
-WHY WTC11 REFUSES RATHER THAN RETURNING WHAT IT CAN. Its S6 activity rows are keyed by ENSEMBL GENE
-ID (`ENSG00000000003`) while its S3 design rows use element names (`seq1000_F`) -- different entity
-types, so the intersection is empty. Table S7 (the joint library) rescues only **699 of 23,064
-(3.03%)**, because S7's ENSG-style names are its 2,396 `promoter` rows and nothing else. Returning
-699 rows would hand a caller a 3%-complete cohort that looks like a cohort; this repo has paid for
-that shape before (the sigma70 rung's naive key join returned 3,821 of 10,898, which is why
-`expression.load_pairs` enforces MIN_JOIN_RATE). So the join rate is ENFORCED here too.
+WHY WTC11 NEEDED A NAME RULE, corrected 2026-11-23 (it previously joined at 0.000 and refused, on a
+MISSTATED mechanism -- the old text said S6 keys this cell by Ensembl gene id while S3 uses element
+names, "different entity types, so the intersection is empty"). Measured, with the two shipped cells
+reproducing 1.0000 as controls first:
+
+  * **S6 carries no orientation marker for ANY cell.** Every measured id is bare -- HepG2
+    `DNasePeakNoPromoter1`, K562 `peak1`, WTC11 `seq1000` / `ENSG00000000003`.
+  * **The difference is on the DESIGN side.** S3 HepG2 and S3 K562 name the forward strand BARE and
+    put the reverse under `_Reversed:`, so a bare S6 id matches at identity. **S3 WTC11 is the only
+    sheet that suffixes the forward strand too** (`seq1000_F` / `seq1000_R`, neither bare), so
+    nothing matches and the rate is exactly 0.
+  * **ENSG was a red herring.** It is 4,397 of WTC11's 23,064 measured ids (19%); the other 81% are
+    bare `seq...` ids failing for the identical suffix reason. The old "different entity types"
+    account could not have explained those, and S3 WTC11 in fact holds 15,000 ENSG-named design rows
+    (7,500 genes x 2 orientations), so the two sides were never disjoint entity types at all.
+
+WHICH STRAND A BARE S6 ID DENOTES -- settled on SEQUENCE IDENTITY, not on the naming analogy, because
+`_F` and `_R` are different sequences for **23,064 of 23,064** measured rows while the join rate
+reads 1.000 either way. That is the shape where a cohort looks complete and is silently half wrong.
+Three independent lines agree on `_F`:
+
+  1. The 4,397 bare-ENSG ids WTC11 measured also exist as BARE names in the HepG2/K562 design
+     sheets, which the shipped cells pair by identity. That shared-promoter sequence equals WTC11's
+     `_F` for **4,397 of 4,397** and `_R` for **0** (0 neither, 0 absent).
+  2. The `_F`/`_R` inserts (`seq[15:215]`, the adaptors being constant) are exact reverse
+     complements for **37,621 of 37,621** pairs -- so they are true orientation pairs of one 200 nt
+     element, not unrelated oligos.
+  3. Table S7, the authors' own joint library, takes **18,946 `_F` rows and zero `_R`**.
+
+The rule is therefore `identity, else sid + "_F"`, applied as an EXPLICIT two-step lookup. It is not
+a stripped-suffix pool: stripping `_F`/`_R` into one dict makes `seq1000_F` and `seq1000_R` collide
+on one key and lets insertion order choose the sequence, which would score the same 1.0000 while
+pairing half the cohort with the wrong strand. `load_cell` REFUSES if an id resolves both ways to
+different sequences, and `LentiStats.name_rule` records which rule was used.
+
+WHAT THIS STILL DOES NOT ESTABLISH. S6 holds one row per element, which does not by itself separate
+"the forward-strand measurement" from "a value aggregated over both orientations". The pairing above
+is the construct convention the two shipped cells already use, so it is consistent across all three
+cells; but until the paper's Methods or the deposit's model code states how the S6 value was built,
+say "one value per element, paired with the forward-designed oligo, as for HepG2/K562" and do NOT
+write that S6 *is* the forward measurement.
+
+The join rate stays ENFORCED at MIN_JOIN_RATE. This repo has paid for a plausible-looking partial
+cohort before (the sigma70 rung's naive key join returned 3,821 of 10,898, which is why
+`expression.load_pairs` enforces it), and Table S7 rescues only **699 of 23,064 (3.03%)** -- the
+route a previous correction reached for, and 3% of a cohort looks exactly like a cohort.
 
 TWO PARSING TRAPS, both measured rather than assumed:
 
@@ -52,6 +91,19 @@ S6_FILE = "Table S6 - folds and performance.xlsx"
 
 #: Mirrors `expression.load_pairs`. A cohort below this is a key problem, not a small cohort.
 MIN_JOIN_RATE = 0.95
+
+#: The strand a bare S6 id denotes, for sheets that suffix BOTH strands (only S3 WTC11 does). See
+#: the module docstring for the three measurements that settle this on `_F`. It is a module constant
+#: rather than a literal at the call site so the value, and the reasoning it points at, has exactly
+#: one home -- and so a future sheet that inverts the convention is a one-line change with a
+#: docstring beside it rather than a silent edit inside a join loop.
+ORIENTATION_SUFFIX = "_F"
+
+#: Name rules `load_cell` may use, reported in `LentiStats.name_rule`. The pairing a cohort was
+#: built with changes what every downstream number is ABOUT, so it is recorded, never implicit --
+#: the same discipline as `sequence_column` recording that the 230 nt includes the adaptors.
+RULE_IDENTITY = "identity"
+RULE_IDENTITY_THEN_FORWARD = "identity_then_forward_suffix"
 
 #: Measured: all 483,627 designed sequences across all three sheets are exactly this long.
 EXPECTED_LEN = 230
@@ -110,12 +162,16 @@ class LentiStats:
     length_min: int = 0
     length_max: int = 0
     n_folds: int = 0
+    name_rule: str = RULE_IDENTITY   # which key rule joined this cell; see ORIENTATION_SUFFIX
+    n_joined_identity: int = 0       # rows paired on a bare id, as the two shipped cells are
+    n_joined_forward: int = 0        # rows paired via `sid + ORIENTATION_SUFFIX`
     fold_sizes: dict = field(default_factory=dict)
 
     def as_dict(self) -> dict:
         d = {k: getattr(self, k) for k in (
             "cell", "n_designed", "n_measured", "n_joined", "s3_sheet", "s3_header_row",
-            "s6_sheet", "s6_header_row", "sequence_column", "length_min", "length_max", "n_folds")}
+            "s6_sheet", "s6_header_row", "sequence_column", "length_min", "length_max", "n_folds",
+            "name_rule", "n_joined_identity", "n_joined_forward")}
         d["join_rate"] = round(self.join_rate, 4)
         d["fold_sizes"] = dict(sorted(self.fold_sizes.items()))
         return d
@@ -265,12 +321,29 @@ def load_cell(cell: str, data_dir: Path | str = DEFAULT_DIR, *,
 
     records, lens = [], []
     for sid, (y, fold) in acts.items():
+        # Identity FIRST, so the two cells that already join at 1.0000 take an untouched path and
+        # the suffix rule can only ever ADD rows. Then the explicit forward-strand name. These are
+        # two named lookups rather than one lookup into a suffix-stripped pool, because stripping
+        # collides `X_F` and `X_R` onto one key and lets insertion order pick the sequence -- which
+        # scores an identical join rate while pairing half the cohort with the wrong strand.
         sq = seqs.get(sid)
-        if sq is None:
+        alt = seqs.get(sid + ORIENTATION_SUFFIX)
+        if sq is not None and alt is not None and sq != alt:
+            raise LentiMpraDataError(
+                "%s: id %r resolves BOTH as a bare name and as %r, to DIFFERENT sequences. The "
+                "name rule cannot decide which construct was measured, and either choice would "
+                "look like a complete join, so this refuses." % (cell, sid, sid + ORIENTATION_SUFFIX))
+        if sq is not None:
+            st.n_joined_identity += 1
+        elif alt is not None:
+            sq = alt
+            st.n_joined_forward += 1
+        else:
             continue
         records.append(LentiRecord(name=sid, seq=sq, activity=y, fold=fold, cell=cell))
         lens.append(len(sq))
 
+    st.name_rule = RULE_IDENTITY_THEN_FORWARD if st.n_joined_forward else RULE_IDENTITY
     st.n_joined = len(records)
     st.join_rate = len(records) / st.n_measured if st.n_measured else 0.0
     for r in records:
@@ -282,9 +355,13 @@ def load_cell(cell: str, data_dir: Path | str = DEFAULT_DIR, *,
     if st.join_rate < min_join_rate:
         raise LentiMpraDataError(
             "%s joins at %.4f (%d of %d measured rows), below the %.2f bar. This is a KEY problem, "
-            "not a small cohort: S6 keys this cell by Ensembl gene id while S3 uses element names. "
-            "Returning the overlap would hand back a %.1f%%-complete cohort that looks complete."
-            % (cell, st.join_rate, st.n_joined, st.n_measured, min_join_rate, 100 * st.join_rate))
+            "not a small cohort. S6 ids are bare for every cell; a sheet joins at identity only if "
+            "it names the forward strand bare, and `identity, else sid + %r` is the only rule "
+            "applied -- so a rate this low means this sheet uses a THIRD naming convention that "
+            "neither rule covers. Diagnose the convention; do not relax the bar, because returning "
+            "the overlap would hand back a %.1f%%-complete cohort that looks complete."
+            % (cell, st.join_rate, st.n_joined, st.n_measured, min_join_rate, ORIENTATION_SUFFIX,
+               100 * st.join_rate))
 
     if st.length_min != st.length_max:
         raise LentiMpraDataError(
