@@ -1,0 +1,787 @@
+{
+  "record": "human-obs-per-nonzero-cell-v1",
+  "date": "2026-11-22",
+  "requested_by": "P2 Tokenization Axis [f6628f]",
+  "spec": "dna-generator-research\\P2-tokenization-axis\\results\\obs-per-nonzero-cell-spec.md -- definition owned by P2, data owned here",
+  "question_it_decides": "whether the sparsity cliff that makes the reach question untestable at the count-model class on E. coli also binds on human",
+  "NO_VERDICT_ON_THE_ARMS_IS_OFFERED": "the spec reserves that inference to P2. This artifact reports the number, the calibration and the ambiguity, and stops there.",
+  "definition_used_verbatim_from_the_spec": {
+    "N_obs": "positions where BOTH a k-context and its FOLLOWING BASE are defined; sum of (L-k)",
+    "C_k": "distinct observed k-mer contexts",
+    "ratio": "N_obs / C_k, PRIMARY per distinct CONTEXT (the row)",
+    "secondary_reported_never_substituted": "per (context, next-base) cell",
+    "a_correction_made_before_running": "a first draft used (L-k+1) contexts, i.e. every k-mer including the final one, which has no following base. That would have counted a context the conditional cannot use."
+  },
+  "conventions": {
+    "strand": "SINGLE strand as given, identical in calibration and human run",
+    "contexts_span_sequence_boundaries": false,
+    "N_obs_definition": "sum of (L - k); the final k-mer is excluded as it has no following base",
+    "human_geometry": "200 nt element, constant 15 nt adaptors STRIPPED",
+    "human_folds": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "folds_9_or_10_touched": false
+  },
+  "CALIBRATION_AND_ITS_ONE_UNRESOLVED_POINT": {
+    "why_mandatory": "the spec requires reproducing the E. coli figure with the same code before any human number is reported -- a definition verified only against its own fixture proves nothing about the comparison it exists to make",
+    "what_was_run": "five DISJOINT 600-window samples from this repo's E. coli 150 bp corpus, because P2's exact 600 fit windows are not in this tree. The spread across samples bounds the 'not their windows' caveat by measurement.",
+    "corpus": "wiki\\glm_training_corpus_2026-11-21.txt",
+    "spread_by_width": {
+      "4": {
+        "min": 342.1875,
+        "max": 342.1875,
+        "mean": 342.1875
+      },
+      "6": {
+        "min": 21.1041,
+        "max": 21.8845,
+        "mean": 21.2705
+      },
+      "8": {
+        "min": 2.2266,
+        "max": 2.7114,
+        "mean": 2.3502
+      },
+      "10": {
+        "min": 1.1229,
+        "max": 1.1975,
+        "mean": 1.1415
+      },
+      "11": {
+        "min": 1.038,
+        "max": 1.07,
+        "mean": 1.0466
+      },
+      "12": {
+        "min": 1.0115,
+        "max": 1.0264,
+        "mean": 1.0155
+      },
+      "14": {
+        "min": 1.0012,
+        "max": 1.0066,
+        "mean": 1.0026
+      },
+      "16": {
+        "min": 1.0002,
+        "max": 1.0041,
+        "mean": 1.0011
+      }
+    },
+    "where_1.002_lands_in_MY_corpus": {
+      "k14": {
+        "min": 1.0012,
+        "max": 1.0066,
+        "mean": 1.0026
+      },
+      "k16": {
+        "min": 1.0002,
+        "max": 1.0041,
+        "mean": 1.0011
+      },
+      "k12_for_contrast": {
+        "min": 1.0115,
+        "max": 1.0264,
+        "mean": 1.0155
+      }
+    },
+    "THE_UNRESOLVED_POINT": "the spec names the target value (1.002) but NOT the width it was observed at. In this corpus 1.002 lands at k=14 (mean 1.0026); at k=12 this corpus gives 1.0155. Both readings are live because the THEORETICAL random-occupancy value at k=12 for 82,800 draws over 4^12 cells is also 1.0025 -- so a corpus with near-random 12-mer occupancy would show 1.002 at k=12, while this one shows 1.0155 there because real DNA repeats and collides more. P2 should confirm which width its 1.002 was measured at.",
+    "WHY_THE_HUMAN_RESULT_SURVIVES_THE_AMBIGUITY": "the ~10 threshold is absolute, derived in the spec from the next-base distribution having 4 outcomes (~10 observations per context is ~2.5 per outcome). It is NOT derived from E. coli. The human ratios at k=12 are 1.840 (K562) and 1.547 (HepG2), far below 10 on any reading, so the calibration validates the CODE and the verdict rests on the absolute bar."
+  },
+  "RESULT_the_crossing_point_is_the_deliverable": {
+    "K562": {
+      "first_width_below_10": 11,
+      "crossing_bracket_bp": [
+        10,
+        11
+      ],
+      "k10": 11.4434,
+      "k11": 3.7908,
+      "k12": 1.8403
+    },
+    "HepG2": {
+      "first_width_below_10": 10,
+      "crossing_bracket_bp": [
+        8,
+        10
+      ],
+      "k10": 7.6489,
+      "k11": 2.8148,
+      "k12": 1.547
+    },
+    "THE_AMBIGUITY_THE_SPEC_ASKED_FOR_RATHER_THAN_A_ROUNDED_SIDE": "the two cells DISAGREE at exactly k=10: K562 reads 11.44, marginally ABOVE the bar of 10, while HepG2 reads 7.65, below it. So 10 bp is usable in one cell and not the other, and this is precisely the case the bar's never-pool rule anticipates. Reported as a disagreement rather than averaged into a single crossing.",
+    "at_12bp_neither_cell_is_close_to_usable": "K562 1.840 and HepG2 1.547 against a bar of 10. Not near the decision boundary, so this part is NOT ambiguous."
+  },
+  "AN_INTERNAL_CONSISTENCY_CHECK_THAT_PASSED": {
+    "the_check": "if the measurement is behaving, a larger corpus should buy extra reach at exactly log4(size ratio), because each additional bp multiplies the context space by 4",
+    "corpus_size_ratio_at_k12_human_over_ecoli600": 134.0,
+    "predicted_extra_reach_bp": 3.53,
+    "observed_shift_bp": "E. coli crosses between 6 and 8 bp; K562 between 10 and 11 -- about 3 to 4 bp",
+    "reading": "the shift matches the alphabet scaling, so the human corpus shows no anomalous density in either direction. A mismatch here would have meant the statistic was measuring something other than occupancy."
+  },
+  "full_curves": {
+    "K562": [
+      {
+        "k": 4,
+        "N_obs": 11563608,
+        "C_k_distinct_contexts": 256,
+        "four_to_the_k": 256.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 45170.3438,
+        "context_occupancy_fraction": 1.0,
+        "SECONDARY_per_context_next_base_cell": 11292.5859,
+        "distinct_context_next_base_cells": 1024,
+        "regime": "usable"
+      },
+      {
+        "k": 6,
+        "N_obs": 11445612,
+        "C_k_distinct_contexts": 4096,
+        "four_to_the_k": 4096.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 2794.3389,
+        "context_occupancy_fraction": 1.0,
+        "SECONDARY_per_context_next_base_cell": 698.5847,
+        "distinct_context_next_base_cells": 16384,
+        "regime": "usable"
+      },
+      {
+        "k": 8,
+        "N_obs": 11327616,
+        "C_k_distinct_contexts": 65535,
+        "four_to_the_k": 65536.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 172.8483,
+        "context_occupancy_fraction": 0.99998474,
+        "SECONDARY_per_context_next_base_cell": 43.3522,
+        "distinct_context_next_base_cells": 261293,
+        "regime": "usable"
+      },
+      {
+        "k": 10,
+        "N_obs": 11209620,
+        "C_k_distinct_contexts": 979568,
+        "four_to_the_k": 1048576.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 11.4434,
+        "context_occupancy_fraction": 0.93418884,
+        "SECONDARY_per_context_next_base_cell": 3.8046,
+        "distinct_context_next_base_cells": 2946352,
+        "regime": "usable"
+      },
+      {
+        "k": 11,
+        "N_obs": 11150622,
+        "C_k_distinct_contexts": 2941494,
+        "four_to_the_k": 4194304.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 3.7908,
+        "context_occupancy_fraction": 0.70130682,
+        "SECONDARY_per_context_next_base_cell": 1.8439,
+        "distinct_context_next_base_cells": 6047314,
+        "regime": "below_usable_bar"
+      },
+      {
+        "k": 12,
+        "N_obs": 11091624,
+        "C_k_distinct_contexts": 6027092,
+        "four_to_the_k": 16777216.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 1.8403,
+        "context_occupancy_fraction": 0.35924268,
+        "SECONDARY_per_context_next_base_cell": 1.2904,
+        "distinct_context_next_base_cells": 8595590,
+        "regime": "below_usable_bar"
+      },
+      {
+        "k": 14,
+        "N_obs": 10973628,
+        "C_k_distinct_contexts": 9824669,
+        "four_to_the_k": 268435456.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 1.1169,
+        "context_occupancy_fraction": 0.03659974,
+        "SECONDARY_per_context_next_base_cell": 1.0595,
+        "distinct_context_next_base_cells": 10357055,
+        "regime": "below_usable_bar"
+      },
+      {
+        "k": 16,
+        "N_obs": 10855632,
+        "C_k_distinct_contexts": 10454322,
+        "four_to_the_k": 4294967296.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 1.0384,
+        "context_occupancy_fraction": 0.00243409,
+        "SECONDARY_per_context_next_base_cell": 1.0295,
+        "distinct_context_next_base_cells": 10544776,
+        "regime": "below_usable_bar"
+      }
+    ],
+    "HepG2": [
+      {
+        "k": 4,
+        "N_obs": 7227696,
+        "C_k_distinct_contexts": 256,
+        "four_to_the_k": 256.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 28233.1875,
+        "context_occupancy_fraction": 1.0,
+        "SECONDARY_per_context_next_base_cell": 7058.2969,
+        "distinct_context_next_base_cells": 1024,
+        "regime": "usable"
+      },
+      {
+        "k": 6,
+        "N_obs": 7153944,
+        "C_k_distinct_contexts": 4096,
+        "four_to_the_k": 4096.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 1746.5684,
+        "context_occupancy_fraction": 1.0,
+        "SECONDARY_per_context_next_base_cell": 436.6421,
+        "distinct_context_next_base_cells": 16384,
+        "regime": "usable"
+      },
+      {
+        "k": 8,
+        "N_obs": 7080192,
+        "C_k_distinct_contexts": 65527,
+        "four_to_the_k": 65536.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 108.05,
+        "context_occupancy_fraction": 0.99986267,
+        "SECONDARY_per_context_next_base_cell": 27.3451,
+        "distinct_context_next_base_cells": 258920,
+        "regime": "usable"
+      },
+      {
+        "k": 10,
+        "N_obs": 7006440,
+        "C_k_distinct_contexts": 916012,
+        "four_to_the_k": 1048576.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 7.6489,
+        "context_occupancy_fraction": 0.87357712,
+        "SECONDARY_per_context_next_base_cell": 2.8236,
+        "distinct_context_next_base_cells": 2481349,
+        "regime": "below_usable_bar"
+      },
+      {
+        "k": 11,
+        "N_obs": 6969564,
+        "C_k_distinct_contexts": 2476067,
+        "four_to_the_k": 4194304.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 2.8148,
+        "context_occupancy_fraction": 0.59034038,
+        "SECONDARY_per_context_next_base_cell": 1.5494,
+        "distinct_context_next_base_cells": 4498279,
+        "regime": "below_usable_bar"
+      },
+      {
+        "k": 12,
+        "N_obs": 6932688,
+        "C_k_distinct_contexts": 4481497,
+        "four_to_the_k": 16777216.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 1.547,
+        "context_occupancy_fraction": 0.26711804,
+        "SECONDARY_per_context_next_base_cell": 1.186,
+        "distinct_context_next_base_cells": 5845624,
+        "regime": "below_usable_bar"
+      },
+      {
+        "k": 14,
+        "N_obs": 6858936,
+        "C_k_distinct_contexts": 6387857,
+        "four_to_the_k": 268435456.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 1.0737,
+        "context_occupancy_fraction": 0.02379662,
+        "SECONDARY_per_context_next_base_cell": 1.0372,
+        "distinct_context_next_base_cells": 6612802,
+        "regime": "below_usable_bar"
+      },
+      {
+        "k": 16,
+        "N_obs": 6785184,
+        "C_k_distinct_contexts": 6628645,
+        "four_to_the_k": 4294967296.0,
+        "obs_per_nonzero_cell_PRIMARY_per_context": 1.0236,
+        "context_occupancy_fraction": 0.00154335,
+        "SECONDARY_per_context_next_base_cell": 1.0177,
+        "distinct_context_next_base_cells": 6667452,
+        "regime": "below_usable_bar"
+      }
+    ],
+    "ecoli_600_window_samples": {
+      "windows_0_599": [
+        {
+          "k": 4,
+          "N_obs": 87600,
+          "C_k_distinct_contexts": 256,
+          "four_to_the_k": 256.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 342.1875,
+          "context_occupancy_fraction": 1.0,
+          "SECONDARY_per_context_next_base_cell": 85.5469,
+          "distinct_context_next_base_cells": 1024,
+          "regime": "usable"
+        },
+        {
+          "k": 6,
+          "N_obs": 86400,
+          "C_k_distinct_contexts": 4090,
+          "four_to_the_k": 4096.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 21.1247,
+          "context_occupancy_fraction": 0.99853516,
+          "SECONDARY_per_context_next_base_cell": 5.7677,
+          "distinct_context_next_base_cells": 14980,
+          "regime": "usable"
+        },
+        {
+          "k": 8,
+          "N_obs": 85200,
+          "C_k_distinct_contexts": 37838,
+          "four_to_the_k": 65536.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 2.2517,
+          "context_occupancy_fraction": 0.57736206,
+          "SECONDARY_per_context_next_base_cell": 1.3838,
+          "distinct_context_next_base_cells": 61570,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 10,
+          "N_obs": 84000,
+          "C_k_distinct_contexts": 74803,
+          "four_to_the_k": 1048576.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.1229,
+          "context_occupancy_fraction": 0.0713377,
+          "SECONDARY_per_context_next_base_cell": 1.0381,
+          "distinct_context_next_base_cells": 80919,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 11,
+          "N_obs": 83400,
+          "C_k_distinct_contexts": 80349,
+          "four_to_the_k": 4194304.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.038,
+          "context_occupancy_fraction": 0.01915669,
+          "SECONDARY_per_context_next_base_cell": 1.0115,
+          "distinct_context_next_base_cells": 82453,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 12,
+          "N_obs": 82800,
+          "C_k_distinct_contexts": 81862,
+          "four_to_the_k": 16777216.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0115,
+          "context_occupancy_fraction": 0.00487936,
+          "SECONDARY_per_context_next_base_cell": 1.0036,
+          "distinct_context_next_base_cells": 82505,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 14,
+          "N_obs": 81600,
+          "C_k_distinct_contexts": 81505,
+          "four_to_the_k": 268435456.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0012,
+          "context_occupancy_fraction": 0.00030363,
+          "SECONDARY_per_context_next_base_cell": 1.0004,
+          "distinct_context_next_base_cells": 81566,
+          "regime": "DEGENERATE"
+        },
+        {
+          "k": 16,
+          "N_obs": 80400,
+          "C_k_distinct_contexts": 80386,
+          "four_to_the_k": 4294967296.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0002,
+          "context_occupancy_fraction": 1.872e-05,
+          "SECONDARY_per_context_next_base_cell": 1.0001,
+          "distinct_context_next_base_cells": 80391,
+          "regime": "DEGENERATE"
+        }
+      ],
+      "windows_600_1199": [
+        {
+          "k": 4,
+          "N_obs": 87600,
+          "C_k_distinct_contexts": 256,
+          "four_to_the_k": 256.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 342.1875,
+          "context_occupancy_fraction": 1.0,
+          "SECONDARY_per_context_next_base_cell": 85.5469,
+          "distinct_context_next_base_cells": 1024,
+          "regime": "usable"
+        },
+        {
+          "k": 6,
+          "N_obs": 86400,
+          "C_k_distinct_contexts": 4090,
+          "four_to_the_k": 4096.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 21.1247,
+          "context_occupancy_fraction": 0.99853516,
+          "SECONDARY_per_context_next_base_cell": 5.7987,
+          "distinct_context_next_base_cells": 14900,
+          "regime": "usable"
+        },
+        {
+          "k": 8,
+          "N_obs": 85200,
+          "C_k_distinct_contexts": 37190,
+          "four_to_the_k": 65536.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 2.2909,
+          "context_occupancy_fraction": 0.56747437,
+          "SECONDARY_per_context_next_base_cell": 1.4096,
+          "distinct_context_next_base_cells": 60442,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 10,
+          "N_obs": 84000,
+          "C_k_distinct_contexts": 74084,
+          "four_to_the_k": 1048576.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.1338,
+          "context_occupancy_fraction": 0.07065201,
+          "SECONDARY_per_context_next_base_cell": 1.0432,
+          "distinct_context_next_base_cells": 80519,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 11,
+          "N_obs": 83400,
+          "C_k_distinct_contexts": 79953,
+          "four_to_the_k": 4194304.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0431,
+          "context_occupancy_fraction": 0.01906228,
+          "SECONDARY_per_context_next_base_cell": 1.0137,
+          "distinct_context_next_base_cells": 82270,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 12,
+          "N_obs": 82800,
+          "C_k_distinct_contexts": 81683,
+          "four_to_the_k": 16777216.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0137,
+          "context_occupancy_fraction": 0.00486869,
+          "SECONDARY_per_context_next_base_cell": 1.0048,
+          "distinct_context_next_base_cells": 82405,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 14,
+          "N_obs": 81600,
+          "C_k_distinct_contexts": 81452,
+          "four_to_the_k": 268435456.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0018,
+          "context_occupancy_fraction": 0.00030343,
+          "SECONDARY_per_context_next_base_cell": 1.0008,
+          "distinct_context_next_base_cells": 81533,
+          "regime": "DEGENERATE"
+        },
+        {
+          "k": 16,
+          "N_obs": 80400,
+          "C_k_distinct_contexts": 80367,
+          "four_to_the_k": 4294967296.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0004,
+          "context_occupancy_fraction": 1.871e-05,
+          "SECONDARY_per_context_next_base_cell": 1.0003,
+          "distinct_context_next_base_cells": 80377,
+          "regime": "DEGENERATE"
+        }
+      ],
+      "windows_1200_1799": [
+        {
+          "k": 4,
+          "N_obs": 87600,
+          "C_k_distinct_contexts": 256,
+          "four_to_the_k": 256.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 342.1875,
+          "context_occupancy_fraction": 1.0,
+          "SECONDARY_per_context_next_base_cell": 85.5469,
+          "distinct_context_next_base_cells": 1024,
+          "regime": "usable"
+        },
+        {
+          "k": 6,
+          "N_obs": 86400,
+          "C_k_distinct_contexts": 4092,
+          "four_to_the_k": 4096.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 21.1144,
+          "context_occupancy_fraction": 0.99902344,
+          "SECONDARY_per_context_next_base_cell": 5.7615,
+          "distinct_context_next_base_cells": 14996,
+          "regime": "usable"
+        },
+        {
+          "k": 8,
+          "N_obs": 85200,
+          "C_k_distinct_contexts": 37523,
+          "four_to_the_k": 65536.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 2.2706,
+          "context_occupancy_fraction": 0.57255554,
+          "SECONDARY_per_context_next_base_cell": 1.3957,
+          "distinct_context_next_base_cells": 61046,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 10,
+          "N_obs": 84000,
+          "C_k_distinct_contexts": 74483,
+          "four_to_the_k": 1048576.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.1278,
+          "context_occupancy_fraction": 0.07103252,
+          "SECONDARY_per_context_next_base_cell": 1.0413,
+          "distinct_context_next_base_cells": 80666,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 11,
+          "N_obs": 83400,
+          "C_k_distinct_contexts": 80104,
+          "four_to_the_k": 4194304.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0411,
+          "context_occupancy_fraction": 0.01909828,
+          "SECONDARY_per_context_next_base_cell": 1.013,
+          "distinct_context_next_base_cells": 82330,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 12,
+          "N_obs": 82800,
+          "C_k_distinct_contexts": 81742,
+          "four_to_the_k": 16777216.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0129,
+          "context_occupancy_fraction": 0.0048722,
+          "SECONDARY_per_context_next_base_cell": 1.0042,
+          "distinct_context_next_base_cells": 82454,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 14,
+          "N_obs": 81600,
+          "C_k_distinct_contexts": 81476,
+          "four_to_the_k": 268435456.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0015,
+          "context_occupancy_fraction": 0.00030352,
+          "SECONDARY_per_context_next_base_cell": 1.0006,
+          "distinct_context_next_base_cells": 81550,
+          "regime": "DEGENERATE"
+        },
+        {
+          "k": 16,
+          "N_obs": 80400,
+          "C_k_distinct_contexts": 80381,
+          "four_to_the_k": 4294967296.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0002,
+          "context_occupancy_fraction": 1.872e-05,
+          "SECONDARY_per_context_next_base_cell": 1.0001,
+          "distinct_context_next_base_cells": 80388,
+          "regime": "DEGENERATE"
+        }
+      ],
+      "windows_20000_20599": [
+        {
+          "k": 4,
+          "N_obs": 87600,
+          "C_k_distinct_contexts": 256,
+          "four_to_the_k": 256.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 342.1875,
+          "context_occupancy_fraction": 1.0,
+          "SECONDARY_per_context_next_base_cell": 85.6305,
+          "distinct_context_next_base_cells": 1023,
+          "regime": "usable"
+        },
+        {
+          "k": 6,
+          "N_obs": 86400,
+          "C_k_distinct_contexts": 3948,
+          "four_to_the_k": 4096.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 21.8845,
+          "context_occupancy_fraction": 0.96386719,
+          "SECONDARY_per_context_next_base_cell": 6.6528,
+          "distinct_context_next_base_cells": 12987,
+          "regime": "usable"
+        },
+        {
+          "k": 8,
+          "N_obs": 85200,
+          "C_k_distinct_contexts": 31423,
+          "four_to_the_k": 65536.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 2.7114,
+          "context_occupancy_fraction": 0.47947693,
+          "SECONDARY_per_context_next_base_cell": 1.574,
+          "distinct_context_next_base_cells": 54130,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 10,
+          "N_obs": 84000,
+          "C_k_distinct_contexts": 70145,
+          "four_to_the_k": 1048576.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.1975,
+          "context_occupancy_fraction": 0.06689548,
+          "SECONDARY_per_context_next_base_cell": 1.0702,
+          "distinct_context_next_base_cells": 78489,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 11,
+          "N_obs": 83400,
+          "C_k_distinct_contexts": 77944,
+          "four_to_the_k": 4194304.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.07,
+          "context_occupancy_fraction": 0.0185833,
+          "SECONDARY_per_context_next_base_cell": 1.0264,
+          "distinct_context_next_base_cells": 81252,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 12,
+          "N_obs": 82800,
+          "C_k_distinct_contexts": 80670,
+          "four_to_the_k": 16777216.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0264,
+          "context_occupancy_fraction": 0.00480831,
+          "SECONDARY_per_context_next_base_cell": 1.0119,
+          "distinct_context_next_base_cells": 81826,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 14,
+          "N_obs": 81600,
+          "C_k_distinct_contexts": 81061,
+          "four_to_the_k": 268435456.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0066,
+          "context_occupancy_fraction": 0.00030198,
+          "SECONDARY_per_context_next_base_cell": 1.0048,
+          "distinct_context_next_base_cells": 81208,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 16,
+          "N_obs": 80400,
+          "C_k_distinct_contexts": 80074,
+          "four_to_the_k": 4294967296.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0041,
+          "context_occupancy_fraction": 1.864e-05,
+          "SECONDARY_per_context_next_base_cell": 1.0035,
+          "distinct_context_next_base_cells": 80118,
+          "regime": "below_usable_bar"
+        }
+      ],
+      "windows_40000_40599": [
+        {
+          "k": 4,
+          "N_obs": 87600,
+          "C_k_distinct_contexts": 256,
+          "four_to_the_k": 256.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 342.1875,
+          "context_occupancy_fraction": 1.0,
+          "SECONDARY_per_context_next_base_cell": 85.5469,
+          "distinct_context_next_base_cells": 1024,
+          "regime": "usable"
+        },
+        {
+          "k": 6,
+          "N_obs": 86400,
+          "C_k_distinct_contexts": 4094,
+          "four_to_the_k": 4096.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 21.1041,
+          "context_occupancy_fraction": 0.99951172,
+          "SECONDARY_per_context_next_base_cell": 5.6745,
+          "distinct_context_next_base_cells": 15226,
+          "regime": "usable"
+        },
+        {
+          "k": 8,
+          "N_obs": 85200,
+          "C_k_distinct_contexts": 38265,
+          "four_to_the_k": 65536.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 2.2266,
+          "context_occupancy_fraction": 0.58387756,
+          "SECONDARY_per_context_next_base_cell": 1.3816,
+          "distinct_context_next_base_cells": 61666,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 10,
+          "N_obs": 84000,
+          "C_k_distinct_contexts": 74627,
+          "four_to_the_k": 1048576.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.1256,
+          "context_occupancy_fraction": 0.07116985,
+          "SECONDARY_per_context_next_base_cell": 1.041,
+          "distinct_context_next_base_cells": 80689,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 11,
+          "N_obs": 83400,
+          "C_k_distinct_contexts": 80122,
+          "four_to_the_k": 4194304.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0409,
+          "context_occupancy_fraction": 0.01910257,
+          "SECONDARY_per_context_next_base_cell": 1.0132,
+          "distinct_context_next_base_cells": 82310,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 12,
+          "N_obs": 82800,
+          "C_k_distinct_contexts": 81719,
+          "four_to_the_k": 16777216.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0132,
+          "context_occupancy_fraction": 0.00487083,
+          "SECONDARY_per_context_next_base_cell": 1.0045,
+          "distinct_context_next_base_cells": 82430,
+          "regime": "below_usable_bar"
+        },
+        {
+          "k": 14,
+          "N_obs": 81600,
+          "C_k_distinct_contexts": 81455,
+          "four_to_the_k": 268435456.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0018,
+          "context_occupancy_fraction": 0.00030344,
+          "SECONDARY_per_context_next_base_cell": 1.0008,
+          "distinct_context_next_base_cells": 81531,
+          "regime": "DEGENERATE"
+        },
+        {
+          "k": 16,
+          "N_obs": 80400,
+          "C_k_distinct_contexts": 80359,
+          "four_to_the_k": 4294967296.0,
+          "obs_per_nonzero_cell_PRIMARY_per_context": 1.0005,
+          "context_occupancy_fraction": 1.871e-05,
+          "SECONDARY_per_context_next_base_cell": 1.0003,
+          "distinct_context_next_base_cells": 80373,
+          "regime": "DEGENERATE"
+        }
+      ]
+    }
+  },
+  "corpus_facts": {
+    "K562": {
+      "n_elements_folds_1_6": 58998,
+      "n_usable": 58998,
+      "n_dropped_non_ACGT": 0,
+      "n_distinct_sequences": 58998,
+      "exact_duplicate_elements": 0,
+      "element_length_bp": 200
+    },
+    "HepG2": {
+      "n_elements_folds_1_6": 36876,
+      "n_usable": 36876,
+      "n_dropped_non_ACGT": 0,
+      "n_distinct_sequences": 36876,
+      "exact_duplicate_elements": 0,
+      "element_length_bp": 200
+    }
+  },
+  "honest_limits": [
+    "The E. coli calibration uses THIS repo's 600-window samples, not P2's exact fit windows, so it validates the implementation rather than reproducing their measurement identically.",
+    "The spec names the degenerate VALUE but not the WIDTH it was observed at, and this corpus reaches that value at k=14 rather than k=12. Which width P2 used is unresolved and is the one thing that would change how the two curves line up.",
+    "Zero exact duplicate elements in either cell, so density is not inflated by repeated sequences -- but near-duplicates (mutational series of a shared parent) were NOT measured, and they would raise the ratio without adding diversity.",
+    "Single strand as given. Pooling both strands would raise the ratio and is not done here.",
+    "This is a property of the generator's training folds only. Folds 9 and 10 were not read.",
+    "A count-model occupancy statistic says nothing about what a NEURAL model could extract from the same corpus; it bounds the count-model class the question was posed about."
+  ]
+}
