@@ -3,7 +3,7 @@
   "date": "2026-11-23",
   "question": "the peer measured the candidate oracle's training activity distribution over all 798,064 rows and assigned the comparison: does our corpus's activity distribution differ from it?",
   "ANSWER": "THE COMPARISON CANNOT RUN AS FRAMED. Our activity values are per-cell STANDARDISED while the oracle's are raw log2 fold-change, so the two are not on a common scale and no difference between them is interpretable as a distribution shift. On the one statistic that survives rescaling, the two AGREE.",
-  "verdict": "SCALE_MISMATCH_COMPARISON_VOID_BUT_SKEW_AGREES",
+  "verdict": "SCALE_MISMATCH_COMPARISON_VOID_SKEW_DIRECTION_CONSISTENT_BUT_UNPOWERED",
   "THE_SUBSTRATE_FACT_WORTH_CARRYING": {
     "finding": "Table S6's activity column is labelled 'Observed log2(RNA/DNA)' and the loader carries that label faithfully, but the values are PER-CELL STANDARDISED: mean 0 and sample sd exactly 1.0 in all three cells.",
     "mechanism_proved_not_asserted": "a sd of 'about 1' could be coincidence. The POPULATION sd is not 1 -- it is sqrt((n-1)/n), because the publishers divided by the SAMPLE sd (ddof=1). Predicted from n ALONE and compared against the measured value, the residual is 1.11e-16 (HepG2, n=61,463), 0 (K562, n=98,332) and 1.11e-16 (WTC11, n=23,064) -- machine precision, in three cells of DIFFERENT size. A coincidence cannot track n.",
@@ -118,7 +118,8 @@
       0.318
     ],
     "overlap": true,
-    "reading": "on the one statistic the two conventions cannot distort, the distributions are comparable: both are right-skewed by a similar amount. So there is no evidence of an activity-distribution shift -- which leaves the peer's SELECTION-criterion difference (98.23% variant-centred vs our cCRE/DNase/TSS) standing on its own, unsupported by and unrefuted by activity."
+    "reading": "on the one statistic the two conventions cannot distort, the distributions are comparable: both are right-skewed by a similar amount. So there is no evidence of an activity-distribution shift -- which leaves the peer's SELECTION-criterion difference (98.23% variant-centred vs our cCRE/DNase/TSS) standing on its own, unsupported by and unrefuted by activity.",
+    "SUPERSEDED": "this block reasons from a BOUND [0.192, 0.318] built out of across-cell ranges, and its own key name asserts agreement. Exact per-cell values have since replaced the bound and both matched pairs point the SAME way, so the agreement reading does NOT hold. Read REVISED_SKEW_ON_EXACT_VALUES instead; this is kept for provenance, not as a conclusion."
   },
   "CONSEQUENCE_FOR_THE_ORACLE_DECISION": "the peer's SELECTION-criterion difference stands on its own and is unaffected: the oracle's training rows are 98.23% variant-centred (GTEX 55.83% + UKBB 42.40%) against 1.77% element-selected, while our corpus is cCRE / DNase / TSS-selected throughout. What this measurement adds is that activity neither supports NOR refutes a shift -- so the distribution-matching argument for fitting our own head rests on the selection criterion alone, not on an activity difference. Anyone citing an activity gap would be citing an artifact.",
   "none_of_todays_published_numbers_depend_on_this": "the oracle gate is Spearman, which is rank-based and invariant under any monotone transform, so standardisation cannot move it. The WTC11 figures (0.3607 best arm against a GC baseline of 0.0858) are unaffected either way.",
@@ -129,5 +130,62 @@
     "That the values are standardised is inferred from mean 0 / sd 1 at 1e-9 across three independent cells, not from a statement by the publishers.",
     "The oracle's activity reference is the peer's measurement, quoted and NOT reproduced here; its skew is therefore bounded from across-cell ranges rather than computed per cell, so the overlap is a bound and not a per-cell match.",
     "A scale bridge would settle it properly: the 100 sequences present in BOTH datasets have one true activity each, so comparing them pairwise separates convention from shift. That needs the oracle's per-sequence values, which the hash sets do not carry. Those 100 are also promoter-enriched 2.17x, so they would bound rather than settle it."
-  ]
+  ],
+  "REVISED_SKEW_ON_EXACT_VALUES": {
+    "added": "2026-11-23",
+    "supersedes": {
+      "field": "verdict",
+      "previous_value": "SCALE_MISMATCH_COMPARISON_VOID_BUT_SKEW_AGREES",
+      "why_an_edit_and_not_an_addition": "the previous verdict asserted SKEW_AGREES, which a reader takes as the answer. It was computed from a BOUND because only across-cell ranges were available; the data owner has since supplied exact per-cell values. Recomputing on better input is not goalpost-moving -- and it weakens my own conclusion rather than strengthening it, so leaving the old string live would have left a false claim at the top of the record."
+    },
+    "CORRECTION_1_THERE_ARE_TWO_MATCHED_PAIRS_NOT_THREE": "three values were reported on each side, which invites a three-pair reading. It is not: the oracle's third cell is SKNSH (neuroblastoma) and ours is WTC11 (iPSC). DIFFERENT CELL LINES, so they do not pair. Two matched pairs only, which cuts an already-tiny n by a third. Raised by the peer session and accepted.",
+    "unpaired_and_reported_rather_than_dropped": {
+      "ours_WTC11": 0.2672,
+      "oracle_SKNSH": 0.207,
+      "note": "neither has a counterpart; listed so the pairing is auditable"
+    },
+    "CORRECTION_2_MY_NEGATIVE_WAS_UNDERPOWERED_NOT_AN_ABSENCE": "the range-overlap statement concealed a consistent direction: in BOTH matched pairs the oracle side is more right-skewed. 'No evidence either way' was therefore the wrong framing -- the right one is NO RESOLVABLE DIFFERENCE AT THIS POWER, WITH A CONSISTENT BUT UNPOWERED DIRECTION. Two pairs cannot resolve a skew difference. Raised by the peer and accepted; it is the same correction this project applied to the tokenization null, that an underpowered negative is not an absence.",
+    "CORRECTION_3_THE_PAIRING_AS_RECEIVED_WAS_CROSSED": {
+      "what_happened": "the correction arrived pairing oracle K562 0.2838 against 0.1927 and oracle HepG2 0.2577 against 0.2250 -- but 0.1927 is OUR HEPG2 and 0.2250 is OUR K562, so the two cell lines were swapped. The arithmetic was right; the pairing was not.",
+      "consequence_and_it_runs_AGAINST_my_interest": "corrected, the deltas are HepG2 +0.0650 (1.337x) and K562 +0.0588 (1.261x), which agree with each other within 11%% -- not the reported 4.5x divergence (which does not follow even from the crossed numbers, those giving 2.79x). So the consistent-direction finding is STRONGER than as received, not weaker: same direction AND closely similar magnitude across two independent cell lines. That makes my original verdict more wrong, not less.",
+      "like_for_like_pairs": {
+        "HepG2": {
+          "oracle": 0.2577,
+          "ours": 0.1927,
+          "delta_oracle_minus_ours": 0.065,
+          "ratio": 1.337
+        },
+        "K562": {
+          "oracle": 0.2838,
+          "ours": 0.225,
+          "delta_oracle_minus_ours": 0.0588,
+          "ratio": 1.261
+        }
+      },
+      "delta_agreement": {
+        "HepG2": 0.065,
+        "K562": 0.0588,
+        "ratio_of_deltas": 1.105,
+        "agree_within_percent": 10.5
+      }
+    },
+    "WHAT_THIS_DOES_NOT_REINSTATE": "nothing. Skew is distribution SHAPE, not activity LEVEL, so even a fully powered skew difference would not be an activity shift -- and the scale mismatch that voids the level comparison is untouched by any of this. The narrowing stands exactly as committed: the SELECTION-criterion finding (98.23%% variant-centred against our cCRE/DNase/TSS selection) is the distribution-matching case for fitting our own head, and it stands ALONE. One argument, not two converging ones.",
+    "oracle_exact_values_now_available": {
+      "values": {
+        "HepG2": 0.2577,
+        "K562": 0.2838,
+        "SKNSH": 0.207
+      },
+      "source": "peer session, computed from its stored figures with no re-stream; supersedes the across-cell ranges from which [0.192, 0.318] was bounded here",
+      "exact_range": [
+        0.207,
+        0.2838
+      ]
+    },
+    "honest_limits": [
+      "Two matched cell lines. A consistent direction across two pairs is suggestive, NOT a powered estimate, and must not be quoted as a measured skew difference.",
+      "Nonparametric skew is one scale-free summary; agreement or disagreement on it does not establish that the distributions match or differ in shape generally.",
+      "Our values are standardised and the oracle's are raw, which skew tolerates by construction -- but that tolerance is exactly why skew cannot speak to activity LEVEL."
+    ]
+  }
 }
