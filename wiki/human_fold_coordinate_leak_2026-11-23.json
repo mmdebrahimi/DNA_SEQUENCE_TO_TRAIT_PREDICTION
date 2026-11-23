@@ -570,11 +570,114 @@
     "nothing_frozen_was_modified": "no wiki artifact and no fold contract was changed by this measurement; it is additive and read-only"
   },
   "honest_limits": [
-    "The generator-vs-oracle_train bucket -- the LARGEST in every cell -- is unmeasured. It would act on the numerator side and flatter a generator, the opposite direction to the held-out exposure that WAS measured.",
+    "CLOSED 2026-11-23, same day: the generator-vs-oracle_train bucket -- the LARGEST in every cell -- was published here as unmeasured and has now been measured. Exposure is the same order as the held-out path (worst 1.16 percent of oracle-train elements). See GENERATOR_SIDE_PATH_NOW_MEASURED. An EFFECT size remains underivable until a generator exists on this substrate, so the direction of that path is characterised by exposure only.",
     "The rescored quantity is the oracle's fold-9 Spearman under the deployed configuration, NOT the per-stratum matched-n ceiling the null artifact reports. The matched-n sd is used only as a scale reference for reading a delta.",
     "Overlap is computed on hg38 coordinates as published. A mis-stated coordinate in the deposit would be invisible to this and to any check built on it.",
     "The cross-cell count is on element NAME with sequence identity verified on a 3,000-id sample, not on all 7,321 shared HepG2/K562 ids.",
     "Fold 10's exposure is reported from keys only. No activity was scored, so nothing here states what a fold-10 number would be.",
     "This measures the SPLIT, not the oracle. A clean split does not make a 0.46-0.50 Spearman oracle strong."
-  ]
+  ],
+  "GENERATOR_SIDE_PATH_NOW_MEASURED": {
+    "closes": "the first entry of honest_limits, which said this path was unmeasured. It was the largest cross-role bucket in every cell and the one acting on the NUMERATOR.",
+    "verdict": "EXPOSURE_SMALL_EFFECT_NOT_DERIVABLE_UNTIL_A_GENERATOR_EXISTS",
+    "why_only_exposure_and_not_an_effect": "the EFFECT requires a trained generator on this substrate and none exists yet, so no effect size is derivable. Exposure is measurable now, and before a generator launches is when it is worth knowing.",
+    "per_cell": {
+      "HepG2": {
+        "role_sizes": {
+          "generator": 36876,
+          "final_only": 6149,
+          "working_held_out": 6146,
+          "oracle_train": 12292
+        },
+        "n_pairs": 35,
+        "shared_bp_median": 40,
+        "shared_bp_max": 151,
+        "by_depth": {
+          "at_least_1bp": {
+            "generator_elements_touched": 35,
+            "generator_frac": 0.000949,
+            "oracle_train_elements_touched": 35,
+            "oracle_train_frac": 0.002847
+          },
+          "at_least_50bp": {
+            "generator_elements_touched": 13,
+            "generator_frac": 0.000353,
+            "oracle_train_elements_touched": 13,
+            "oracle_train_frac": 0.001058
+          },
+          "at_least_100bp": {
+            "generator_elements_touched": 5,
+            "generator_frac": 0.000136,
+            "oracle_train_elements_touched": 5,
+            "oracle_train_frac": 0.000407
+          }
+        }
+      },
+      "K562": {
+        "role_sizes": {
+          "generator": 58998,
+          "final_only": 9835,
+          "oracle_train": 19666,
+          "working_held_out": 9833
+        },
+        "n_pairs": 231,
+        "shared_bp_median": 35,
+        "shared_bp_max": 192,
+        "by_depth": {
+          "at_least_1bp": {
+            "generator_elements_touched": 231,
+            "generator_frac": 0.003915,
+            "oracle_train_elements_touched": 229,
+            "oracle_train_frac": 0.011644
+          },
+          "at_least_50bp": {
+            "generator_elements_touched": 85,
+            "generator_frac": 0.001441,
+            "oracle_train_elements_touched": 85,
+            "oracle_train_frac": 0.004322
+          },
+          "at_least_100bp": {
+            "generator_elements_touched": 28,
+            "generator_frac": 0.000475,
+            "oracle_train_elements_touched": 28,
+            "oracle_train_frac": 0.001424
+          }
+        }
+      },
+      "WTC11": {
+        "role_sizes": {
+          "generator": 13836,
+          "oracle_train": 4612,
+          "final_only": 2310,
+          "working_held_out": 2306
+        },
+        "n_pairs": 10,
+        "shared_bp_median": 57,
+        "shared_bp_max": 178,
+        "by_depth": {
+          "at_least_1bp": {
+            "generator_elements_touched": 10,
+            "generator_frac": 0.000723,
+            "oracle_train_elements_touched": 10,
+            "oracle_train_frac": 0.002168
+          },
+          "at_least_50bp": {
+            "generator_elements_touched": 5,
+            "generator_frac": 0.000361,
+            "oracle_train_elements_touched": 5,
+            "oracle_train_frac": 0.001084
+          },
+          "at_least_100bp": {
+            "generator_elements_touched": 3,
+            "generator_frac": 0.000217,
+            "oracle_train_elements_touched": 3,
+            "oracle_train_frac": 0.00065
+          }
+        }
+      }
+    },
+    "worst_oracle_train_frac_at_1bp": 0.011644,
+    "reading": "the numerator path's exposure is the SAME ORDER as the denominator path's: at most 1.16 percent of oracle-train elements (K562, 229 of 19,666) overlap a generator-fold element at any depth, falling to 0.43 percent at 50+ bp. So neither direction of the leak is large on this substrate. What is still NOT established is an effect size, and it cannot be: that needs a generator trained on this substrate, and none exists yet. Measuring the exposure BEFORE a generator launches is the point -- it shares the split decision's deadline.",
+    "a_detail_worth_keeping": "K562 shows 231 overlapping pairs but only 229 distinct oracle-train elements touched, so two oracle-train elements each overlap more than one generator element. Pairs and distinct elements are different denominators and the smaller one is the honest exposure."
+  }
 }
