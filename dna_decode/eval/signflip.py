@@ -37,13 +37,16 @@ from __future__ import annotations
 
 import itertools
 import math
+import statistics
 from dataclasses import dataclass, field
 
 __all__ = [
+    "ReplicationAudit",
     "SignFlipRefusal",
     "SignFlipResult",
-    "family_wise_signflip",
     "bonferroni_p",
+    "collapse_to_rows",
+    "family_wise_signflip",
 ]
 
 #: Above this many rows, exact enumeration of 2**n sign vectors is replaced by Monte Carlo.
@@ -271,3 +274,91 @@ def bonferroni_p(per_candidate_p: list[float]) -> float:
     if not per_candidate_p:
         raise SignFlipRefusal("no per-candidate p values")
     return min(1.0, min(per_candidate_p) * len(per_candidate_p))
+
+
+# ----------------------------------------------------------------------------------------------
+# Discipline 1: the generated set is the unit of replication. Collapse re-scorings BEFORE any
+# statistic. This lives beside the family-wise test on purpose -- the module above warns that rows
+# "must already be independent replicates" and, until this existed, offered no way to make them.
+# ----------------------------------------------------------------------------------------------
+
+@dataclass(frozen=True)
+class ReplicationAudit:
+    n_records_in: int
+    n_replicates: int
+    n_candidates: int
+    collapse_factor: float
+    nothing_collapsed: bool
+    reads: str
+
+    def as_dict(self) -> dict:
+        return {
+            "n_records_in": self.n_records_in,
+            "n_replicates_out": self.n_replicates,
+            "n_candidates": self.n_candidates,
+            "mean_inner_observations_per_cell": round(self.collapse_factor, 4),
+            "nothing_collapsed": self.nothing_collapsed,
+            "reads": self.reads,
+        }
+
+
+def collapse_to_rows(records, *, replicate_key, candidate_key, value_key):
+    """Collapse inner re-scorings to ONE value per (replicate, candidate), returning a row matrix.
+
+    Returns (rows, candidates, audit). `rows[i][j]` is replicate i's mean value for candidate j,
+    with replicates and candidates in sorted order so the matrix is deterministic.
+
+    WHY THIS MUST HAPPEN FIRST. P2's harness generated 20 sets and scored each under 2 split seeds,
+    then treated the 40 rows as 40 replicates. Two split seeds RE-SCORE ONE ARTIFACT: they measure
+    scorer variance, not generator variance. Pooling them understates the standard error of the
+    mean by up to sqrt(2), and it does so IN THE DIRECTION THAT MANUFACTURES SIGNIFICANCE. That one
+    defect moved a reported effect from |t| 2.25 to 1.76, below even its per-candidate bar.
+
+    THE DIAGNOSTIC QUESTION, for every row you are about to call a replicate: *what would I have to
+    re-run to get an independent one?* If the answer is "nothing, I only re-split", it is not a
+    replicate. On the human arm the nesting is THREE deep -- scoring split inside generated set
+    inside trained run -- so collapsing one level is not automatically enough: for an architecture
+    or size claim the replicate key must be the TRAINED RUN, because extra sampling seeds from one
+    trained model are extra generated sets but not extra models.
+
+    This function cannot tell you which key is right; it can only make the collapse explicit and
+    report what it did, which is why `nothing_collapsed` is reported loudly rather than ignored.
+    """
+    recs = list(records)
+    if not recs:
+        raise SignFlipRefusal("no records to collapse")
+    cells: dict = {}
+    for i, r in enumerate(recs):
+        for k in (replicate_key, candidate_key, value_key):
+            if k not in r:
+                raise SignFlipRefusal(f"record {i} has no key {k!r}; got {sorted(r)}")
+        v = float(r[value_key])
+        if math.isnan(v) or math.isinf(v):
+            raise SignFlipRefusal(
+                f"record {i} value is {r[value_key]!r}. A non-finite value would propagate through "
+                f"the mean and then through every draw of the permutation null.")
+        cells.setdefault((r[replicate_key], r[candidate_key]), []).append(v)
+
+    reps = sorted({k[0] for k in cells})
+    cands = sorted({k[1] for k in cells})
+    missing = [(rp, cd) for rp in reps for cd in cands if (rp, cd) not in cells]
+    if missing:
+        raise SignFlipRefusal(
+            f"{len(missing)} (replicate, candidate) cell(s) absent, e.g. {missing[:3]}. A row "
+            f"missing one candidate is not a whole-row sign-flip unit -- flipping it would carry a "
+            f"different candidate set into the null than the observed statistic used. Drop the "
+            f"incomplete replicate deliberately, or supply the missing runs.")
+
+    rows = [[statistics.fmean(cells[(rp, cd)]) for cd in cands] for rp in reps]
+    factor = len(recs) / float(len(reps) * len(cands))
+    nothing = factor <= 1.0
+    reads = (
+        f"{len(recs)} records collapsed to {len(reps)} replicate(s) x {len(cands)} candidate(s) "
+        f"at {factor:.2f} inner observation(s) per cell")
+    if nothing:
+        reads += (" -- NOTHING COLLAPSED. Either the records were already one-per-cell, or "
+                  "`replicate_key` is too fine (a per-row id makes every row its own replicate, "
+                  "which is the pooling defect wearing the opposite disguise)")
+    return rows, cands, ReplicationAudit(
+        n_records_in=len(recs), n_replicates=len(reps), n_candidates=len(cands),
+        collapse_factor=factor, nothing_collapsed=nothing, reads=reads)

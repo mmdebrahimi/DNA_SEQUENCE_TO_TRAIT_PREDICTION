@@ -97,5 +97,113 @@
     "result": "no verdict changed. The shard change moved the K562 ceiling +0.0184 = 0.72 sd of its own sampling spread (not detectable) and every oracle arm by at most 0.0063.",
     "the_finding_came_from_elsewhere": "running the ceiling arm again surfaced a biased subsample inside it: quintiles() returns each stratum sorted by activity ASCENDING and the arm took the first n, i.e. every stratum's LOWEST-activity members, truncating the top quintile's tail. Correcting that moved the ceiling +0.0999 in K562 (3.93 sd) -- five times the shard effect. Direction matters: the ceiling is the DENOMINATOR of every fraction-of-ceiling, so understating it OVERSTATED a generator's share of achievable signal.",
     "relevance_to_RULE_1": "the ceiling now ships with a MEASURED draw spread (sd 0.0254 K562 / 0.0253 HepG2) rather than as a bare point, which is what this protocol's refusal of frozen numeric tolerances requires of the one quantity every fraction is divided by."
+  },
+  "P2_FINAL_LESSONS_2026_11_22": {
+    "source": "C:\\Users\\Laptop Portable\\pythonprojects\\dna-generator-research\\P2-tokenization-axis\\results\\lessons-learned-measurement-discipline.md",
+    "read_how": "the document was read directly, not reconstructed from the relay message, per P2's own instruction that its definitions be implemented verbatim",
+    "supersedes": "both earlier P2 correction messages of 2026-11-22",
+    "THE_LEAK_GATES_STAY": {
+      "status": "withdrawn means UNDERPOWERED, not ABSENT, and for leakage that distinction is the whole point",
+      "numbers": {
+        "effect": 0.007,
+        "abs_t": 2.24,
+        "family_wise_p": 0.208,
+        "n_positive_of_6_estimates": 5
+      },
+      "near_miss": "roughly 1.4x, answerable by about doubling replicates; not a comfortable null",
+      "the_test_wording_is_load_bearing": "differs from RANDOM REMOVAL, never differs from zero. The comparator is the claim.",
+      "retracted_dismissals_stay_retracted": [
+        "immaterial",
+        "near-harmless"
+      ]
+    },
+    "A_BAR_AMBIGUITY_THE_RELAY_LOST_AND_THE_DOCUMENT_RESOLVES": {
+      "what_looked_contradictory": "the relay gave 0.0061 per-candidate / 0.0082 family-wise in one paragraph and 0.0075 / 0.0101 in another, as though correcting itself",
+      "the_resolution": "they are DIFFERENT QUANTITIES, exactly per discipline 4. 0.0061/0.0082 are the NULL effect's OWN bars, priced with its own sem. 0.0075/0.0101 are the leak FAMILY's bars. An effect clearing its own bar while the family's bar sits higher is not a contradiction.",
+      "superseded_value": {
+        "value": 0.013,
+        "why": "came from the superseded pooled-40 file; do not re-derive it"
+      },
+      "why_recorded": "the compressed relay was genuinely ambiguous and the full document was not. Reading the source resolved it; guessing would have picked a bar."
+    },
+    "DISCIPLINE_5_EQUIVALENCE_AGAINST_A_MEASURED_MARGIN": {
+      "status": "BUILT 2026-11-22 -- this arm had nothing like it",
+      "module": "dna_decode/eval/equivalence.py",
+      "rule": "never claim free from a non-significant difference. A CI containing zero means the data could not resolve a difference; it does not mean the difference is too small to matter. contains_zero and equivalent are separate fields and the function refuses to let them be confused.",
+      "refusals": [
+        "margin <= 0, which is a test against ZERO and is the defect itself",
+        "an unsourced margin: a margin is a claim about consequences and must name the measured quantity it came from",
+        "an inverted or non-finite interval"
+      ],
+      "verified_against_P2s_OWN_WITHDRAWN_CLAIM": {
+        "input": {
+          "point": 0.0098,
+          "ci": [
+            -0.012,
+            0.0316
+          ],
+          "margin": 0.0226
+        },
+        "output": {
+          "contains_zero": true,
+          "equivalent": false,
+          "worst_case_abs_permitted": 0.0316,
+          "verdict": "UNDERPOWERED_NOT_EQUIVALENT"
+        },
+        "why_this_is_the_strongest_available_fixture": "the function must refuse the exact reasoning that was published and then retracted"
+      },
+      "THE_MARGINS_DO_NOT_TRANSFER_AND_THE_FUNCTION_DOES": "P2's MARGIN_LOOSE 0.0226 and MARGIN_STRICT 0.0075 are measured on E. coli with a logistic-regression discriminator over AUROC. This arm's own bar carries INHERITED_PROHIBITED_COMPARISON forbidding exactly that transfer: different assay, different noise ceiling, different kingdom. They are recorded as provenance and as a test fixture, NEVER as a human-arm margin. A human margin must come from the human arm's own spread, which is also what this protocol's refusal of frozen numeric tolerances already requires."
+    },
+    "DISCIPLINE_1_THE_COLLAPSE_IS_NOW_CODE": {
+      "status": "BUILT 2026-11-22",
+      "function": "dna_decode/eval/signflip.py::collapse_to_rows",
+      "why_it_belongs_beside_the_family_wise_test": "that module already warned rows must be independent replicates and offered no way to make them, which is a warning without a remedy",
+      "reconstructed_numerically_not_asserted": {
+        "setup": "20 generated sets re-scored under 2 split seeds, the split seeds carrying zero new information",
+        "correct_sem_20_replicates": 0.002193,
+        "pooled_sem_40_rows": 0.001531,
+        "ratio": 1.4327,
+        "sqrt_2": 1.4142,
+        "abs_t_correct": 9.171,
+        "abs_t_pooled": 13.14,
+        "reading": "the pooled sem is SMALLER, which is the direction that manufactures significance"
+      },
+      "the_diagnostic_question": "of every row: what would I have to re-run to get an independent one? If the answer is nothing, I only re-split, it is not a replicate.",
+      "THREE_DEEP_HERE_NOT_TWO": "scoring split inside generated set inside trained run. Collapsing one level is not automatically enough: for a size or architecture claim the replicate key must be the TRAINED RUN, because extra sampling seeds from one trained model are extra generated sets and not extra models.",
+      "also_reports_the_opposite_disguise": "a per-row id as the replicate key makes every row its own replicate; nothing_collapsed is reported loudly because that is otherwise silent"
+    },
+    "DISCIPLINE_3_SIDEDNESS_WAS_ALREADY_CONSISTENT_AND_IS_NOW_PINNED": {
+      "checked": "the family statistic, the family null comparison and every per-candidate comparison all take absolute values, so all three bars are two-sided",
+      "pinned_BEHAVIOURALLY_not_structurally": "negating every value must leave both the family-wise p and every per-candidate p unchanged. A one-sided bar on either side would move under negation, so the test detects the inconsistency rather than the spelling of abs()",
+      "P2_had_this_defect_and_this_arm_did_not": "recorded because the absence of a defect is worth knowing only if someone checked"
+    },
+    "disciplines_status_in_this_arm": {
+      "1_unit_of_replication": "BUILT today (collapse_to_rows)",
+      "2_family_wise_signflip": "BUILT today (dna_decode/eval/signflip.py)",
+      "3_sidedness": "already consistent; pinned today",
+      "4_own_sem_per_effect": "recorded in RULE_1; no code owed until replicate rows exist",
+      "5_equivalence_vs_margin": "BUILT today (dna_decode/eval/equivalence.py)",
+      "6_instrument_unavailability_terminates": "PARTIAL and named as owed rather than claimed. assert_oracle_fixture raises, but it pins the FEATURE pipeline only. P2's two-pair design -- one separable-by-construction case that must score well, one under-size case that must refuse -- covers the FITTED scorer and is NOT yet built here.",
+      "7_random_drop_as_N_draws": "BUILT earlier today (--shuffle-seed decoupled from --seed)",
+      "8_PYTHONDONTWRITEBYTECODE": "noted; this arm imports from no read-only tree, and the one bytecode file P2 disclosed in this tree is gitignored and was left in place deliberately",
+      "9_verdict_and_action_separate": "already in this protocol",
+      "10_prefer_measurements_over_threshold_crossings": "adopted. Today's fold-9 findings are shaped as measurements -- the ceiling is 0.4912 with a measured draw sd of 0.0254, the subsample bias is -0.1095 = -4.14 sd -- rather than as threshold crossings. Honest caveat: stratified_frac_of_ceiling's verdict BUCKETS are still threshold crossings, so they stay as fragile as the sem behind them."
+    },
+    "DO_NOT_CITE_AS_SURVIVORS": {
+      "figures": [
+        "the bp-matched run's 13 of 15 pairwise CIs contain zero",
+        "the slot-matched run's all 6 of 6 pairs resolved, and its width-1 ranking"
+      ],
+      "status": "status unknown: the same pooled-40 defect, never re-tested, and no consumer after the substrate pivot",
+      "not_a_restatement": "0 of 10 pairs resolve is scoped to UNIT-VERSUS-UNIT pairs and is a different comparison set from the 13-of-15 figure",
+      "what_DOES_survive_from_that_run": "the direct measurement: 95-100% marginal fallback for w2/w3/w6 between 6 and 12 bp at 600 windows, which is the sparsity cliff itself"
+    },
+    "P2s_sparsity_arithmetic_about_THIS_corpus_and_why_it_does_not_bite_here": {
+      "what_P2_computed": "58,998 sequences x 200 bp is about 11.1M context observations against 4^12 = 16.8M possible contexts, i.e. 0.66 observations per possible 12-mer, crossing ~10 only near 10 bp",
+      "P2s_own_correction_to_it": "that count is a LOWER BOUND on observations per NONZERO cell, so it settles nothing either way. The re-open test is to MEASURE obs_per_nonzero_cell on the real human corpus rather than assume the cliff moved. The degenerate lookup-table regime was observed at obs_per_nonzero_cell = 1.002.",
+      "the_58998_figure_is_recognisable_here": "it is this arm's K562 folds-1-6 count, the same n_chain_fit the stratified null reports",
+      "why_INAPPLICABLE_to_this_arm": "the question is about TOKENIZATION UNITS and this arm is single-nucleotide throughout. Its nulls are order-3 Markov chains over 4^3 = 64 contexts, trivially dense at this corpus size. Recorded with the reason rather than skipped, and NOT over-read as evidence about tokenization."
+    },
+    "P2s_open_decision_is_NOT_this_arms_to_settle": "P2 names a DECISION NEEDED on its four architecture arms (principled-fixed-k, dynamic-patching-patchdna, single-nucleotide-ssm, multi-scale-k), still planned, with ceiling:tokenization-representation reading blocked:untried-arm. That is P2's ceiling and its owner's call, surfaced here only so this arm does not silently inherit it."
   }
 }
