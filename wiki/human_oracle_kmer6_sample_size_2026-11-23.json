@@ -1,0 +1,110 @@
+{
+  "record": "human-oracle-kmer6-sample-size-v1",
+  "date": "2026-11-23",
+  "question": "the 6-mer oracle WINS on HepG2 and K562 and LOSES badly on WTC11 (0.2240 vs the 4-mer's 0.3607). Is that a property of WTC11, or of its sample size?",
+  "why_it_mattered": "the two answers point opposite ways. A sample-size artifact has a mechanical fix and clears WTC11 of suspicion; anything else means the newly-rescued cell type behaves differently in an uncharacterised way and building on it would be premature.",
+  "prereg_reading_fixed_before_the_run": "SURVIVES iff the kmer6-minus-kmer4 gap at n=4612 loses >=50% of its full-n value, for both donor cells",
+  "verdict": "HYPOTHESIS_SURVIVES_SAMPLE_SIZE_ARTIFACT",
+  "THE_KILL_TEST": {
+    "design": "cut HepG2's and K562's oracle-train sets DOWN to WTC11's exact 4,612 rows and refit, 5 seeds each, using the DEPLOYED build / ridge_spearman so the arms are the real ones. Folds 7+8 train, fold 9 test, fold 10 never read.",
+    "rows_per_6mer_parameter": {
+      "HepG2": 3.001,
+      "K562": 4.8013,
+      "WTC11": 1.126
+    },
+    "full_n": {
+      "HepG2": {
+        "kmer4": 0.4229,
+        "kmer6": 0.4643,
+        "n_train": 12292
+      },
+      "K562": {
+        "kmer4": 0.3975,
+        "kmer6": 0.5038,
+        "n_train": 19666
+      },
+      "WTC11": {
+        "kmer4": 0.3607,
+        "kmer6": 0.224,
+        "n_train": 4612
+      }
+    },
+    "per_cell": {
+      "HepG2": {
+        "kmer4_at_reduced_n": [
+          0.3975,
+          0.3983,
+          0.3951,
+          0.3954,
+          0.4075
+        ],
+        "kmer6_at_reduced_n": [
+          0.2107,
+          0.2464,
+          0.2012,
+          0.2299,
+          0.2425
+        ],
+        "kmer4_median": 0.3975,
+        "kmer6_median": 0.2299,
+        "gap_full_n": 0.0414,
+        "gap_reduced_n": -0.1676,
+        "fraction_of_gap_LOST": 5.0483,
+        "kmer6_drop_from_full": -0.2344
+      },
+      "K562": {
+        "kmer4_at_reduced_n": [
+          0.3631,
+          0.368,
+          0.3588,
+          0.3628,
+          0.369
+        ],
+        "kmer6_at_reduced_n": [
+          0.2369,
+          0.2298,
+          0.2368,
+          0.2377,
+          0.226
+        ],
+        "kmer4_median": 0.3631,
+        "kmer6_median": 0.2368,
+        "gap_full_n": 0.1063,
+        "gap_reduced_n": -0.1263,
+        "fraction_of_gap_LOST": 2.1881,
+        "kmer6_drop_from_full": -0.267
+      }
+    }
+  },
+  "IT_DOES_MORE_THAN_SURVIVE_THE_REDUCED_DONORS_REPRODUCE_WTC11": {
+    "wtc11": {
+      "kmer4": 0.3607,
+      "kmer6": 0.224,
+      "n_train": 4612
+    },
+    "hepg2_cut_to_4612": {
+      "kmer4": 0.3975,
+      "kmer6": 0.2299
+    },
+    "k562_cut_to_4612": {
+      "kmer4": 0.3631,
+      "kmer6": 0.2368
+    },
+    "reading": "the lead does not merely shrink, it REVERSES SIGN in both donors, across all five seeds with no overlap -- and K562's reduced 4-mer lands within 0.002 of WTC11's. A quantitative match, not just a directional one. WTC11's oracle behaves exactly as either established cell would on the same amount of data."
+  },
+  "WHAT_THIS_DOES_NOT_EXPLAIN_and_must_not_be_read_as_explaining": {
+    "the_low_GC_baseline_is_a_REAL_WTC11_difference": "GC predicts activity at 0.2415 (HepG2) and 0.2112 (K562) but only 0.0858 in WTC11. GC is ONE feature, so 4,612 rows is ample and sample size cannot be the cause. This kill-test covered kmer4 and kmer6 ONLY; it says nothing about the GC arm, and the GC difference stands unexplained.",
+    "a_consequence_worth_stating": "the gate is a MARGIN OVER GC, so a weaker baseline makes the margin easier to clear. WTC11's margin 0.2749 sits between HepG2's 0.2228 and K562's 0.2926 while its ABSOLUTE best arm, 0.3607, is the weakest of the three. It clears both bars honestly -- 0.3607 is well above the 0.20 floor -- but the composition differs and a reader comparing margins alone would miss that."
+  },
+  "ACTIONABLE": {
+    "the_fix_is_mechanical": "score WTC11 with the 4-mer arm, not the 6-mer one. That is 0.3607 instead of 0.2240, a 61 percent relative gain, free.",
+    "THE_OBVIOUS_OTHER_REMEDY_IS_FORBIDDEN_BY_TODAYS_OTHER_FINDING": "the natural way to lift WTC11's 4,612 training rows is to POOL cells. But the cross-cell measurement the same day found ~90 percent of shared elements sit in DIFFERENT fold roles across cells with byte-identical sequence (12,595 pairs), so pooling to enlarge WTC11's training set walks straight into that leak. Pooling needs a fold assignment derived from the UNION first, or the shared elements excluded. The two findings interact and neither is safe to act on alone.",
+    "the_deployed_oracle_is_no_longer_ONE_configuration": "HepG2 and K562 deploy the 6-mer arm; WTC11's best is the 4-mer. Anyone defaulting to 'the oracle is kmer6' gets a materially worse judge on WTC11. Recorded here and pointed at from the oracle artifact itself."
+  },
+  "honest_limits": [
+    "Two donor cells, five seeds, one held-out fold. The reproduction is tight but it is not a general law about k-mer order against sample size.",
+    "Random subsampling of folds 7+8 is not the same as having been assayed at that depth: the donors' elements were selected by a library design that targeted a larger set.",
+    "The GC arm was not re-run at reduced n, so the GC difference is observed and unexplained rather than tested.",
+    "This is about the ORACLE's capacity, not about WTC11's biology. It shows WTC11 is not anomalous on this axis; it does not show it is equivalent on others."
+  ]
+}

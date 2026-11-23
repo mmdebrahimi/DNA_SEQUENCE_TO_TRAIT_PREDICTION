@@ -114,9 +114,50 @@
           "passes_gate": true
         }
       }
+    },
+    "WTC11": {
+      "n_records": 23064,
+      "n_oracle_train": 4612,
+      "n_held_out": 2306,
+      "sequence_column": "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)",
+      "geometries": {
+        "element_200nt_adaptors_stripped": {
+          "length_bp": 200,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.0858,
+            "kmer4": 0.3607,
+            "kmer6": 0.224,
+            "positional": 0.1136
+          },
+          "best_learned": 0.3607,
+          "margin_over_gc": 0.2749,
+          "passes_gate": true
+        },
+        "full_230nt_as_shipped": {
+          "length_bp": 230,
+          "positional_bins": 10,
+          "arms": {
+            "gc": 0.0858,
+            "kmer4": 0.3728,
+            "kmer6": 0.2767,
+            "positional": 0.1256
+          },
+          "best_learned": 0.3728,
+          "margin_over_gc": 0.287,
+          "passes_gate": true
+        }
+      }
     }
   },
   "verdict": "ORACLE_VALID_PROCEED",
   "verdict_detail": "Every cell clears the pre-registered gate on the primary geometry, so the oracle is a competent judge and a generator design question is interpretable against it. This does NOT show a generator can design to it -- only that the judge works.",
-  "seconds": 237.3
+  "seconds": 366.5,
+  "WTC11_BEST_ARM_IS_KMER4_NOT_KMER6": {
+    "added": "2026-11-23",
+    "the_trap": "HepG2 and K562 deploy the 6-mer arm. On WTC11 the 6-mer arm scores 0.2240 against the 4-mer's 0.3607, so defaulting to 'the oracle is kmer6' uses a 61 percent relatively worse judge on this cell.",
+    "cause_MEASURED_not_inferred": "a sample-size artifact, not a WTC11 property. Cutting HepG2 and K562 to WTC11's 4,612 training rows REVERSES the 6-mer lead in both and reproduces WTC11's numbers (K562's reduced 4-mer within 0.002 of WTC11's).",
+    "see": "wiki/human_oracle_kmer6_sample_size_2026-11-23.json",
+    "pooling_is_NOT_the_remedy": "enlarging WTC11's training set by pooling cells hits the cross-cell fold conflict measured the same day; see wiki/human_fold_coordinate_leak_2026-11-23.json"
+  }
 }
