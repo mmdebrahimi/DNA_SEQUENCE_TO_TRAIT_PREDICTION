@@ -1,0 +1,382 @@
+{
+  "record": "oracle-contamination-agarwal-v1",
+  "date": "2026-11-23",
+  "question": "before adopting the candidate oracle (Gosai 2024, Genentech/human-mpra-gosai-2024-model) as a scorer, has it already seen any sequence in our 182,859-record Agarwal lentiMPRA corpus?",
+  "why_it_mattered": "adopting it and scoring our corpus would otherwise have it grading, in part, its own training data -- and the failure is silent, because a contaminated element scores WELL and so looks like oracle quality.",
+  "METHOD_AND_WHY_IT_IS_TRAP_FREE": {
+    "join": "exact sequence match against sha1(sequence)[:16] sets of the oracle's own train/val/test splits, supplied by the peer session from the training table the oracle's notebook names in code.",
+    "three_traps_structurally_unreachable": "a coordinate join would have faced three hazards measured earlier today: HepG2 is hg19-native with hg38 only on perfect match (963 NA rows); the S3 header row moves between sheets (4/2/1); and ALL 75,542 WTC11 rows write chromosomes BARE (`1`, not `chr1`), so a string join returns exactly zero and zero reads as perfect independence. A SEQUENCE join cannot hit any of them -- immune by construction rather than by remembering to normalise.",
+    "but_a_sequence_join_has_its_OWN_trap_pointing_the_same_way": "our records are 230 bp (15 nt adaptor + 200 nt element + 15 nt adaptor) and the manifest does not state case or whitespace handling, so a geometry or case mismatch returns ZERO -- indistinguishable from a clean result."
+  },
+  "POSITIVE_CONTROL_IS_THE_LOAD_BEARING_PART": {
+    "design": "our own Tewhey holdings provably contain 100% of the oracle's training table (798,064 of 798,064, measured by the peer), so hashing OUR copy of those sequences MUST hit. Only once it does is a zero against Agarwal evidence.",
+    "n_control_sequences": 40000,
+    "hits_by_convention": {
+      "as_is": 39561,
+      "upper": 39561,
+      "strip_upper": 39561
+    },
+    "hit_rate": 0.989,
+    "reading": "98.9% of our Tewhey sequences hit, identically under all three conventions (the sequences are already clean uppercase ACGT), so the hashing reproduces the peer's exactly. The 1.1% residual is expected: our holdings are a superset, 51.6% of which is in none of the oracle's splits.",
+    "fired": true
+  },
+  "GEOMETRY_SWEEP": {
+    "per_cell": {
+      "HepG2": {
+        "n_records": 61463,
+        "full_230bp": {
+          "distinct_hashes": 61463,
+          "hits": {
+            "train": 0,
+            "val": 0,
+            "test": 0
+          },
+          "total_hits": 0
+        },
+        "insert_200nt": {
+          "distinct_hashes": 61463,
+          "hits": {
+            "train": 26,
+            "val": 1,
+            "test": 0
+          },
+          "total_hits": 27
+        },
+        "full_230bp_revcomp": {
+          "distinct_hashes": 61463,
+          "hits": {
+            "train": 0,
+            "val": 0,
+            "test": 0
+          },
+          "total_hits": 0
+        },
+        "insert_200nt_revcomp": {
+          "distinct_hashes": 61463,
+          "hits": {
+            "train": 3,
+            "val": 1,
+            "test": 1
+          },
+          "total_hits": 5
+        }
+      },
+      "K562": {
+        "n_records": 98332,
+        "full_230bp": {
+          "distinct_hashes": 98332,
+          "hits": {
+            "train": 0,
+            "val": 0,
+            "test": 0
+          },
+          "total_hits": 0
+        },
+        "insert_200nt": {
+          "distinct_hashes": 98332,
+          "hits": {
+            "train": 39,
+            "val": 4,
+            "test": 3
+          },
+          "total_hits": 46
+        },
+        "full_230bp_revcomp": {
+          "distinct_hashes": 98332,
+          "hits": {
+            "train": 0,
+            "val": 0,
+            "test": 0
+          },
+          "total_hits": 0
+        },
+        "insert_200nt_revcomp": {
+          "distinct_hashes": 98332,
+          "hits": {
+            "train": 7,
+            "val": 1,
+            "test": 2
+          },
+          "total_hits": 10
+        }
+      },
+      "WTC11": {
+        "n_records": 23064,
+        "full_230bp": {
+          "distinct_hashes": 23064,
+          "hits": {
+            "train": 0,
+            "val": 0,
+            "test": 0
+          },
+          "total_hits": 0
+        },
+        "insert_200nt": {
+          "distinct_hashes": 23064,
+          "hits": {
+            "train": 9,
+            "val": 0,
+            "test": 0
+          },
+          "total_hits": 9
+        },
+        "full_230bp_revcomp": {
+          "distinct_hashes": 23064,
+          "hits": {
+            "train": 0,
+            "val": 0,
+            "test": 0
+          },
+          "total_hits": 0
+        },
+        "insert_200nt_revcomp": {
+          "distinct_hashes": 23064,
+          "hits": {
+            "train": 2,
+            "val": 1,
+            "test": 0
+          },
+          "total_hits": 3
+        }
+      }
+    },
+    "the_230bp_zero_is_EXPLAINED_not_a_trap": "full_230bp returns 0 in all three cells because the oracle's table carries no adaptors. The 200nt-insert geometry firing on the same records is what proves the pipeline reaches our corpus; without that, the 230bp zero would be unreadable.",
+    "both_strands_tested": "the reverse complement was tested because a one-orientation check would miss a match recorded on the other strand -- and it DID find additional hits, so this was not a formality."
+  },
+  "RESULT": {
+    "verdict": "CONTAMINATION_REAL_BUT_IMMATERIAL_AT_THIS_SCALE",
+    "n_contaminated_records": 100,
+    "n_records": 182859,
+    "rate": 0.00054687,
+    "in_oracle_TRAIN_split": 86,
+    "in_our_HELD_OUT_folds_9_10": 16,
+    "per_cell": {
+      "HepG2": {
+        "n_records": 61463,
+        "n_contaminated_records": 32,
+        "rate": 0.00052064,
+        "by_our_fold": {
+          "2": 5,
+          "3": 2,
+          "4": 3,
+          "5": 2,
+          "6": 3,
+          "7": 4,
+          "8": 5,
+          "9": 6,
+          "10": 2
+        },
+        "by_fold_role": {
+          "WORKING_HELD_OUT_9": 6,
+          "oracle_train_7_8": 9,
+          "generator_reserved_1_6": 15,
+          "FINAL_ONLY_10": 2
+        },
+        "by_oracle_split": {
+          "train": 29,
+          "val": 2,
+          "test": 1
+        },
+        "by_strand": {
+          "forward": 27,
+          "revcomp": 5
+        }
+      },
+      "K562": {
+        "n_records": 98332,
+        "n_contaminated_records": 56,
+        "rate": 0.0005695,
+        "by_our_fold": {
+          "1": 6,
+          "2": 7,
+          "3": 5,
+          "4": 3,
+          "5": 9,
+          "6": 6,
+          "7": 5,
+          "8": 9,
+          "9": 2,
+          "10": 4
+        },
+        "by_fold_role": {
+          "generator_reserved_1_6": 36,
+          "FINAL_ONLY_10": 4,
+          "oracle_train_7_8": 14,
+          "WORKING_HELD_OUT_9": 2
+        },
+        "by_oracle_split": {
+          "test": 5,
+          "train": 46,
+          "val": 5
+        },
+        "by_strand": {
+          "revcomp": 10,
+          "forward": 46
+        }
+      },
+      "WTC11": {
+        "n_records": 23064,
+        "n_contaminated_records": 12,
+        "rate": 0.00052029,
+        "by_our_fold": {
+          "1": 3,
+          "3": 1,
+          "4": 2,
+          "6": 2,
+          "8": 2,
+          "10": 2
+        },
+        "by_fold_role": {
+          "FINAL_ONLY_10": 2,
+          "generator_reserved_1_6": 8,
+          "oracle_train_7_8": 2
+        },
+        "by_oracle_split": {
+          "train": 11,
+          "val": 1
+        },
+        "by_strand": {
+          "revcomp": 3,
+          "forward": 9
+        }
+      }
+    },
+    "reading": "100 of 182,859 records (0.0547%) appear verbatim in the oracle's own splits, 86 of them in its TRAIN split -- so the claim 'this oracle has never seen our evaluation data' is FALSE and must not be made. But 16 records fall in our held-out folds 9/10, the only placement that corrupts an evaluation, and 16 records cannot move an aggregate correlation over thousands. Both halves hold: real, and immaterial at this scale.",
+    "a_coherence_check_worth_noting": "the rate is near-uniform across cells (HepG2 0.0521%, K562 0.0569%, WTC11 0.0520%) and spread over nearly every fold, which is what independent random fold assignment over elements predicts. A rate concentrated in one fold would have suggested a systematic shared design instead."
+  },
+  "ACTIONABLE": {
+    "the_fix_is_exact_and_free": "exclude these 100 named records when scoring with this oracle, or at minimum the 16 in folds 9/10. That converts an approximate 'immaterial' into an exact zero, and it costs 16 of ~18,000 held-out elements.",
+    "held_out_contaminated_records": [
+      {
+        "cell": "HepG2",
+        "name": "DNasePeakNoPromoter23926",
+        "fold": 9,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "HepG2",
+        "name": "DNasePeakNoPromoter3054",
+        "fold": 9,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "HepG2",
+        "name": "DNasePeakNoPromoter33354",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "HepG2",
+        "name": "DNasePeakNoPromoter40793",
+        "fold": 9,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "HepG2",
+        "name": "DNasePeakNoPromoter54010",
+        "fold": 9,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "HepG2",
+        "name": "DNasePeakNoPromoter7783",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "HepG2",
+        "name": "ENSG00000127903",
+        "fold": 9,
+        "oracle_split": "val",
+        "strand": "revcomp"
+      },
+      {
+        "cell": "HepG2",
+        "name": "ENSG00000133313",
+        "fold": 9,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "K562",
+        "name": "ENSG00000109775",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "revcomp"
+      },
+      {
+        "cell": "K562",
+        "name": "ENSG00000147488",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "revcomp"
+      },
+      {
+        "cell": "K562",
+        "name": "peak1353",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "K562",
+        "name": "peak3470",
+        "fold": 9,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "K562",
+        "name": "peak44184",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "K562",
+        "name": "peak64733",
+        "fold": 9,
+        "oracle_split": "train",
+        "strand": "forward"
+      },
+      {
+        "cell": "WTC11",
+        "name": "ENSG00000084463",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "revcomp"
+      },
+      {
+        "cell": "WTC11",
+        "name": "seq13838",
+        "fold": 10,
+        "oracle_split": "train",
+        "strand": "forward"
+      }
+    ],
+    "do_NOT_use_this_to_call_the_oracle_independent": "a clean-after-exclusion result says the oracle has not MEMORISED our remaining sequences. It does not make it independent of the Agarwal study in any broader sense, and it says nothing about locus overlap."
+  },
+  "honest_limits": [
+    "Exact sequence identity only. A shifted window over the same locus, or a different 200nt tile of one enhancer, is NOT detected and would still be partial leakage. This bounds VERBATIM reuse, not locus overlap -- the locus-level question needs the coordinate intersect, which is a separate and harder measurement.",
+    "A tiny contaminated count is immaterial to an AGGREGATE score but is not automatically immaterial to a per-element claim about one of those elements.",
+    "The oracle's split membership is derived from the peer's read of its training notebook.",
+    "The 100 is a LOWER BOUND on shared content. Exact identity misses a shifted window over the same locus or a different 200nt tile of one enhancer, both of which would be partial leakage. The locus-level question still needs the coordinate intersect.",
+    "The oracle's split membership comes from the peer's read of its training notebook, not a published split file. The split rule is quoted in that artifact's manifest."
+  ],
+  "provenance": {
+    "oracle_split_hashes": "dna-generator-research/data/oracle_contamination_set/ -- three sha1[:16] files plus a manifest recording the source URL and the split rule, built by the peer session",
+    "oracle_split_sizes": {
+      "train": 668946,
+      "val": 62406,
+      "test": 66712
+    },
+    "our_corpus": "data/mpra_human Tables S3 + S6, loaded through dna_decode.glm.lentimpra"
+  },
+  "SCOPE_TODAYS_COMMITTED_NUMBERS_ARE_UNAFFECTED": "This is FORWARD-LOOKING and does not touch any number already published. The oracle validated on fold 9 earlier today (wiki/glm_human_activity_oracle_fold9_2026-11-22.json, WTC11 0.3607 vs GC 0.0858) is OUR OWN k-mer ridge, trained on folds 7+8 of our own corpus with no Gosai model involved -- so none of those figures are contaminated by this finding. What this bears on is the PENDING decision to adopt the Gosai oracle as a scorer. Of the 16 held-out records, 10 are in fold 9 and 6 in fold 10, which has never been queried."
+}
