@@ -203,6 +203,7 @@
       "The bootstrap is on OUR values only; the oracle SE is inferred from its row count, not measured.",
       "Two cell lines. Precision within a cell says nothing about generality across cells.",
       "Selection and assay/lab are confounded across the two corpora and cannot be separated here."
-    ]
+    ],
+    "SE_RATIO_IS_AN_UPPER_BOUND": "the 26.7 and 26.9 figures divide by OUR bootstrap SE alone. The SE of a DIFFERENCE combines both sides, so those ratios are upper bounds. Combined they fall to about 25-26: the peer session reports 25.8 and 26.0 from its own stored values, and scaling our per-cell SE by 1/sqrt(n) to the oracle row count gives 25.1 and 24.4 here -- a 6 to 10 percent reduction, and the peer figure is the better one because it is computed rather than scaled. EVERY CONCLUSION IS IDENTICAL at 24 SE or 27 SE: the offset exceeds sampling error by more than 24-fold either way, measurement noise is not the binding limit either way, and generalisation and attribution remain the live uncertainties either way. Recorded for precision, not because anything turns on it."
   }
 }
