@@ -309,7 +309,7 @@
         }
       },
       "THE_FROZEN_BAR_IS_ALREADY_HONEST_ABOUT_THIS_AND_THE_RISK_IS_IN_THE_PROSE": "the success verdict is named DESIGNS_TO_SPEC_BEYOND_4MERS -- not 'beyond composition'. That name is exactly right and needs no amendment. The exposure is entirely in how a result would be READ and written up: 'beat the 4-mer null' will be heard as 'learned real regulatory structure', when up to 21.1% of the oracle's signal sits in a composition band above 4-mers that a higher-ORDER composition model would also reach. So the fix owed is a REPORTING rule, not a bar change.",
-      "the_reporting_rule_adopted_here": "any claim that the generator beat the activity-stratified null must be stated as 'beyond 4-MER composition', must quote the measured 5-6-mer band for that cell beside it, and must not be phrased as beyond composition in general. A size-curve reading must additionally state that the confound scales with capacity and therefore flatters the larger models.",
+      "the_reporting_rule_adopted_here": "any claim that the generator beat the activity-stratified null must be stated as 'beyond 4-MER composition', must quote the measured 5-6-mer band for that cell beside it, and must not be phrased as beyond composition in general. A size-curve reading must additionally state that the confound scales with capacity and therefore flatters the larger models. EXTENDED 2026-11-22: the rule is per FEATURE FAMILY, not per order. Before reading any null, enumerate every family the instrument scores and check the null can represent each one; a family it cannot represent is a band, whatever axis it lies on. For this arm that enumeration returns exactly one family (position-invariant k-mer composition) because the deployed scorer is single-mode -- verified in code, not assumed, after making precisely this scope error about a peer's design.",
       "the_empirical_option_is_a_USER_AUTHORITY_call": {
         "what_would_close_it": "an order-5 chain -- 6-mer conditionals -- fit per activity quintile, saturating the oracle's own feature order, reported ALONGSIDE the frozen order-3 null",
         "why_it_is_not_taken_unilaterally": "the frozen bar names the order-3 chain as the comparator for its decision quantity. Adding a secondary null is additive and changes no frozen number, but promoting it to the comparator would amend a frozen bar and is not this session's call.",
@@ -322,7 +322,44 @@
         "the_consequence": "the effective number of tests is not a simple function of the arm count, so it cannot be read off the design and has to come from the permutation null itself -- which is the argument for discipline 0 rather than for a closed-form correction."
       },
       "P2s_DEFECT_3_RETRACTED_ON_MECHANISM": "P2 verified at three call sites that prompts are built from FIT windows only, never scoring windows, and that copying is already measured against the fit corpus. Since every unit arm is fitted on those windows, 'a prompt's continuation is a fit window' is the existing contract rather than a leak genome pretraining introduces. P2 reports it had rendered a reviewer's directional concern as a stronger mechanism than the code supports, for the second time in that run, and that only the call sites separated the two. Recorded because the retraction is what makes the surviving half -- the capacity confound above -- trustworthy.",
-      "what_is_genuinely_new_in_P2s_half_a": "excluding the SCORING windows from pretraining is mandatory and new for a neural arm, because the count arms never saw the genome at all. The analogue here is already enforced: the generator's shard is folds 1-6 only, the oracle is folds 7-8, and fold 10 is read by nothing in force."
+      "what_is_genuinely_new_in_P2s_half_a": "excluding the SCORING windows from pretraining is mandatory and new for a neural arm, because the count arms never saw the genome at all. The analogue here is already enforced: the generator's shard is folds 1-6 only, the oracle is folds 7-8, and fold 10 is read by nothing in force.",
+      "FEATURE_FAMILY_RULE_CORRECTED": {
+        "date": "2026-11-22",
+        "MY_CLAIM_WAS_WRONG_AND_THE_ERROR_WAS_SCOPE": "I sent P2 the rule 'the null's order must match the instrument's feature order', checked their COMPOSITION axis, found it saturated by construction (kmer_k=4 against markov_order=3, whose sufficient statistic IS the 4-mer conditional distribution), and told them their band was EXACTLY ZERO. It is zero on the axis I checked and large on one I did not. I verified one feature family and generalised to the whole design.",
+        "THE_CORRECTED_RULE": "the null must match the instrument on EVERY FEATURE FAMILY, not only on order. Order is one axis of matching; position is another; any family the instrument scores and the null cannot represent opens a band.",
+        "P2s_measured_positional_band": {
+          "cause": "their scoring mode is `both`, which adds 6 POSITIONAL BINS, and a homogeneous order-3 chain is position-invariant -- it cannot represent position-dependent composition across a 150 bp promoter at all",
+          "per_mode_anchors": {
+            "FLOOR": {
+              "kmer": 0.4625,
+              "both": 0.4734
+            },
+            "NULL": {
+              "kmer": 0.534,
+              "both": 0.6444
+            },
+            "POWER": {
+              "kmer": 0.9338,
+              "both": 0.9518
+            }
+          },
+          "band": 0.1104,
+          "band_vs_their_arm_spread": "roughly FIVE TIMES their entire 0.0226 arm spread, so the instrument's dynamic range is dominated by a feature family their axis is not about",
+          "why_this_is_a_MECHANISM_not_a_restatement": "every arm is prompted and promoter-fitted, so every arm collects the positional pedestal, and the units then differ from each other by 0.0226 sitting on top of it. That is the best available explanation for why the unit question resists resolution: the instrument's power is largely spent on a family the question is not about. It is a cause of 'no resolvable winner' rather than another way of saying it.",
+          "what_it_does_NOT_touch": "no surviving claim is biased: boundary-conditioning (+0.0691), the re-patching costs and the copying figure are arm-vs-arm or direct measurements, and a pedestal both sides carry cancels in the difference. Their conditioning-matched null was already in place for the anchoring half."
+        },
+        "WHY_THIS_ARM_IS_EXEMPT_AND_IT_IS_VERIFIED_NOT_ASSUMED": {
+          "checked_because_I_had_just_made_this_exact_error_about_P2": true,
+          "the_deployed_scorer_is_SINGLE_FAMILY": "scripts/glm_human_stratified_null.py sets ORACLE_MODE = 'kmer6' and fits with that one mode. build() returns EXACTLY ONE family per call -- gc OR kmer4 OR kmer6 OR positional -- and no branch anywhere concatenates families, so the scorer is never an ensemble.",
+          "and_it_is_POSITION_INVARIANT": "kmer_feats counts k-mers over the whole sequence and normalises by the count; it carries no positional term. The order-3 null is position-invariant too.",
+          "positional_is_only_ever_a_COMPETING_arm": "the oracle gate evaluates gc / kmer4 / kmer6 / positional as four separate single-family arms and takes the max, so 'positional' informs whether the judge is competent and never enters what the judge rewards",
+          "consequence": "instrument and null are both single-family and both position-invariant, so the ONLY mismatch is ORDER, and the 5-6-mer band already measured (0.0414 HepG2 / 0.1063 K562) fully characterises this arm's exposure. One axis here, not because the rule is one-dimensional but because the instrument is."
+        },
+        "THE_SAME_PROPERTY_THAT_CLOSES_THE_BAND_IS_A_LIMIT_ON_THE_SCIENCE": "a position-invariant judge cannot reward position-dependent regulatory structure, which is real biology -- binding-site placement relative to the transcription start site. So the very feature that spares this arm P2's positional band is also why its design verdict is scoped to composition. The bar already records that as an open question ('the oracle is a 6-mer ridge, so designs-to-spec as this judge measures it remains substantially composition-matching'); the two facts are the same fact seen from two sides, and neither should be reported without the other.",
+        "P2s_generalisation_of_my_copying_correction_which_is_better_than_mine_was": "THE CONTROL HAS TO BE CHOSEN TO MATCH THE CHANNEL. Substrings for a memorisation channel; held-out composition at the judge's own resolution for a composition channel. 'Copying at chance' is evidence about SUBSTRINGS only and settles nothing about any other channel. P2 accepted that its capacity confound pointed copying at a problem copying cannot see here.",
+        "P2_also_confirmed_the_authority_boundary": "promoting a comparator is an acceptance-bar change and therefore the user's, even though adding a secondary null changes no frozen figure. P2 notes it would have been tempted to blur that line.",
+        "the_symmetry_is_the_evidence_for_the_rule": "this arm's band is in COMPOSITION and zero in position; P2's is zero in composition and large in POSITION. Same rule, orthogonal axes, two independently-built instruments. That is better evidence the rule is about feature families generally than either case alone, and neither of us would have found our own band without the other's."
+      }
     }
   }
 }

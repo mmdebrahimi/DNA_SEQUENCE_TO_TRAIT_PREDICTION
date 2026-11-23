@@ -436,3 +436,66 @@ def test_the_order_5_remedy_is_recorded_as_a_user_authority_option_not_taken():
     assert "order-5" in opt["what_would_close_it"]
     assert "ALONGSIDE" in opt["what_would_close_it"]
     assert "amend a frozen bar" in opt["why_it_is_not_taken_unilaterally"]
+
+
+# ----------------------------------- the feature-family rule (P2 correction, 2026-11-22)
+
+def test_the_deployed_scorer_is_SINGLE_FAMILY_so_the_band_is_one_dimensional():
+    """The corrected rule is 'match the null to the instrument on EVERY feature family'. This arm is
+    exempt on every axis but order ONLY because the deployed scorer is one mode. If that ever becomes
+    an ensemble, a second band opens and this test is what notices.
+
+    Position-invariance itself is a property of counting k-mers over the whole sequence, which the
+    hand-derived fixture in tests/test_human_oracle_precondition.py already pins; this test pins that
+    no OTHER family is concatenated into the scored feature vector.
+    """
+    import importlib.util
+    import sys as _sys
+    from pathlib import Path
+
+    repo = Path(__file__).resolve().parents[1]
+    spec = importlib.util.spec_from_file_location(
+        "_null_under_test", repo / "scripts" / "glm_human_stratified_null.py")
+    mod = importlib.util.module_from_spec(spec)
+    _sys.modules["_null_under_test"] = mod
+    spec.loader.exec_module(mod)
+
+    assert mod.ORACLE_MODE == "kmer6", "the deployed scorer mode changed; re-derive the band"
+    assert isinstance(mod.ORACLE_MODE, str), (
+        "a list or tuple here would make the scorer multi-family and reopen the rule on every "
+        "family it then spans")
+
+    from scripts.glm_human_activity_oracle import build
+    # Exactly 4**6 columns: no positional block appended to the scored vector.
+    assert len(build(["ACGT" * 50], "kmer6", 10)[0]) == 4 ** 6
+    assert len(build(["ACGT" * 50], "kmer4", 10)[0]) == 4 ** 4
+    # And a compound mode is refused rather than silently concatenated.
+    for compound in ("kmer6+positional", "both", "kmer6,positional"):
+        with pytest.raises(ValueError):
+            build(["ACGT" * 50], compound, 10)
+
+
+def test_the_protocol_records_my_scope_error_rather_than_only_the_corrected_rule():
+    """A correction that keeps only the fixed rule loses why the rule needed fixing. I checked one
+    feature family and declared a peer's whole design clean."""
+    cap = _protocol()["CAPACITY_SCALING_CONFOUND"]["FEATURE_FAMILY_RULE_CORRECTED"]
+    assert "EXACTLY ZERO" in cap["MY_CLAIM_WAS_WRONG_AND_THE_ERROR_WAS_SCOPE"]
+    assert "EVERY FEATURE FAMILY" in cap["THE_CORRECTED_RULE"]
+    assert cap["WHY_THIS_ARM_IS_EXEMPT_AND_IT_IS_VERIFIED_NOT_ASSUMED"][
+        "checked_because_I_had_just_made_this_exact_error_about_P2"] is True
+
+
+def test_the_record_keeps_the_cost_of_the_property_that_grants_the_exemption():
+    """Position-invariance spares this arm the positional band AND blinds the judge to positional
+    biology. Reporting either without the other is the over-read."""
+    cap = _protocol()["CAPACITY_SCALING_CONFOUND"]["FEATURE_FAMILY_RULE_CORRECTED"]
+    limit = cap["THE_SAME_PROPERTY_THAT_CLOSES_THE_BAND_IS_A_LIMIT_ON_THE_SCIENCE"]
+    assert "cannot reward position-dependent" in limit
+    assert "neither should be reported without the other" in limit
+
+
+def test_the_control_must_match_the_channel_is_recorded_as_the_generalisation():
+    cap = _protocol()["CAPACITY_SCALING_CONFOUND"]["FEATURE_FAMILY_RULE_CORRECTED"]
+    gen = cap["P2s_generalisation_of_my_copying_correction_which_is_better_than_mine_was"]
+    assert "MATCH THE CHANNEL" in gen
+    assert "SUBSTRINGS only" in gen
