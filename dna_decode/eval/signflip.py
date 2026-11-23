@@ -74,6 +74,13 @@ class SignFlipResult:
     n_draws: int
     exact: bool
     seed: int | None
+    #: DISCIPLINE 0. The 95th percentile of the FAMILY statistic under the null -- the bar the
+    #: observed statistic had to clear. For max_abs_t this is a dimensionless critical value; for
+    #: mean it is already in the data's units.
+    null_family_p95: float = 0.0
+    per_candidate_sem: list[float] = field(default_factory=list)
+    #: The smallest per-candidate effect this design could have resolved at the family-wise bar.
+    family_wise_mdd: list[float] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict:
@@ -89,6 +96,23 @@ class SignFlipResult:
             "n_draws": self.n_draws,
             "enumeration": "exact" if self.exact else "monte-carlo",
             "seed": self.seed,
+            "DISCIPLINE_0_what_this_design_could_detect": {
+                "null_family_statistic_p95": round(self.null_family_p95, 6),
+                "per_candidate_sem": [round(v, 6) for v in self.per_candidate_sem],
+                "family_wise_mdd": [round(v, 6) for v in self.family_wise_mdd],
+                "median_family_wise_mdd": (round(statistics.median(self.family_wise_mdd), 6)
+                                           if self.family_wise_mdd else None),
+                "how": ("for max_abs_t the p95 is a dimensionless critical value so the MDD is "
+                        "p95 * each candidate's OWN sem; for mean the p95 is already in the data's "
+                        "units and IS the bar, so it is not multiplied by anything"),
+                "read_this_BEFORE_the_p": ("a null whose MDD exceeds the spread it was measured "
+                                           "over is a statement about the DESIGN, not about the "
+                                           "candidates. Compare the MDD to the effect you expect "
+                                           "or observe before reading family_wise_p as absence."),
+                "power_convention": ("the MDD is the effect detectable about HALF the time -- an "
+                                     "effect sitting exactly at the bar is rejected 50% of the "
+                                     "time. An 80%-power target is materially larger."),
+            },
             "reading": (
                 "family_wise_p is ONE p for the whole family and assumes NO independence across "
                 "candidates -- the cross-candidate correlation is carried in the null by flipping "
@@ -163,6 +187,20 @@ def _t_stats(mat: list[list[float]], statistic: str) -> list[float]:
     return out
 
 
+def _percentile(xs, q: float) -> float:
+    """Nearest-rank percentile of a sampled distribution.
+
+    Deliberately NOT interpolated. The null here is a finite set of attainable statistic values --
+    exhaustively enumerated when n is small -- so an interpolated percentile would report a bar no
+    sign vector can actually produce.
+    """
+    if not xs:
+        return 0.0
+    s = sorted(xs)
+    i = min(len(s) - 1, max(0, int(math.ceil(q * len(s))) - 1))
+    return s[i]
+
+
 def _sign_vectors(n: int, n_draws: int, seed: int | None):
     """Yield (signs, exact, total). Exact enumeration includes the observed all-plus vector."""
     if n <= EXACT_MAX_ROWS:
@@ -187,6 +225,7 @@ def family_wise_signflip(
     n_draws: int = 20000,
     seed: int | None = 0,
     flag_uncentred: bool = True,
+    observed_spread: float | None = None,
 ) -> SignFlipResult:
     """One family-wise p for a family of candidates measured on shared replicate rows.
 
@@ -226,11 +265,14 @@ def family_wise_signflip(
     ge_family = 0
     ge_cand = [0] * k
     used = 0
+    null_family: list[float] = []          # DISCIPLINE 0: keep it; the bar is in here
     for signs in signs_iter:
         flipped = [[s * v for v in row] for s, row in zip(signs, mat)]
         t = _t_stats(flipped, stat_kind)
         used += 1
-        if max(abs(v) for v in t) >= obs_family - 1e-12:
+        fam = max(abs(v) for v in t)
+        null_family.append(fam)
+        if fam >= obs_family - 1e-12:
             ge_family += 1
         for j in range(k):
             if abs(t[j]) >= abs(obs[j]) - 1e-12:
@@ -257,10 +299,46 @@ def family_wise_signflip(
             f"effect of ANY size cannot be resolved below it. A non-significant result here is "
             f"UNDERPOWERED, not evidence of absence.")
 
+    # ---- DISCIPLINE 0: what could this design have detected at all? ----
+    p95 = _percentile(null_family, 0.95)
+    sems = []
+    for j in range(k):
+        col = [row[j] for row in mat]
+        mu = sum(col) / n
+        var = sum((v - mu) ** 2 for v in col) / (n - 1)
+        sems.append(math.sqrt(var / n))
+    if stat_kind == "max_abs_t":
+        mdd = [p95 * s for s in sems]
+    else:
+        # The p95 of max|mean| is ALREADY an effect size. Multiplying it by a sem would give a
+        # number in squared units that still looks like an effect.
+        mdd = [p95] * k
+
+    if observed_spread is not None:
+        spread = abs(float(observed_spread))
+        med = statistics.median(mdd)
+        if med > spread:
+            need_sem = spread / p95 if p95 > 0 else float("inf")
+            cur = statistics.median(sems) if sems else float("nan")
+            n_needed = (n * (cur / need_sem) ** 2) if need_sem > 0 else float("inf")
+            notes.append(
+                "DESIGN-LIMITED: the family-wise MDD (%.4f) EXCEEDS the spread it is measured over "
+                "(%.4f), so a non-significant result here is a statement about the DESIGN and not "
+                "about the candidates. Resolving %.4f needs sem <= %.5f, i.e. about %d replicate "
+                "rows at this spread (first-order: the null's own p95 also shifts with n), for "
+                "roughly 50%% power."
+                % (med, spread, spread, need_sem, max(n, int(round(n_needed)))))
+        else:
+            notes.append(
+                "the family-wise MDD (%.4f) is within the spread it is measured over (%.4f), so a "
+                "non-significant result is informative about the candidates rather than only about "
+                "the design" % (med, spread))
+
     return SignFlipResult(
         n_rows=n, n_candidates=k, statistic=stat_kind, observed=obs,
         observed_family=obs_family, family_wise_p=p_family, per_candidate_p=p_cand,
-        n_draws=used, exact=exact, seed=None if exact else seed, notes=notes,
+        n_draws=used, exact=exact, seed=None if exact else seed,
+        null_family_p95=p95, per_candidate_sem=sems, family_wise_mdd=mdd, notes=notes,
     )
 
 

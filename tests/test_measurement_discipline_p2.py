@@ -230,3 +230,118 @@ def test_sidedness_holds_for_the_t_statistic_too():
     a = family_wise_signflip(rows, statistic="max_abs_t")
     b = family_wise_signflip([[-v for v in r] for r in rows], statistic="max_abs_t")
     assert a.family_wise_p == pytest.approx(b.family_wise_p)
+
+
+# ------------------------------------------------------- discipline 0: the MDD before the null
+
+def test_the_mdd_is_reported_and_the_sems_are_the_real_ones():
+    """Discipline 0, added by P2 ahead of the other ten: read what the design could detect BEFORE
+    reading the p. The sems are checked against an independent computation, not against the
+    implementation that produced them."""
+    import random
+    g = random.Random(3)
+    rows = [[g.gauss(0.0, 0.05) for _ in range(4)] for _ in range(12)]
+    r = family_wise_signflip(rows, statistic="max_abs_t")
+    assert r.null_family_p95 > 0
+    assert len(r.per_candidate_sem) == 4 and len(r.family_wise_mdd) == 4
+    for j, sem in enumerate(r.per_candidate_sem):
+        col = [row[j] for row in rows]
+        expected = statistics.stdev(col) / math.sqrt(len(col))
+        assert sem == pytest.approx(expected), f"candidate {j} sem is not sd/sqrt(n)"
+
+
+def test_the_t_statistic_mdd_is_p95_times_each_candidates_OWN_sem():
+    """Per discipline 4, candidates do not share a sem, so there are k minimum detectable
+    differences and not one."""
+    import random
+    g = random.Random(8)
+    # Deliberately unequal spreads so a shared-sem bug cannot pass.
+    rows = [[g.gauss(0, 0.01), g.gauss(0, 0.10), g.gauss(0, 0.50)] for _ in range(14)]
+    r = family_wise_signflip(rows, statistic="max_abs_t")
+    for sem, mdd in zip(r.per_candidate_sem, r.family_wise_mdd):
+        assert mdd == pytest.approx(r.null_family_p95 * sem)
+    assert len(set(round(v, 6) for v in r.family_wise_mdd)) == 3, (
+        "three candidates with different spreads must yield three different MDDs")
+
+
+def test_the_mean_statistic_mdd_is_NOT_multiplied_by_a_sem():
+    """The units guard. For `mean` the null p95 is ALREADY an effect size, so multiplying it by a
+    sem would give a number in squared units that still reads like an effect size -- the kind of
+    error that produces a plausible wrong bar rather than a crash."""
+    import random
+    g = random.Random(2)
+    rows = [[g.gauss(0, 0.05) for _ in range(3)] for _ in range(11)]
+    r = family_wise_signflip(rows, statistic="mean")
+    for mdd in r.family_wise_mdd:
+        assert mdd == pytest.approx(r.null_family_p95)
+        assert mdd != pytest.approx(r.null_family_p95 * statistics.median(r.per_candidate_sem))
+
+
+def test_a_design_limited_null_says_so_in_words():
+    """P2's own headline failed this: an MDD of 0.0317 over a spread of 0.0226 means '0 of 10
+    resolve' was fixed by n=20 before any data was seen."""
+    import random
+    g = random.Random(11)
+    n = 20
+    sd = 0.0106 * math.sqrt(n)
+    rows = [[g.gauss(0.0, sd) for _ in range(10)] for _ in range(n)]
+    r = family_wise_signflip(rows, statistic="max_abs_t", observed_spread=0.0226)
+    joined = " ".join(r.notes)
+    assert "DESIGN-LIMITED" in joined
+    assert "statement about the DESIGN" in joined
+    assert "replicate rows" in joined, "it must say how many rows would resolve the spread"
+    assert statistics.median(r.family_wise_mdd) > 0.0226
+
+
+def test_a_design_that_can_resolve_its_spread_is_told_apart_from_one_that_cannot():
+    import random
+    g = random.Random(5)
+    rows = [[g.gauss(0.0, 0.004) for _ in range(3)] for _ in range(30)]
+    r = family_wise_signflip(rows, statistic="max_abs_t", observed_spread=0.05)
+    joined = " ".join(r.notes)
+    assert "DESIGN-LIMITED" not in joined
+    assert "informative about the candidates" in joined
+
+
+def test_omitting_the_spread_emits_no_design_verdict():
+    """Backwards compatible: the comparison needs a spread the CALLER supplies, because what counts
+    as a difference worth resolving is not derivable from the data being tested."""
+    import random
+    g = random.Random(1)
+    rows = [[g.gauss(0, 0.02) for _ in range(3)] for _ in range(10)]
+    r = family_wise_signflip(rows, statistic="mean")
+    joined = " ".join(r.notes)
+    assert "DESIGN-LIMITED" not in joined and "informative about the candidates" not in joined
+    assert r.null_family_p95 > 0, "the MDD is still computed; only the VERDICT needs a spread"
+
+
+def test_the_p95_is_a_value_the_null_can_actually_produce():
+    """Nearest-rank, not interpolated. Under exact enumeration the null is a finite set of
+    attainable values, so an interpolated percentile would report a bar no sign vector produces."""
+    rows = [[0.03, 0.04], [0.02, 0.05], [0.04, 0.03], [0.05, 0.02]]
+    r = family_wise_signflip(rows, statistic="mean")
+    assert r.exact
+    attainable = set()
+    for bits in range(2 ** len(rows)):
+        signs = [1.0 if (bits >> i) & 1 else -1.0 for i in range(len(rows))]
+        flipped = [[s * v for v in row] for s, row in zip(signs, rows)]
+        means = [statistics.fmean([row[j] for row in flipped]) for j in range(2)]
+        attainable.add(round(max(abs(m) for m in means), 9))
+    assert round(r.null_family_p95, 9) in attainable
+
+
+def test_the_record_states_the_power_convention_and_the_reading_order():
+    import random
+    g = random.Random(6)
+    rows = [[g.gauss(0, 0.02) for _ in range(3)] for _ in range(10)]
+    d = family_wise_signflip(rows, statistic="mean").as_dict()
+    blk = d["DISCIPLINE_0_what_this_design_could_detect"]
+    assert "50%" in blk["power_convention"], (
+        "the MDD is a 50%-power figure and must say so; an 80% target is materially larger")
+    # The key carries the emphasis; the VALUE has to carry the instruction. Asserting "BEFORE"
+    # against the value was checking capitalisation rather than meaning.
+    assert "read_this_BEFORE_the_p" in blk
+    guidance = blk["read_this_BEFORE_the_p"]
+    assert "statement about the DESIGN" in guidance
+    assert "before reading family_wise_p" in guidance
+    assert blk["median_family_wise_mdd"] is not None

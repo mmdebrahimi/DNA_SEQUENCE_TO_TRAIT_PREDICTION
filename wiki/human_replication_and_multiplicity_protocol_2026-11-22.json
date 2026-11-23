@@ -187,7 +187,8 @@
       "7_random_drop_as_N_draws": "BUILT earlier today (--shuffle-seed decoupled from --seed)",
       "8_PYTHONDONTWRITEBYTECODE": "noted; this arm imports from no read-only tree, and the one bytecode file P2 disclosed in this tree is gitignored and was left in place deliberately",
       "9_verdict_and_action_separate": "already in this protocol",
-      "10_prefer_measurements_over_threshold_crossings": "adopted. Today's fold-9 findings are shaped as measurements -- the ceiling is 0.4912 with a measured draw sd of 0.0254, the subsample bias is -0.1095 = -4.14 sd -- rather than as threshold crossings. Honest caveat: stratified_frac_of_ceiling's verdict BUCKETS are still threshold crossings, so they stay as fragile as the sem behind them."
+      "10_prefer_measurements_over_threshold_crossings": "adopted. Today's fold-9 findings are shaped as measurements -- the ceiling is 0.4912 with a measured draw sd of 0.0254, the subsample bias is -0.1095 = -4.14 sd -- rather than as threshold crossings. Honest caveat: stratified_frac_of_ceiling's verdict BUCKETS are still threshold crossings, so they stay as fragile as the sem behind them.",
+      "0_compute_the_MDD_before_reading_a_null": "BUILT 2026-11-22 (null_family_p95 / per_candidate_sem / family_wise_mdd, with a DESIGN-LIMITED verdict when a caller-supplied spread is exceeded)"
     },
     "DO_NOT_CITE_AS_SURVIVORS": {
       "figures": [
@@ -204,6 +205,74 @@
       "the_58998_figure_is_recognisable_here": "it is this arm's K562 folds-1-6 count, the same n_chain_fit the stratified null reports",
       "why_INAPPLICABLE_to_this_arm": "the question is about TOKENIZATION UNITS and this arm is single-nucleotide throughout. Its nulls are order-3 Markov chains over 4^3 = 64 contexts, trivially dense at this corpus size. Recorded with the reason rather than skipped, and NOT over-read as evidence about tokenization."
     },
-    "P2s_open_decision_is_NOT_this_arms_to_settle": "P2 names a DECISION NEEDED on its four architecture arms (principled-fixed-k, dynamic-patching-patchdna, single-nucleotide-ssm, multi-scale-k), still planned, with ceiling:tokenization-representation reading blocked:untried-arm. That is P2's ceiling and its owner's call, surfaced here only so this arm does not silently inherit it."
+    "P2s_open_decision_is_NOT_this_arms_to_settle": "P2 names a DECISION NEEDED on its four architecture arms (principled-fixed-k, dynamic-patching-patchdna, single-nucleotide-ssm, multi-scale-k), still planned, with ceiling:tokenization-representation reading blocked:untried-arm. That is P2's ceiling and its owner's call, surfaced here only so this arm does not silently inherit it.",
+    "DISCIPLINE_0_COMPUTE_THE_MDD_BEFORE_READING_A_NULL": {
+      "status": "BUILT 2026-11-22, same day it was received",
+      "function": "dna_decode/eval/signflip.py -- null_family_p95, per_candidate_sem, family_wise_mdd",
+      "rule": "compute the minimum detectable difference BEFORE reading a null, and compare it to the effect you expect or observe. A null whose MDD exceeds the spread it was measured over is a statement about the DESIGN, not about the candidates.",
+      "why_it_was_nearly_free_here": "the permutation loop already computed the family statistic for every draw and then discarded it. Keeping the distribution turns a test that reports a p into one that also reports what it could ever have detected.",
+      "P2s_own_headline_failed_this": {
+        "what_was_claimed": "0 of 10 pairs resolve ... nothing to explain away",
+        "the_arithmetic_confirms_the_count": {
+          "n_pairs": 10,
+          "n_resolved": 0,
+          "family_wise_p": 0.39328,
+          "max_abs_t": 1.892
+        },
+        "but_the_design_could_not_have_resolved_it": {
+          "null_p95_of_max_abs_t": 3.0,
+          "median_paired_sem": 0.0106,
+          "family_wise_mdd": 0.0317,
+          "total_arm_spread": 0.0226
+        },
+        "reading": "0 of 10 was fixed by n=20 before any data was seen. Resolving 0.0226 over 10 pairs needs sem <= 0.0075, about n=40 for 50% power and n=65 for 80%.",
+        "honest_headline": "no resolvable winner AT THIS POWER",
+        "the_sharp_part": "this was F12 -- an underpowered null read as absence -- committed in the very document that retracts F12 elsewhere",
+        "what_still_stands": "point estimates never moved; fixed-k6 is still nominally best and still the memorization-flagged arm, so the ranking still tracks copying. Correcting for selection can only remove winners, never create them, so the withdrawal of the one resolved pair is safe."
+      },
+      "INDEPENDENT_REPRODUCTION_HERE_AND_WHY_IT_DIFFERS_SLIGHTLY": {
+        "built_a_matched_fixture": "n=20 replicate rows, 10 candidates, per-candidate sem near 0.0106",
+        "mine": {
+          "null_p95_max_abs_t": 3.116,
+          "median_sem": 0.01092,
+          "median_mdd": 0.034,
+          "rows_needed_to_resolve_0.0226": 45
+        },
+        "P2s": {
+          "null_p95_max_abs_t": 3.0,
+          "median_sem": 0.0106,
+          "median_mdd": 0.0317,
+          "rows_needed": 40
+        },
+        "the_discrepancy_is_EXPLAINED_not_hand_waved": "my fixture's 10 candidates are INDEPENDENT draws; P2's 10 are PAIRWISE comparisons among 5 arms, so they are necessarily correlated -- pair (A,B) and pair (A,C) share arm A. Correlated candidates reduce the effective number of independent maxima, so the null maximum is SMALLER. 3.00 < 3.116 is therefore the right direction, and the gap is produced by exactly the cross-candidate correlation the whole-row sign-flip exists to preserve. A matching number would have been more suspicious than this one."
+      },
+      "the_two_statistics_need_DIFFERENT_arithmetic": {
+        "max_abs_t": "the null p95 is a DIMENSIONLESS critical value, so the detectable effect is p95 x sem, and per discipline 4 each candidate has its OWN sem -- there are k MDDs, not one",
+        "mean": "the null p95 is ALREADY in the data's units and IS the bar, so it must not be multiplied by anything. Multiplying it by a sem would yield a number in squared units that still reads like an effect size -- a plausible wrong bar rather than a crash, which is why it is pinned by its own test"
+      },
+      "power_convention_stated_in_the_output": "the MDD is the effect detectable about HALF the time; an effect sitting exactly at the bar is rejected 50% of the time. An 80%-power target is materially larger, and the output says so rather than letting the MDD read as a sufficiency bar.",
+      "the_comparison_needs_a_CALLER_SUPPLIED_spread": "observed_spread is optional and there is no default. What counts as a difference worth resolving is not derivable from the data being tested -- the same reason the equivalence margin must be sourced.",
+      "P2s_sign_error_noted_and_nothing_to_retract_here": "P2 corrects its own 'selection inflation biases apparent winners upward', which is backwards for a lower-is-better metric: selection biases a chosen extreme AWAY from the mean, making an apparent winner look BETTER. Checked: that sentence was never recorded in this repo, so there is nothing to correct on this side. The directional conclusion is unaffected either way.",
+      "P2_ACCEPTED_BOTH_CORRECTIONS_SENT_FROM_HERE": {
+        "margins_do_not_transfer": "accepted and relayed onward -- P2 has told Soraya Development explicitly not to adopt 0.0226 and 0.0075 as governance constants, and recorded as a defect in how it packaged them, since shipping them as NAMED CONSTANTS is the shape that invites the transfer",
+        "the_relay_lost_the_bar_distinction": "accepted -- the two bar pairs sat in adjacent paragraphs without being distinguished. P2 confirms reading the document rather than the relay is the right standing policy",
+        "discipline_6_partial": "recorded by P2 as honest and correctly scoped"
+      },
+      "P2s_OPEN_DECISION_IS_SETTLED_AND_NOT_TOWARD_THIS_SUBSTRATE": "the user chose to run the four architecture arms on E. coli. So the human re-declaration is off, this arm's fold contract does not bind there, and the reason recorded here for not measuring obs_per_nonzero_cell stands on its own terms: no consumer, and this arm is single-nucleotide throughout with trivially dense order-3 nulls over 64 contexts. Nothing is owed from this arm on it.",
+      "two_defects_P2s_execution_review_found_that_bear_on_this_arm": {
+        "1_the_unit_of_replication_moves_UP_for_a_neural_arm": {
+          "P2s_finding": "a count-model fit is deterministic so gen_seed was the right replicate key there, but a TRAINING RUN is itself a draw, so an independent replicate needs a RETRAIN. Forty sets from one checkpoint would repeat discipline 1 one level up.",
+          "status_here": "CONVERGED INDEPENDENTLY. This protocol's RULE_1 already records the three-deep nesting -- scoring split inside generated set inside trained run -- and collapse_to_rows' docstring already states that for a size or architecture claim the replicate key must be the TRAINED RUN because extra sampling seeds from one trained model are extra generated sets and not extra models. Two arms reached the same rule by different routes, which is the best available evidence that it is not an artifact of either one's harness."
+        },
+        "2_the_prompt_continuation_leak": {
+          "P2s_finding": "window_context returns the bases immediately PRECEDING a window, so each prompt's true continuation is itself a fit window. Pretraining on a corpus that excludes only the SCORING windows therefore leaves every prompt's answer in the training data, turning generation into recall.",
+          "status_here": "INAPPLICABLE BY CONSTRUCTION, and checked rather than assumed",
+          "why": "this arm's generator conditions on a SCALAR target activity bin, not on flanking sequence, so there is no sequence prompt whose continuation could be in the corpus. The bar already asserts this under controls_that_transfer.",
+          "the_one_flank_that_exists_and_why_it_is_not_this": "lentiMPRA elements carry 15 nt adaptors on each side, which ARE flanks -- but they are MEASURED constant, one distinct value each, and the primary geometry strips them. A constant flank cannot carry a prompt-specific continuation.",
+          "what_still_covers_the_residual": "the copying control, which measures the longest verbatim substring shared with the training folds against the real held-out level, with an ABSOLUTE verbatim-reproduction rule evaluated before any ratio",
+          "re_check_condition": "if this arm ever conditions on upstream sequence rather than on a scalar, this stops being inapplicable and must be measured"
+        }
+      }
+    }
   }
 }
