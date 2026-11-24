@@ -1,0 +1,137 @@
+{
+  "record": "glm-beyond-kmer-two-sets-v1",
+  "date": "2026-11-24",
+  "graded_against": "wiki/glm_two_set_reading_rule_2026-11-24.json",
+  "rule_frozen_before_any_model_number_at_this_geometry": true,
+  "checkpoint_step": 6000,
+  "geometry": {
+    "n_windows": 120,
+    "positions_per_window": 30,
+    "n_predictions_per_set": 3600,
+    "selection_seed": 0,
+    "scoring_seed": 0,
+    "boot": 2000
+  },
+  "QUESTION_1_DOES_THE_COMMITTED_REFUSAL_STAND": {
+    "branch": "ADMISSIBLE",
+    "refusal_stands": false,
+    "all_four_sets_admissible": true,
+    "per_set": {
+      "orthology_free": {
+        "gate_state": "ADMISSIBLE",
+        "admissible": true,
+        "model_ce_nats": 1.3726,
+        "null_ce_nats": 1.3535,
+        "uniform_ce_nats": 1.3863,
+        "scorer_verdict": "WORSE_THAN_ORDER3_ON_THIS_SET",
+        "paired_delta_nats": -0.0191,
+        "ci95": [
+          -0.032,
+          -0.0068
+        ],
+        "resolved": true,
+        "n_windows": 120,
+        "n_predictions": 3600
+      },
+      "sequence_withheld": {
+        "gate_state": "ADMISSIBLE",
+        "admissible": true,
+        "model_ce_nats": 1.3783,
+        "null_ce_nats": 1.3561,
+        "uniform_ce_nats": 1.3863,
+        "scorer_verdict": "WORSE_THAN_ORDER3_ON_THIS_SET",
+        "paired_delta_nats": -0.0222,
+        "ci95": [
+          -0.0311,
+          -0.0128
+        ],
+        "resolved": true,
+        "n_windows": 120,
+        "n_predictions": 3600
+      },
+      "ortholog_bearing": {
+        "gate_state": "ADMISSIBLE",
+        "admissible": true,
+        "model_ce_nats": 1.3708,
+        "null_ce_nats": 1.346,
+        "uniform_ce_nats": 1.3863,
+        "scorer_verdict": "WORSE_THAN_ORDER3_ON_THIS_SET",
+        "paired_delta_nats": -0.0248,
+        "ci95": [
+          -0.0352,
+          -0.0137
+        ],
+        "resolved": true,
+        "n_windows": 120,
+        "n_predictions": 3600
+      },
+      "withheld_orthology_free": {
+        "gate_state": "ADMISSIBLE",
+        "admissible": true,
+        "model_ce_nats": 1.3654,
+        "null_ce_nats": 1.356,
+        "uniform_ce_nats": 1.3863,
+        "scorer_verdict": "UNRESOLVED",
+        "paired_delta_nats": -0.0094,
+        "ci95": [
+          -0.0198,
+          0.0015
+        ],
+        "resolved": false,
+        "n_windows": 120,
+        "n_predictions": 3600
+      }
+    },
+    "the_committed_cell_for_comparison": {
+      "n_windows": 6,
+      "positions_per_window": 8,
+      "n_predictions": 48,
+      "model_ce_nats": 1.4098,
+      "null_ce_nats": 1.4291,
+      "paired_delta_nats": 0.0192,
+      "gate_state": "REFUSED_BOTH_BELOW_UNIFORM",
+      "verdict": "EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM",
+      "reproduces_the_committed_artifact": true
+    },
+    "reading": "The committed refusal does NOT stand. At 3600 predictions per set instead of 48, every one of the four candidate sets is ADMISSIBLE -- the model and the strong null both beat uniform 1.3863 on all of them. EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM was a 48-prediction artifact in BOTH halves of the gate, and the accessory-gene out-of-distribution explanation recorded alongside it does not account for a set its own strong null predicts comfortably above chance.",
+    "the_sign_flipped_and_that_is_the_point": "On the committed 6 windows the paired delta was +0.0192, the model AHEAD. On 120 windows of the same set it is -0.0191, the model BEHIND and resolvably so. Nearly equal magnitude, opposite sign: the committed estimate carried no information about the direction of the effect, let alone its size."
+  },
+  "QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK": {
+    "branch": "UNRESOLVED_CONTRAST_SPANS_THE_MARGIN",
+    "equivalence_margin_nats": 0.01,
+    "contrast": "paired delta on ortholog-BEARING minus paired delta on orthology-FREE, both halves of the withheld set A, disjoint, same geometry and seed",
+    "ortholog_bearing_mean_delta": -0.024778,
+    "orthology_free_mean_delta": -0.009406,
+    "two_sample_bootstrap": {
+      "observed": -0.015372,
+      "ci95": [
+        -0.030708,
+        -0.001625
+      ],
+      "b": 2000,
+      "seed": 0,
+      "n_x": 120,
+      "n_y": 120
+    },
+    "decomposition": {
+      "delta_null_bearing_minus_free": -0.01,
+      "delta_model_bearing_minus_free": 0.0054,
+      "identity": "contrast = delta_null - delta_model (CE is lower-is-better, so a NEGATIVE delta_null means the null improved on the bearing arm)",
+      "reading": "On these samples the NULL improves on the ortholog-bearing arm while the MODEL worsens slightly, and the null's share is the larger of the two. So the near-ortholog leak on this measurement favours the 4-MER CHAIN more than the model -- the opposite direction from the concern the orthology filter exists to address, which is a model-side advantage."
+    },
+    "A_TENSION_RECORDED_RATHER_THAN_RESOLVED": "The null-side gap implied by these 120-window samples is about 0.0100 nats, while the same quantity measured over ALL 2830 and ALL 519 windows at ALL 147 positions is 0.0007 nats -- a 14x disagreement. The all-window figure is far better powered, which suggests the 0.0100 here is largely sampling variation in which 120 windows were drawn, not a systematic null-side leak. The two-sample CI already carries that uncertainty, which is part of why this contrast lands UNRESOLVED against the margin. Do not quote either null-side figure as settled; they are different estimators on different samples and they disagree.",
+    "sign_convention": "positive = the model does BETTER on the ortholog-bearing arm, i.e. the model GAINED from the near-ortholog leak",
+    "null_side_leak_for_comparison_nats": 0.0007,
+    "null_side_leak_source": "wiki/glm_eval_set_inventory_2026-11-23.json null_side_leak_contrast, measured over ALL windows and ALL positions of each arm"
+  },
+  "honest_limits": [
+    "This measures the near-ortholog LEAK SIZE and the admissibility gate state per set. It is NOT a beyond-k-mer verdict, and no outcome here licenses one.",
+    "Sequence-withholding does not remove near-ortholog leakage: a 95%-identical draft ortholog remains in training for every window of the ortholog-bearing arm by construction. An ADMISSIBLE gate does not make any set confound-free.",
+    "The leak is not one-sided. The strong null was fit on the draft windows that ARE the near-orthologs, so it is exposed to the same leak; measured at 0.0007 nats over all windows and positions, it is small, but the contrast reads model-leak MINUS null-leak rather than model-leak alone.",
+    "The model loses to the order-3 chain on the left-only arm on every set measured, which is a RESOLVED negative on three of four and unresolved on the fourth. That is a stronger and more useful result than the refusal it replaces, and it is still one checkpoint at one step on one organism pair.",
+    "The model DOES beat uniform on every set, so it learned something; it did not learn something a 4-mer conditional distribution cannot already express on this substrate.",
+    "The committed artifact records no seed or boot, so its CONFIDENCE INTERVALS are not reproducible from it while its point estimates reproduce exactly. No bootstrap count tried reproduces the committed CI and that remains unexplained.",
+    "120 windows is the scorer's own default and was fixed before the run. It is not a power analysis, and the orthology-free arm holds only 519 distinct windows available."
+  ],
+  "what_this_does_not_retire": "The representative re-pretrain arm. Its stated rationale -- that the eval set is uninformative -- is weakened by Q1, but an arm dies only on its own executed evidence, and retiring an expensive arm because a cheap result weakened its motivation is a USER authority decision, never a bookkeeping consequence. It is declared, not run."
+}

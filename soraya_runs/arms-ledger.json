@@ -207,6 +207,17 @@
         "status": "measured",
         "substrate_reachability_2026_11_01": "NOT DRIVE-BLOCKED, measured 2026-11-01. The rationale points at D:/dna_decode_cache/mpra_human/ and D: is detached, which reads as a hardware wall. It is not: Zenodo record 10558183 is OPEN and cc-by-4.0, fetched live -- 8 files, of which the four substrate tables (Table S3 56.2 MB, S6 6.1 MB, S7 8.3 MB, S9 3.6 MB) total ~74 MB and are trivially downloadable INSIDE a Kaggle kernel, exactly as the tile kernels fetch GSE144621 from GEO. The two big dumps (final_dump.zip 3.5 GB, final_joint_dump.zip 4.0 GB) are not needed for the (sequence, activity, fold) triples. CONSEQUENCE: ceiling_verdict is closable without waiting on the drive, so this arm is cost-gated, not access-gated."
       }
+    },
+    "ceiling: does the masked-diffusion promoter generator capture structure an order-3 Markov chain cannot, on withheld MG1655 windows": {
+      "representative-re-pretrain-excluding-draft-ecoli": {
+        "name": "representative-re-pretrain-excluding-draft-ecoli",
+        "cost_tier": "large",
+        "status": "planned",
+        "metric": null,
+        "evidence": "",
+        "declared_at": "2026-11-24T07:04:39Z",
+        "resolved_at": ""
+      }
     }
   },
   "schema_version": 1

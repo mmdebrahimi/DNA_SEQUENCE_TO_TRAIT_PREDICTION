@@ -58,6 +58,10 @@ if str(ROOT) not in sys.path:
 from dna_decode.glm.baselines import MarkovGenerator  # noqa: E402
 from dna_decode.glm.corpus import build_natural_set  # noqa: E402
 from dna_decode.glm.diffusion import MASK_ID, DiffusionConfig, build_model, encode  # noqa: E402
+from dna_decode.glm.eval_admissibility import (  # noqa: E402
+    REFUSED_BOTH_BELOW_UNIFORM,
+    admissibility,
+)
 from scripts.glm_orthology_free_baseline import id_to_symbol, symbols  # noqa: E402
 
 MG1655 = ROOT / "data" / "cache" / "refseq" / "GCF_000005845.2"
@@ -69,6 +73,42 @@ OUT = ROOT / "wiki" / "glm_beyond_kmer_2026-11-22.json"
 
 BASES = "ACGT"
 ORDER = 3  # the committed markov_order; the whole comparison is defined against it
+
+# The geometry that DEFINES the designed withhold (set A), from the `geometry` block of
+# wiki/glm_training_corpus_manifest_2026-11-21.json. Only read on a `--eval-set` other than the
+# default, because recomputing set A costs ten natural-set builds.
+SCORING_LIMIT = 1200
+N_SEEDS = 10
+
+#: The selectable eval sets. `orthology_free` is the committed path and is deliberately FIRST so it
+#: stays the argparse default, leaving the original invocation byte-unchanged.
+EVAL_SETS = ("orthology_free", "sequence_withheld", "ortholog_bearing", "withheld_orthology_free")
+
+SET_LABELS = {
+    "orthology_free": "orthology-free held-out MG1655 promoter windows",
+    "sequence_withheld": "sequence-withheld MG1655 promoter windows (the designed withhold)",
+    "ortholog_bearing": "withheld MG1655 promoter windows WHOSE GENE HAS a draft counterpart",
+    "withheld_orthology_free": "withheld MG1655 promoter windows whose gene has NO draft counterpart",
+}
+
+# The committed artifact hardcoded the orthology-free note, which is FALSE for two of these sets --
+# `ortholog_bearing` is its exact opposite. A note that does not describe the set it ships with is
+# worse than no note, so each set carries its own.
+SET_STRAIN_NOTES = {
+    "orthology_free": ("corpus E. coli is GCA_059754755.1 (draft); eval is GCF_000005845.2 "
+                       "(MG1655), and eval genes have NO draft counterpart"),
+    "sequence_withheld": ("corpus E. coli is GCA_059754755.1 (draft); eval is GCF_000005845.2 "
+                          "(MG1655). Withheld BY SEQUENCE, so a 95%-identical draft ortholog may "
+                          "remain in training -- this set is NOT orthology-free and MIXES windows "
+                          "that have a draft counterpart with windows that do not"),
+    "ortholog_bearing": ("corpus E. coli is GCA_059754755.1 (draft); eval is GCF_000005845.2 "
+                         "(MG1655). Every window here is withheld by sequence BUT its gene DOES "
+                         "have a draft counterpart, so a near-ortholog is in training by "
+                         "construction. This is the EXPOSED arm of the leak contrast"),
+    "withheld_orthology_free": ("corpus E. coli is GCA_059754755.1 (draft); eval is "
+                                "GCF_000005845.2 (MG1655). Withheld by sequence AND the gene has no "
+                                "draft counterpart. The CLEAN arm of the leak contrast"),
+}
 
 
 def load_corpus_windows(path: Path = CORPUS) -> list[str]:
@@ -124,13 +164,71 @@ def markov_nll(chain: MarkovGenerator, seq: str, pos: int) -> float:
     return -math.log(p)
 
 
+class EvalSetUnavailable(RuntimeError):
+    """The requested set holds fewer windows than were asked for."""
+
+
+def select_eval_windows(eval_set: str, *, of_seqs, withheld_seqs, n_windows: int,
+                        selection_seed: int) -> tuple[list[str], dict]:
+    """Pick the windows to score, and say exactly how they were picked.
+
+    `orthology_free` keeps `of_seqs[:n]` -- MG1655 coordinate order, the committed slice -- because
+    the reproduction pin depends on that exact selection and must not move.
+
+    Every OTHER set is a SEEDED RANDOM SAMPLE of its sorted distinct sequences. Taking the first n
+    of a sorted order would be a biased sample of DNA (a lexicographic prefix over-selects A-rich
+    windows), and the sets differ in size, so an unseeded or order-dependent pick would make a
+    between-set difference partly a sampling difference. Deduplicated first: the orthology-free LIST
+    carries 14 repeated sequences and scoring one twice would inflate n and break the paired
+    bootstrap's independence.
+    """
+    if eval_set not in EVAL_SETS:
+        raise EvalSetUnavailable(f"unknown eval set {eval_set!r}; expected one of {EVAL_SETS}")
+
+    if eval_set == "orthology_free":
+        pool: list[str] = list(of_seqs)
+        how = "the first n in MG1655 coordinate order (the committed slice, preserved)"
+        sampled = False
+    else:
+        a = {s.upper() for s in withheld_seqs}
+        c = {s.upper() for s in of_seqs}
+        chosen = {"sequence_withheld": a,
+                  "ortholog_bearing": a - c,
+                  "withheld_orthology_free": a & c}[eval_set]
+        pool = sorted(chosen)
+        how = f"a seeded random sample (seed {selection_seed}) of the sorted distinct sequences"
+        sampled = True
+
+    if len(pool) < n_windows:
+        raise EvalSetUnavailable(
+            f"{eval_set}: {len(pool)} windows available < requested {n_windows}")
+
+    seqs = (random.Random(selection_seed).sample(pool, n_windows) if sampled
+            else pool[:n_windows])
+    return seqs, {
+        "set": eval_set,
+        "n_available": len(pool),
+        "n_scored": len(seqs),
+        "selection": how,
+        "selection_seed": selection_seed if sampled else None,
+        "deduplicated": sampled,
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--n-windows", type=int, default=120)
     ap.add_argument("--positions", type=int, default=30, help="target positions sampled per window")
     ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--boot", type=int, default=2000)
+    ap.add_argument("--eval-set", choices=EVAL_SETS, default="orthology_free",
+                    help="which candidate set to score; the default is the committed path")
+    ap.add_argument("--selection-seed", type=int, default=0,
+                    help="seeds the window sample for every set except the committed default")
+    ap.add_argument("--out", type=Path, default=OUT,
+                    help="artifact path; the default OVERWRITES the committed 2026-11-22 artifact")
     a = ap.parse_args()
+    RUN_DATE = time.strftime("%Y-%m-%d")
 
     import torch
 
@@ -171,15 +269,29 @@ def main() -> int:
     chain_ec = MarkovGenerator(order=ORDER, seed=a.seed).fit(ecoli_fit)
     print(f"order-{ORDER} chain (E. COLI-fit, the STRONG 4-mer null) fit on {len(ecoli_fit)} windows")
 
-    # ---- the orthology-free held-out eval set ----
+    # ---- the eval set ----
     _sets = mg1655_candidate_sets(cset, length=cfg.length)
     only, held, of = _sets["only"], _sets["held"], _sets["orthology_free"]
-    if len(of) < a.n_windows:
-        print(f"REFUSING: {len(of)} orthology-free windows < requested {a.n_windows}", file=sys.stderr)
+
+    # Set A costs ten natural-set builds, so it is only computed when a set that needs it is asked
+    # for. The default path never touches it and so is unchanged in cost as well as in behaviour.
+    withheld: set[str] = set()
+    if a.eval_set != "orthology_free":
+        from dna_decode.glm.training_corpus import falsifier_eval_windows
+        withheld = falsifier_eval_windows(MG1655, length=cfg.length, limit=SCORING_LIMIT,
+                                          seeds=range(N_SEEDS), kind="promoter")
+        print(f"designed withhold (set A): {len(withheld)} windows")
+
+    try:
+        eval_seqs, eval_prov = select_eval_windows(
+            a.eval_set, of_seqs=of, withheld_seqs=withheld,
+            n_windows=a.n_windows, selection_seed=a.selection_seed)
+    except EvalSetUnavailable as exc:
+        print(f"REFUSING: {exc}", file=sys.stderr)
         return 3
-    eval_seqs = of[:a.n_windows]
-    print(f"eval: {len(eval_seqs)} orthology-free held-out MG1655 windows "
-          f"(of {len(held)} held-out, {len(only)} MG1655-only symbols)")
+    print(f"eval: {len(eval_seqs)} windows from {a.eval_set} "
+          f"({eval_prov['n_available']} available; {eval_prov['selection']})")
+    print(f"      context: {len(held)} held-out, {len(only)} MG1655-only symbols")
 
     rng = random.Random(a.seed)
     per_window: list[dict] = []
@@ -239,16 +351,28 @@ def main() -> int:
 
     res = {
         "record": "glm-beyond-kmer-v1",
-        "date": "2026-11-22",
+        "date": RUN_DATE,
         "question": "does the diffusion model capture structure an order-3 Markov chain cannot?",
         "why_order3": "an order-3 chain's sufficient statistic IS the 4-mer conditional distribution",
         "checkpoint_step": step,
-        "eval": {"set": "orthology-free held-out MG1655 promoter windows",
+        "eval": {"set": SET_LABELS[a.eval_set],
+                 "set_key": a.eval_set,
                  "n_windows": len(eval_seqs), "positions_per_window": a.positions,
-                 "strain_note": "corpus E. coli is GCA_059754755.1 (draft); eval is "
-                                "GCF_000005845.2 (MG1655), and eval genes have NO draft counterpart",
+                 "n_predictions": len(eval_seqs) * a.positions,
+                 "strain_note": SET_STRAIN_NOTES[a.eval_set],
+                 "provenance": eval_prov,
                  "copying_cleared_by": "wiki/glm_copying_penalty_2026-11-22.json"},
+        # The committed artifact recorded NO seed and NO boot, which is why its confidence intervals
+        # cannot be reproduced from it while its point estimates can. Recorded here so this one can.
+        "run_args": {"n_windows": a.n_windows, "positions": a.positions, "seed": a.seed,
+                     "boot": a.boot, "eval_set": a.eval_set,
+                     "selection_seed": a.selection_seed},
         "cells": {f"{arm}|{null}": summarise(arm, null) for arm, null in CELLS},
+        # PER-WINDOW rows, persisted so a BETWEEN-SET contrast is computable without re-running.
+        # The committed artifact kept only cell summaries, which makes a two-sample bootstrap on a
+        # difference of paired deltas impossible after the fact -- and two cell CIs overlapping is
+        # not that test: two intervals can both span zero while their difference does not.
+        "per_window": [{k: round(v, 6) for k, v in row.items()} for row in per_window],
         "primary_cell": "left_only|markov_ecoli",
         "why_primary": ("left_only matches the information budget (both see only the unmasked left "
                         "prefix) and markov_ecoli is the STRONG 4-mer null, fit on the E. coli the "
@@ -264,16 +388,22 @@ def main() -> int:
     # ln(4) -- a model confident about the wrong base loses to one that commits to nothing. A
     # positive delta between two sub-chance models is not evidence of learning, so reporting it
     # would be the same error class as a broken detector reading as a clean result.
+    # The gate now has exactly ONE definition, in `dna_decode.glm.eval_admissibility`. The model
+    # side is passed as the uniform cell's PAIRED DELTA rather than its cross-entropy, because that
+    # is the value this block originally compared and it is rounded to 4dp BEFORE comparison --
+    # passing the delta makes the extraction bit-identical rather than merely equivalent.
     uni_cell = res["cells"]["left_only|uniform"]
     UNI = math.log(4)
-    null_beats_uniform = pri["null_ce_nats"] < UNI
-    model_beats_uniform = uni_cell["paired_delta_nats"] > 0
-    if not (model_beats_uniform and null_beats_uniform):
+    gate = admissibility(null_ce_nats=pri["null_ce_nats"],
+                         model_ce_nats=uni_cell["diffusion_ce_nats"],
+                         model_uniform_delta_nats=uni_cell["paired_delta_nats"])
+    res["admissibility"] = gate.to_dict()
+    if not gate.admissible:
         res["verdict"] = "EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM"
         res["verdict_detail"] = (
             f"On this eval set the model scores {uni_cell['diffusion_ce_nats']} nats and the strong "
             f"null {pri['null_ce_nats']}, both against uniform {UNI:.4f} -- so "
-            f"{'neither' if not model_beats_uniform and not null_beats_uniform else 'at least one'} "
+            f"{'neither' if gate.state == REFUSED_BOTH_BELOW_UNIFORM else 'at least one'} "
             "beats a random guess. The model-vs-null delta is therefore a comparison between "
             "sub-chance predictors and carries NO information about structure beyond 4-mers. "
             "REFUSING a verdict rather than reporting the delta. This is the accessory-gene "
@@ -282,6 +412,22 @@ def main() -> int:
             "shortcut can be both orthology-free and representative. The representative "
             "re-pretrain -- excluding draft E. coli so that ALL MG1655 windows are orthology-free "
             "without any gene filtering -- is the only route to an informative measurement.")
+        # The paragraph above is preserved VERBATIM because the committed artifact carries it and
+        # the reproduction pin depends on it. But it attributes the refusal to the EVAL SET, and
+        # that attribution is only available when the NULL also failed. When the null clears
+        # uniform and only the model does not, the set is demonstrably predictable and the
+        # accessory-gene story does not explain the result -- so say so beside the text rather than
+        # editing it. Measured 2026-11-24: the strong null reads 1.3571 on all 648 windows of this
+        # same set, so this branch is reachable and is not hypothetical.
+        if gate.state != REFUSED_BOTH_BELOW_UNIFORM:
+            res["verdict_detail_scope_note"] = (
+                f"The paragraph above is the committed 2026-11-22 wording, kept verbatim. It does "
+                f"NOT account for THIS run: the gate state is {gate.state}, i.e. the strong null "
+                f"CLEARED uniform on this set and only the model did not. That is a MODEL negative "
+                f"on a set shown to be predictable, not an uninformative eval set, so the "
+                f"accessory-gene out-of-distribution explanation and the claim that a re-pretrain "
+                f"is 'the only route' do not follow from it. See "
+                f"wiki/glm_eval_set_inventory_2026-11-23.json.")
     elif pri["resolved"] and pri["paired_delta_nats"] > 0:
         res["verdict"] = "BEYOND_KMER_CONSERVATIVE_POSITIVE"
         res["verdict_detail"] = (
@@ -318,8 +464,9 @@ def main() -> int:
     print("* = primary. positive delta = model BETTER (lower cross-entropy).")
     print("=" * 86)
     print(f"VERDICT: {res['verdict']}\n  {res['verdict_detail']}")
-    OUT.write_text(json.dumps(res, indent=2), encoding="utf-8")
-    print(f"\n-> {OUT}")
+    a.out.parent.mkdir(parents=True, exist_ok=True)
+    a.out.write_text(json.dumps(res, indent=2), encoding="utf-8")
+    print(f"\n-> {a.out}")
     return 0
 
 
