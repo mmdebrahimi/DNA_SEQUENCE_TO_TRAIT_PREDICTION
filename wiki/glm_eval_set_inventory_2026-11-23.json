@@ -1,0 +1,153 @@
+{
+  "record": "glm-eval-set-inventory-v1",
+  "date": "2026-11-24",
+  "question": "how many windows does each candidate eval set contain, and can each carry a verdict at all, judged from the strong null alone?",
+  "no_checkpoint_loaded": true,
+  "geometry": {
+    "window_length_bp": 150,
+    "scoring_limit_natural": 1200,
+    "scoring_seeds": 10,
+    "natural_set_arg": "promoter",
+    "markov_order": 3,
+    "length_source": "an ARGUMENT here; the scorer derives it from the checkpoint config (measured 150 at step 6000). The A==3349 refusal is the tripwire for those two disagreeing."
+  },
+  "set_definitions": {
+    "A_sequence_withheld": "falsifier_eval_windows union over seeds, built at limit=1200",
+    "B_held_out_of_corpus": "MG1655 promoter windows absent from the corpus TEXT, limit=None",
+    "C_orthology_free": "B filtered to genes with no draft counterpart; what the committed 2026-11-22 run scored"
+  },
+  "mg1655_only_symbols": 651,
+  "mg1655_windows_total": 4340,
+  "sizes_and_overlaps": {
+    "A_sequence_withheld": 3349,
+    "B_held_out_of_corpus": 3906,
+    "C_orthology_free": 634,
+    "A_list_entries": 3349,
+    "B_list_entries": 3923,
+    "C_list_entries": 648,
+    "B_duplicate_entries": 17,
+    "C_duplicate_entries": 14,
+    "A_raw_before_uppercasing": 3349,
+    "B_raw_before_uppercasing": 3906,
+    "C_raw_before_uppercasing": 634,
+    "A_inter_B": 3349,
+    "A_inter_C": 519,
+    "B_inter_C": 634,
+    "C_is_subset_of_B": true,
+    "A_is_subset_of_B": true,
+    "C_over_A_the_filters_measured_cost": 0.18931,
+    "A_minus_B": 0,
+    "B_minus_A": 557
+  },
+  "slice_safety": {
+    "first_6_is_duplicate_free": true,
+    "first_120_is_duplicate_free": true,
+    "first_300_is_duplicate_free": false,
+    "first_648_is_duplicate_free": false,
+    "distinct_in_first_120": 120
+  },
+  "strong_null": {
+    "fit_windows": 3536,
+    "fit_on": "draft E. coli (GCA_059754755.1) promoter windows that are IN the corpus, so the null is never fit on the windows it scores, for any of the three sets",
+    "order": 3
+  },
+  "admissibility_screens": {
+    "A_sequence_withheld": {
+      "n_windows": 3349,
+      "n_positions_per_window": 147,
+      "scoring": "ALL scoreable positions, not a sample -- no seed involved",
+      "null_ce_nats": 1.3563,
+      "gate": {
+        "state": "ADMISSIBLE",
+        "admissible": true,
+        "uniform_ce_nats": 1.3863,
+        "null_ce_nats": 1.3563,
+        "null_margin_nats": 0.03,
+        "model_ce_nats": null,
+        "model_margin_nats": null,
+        "model_assessed": false
+      }
+    },
+    "B_held_out_of_corpus": {
+      "n_windows": 3906,
+      "n_positions_per_window": 147,
+      "scoring": "ALL scoreable positions, not a sample -- no seed involved",
+      "null_ce_nats": 1.3561,
+      "gate": {
+        "state": "ADMISSIBLE",
+        "admissible": true,
+        "uniform_ce_nats": 1.3863,
+        "null_ce_nats": 1.3561,
+        "null_margin_nats": 0.0302,
+        "model_ce_nats": null,
+        "model_margin_nats": null,
+        "model_assessed": false
+      }
+    },
+    "C_orthology_free": {
+      "n_windows": 634,
+      "n_positions_per_window": 147,
+      "scoring": "ALL scoreable positions, not a sample -- no seed involved",
+      "null_ce_nats": 1.3573,
+      "gate": {
+        "state": "ADMISSIBLE",
+        "admissible": true,
+        "uniform_ce_nats": 1.3863,
+        "null_ce_nats": 1.3573,
+        "null_margin_nats": 0.029,
+        "model_ce_nats": null,
+        "model_margin_nats": null,
+        "model_assessed": false
+      }
+    }
+  },
+  "committed_cell_decomposition": {
+    "cells": {
+      "committed_6_windows_8_sampled_positions": 1.4291,
+      "same_6_windows_ALL_positions": 1.3541,
+      "ALL_windows_8_sampled_positions": 1.3565,
+      "ALL_windows_ALL_positions": 1.3571
+    },
+    "uniform_ce_nats": 1.3863,
+    "n_predictions_in_the_committed_cell": 48,
+    "per_window_all_position_null_ce": {
+      "min": 1.2811,
+      "median": 1.3562,
+      "max": 1.4558
+    },
+    "first_six_windows_percentile_within_set_C": [
+      0.335,
+      0.41,
+      0.955,
+      0.531,
+      0.347,
+      0.054
+    ],
+    "windows_whose_own_null_ce_is_worse_than_uniform": 74,
+    "windows_total": 648,
+    "fraction_worse_than_uniform": 0.1142,
+    "reading": "The committed cell REPRODUCES exactly, which is what makes the other three cells trustworthy. Holding the windows fixed and scoring every position instead of eight moves the null from 1.4291 to 1.3541 -- across uniform. Holding the positions at eight and using every window gives 1.3565. So the factor is the TOTAL number of predictions, not which windows were chosen: the first six sit at ordinary percentiles within set C, so `of[:6]` is not a biased selection. 48 predictions is simply too few, and the committed run drew an unlucky 48. The estimator is unbiased and was read as a property of the eval set.",
+    "what_this_does_NOT_establish": "That the generator beats the null. This is the NULL alone. It establishes that set C is admissible and that the committed refusal rests on 48 predictions, nothing more. It also does not remove the near-ortholog confound from any set."
+  },
+  "committed_run_geometry_reconstructed": {
+    "n_windows": 6,
+    "positions_per_window": 8,
+    "n_predictions": 48,
+    "windows_that_were_AVAILABLE": 648,
+    "confirmed_by": "decompose_committed_cell reproduces the committed 1.4291 exactly",
+    "note": "the committed artifact records no seed or boot argument, so its CI is not reproducible from it; the POINT estimates are. The scorer refuses when len(of) < --n-windows, and len(of) is 648, so the scorer default of 120 windows would have run -- the 6 was a choice, not a ceiling the filter imposed."
+  },
+  "uniform_ce_nats": 1.3863,
+  "seconds": 26.5,
+  "emits_no_verdict_about_the_generator": true,
+  "headline": "The orthology-free set holds 648 list entries (634 DISTINCT sequences), not 6. The committed 2026-11-22 run scored 6 of them at 8 positions each, and its strong null read 1.4291 nats -- above uniform 1.3863 -- which is what made the runner refuse a verdict and record the representative re-pretrain as the only informative route. The same null on the same set over every window and position reads 1.3571, below uniform, and all three candidate sets screen ADMISSIBLE. The decomposition isolates the cause as the 48-prediction sample size rather than which windows were picked. So the refusal is a small-sample excursion, and the premise that the orthology filter leaves too little to score is false: the scorer refuses only when len(of) < --n-windows, and at 648 its own default of 120 would have run.",
+  "duplicate_slot_finding": "The orthology-free LIST carries 14 duplicate sequences (648 entries, 634 distinct) and `held` carries 17 (3923 entries, 3906 distinct), one sequence appearing 6 times. The scorer slices the LIST, so a duplicate occupies a scoring slot and would be scored twice -- inflating apparent n and breaking the independence the paired bootstrap assumes. MEASURED: neither of[:6] (the committed run) nor of[:120] (the scorer default) contains a duplicate, so no committed number is affected and Step 3 at 120 windows is safe. The duplicates sit later in the list, which is why this is recorded as a latent hazard rather than a live defect.",
+  "what_the_headline_does_not_claim": "It does not claim the generator beats the null, or that any set is unconfounded. The near-ortholog leak is untouched by all of this, and the strong null shares it.",
+  "honest_limits": [
+    "This measures SET SIZES and a null-only admissibility screen. It says nothing about the generator, and an ADMISSIBLE set is not an unconfounded set.",
+    "Set A retains near-orthologs: withholding is by SEQUENCE, so a 95%-identical ortholog in the draft E. coli the model trained on is NOT withheld. Admissibility does not fix that and does not claim to.",
+    "The strong null was fit on draft windows that ARE in the corpus, which are the very near-orthologs set A retains. So a set retaining near-orthologs strengthens the NULL as well as the model, and an A-vs-C difference is therefore not a one-sided model advantage.",
+    "Sets A and B are built with DIFFERENT builder arguments (limit=1200 vs limit=None), so they are not nested by construction; A_is_subset_of_B records whether they happen to be rather than assuming it.",
+    "The null CE here averages ALL scoreable positions while the scorer samples a few, so these figures are lower-variance and will not equal the scorer figures to 4dp."
+  ]
+}

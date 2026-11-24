@@ -61,13 +61,53 @@ from dna_decode.glm.diffusion import MASK_ID, DiffusionConfig, build_model, enco
 from scripts.glm_orthology_free_baseline import id_to_symbol, symbols  # noqa: E402
 
 MG1655 = ROOT / "data" / "cache" / "refseq" / "GCF_000005845.2"
-DRAFT_GFF = ROOT / "data" / "refseq_cache" / "GCA_059754755.1" / "annotations.gff3"
+DRAFT_DIR = ROOT / "data" / "refseq_cache" / "GCA_059754755.1"
+DRAFT_GFF = DRAFT_DIR / "annotations.gff3"
 CORPUS = ROOT / "wiki" / "glm_training_corpus_2026-11-21.txt"
 CKPT = ROOT / "data" / "glm_diffusion_ckpt" / "latest.pt"
 OUT = ROOT / "wiki" / "glm_beyond_kmer_2026-11-22.json"
 
 BASES = "ACGT"
 ORDER = 3  # the committed markov_order; the whole comparison is defined against it
+
+
+def load_corpus_windows(path: Path = CORPUS) -> list[str]:
+    """The training corpus windows, uppercased -- the ONE way every consumer reads this file.
+
+    Extracted from `main` so the set-inventory probe reads the corpus the scorer scores against
+    rather than a second description of it. A probe that strips differently sees a different
+    `held` set, and `held` is the basis of every candidate set below.
+    """
+    return [ln.strip().upper() for ln in path.open(encoding="utf-8")
+            if ln.strip() and not ln.startswith("#")]
+
+
+def ecoli_fit_windows(corpus_set: set[str], *, length: int) -> list[str]:
+    """Draft E. coli promoter windows that are IN the corpus: the STRONG null's fitting set.
+
+    NOTE the asymmetry this creates, because it is load-bearing for reading any two-set comparison:
+    these windows come from the DRAFT assembly and are IN the corpus, while every candidate eval set
+    below is MG1655 windows ABSENT from it. So the strong null is never fit on the windows it scores
+    -- but it HAS seen the draft near-orthologs of any eval window that has one, which means a set
+    retaining near-orthologs strengthens the null as well as the model.
+    """
+    draft_wins, _ = build_natural_set(DRAFT_DIR, length=length, limit=None, seed=0, kind="promoter")
+    return [w.seq.upper() for w in draft_wins if w.seq.upper() in corpus_set]
+
+
+def mg1655_candidate_sets(corpus_set: set[str], *, length: int) -> dict:
+    """Set B (`held`) and set C (`of`) in ONE computation, because that is how they are defined.
+
+    `held` = MG1655 promoter windows whose sequence is absent from the corpus TEXT. `of` = those
+    whose gene symbol has no counterpart in the draft assembly. Returned together with the symbol
+    inputs so a caller can report the filter's cost without recomputing anything.
+    """
+    only = symbols(MG1655 / "annotations.gff3") - symbols(DRAFT_GFF)
+    wins, _ = build_natural_set(MG1655, length=length, limit=None, seed=0, kind="promoter")
+    m = id_to_symbol(MG1655 / "annotations.gff3")
+    held = [w for w in wins if w.seq.upper() not in corpus_set]
+    of = [w.seq.upper() for w in held if (m.get(w.gene_id) or "") in only]
+    return {"only": only, "all_windows": wins, "held": held, "orthology_free": of}
 
 
 def markov_nll(chain: MarkovGenerator, seq: str, pos: int) -> float:
@@ -111,8 +151,7 @@ def main() -> int:
     print(f"checkpoint step {step}, length {cfg.length}, d_model {cfg.d_model}")
 
     # ---- the chain, fit on exactly what the model trained on ----
-    corpus = [ln.strip().upper() for ln in CORPUS.open(encoding="utf-8")
-              if ln.strip() and not ln.startswith("#")]
+    corpus = load_corpus_windows()
     cset = set(corpus)
     chain = MarkovGenerator(order=ORDER, seed=a.seed).fit(corpus)
     print(f"order-{ORDER} chain (POOLED, same data as the model) fit on {len(corpus)} windows")
@@ -123,9 +162,7 @@ def main() -> int:
     # conditionals. "Beating an order-3 chain means beating 4-mers" only holds if the chain models
     # the distribution being SCORED -- otherwise the win is distribution shift, not order. So a
     # second chain is fit on exactly the E. COLI sequence the model saw.
-    draft_wins, _ = build_natural_set(ROOT / "data" / "refseq_cache" / "GCA_059754755.1",
-                                      length=cfg.length, limit=None, seed=0, kind="promoter")
-    ecoli_fit = [w.seq.upper() for w in draft_wins if w.seq.upper() in cset]
+    ecoli_fit = ecoli_fit_windows(cset, length=cfg.length)
     if len(ecoli_fit) < 500:
         print(f"REFUSING: only {len(ecoli_fit)} draft E. coli windows found in the corpus; the "
               "strong null would be fit on too little data to be the stronger of the two.",
@@ -135,11 +172,8 @@ def main() -> int:
     print(f"order-{ORDER} chain (E. COLI-fit, the STRONG 4-mer null) fit on {len(ecoli_fit)} windows")
 
     # ---- the orthology-free held-out eval set ----
-    only = symbols(MG1655 / "annotations.gff3") - symbols(DRAFT_GFF)
-    wins, _ = build_natural_set(MG1655, length=cfg.length, limit=None, seed=0, kind="promoter")
-    m = id_to_symbol(MG1655 / "annotations.gff3")
-    held = [w for w in wins if w.seq.upper() not in cset]
-    of = [w.seq.upper() for w in held if (m.get(w.gene_id) or "") in only]
+    _sets = mg1655_candidate_sets(cset, length=cfg.length)
+    only, held, of = _sets["only"], _sets["held"], _sets["orthology_free"]
     if len(of) < a.n_windows:
         print(f"REFUSING: {len(of)} orthology-free windows < requested {a.n_windows}", file=sys.stderr)
         return 3
