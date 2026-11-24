@@ -350,6 +350,34 @@ def test_the_reading_rule_was_frozen_before_any_model_number():
 
 # ---- the declared arm must actually bind --------------------------------------------------------
 
+def test_the_generator_criterion_does_NOT_squat_the_reserved_ceiling_prefix():
+    """REGRESSION GUARD, written because this exact mistake was made here.
+
+    `scripts/declare_successor_arms.py::ceiling_criterion` requires EXACTLY ONE criterion whose key
+    starts with `ceiling:` and raises otherwise. Declaring the generator's criterion under that
+    prefix made two, which took down 125 tests across 8 arms-ledger files at once -- none of which
+    this plan touched, and none of which a targeted test run would have exercised.
+
+    The `ceiling:` namespace belongs to the promoter-activity portfolio. A criterion about a
+    different question gets a different prefix.
+    """
+    from scripts.declare_successor_arms import CRITERION_PREFIX, ceiling_criterion
+    led = json.loads((ROOT / "soraya_runs" / "arms-ledger.json").read_text(encoding="utf-8"))
+    reserved = [k for k in led["criteria"] if k.startswith(CRITERION_PREFIX)]
+    assert len(reserved) == 1, f"the reserved {CRITERION_PREFIX!r} namespace holds {reserved}"
+    # and the consumer that enforces it must resolve without raising
+    assert ceiling_criterion(led) == reserved[0]
+    # the generator criterion exists, and is NOT in that namespace
+    gen = [k for k in led["criteria"] if "order-3 Markov chain" in k]
+    assert len(gen) == 1 and not gen[0].startswith(CRITERION_PREFIX)
+    # NON-VACUITY: the consumer must actually reject a second reserved criterion, otherwise this
+    # whole test is asserting a condition nothing enforces.
+    from scripts.declare_successor_arms import DeclareError
+    squatted = {"criteria": dict(led["criteria"], **{f"{CRITERION_PREFIX} a second one": {}})}
+    with pytest.raises(DeclareError):
+        ceiling_criterion(squatted)
+
+
 def test_the_re_pretrain_arm_is_declared_and_blocks_its_criterion():
     """R6: a declared-but-unrun expensive arm BLOCKS its criterion instead of evaporating when a
     cheap result weakens its motivation."""
