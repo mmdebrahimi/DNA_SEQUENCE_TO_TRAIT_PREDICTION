@@ -1114,7 +1114,7 @@ nothing to remove.
 
 ## [plan_file: Score_The_Checkpoint_On_Both_Eval_Sets_And_Measure_What_The_Orthology_Filter_Costs_Plan/] 2026-11-23
 **Summary:** Run the committed step-6000 checkpoint against the sequence-withheld set and the orthology-free set, with the Markov null and uniform on both, and report the admissibility verdict per set.
-**Status:** active (executing 2026-11-24 via /execute-plan, sequential mode; live state file at .claude/execute-plan-state/)
+**Status:** executed — shipped 2026-11-24, all 4 steps, sequential mode (toolkit said parallel-eligible; overridden because `data/` is gitignored so a worktree carries neither the MG1655 cache nor the checkpoint, and Step 2's declared `Depends on: none` hid a real import dependency on Step 1). Q1 ADMISSIBLE on all four sets at 3600 predictions, so the committed EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM does NOT stand; replaced by a resolved NEGATIVE (order-3 chain beats the model on 3 of 4 sets; committed +0.0192 -> powered -0.0191, sign flipped). Q2 UNRESOLVED_CONTRAST_SPANS_THE_MARGIN (-0.015372, CI [-0.030708, -0.001625], derived 0.01-nat margin). |C| = 648 entries / 634 distinct, not 6. Re-pretrain arm declared + blocking under `generator-ceiling:`; retiring it is a user call. 0 regressions, +129 tests, sentrux clean. Archived to executed_plans/.
 
 **Key decisions:**
 - Scoped to measuring the NEAR-ORTHOLOG LEAK SIZE, not to producing a beyond-k-mer verdict. `scripts/glm_beyond_kmer.py:246-250` already records that no eval-side shortcut can be both orthology-free and representative, so the plan's own Problem Statement states it cannot deliver the verdict the question wants.
