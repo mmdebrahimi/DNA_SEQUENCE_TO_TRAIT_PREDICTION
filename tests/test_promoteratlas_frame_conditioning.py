@@ -128,8 +128,27 @@ def test_the_recorded_verdict_is_reproducible_from_the_artifacts_own_numbers(art
         gc_out_window=c3["gc_out_window_median"],
         random_stratum_min_margin=c3["random_stratum_min_margin_median"],
         margin=art["inherited_margin"],
+        # READ FROM THE ARTIFACT, never a literal: this test's whole claim is reproducibility
+        # from the artifact's own numbers, so a hand-typed value here would make it vacuous.
+        best_matched_alone=art["c2_matched_strength_series"]["matched_control_premise"][
+            "best_matched_alone"],
     )
-    assert grade(fi).verdict == art["verdict"]
+    # THE RECORDED VERDICT NO LONGER REPRODUCES, AND THAT IS THE FINDING -- not a test to relax.
+    #
+    # `art["verdict"]` is FRAME_PARTIAL, which is what the EIGHT-outcome check order returned on
+    # 2026-11-05 and is preserved as the historical record. The current NINE-outcome order adds
+    # INDETERMINATE_CONTROL_PREMISE_UNMET, which reads a boolean the runner had computed and only
+    # PRINTED since the beginning: control_is_at_least_as_strong_as_the_frame. On this run it is
+    # False -- best_matched_alone 0.2895 against frame_alone 0.3170, a shortfall of 0.0275 or 8.7%
+    # of the frame's own signal -- so the matched control was never matched, and the substantive
+    # verdict rested on an unmet premise.
+    #
+    # The predicate is the RUNNER'S OWN (`max(dinuc, kmer4) >= frame_alone`); no tolerance is
+    # invented here, which is why an 8.7% shortfall demotes rather than being waved through. If a
+    # tolerance is wanted, that is a user call and the shortfall is stated above so it can be made.
+    assert art["verdict"] == "FRAME_PARTIAL"
+    assert grade(fi).verdict == "INDETERMINATE_CONTROL_PREMISE_UNMET"
+    assert not grade(fi).is_valid
 
 
 def test_the_margin_matches_the_frozen_bar(art):

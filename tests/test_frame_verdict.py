@@ -37,6 +37,9 @@ BASE = FrameInput(
     atlas_out_window=0.49,
     gc_out_window=0.30,
     random_stratum_min_margin=0.18,
+    # >= frame_alone_spearman (0.10), so the control premise HOLDS in BASE and every
+    # pre-existing case keeps the meaning it was written with.
+    best_matched_alone=0.12,
 )
 
 
@@ -51,6 +54,12 @@ CASES: dict[str, FrameInput] = {
     "INDETERMINATE_LOCATE_RATE": _with(unique_locate_rate=0.80),
     "INDETERMINATE_FRAME_UNINFORMATIVE": _with(frame_alone_spearman=0.005),
     "INDETERMINATE_BASELINE_NOT_STRENGTHENED": _with(train_fit_gc_frame=0.29),
+    # The control is WEAKER standalone than the frame it is meant to match, so its premise --
+    # matched informativeness -- is unmet and the attributability comparison downstream carries
+    # no information. MEASURED ON THE REAL RUN: best_matched_alone 0.2895 < frame_alone 0.3170,
+    # i.e. control_is_at_least_as_strong_as_the_frame = False, a boolean the runner computed and
+    # only PRINTED. This case is the one the completed 2026-11-05 run would have hit.
+    "INDETERMINATE_CONTROL_PREMISE_UNMET": _with(best_matched_alone=0.05),
     # the frame absorbs the margin, but an equally strong non-positional feature absorbs just as
     # much -- so the shrinkage is "the baseline got better", not position
     "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE": _with(
@@ -190,3 +199,33 @@ def test_the_locate_floor_has_headroom_over_the_measured_rate():
     """0.95 was chosen above a measured 0.9918, not fitted down to it."""
     assert LOCATE_FLOOR == 0.95
     assert BASE.unique_locate_rate > LOCATE_FLOOR
+
+
+def test_control_premise_gate_precedes_attributability_and_the_real_run_would_hit_it():
+    """The premise gate must win over not-attributable when BOTH conditions hold.
+
+    Order is load-bearing, not cosmetic: `c2_attributable` compares frame absorption against
+    MATCHED absorption, so an unmatched control makes that comparison meaningless. Reporting
+    "not attributable" would attribute to the biology what is really a defect in the control.
+    """
+    both = _with(best_matched_alone=0.05, gc_plus_frame=0.50, gc_plus_matched=0.50)
+    assert both.control_premise_unmet and both.absorbs_unattributably
+    assert grade(both).verdict == "INDETERMINATE_CONTROL_PREMISE_UNMET"
+
+    # and it is NOT vacuous: a MATCHED control lets the downstream gate through
+    matched = _with(best_matched_alone=0.12, gc_plus_frame=0.50, gc_plus_matched=0.50)
+    assert not matched.control_premise_unmet
+    assert grade(matched).verdict == "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE"
+
+
+def test_the_real_measured_control_premise_is_unmet():
+    """Not a hypothetical: the committed run's own numbers trip this gate.
+
+    wiki/promoteratlas_frame_conditioning_2026-11-01.json records best_matched_alone 0.2895 and
+    frame_alone_median 0.3170. This pins that the gate fires on the REAL values, so the gate is
+    not a guard against an imagined failure.
+    """
+    real = _with(frame_alone_spearman=0.3170, best_matched_alone=0.2895)
+    assert real.control_premise_unmet
+    assert grade(real).verdict == "INDETERMINATE_CONTROL_PREMISE_UNMET"
+    assert not grade(real).is_valid

@@ -1,0 +1,111 @@
+{
+  "schema": "promoteratlas-frame-successor-bar-v1",
+  "frozen": "2026-11-23",
+  "frozen_before_any_successor_number_existed": true,
+  "authority": "User delegated BOTH 2026-11-05 frame-conditioning calls as technical judgement (2026-11-23, verbatim: 'use your best judgement, this is also a technical question = your judgement'). This bar is the exercise of that delegation.",
+
+  "question": "Does corpus-window position explain the PromoterAtlas encoder's margin over a GC baseline, measured so that the answer is DECIDABLE rather than a coin flip on a point estimate?",
+
+  "WHAT_THIS_DOES_NOT_TOUCH": {
+    "frozen_artifacts_edited": "NONE",
+    "detail": "wiki/promoteratlas_frame_acceptance_bar.json, the conditioning artifact, the arm artifact and the pinned five are byte-unchanged. The completed run KEEPS its verdict FRAME_PARTIAL with resolved=false. A frozen pre-registration is not re-opened because its result was inconvenient; the successor run gets a better-specified bar instead.",
+    "why_not_amend_the_old_bar": "Amending a bar after seeing its result is the defect the freeze exists to prevent, and this project has a recorded instance of a mis-specified bar LEFT unedited for exactly that reason. The old bar's reading stands as the honest record of what a point-median grader could conclude."
+  },
+
+  "CALL_1_THE_UNSTABLE_POINT_MEDIAN": {
+    "finding_reproduced_here_not_inherited": true,
+    "series": "C3 weaker-stratum per-seed margin (margin_out_window), n=10, read from wiki/promoteratlas_frame_shift_null_2026-11-14.json",
+    "values": [0.0418, 0.0498, -0.02, 0.0269, -0.0347, -0.0492, 0.0425, -0.0013, 0.0191, 0.1081],
+    "recomputed": {
+      "median": 0.023,
+      "mean": 0.0183,
+      "sd": 0.0465,
+      "min": -0.0492,
+      "max": 0.1081,
+      "n_at_or_above_bar": 5,
+      "n_below_bar": 5,
+      "n_negative": 4
+    },
+    "the_disqualifying_fact": "the 95% t-interval is [-0.0150, 0.0516], half-width 0.0333 -- WIDER than the 0.02 threshold it must discriminate. A bootstrap agrees and is no kinder: percentile 95% CI on the mean [-0.0083, 0.0462] and on the median [-0.0200, 0.0458], both spanning the bar AND zero, with P(bootstrap mean >= bar) = 0.444. At n=10 this statistic cannot discriminate under ANY estimator, so grading a point median is grading a coin flip.",
+    "TWO_CARRIED_FIGURES_CORRECTED_BY_RECOMPUTING_THEM": {
+      "seeds_for_half_width_under_the_bar": {
+        "carried_in_NEXT_md": "~21",
+        "recomputed": 24,
+        "method": "smallest k with t(0.975,k-1)*sd/sqrt(k) < 0.02, sd held at the measured 0.0465"
+      },
+      "seeds_to_separate_the_estimate_from_the_bar": {
+        "carried_in_NEXT_md": "~3,253",
+        "recomputed": 3027,
+        "method": "smallest k with t(0.975)*sd/sqrt(k) < |mean - bar| = 0.0017",
+        "honest_limit": "both figures use an interpolated t-quantile TABLE, not scipy, and the second caps df at 49, so 3027 is an order-of-magnitude statement and nothing finer. The correction that matters is 24 vs 21, because that one changes a reachable design decision."
+      },
+      "why_recompute_at_all": "the carried figures were asserted in prose. Recomputing them from the committed per-seed series is the derive-don't-assert discipline, and it moved one of them."
+    },
+    "RULING": {
+      "statistic": "ONE statistic, named: the PER-SEED PAIRED weaker-stratum margin. This resolves a live ambiguity -- the old grader reads a DIFFERENCE OF MEDIANS (0.0204) while the stability block reports PER-SEED PAIRED margins (0.0230), so the bar and its own stability report were describing different quantities. Paired is chosen because it removes seed-level common variation, not because it is the larger number.",
+      "estimator": "bootstrap percentile 95% CI over seeds, B=20000, RNG seed pinned at 0. NOT a point median, NOT a t-interval.",
+      "minimum_seeds": 24,
+      "minimum_seeds_basis": "derived above, not chosen: below 24 the interval cannot be narrower than the threshold, so any verdict would be unearned by construction.",
+      "UNRESOLVED_is_first_class": "if the 95% CI CONTAINS the bar, the verdict is UNRESOLVED. UNRESOLVED is neither a demotion to PARTIAL nor a promotion to EXPLAINS -- it is the honest third state the old bar lacked, and it is what the completed run would have returned had it existed.",
+      "what_UNRESOLVED_obliges": "report the interval and the seed count; do NOT re-grade on a point estimate; do NOT widen the bar."
+    }
+  },
+
+  "CALL_2_THE_EIGHTH_OUTCOME_AND_THE_MISSING_NINTH": {
+    "RATIFIED": "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE",
+    "ratified_on": "PROSPECTIVE grounds only",
+    "ratification_reasoning": "it precedes every substantive outcome in CHECK_ORDER, so it can only ever DEMOTE a verdict and never promote one -- which makes keeping it safe independent of whether it has ever fired. It is NOT ratified as having caught this run's confound: re-grading from the artifact gives absorbs_unattributably = False, so with seven outcomes the grader would still have returned FRAME_PARTIAL. It was INERT here and this ratification says so rather than claiming a catch.",
+    "ADDED": "INDETERMINATE_CONTROL_PREMISE_UNMET",
+    "added_because": "the gate that WOULD have caught the confound does not exist. scripts/promoteratlas_frame_conditioning.py:430 already COMPUTES control_is_at_least_as_strong_as_the_frame = max(dinuc_alone, kmer4_alone) >= frame_alone, writes it to the artifact, and its own why_this_matters string explains that the control's whole premise is MATCHED INFORMATIVENESS. Verified by grep: the boolean is read in exactly one place, line 543, where it is PRINTED to the console, and the only test touching it asserts it is a bool. It feeds no verdict in frame_verdict.py or freeze_frame_bar.py. A premise check that cannot demote anything is the vacuous-control shape this repo has paid for repeatedly.",
+    "predicate": "best_matched_alone < frame_alone_spearman",
+    "placement": {
+      "after": "INDETERMINATE_FRAME_UNINFORMATIVE",
+      "before": "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE",
+      "why_that_exact_slot": "AFTER uninformative, because a frame carrying no signal makes 'the control is at least as strong' trivially true -- firing the premise gate on a dead frame would itself be a vacuous pass. BEFORE not-attributable, because c2_attributable compares frame absorption against MATCHED absorption; if the control is weaker standalone than the frame then 'matched' is a misnomer and the attributability comparison is meaningless in either direction. Premise precedes the conclusion that depends on it."
+    },
+    "field_is_REQUIRED_not_defaulted": "best_matched_alone takes no default on FrameInput. A default would let a caller skip the premise check and receive a verdict that silently never tested it -- reconstructing the exact defect this gate exists to close. Fail closed: a caller that omits it raises at construction.",
+
+    "MEASURED_AFTER_THIS_BAR_WAS_DRAFTED_THE_NINTH_IS_NOT_INERT": {
+      "finding": "the ninth gate FIRES on the completed 2026-11-05 run. Re-grading the committed artifact's own numbers under the nine-outcome order returns INDETERMINATE_CONTROL_PREMISE_UNMET, not the recorded FRAME_PARTIAL.",
+      "numbers": {
+        "frame_alone": 0.317,
+        "best_matched_alone": 0.2895,
+        "shortfall_absolute": 0.0275,
+        "shortfall_as_fraction_of_frame": "8.7%",
+        "runner_own_boolean": "control_is_at_least_as_strong_as_the_frame = False"
+      },
+      "why_this_is_stronger_than_the_eighth_ratification": "the eighth outcome was ratified on PROSPECTIVE grounds because it was inert on this run. The ninth is the opposite case: the premise it checks was ALREADY VIOLATED, the runner had already computed the boolean saying so, and nothing read it. So the completed run reported a substantive verdict (FRAME_PARTIAL) on a control that was never matched.",
+      "what_this_does_and_does_not_change": "it does NOT edit the artifact: art['verdict'] stays FRAME_PARTIAL as the historical record of what the eight-outcome order returned, and tests/test_promoteratlas_frame_conditioning.py now pins BOTH facts -- the recorded verdict AND the demotion the current order produces. What it DOES change is how FRAME_PARTIAL should be read: weaker than recorded, because its attributability arm rested on an unmet premise.",
+      "no_tolerance_was_invented": "the predicate is the runner's own `max(dinuc, kmer4) >= frame_alone`, which is why an 8.7% shortfall demotes rather than being waved through. Whether an 8.7% shortfall DESERVES a hard indeterminate -- i.e. whether the premise should carry a tolerance -- is a USER call, not a technical one, and the shortfall is stated numerically here so that call can be made without re-deriving it. Inventing a tolerance to make the old verdict survive would be the bar-shopping this project refuses.",
+      "a_defect_in_this_session_recorded_rather_than_hidden": "the first patch of the reproducibility test passed a hand-typed best_matched_alone=0.12 instead of reading the artifact -- in a test whose entire claim is reproducibility FROM the artifact's own numbers. That would have made the test vacuous on exactly the field under examination. Caught by the test failing, then corrected to read art['c2_matched_strength_series']['matched_control_premise']['best_matched_alone']."
+    }
+  },
+
+  "verdict_check_order": [
+    "INDETERMINATE_HARNESS_DRIFT",
+    "INDETERMINATE_LOCATE_RATE",
+    "INDETERMINATE_BASELINE_NOT_STRENGTHENED",
+    "INDETERMINATE_FRAME_UNINFORMATIVE",
+    "INDETERMINATE_CONTROL_PREMISE_UNMET",
+    "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE",
+    "UNRESOLVED_INTERVAL_SPANS_BAR",
+    "FRAME_EXPLAINS",
+    "FRAME_PARTIAL",
+    "FRAME_EXCLUDED_CONDITIONAL"
+  ],
+
+  "what_a_PASS_would_NOT_license": [
+    "'position excluded' -- the old bar's bound carries over verbatim: this tests THE CORPUS-WINDOW RULE AS REPLICATED (200 bp upstream of an annotated gene start, a 5 bp intergenic gate, sorted ordering, ONE organism's annotation). A sharper or differently-granular positional feature is untested.",
+    "any claim about the HUMAN substrate -- this bar governs the bacterial PromoterAtlas rung only, and that rung was called done-for-now on 2026-11-23.",
+    "re-reading the completed 2026-11-05 run. That run stays FRAME_PARTIAL / resolved=false; this bar governs a FUTURE run and grades nothing retroactively.",
+    "treating 24 seeds as sufficient for the SEPARATION question. 24 makes the interval narrower than the bar; separating the estimate FROM the bar needs ~3,027 seeds and is not proposed here."
+  ],
+
+  "honest_limits": [
+    "The 24-seed floor holds sd at the measured 0.0465. A successor run with larger seed-to-seed spread needs more, and this bar does not pretend otherwise.",
+    "Making UNRESOLVED first-class makes the bar HARDER to pass, not easier -- it removes the option of reporting a point median above the line as a result.",
+    "The added gate is a PREMISE check, not a correctness check: it establishes that the matched control is at least as informative as the frame, never that it is the RIGHT control.",
+    "t-quantiles come from an interpolated table rather than scipy. Material only to the two seed-count figures; 24 was verified against neighbouring k.",
+    "This bar is frozen by a session acting on delegated technical authority. The user can redirect it; nothing here is irreversible and no frozen artifact was edited."
+  ]
+}

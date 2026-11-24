@@ -46,6 +46,12 @@ CHECK_ORDER: tuple[str, ...] = (
     # it.
     "INDETERMINATE_BASELINE_NOT_STRENGTHENED",
     "INDETERMINATE_FRAME_UNINFORMATIVE",
+    # The PREMISE before the conclusion that rests on it. `c2_attributable` compares frame
+    # absorption against MATCHED absorption, so if the control is WEAKER standalone than the
+    # frame then "matched" is a misnomer and that comparison is meaningless in either
+    # direction. Placed AFTER uninformative because a frame carrying no signal would make
+    # "the control is at least as strong" trivially true -- a vacuous pass.
+    "INDETERMINATE_CONTROL_PREMISE_UNMET",
     "INDETERMINATE_ABSORPTION_NOT_ATTRIBUTABLE",
     "FRAME_EXPLAINS",
     "FRAME_PARTIAL",
@@ -85,6 +91,7 @@ class FrameInput:
     atlas_out_window: float
     gc_out_window: float
     random_stratum_min_margin: float     # size-matched RANDOM stratification null
+    best_matched_alone: float            # the matched control's own STANDALONE signal
 
     margin: float = 0.02
 
@@ -159,6 +166,17 @@ class FrameInput:
         )
 
     @property
+    def control_premise_unmet(self) -> bool:
+        """The matched control carries LESS signal on its own than the frame does.
+
+        Reads the comparison `promoteratlas_frame_conditioning.py` already computed and only
+        PRINTED. The control exists to answer "shrinkage is not absorption unless it exceeds
+        what an equally strong NON-positional feature produces" -- so a control that is not
+        equally strong cannot answer it, and a verdict resting on it is unearned.
+        """
+        return self.best_matched_alone < self.frame_alone_spearman
+
+    @property
     def absorbs_unattributably(self) -> bool:
         """A cell fired, but every cell that fired is confounded."""
         return (self.c2_absorbs or self.c3_absorbs) and not self.explains
@@ -212,6 +230,19 @@ def grade(x: FrameInput) -> FrameVerdict:
             "true -- a feature carrying less signal than the gap cannot explain the gap. "
             "Pre-committed response: a better positional feature, never a weaker test."
             % (x.frame_alone_spearman, x.margin),
+            False,
+        )
+
+    if x.control_premise_unmet:
+        return FrameVerdict(
+            "INDETERMINATE_CONTROL_PREMISE_UNMET",
+            "the matched control is WEAKER standalone (%.4f) than the frame it is supposed to "
+            "match (%.4f), so its premise -- matched informativeness -- is unmet and the "
+            "attributability comparison that rests on it carries no information in either "
+            "direction. This boolean was computed and printed by the runner from the start and "
+            "fed no verdict; a premise check that cannot demote anything is not a control. "
+            "Pre-committed response: a better-matched control, never dropping the premise."
+            % (x.best_matched_alone, x.frame_alone_spearman),
             False,
         )
 

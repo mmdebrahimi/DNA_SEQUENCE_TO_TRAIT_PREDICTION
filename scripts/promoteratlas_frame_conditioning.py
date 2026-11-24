@@ -339,6 +339,7 @@ def run(verbose: bool = True) -> dict:
         atlas_out_window=med["atlas_out_window"],
         gc_out_window=med["gc_out_window"],
         random_stratum_min_margin=med["random_stratum_min_margin"],
+        best_matched_alone=max(med["dinuc_alone"], med["kmer4_alone"]),
         margin=margin,
     )
     v = grade(fi)
