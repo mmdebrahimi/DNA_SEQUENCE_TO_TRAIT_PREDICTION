@@ -301,9 +301,10 @@ Plan `plans/Discharge_The_Queued_Sampling_Sweep_G_D_Unblock_Trigger_Plan/technic
 - [ ] **Carried honest limit, unchanged by this work:** `baselines.py:92` has no conditional Markov variant, so the null is unconditional while the GLM is conditioned. The comparison **handicaps the null**, which means a GLM loss is understated, not overstated.
 - [ ] **Do not quote the 2026-10-19 headline (GLM 0.8141 vs null 0.3876) for anything.** Doubly invalid: inert sampling knobs AND `conditional=False` against the aligned promoter set. The valid baseline is `wiki/glm_generator_falsifier_REAL_2026-10-07.json`.
 
-## A red count rail, pre-existing and NOT absent data — a user call, not executor work (2026-11-01)
+## A red count rail — RESOLVED 2026-11-24, by the schema fix this item proposed (2026-11-01)
 
-- [ ] **`tests/test_tile_chain_constraint_registered.py::test_the_eleven_pre_existing_constraints_are_still_present` ends in `assert len(rows) == 12`; the constraint registry now holds **14**.** Measured on a full suite 2026-11-01 (13 failed / 7,238 passed / 180 skipped, 9m48s): this is **the only one of the 13 that is not absent DATA**, so the standing `README.md` / `CLAUDE.md` claim that *all* remaining failures are environment and *none* is a code defect was wrong about this row — and had been for some time. **It is pre-existing**: `git status dna_decode/constraints/` is empty for the 2026-11-01 work, which registers no constraint. **The eleven NAMED constraints are all still present** — the test's `cid in rows` loop passes; only the trailing total has drifted, by two added constraints (`expiry: register the promcalc blocker` is the most recent commit to the rail's own file). **Deliberately NOT re-pinned.** Per the standing rule, a guard that is red because its subject legitimately moved is a record-and-escalate, and a count rail is part of the project's guard structure: bumping `12` → `14` is the single edit that makes it green and is also exactly the "tidying" the rail exists to interrupt. The open question is a schema one — whether a total-count assertion earns its keep next to the named-membership loop that already carries the real invariant, or whether it should be replaced by a *minimum* plus a named roster derived from the registry (the repo's recorded fix for hand-enumerated lists beside the data that defines them).
+- [x] **`tests/test_tile_chain_constraint_registered.py::test_the_eleven_pre_existing_constraints_are_still_present` ends in `assert len(rows) == 12`; the constraint registry now holds **14**.** Measured on a full suite 2026-11-01 (13 failed / 7,238 passed / 180 skipped, 9m48s): this is **the only one of the 13 that is not absent DATA**, so the standing `README.md` / `CLAUDE.md` claim that *all* remaining failures are environment and *none* is a code defect was wrong about this row — and had been for some time. **It is pre-existing**: `git status dna_decode/constraints/` is empty for the 2026-11-01 work, which registers no constraint. **The eleven NAMED constraints are all still present** — the test's `cid in rows` loop passes; only the trailing total has drifted, by two added constraints (`expiry: register the promcalc blocker` is the most recent commit to the rail's own file). **Deliberately NOT re-pinned.** Per the standing rule, a guard that is red because its subject legitimately moved is a record-and-escalate, and a count rail is part of the project's guard structure: bumping `12` → `14` is the single edit that makes it green and is also exactly the "tidying" the rail exists to interrupt. The open question is a schema one — whether a total-count assertion earns its keep next to the named-membership loop that already carries the real invariant, or whether it should be replaced by a *minimum* plus a named roster derived from the registry (the repo's recorded fix for hand-enumerated lists beside the data that defines them).
+- [x] **[DONE] Resolved as the schema question rather than as the bump — measured green 2026-11-24** (`pytest tests/test_tile_chain_constraint_registered.py` → **12 passed**, 0.65 s). Commit `d550809b` replaced `assert len(rows) == 12` with `assert len(rows) >= len(NAMED_CONSTRAINTS)` and NAMED the two appended rows (`gd-sweep-weights-absent`, `mvp-bar-parser-blind-to-table-format`) rather than absorbing them into a looser bound, so the file keeps the named-individually property its own docstring argues for and the total is a floor TIED to the named list instead of a literal that drifts on the next append. An earlier draft of a hardcoded `>= 12` was superseded for exactly that reason, and the 12 → 14 bump was never taken. The rail is therefore **out of the failure set**; `README.md` is corrected in place.
 
 ## Frame-conditioning / corpus-window residuals (2026-11-01)
 
@@ -385,6 +386,89 @@ blocked on compute, and both of those have a decision attached that expires when
   pin.** Both are expected, not drift: the as-given arm's 0.5086 displaces 0.5076, so the leader
   changes by 0.0010 on an arm whose own verdict is TIES with a zero-containing interval. Re-pin and
   say so; do not relax the pin, and do not let `best` be read as "the best approach".
+
+## Two further red tests — measured 2026-11-24, neither absent DATA nor from this plan (2026-11-24)
+
+The `README.md` / `CLAUDE.md` classification of the failure set says **one** remaining failure is not
+absent data — the count rail above, which has since been REPAIRED and measured green. That
+classification is superseded twice over: measured directly on this host 2026-11-24
+(`pytest tests/test_freeze_frame_bar.py tests/test_human_natural.py` -> 2 failed / 37 passed, 123 s),
+two DIFFERENT failures are neither absent data nor the count rail, and both pre-date this plan's
+commits.
+**The suite totals were NOT re-measured**, so only the classification is corrected, not the counts.
+README has been corrected in place; `CLAUDE.md` has ~one word of headroom and was left alone.
+
+- [ ] **`tests/test_freeze_frame_bar.py::test_the_check_order_MATCHES_the_graders_check_order_exactly`
+  — a FROZEN artifact and its grader disagree, so neither side can be edited to match without a user
+  call.** `dna_decode/glm/frame_verdict.CHECK_ORDER` now carries **9** states against the 8 in
+  `wiki/promoteratlas_frame_acceptance_bar.json::verdict_check_order`; the single extra is
+  `INDETERMINATE_CONTROL_PREMISE_UNMET`, added to the grader by commit `8b193c2e` ("Settle both
+  frame-conditioning calls"). The sibling `test_the_check_order_lists_every_outcome_exactly_once`
+  PASSES, because it checks the bar against its own outcomes — so the bar is internally consistent
+  and the divergence is strictly bar-versus-grader. **Order is semantic here** (first match wins, and
+  the module's own comment records that an earlier draft had two states reversed and its ordering test
+  caught it), so this is not a cosmetic set mismatch. Editing the frozen bar to add the state is a
+  retro-fit of a pre-registration; deleting the state from the grader removes a gate that the
+  commit's message says fired on a completed run. Both are authority calls, which is why it is
+  recorded rather than taken.
+- [ ] **`tests/test_human_natural.py::test_WTC11_still_refuses_with_the_loaders_own_reason` fails
+  `DID NOT RAISE`, and the test itself says what that means.** Its docstring: *"A sudden WTC11 pass
+  would mean the join-rate guard had broken, not that data improved."* So the failure is a signal
+  that `human_natural_set("WTC11", ...)` no longer raises `HumanNaturalError` where it must — a
+  candidate defect and **not absent data** — the test is `@needs_data` and it RAN, so the data it needs
+  is present. **Cause unverified, and it could be either side**: the loader may have stopped raising,
+  or the data under it may have changed in a way that now satisfies the join-rate guard; this run
+  showed the data is THERE, not that it is UNCHANGED. the last commits to `dna_decode/glm/human_natural.py` and the test
+  (`f7d23006`, `f421320c`) both pre-date this plan, so nothing here changed it. Diagnose before
+  touching the guard — a guard that stopped firing and a precondition that legitimately stopped
+  applying print the same red.
+
+## Beyond-k-mer eval sets — the refusal is RETIRED; five residuals are open (2026-11-24)
+
+Plan `plans/Score_The_Checkpoint_On_Both_Eval_Sets_And_Measure_What_The_Orthology_Filter_Costs_Plan/technical-plan.md`.
+The committed 2026-11-22 `EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM` verdict was a **48-prediction**
+artifact: at the scorer's own defaults (120 windows x 30 positions) all four candidate sets are
+ADMISSIBLE, and the order-3 chain beats the generator on 3 of 4. Artifacts
+`wiki/glm_eval_set_inventory_2026-11-23.json`, `wiki/glm_two_set_reading_rule_2026-11-24.json`,
+`wiki/glm_beyond_kmer_two_sets_2026-11-23.json`; narrative in `LESSONS_LEARNED.md` 2026-11-24. The
+committed 2026-11-22 artifact is deliberately **unedited** and keeps its verdict.
+
+- [ ] **The near-ortholog leak contrast is UNRESOLVED, and it must NOT be closed by re-running this
+  measurement with more windows.** Observed **-0.015372**, two-sample bootstrap 95% CI
+  `[-0.030708,-0.001625]` against the **0.01** nat equivalence margin frozen before the run, so the
+  verdict is `UNRESOLVED_CONTRAST_SPANS_THE_MARGIN` — the interval excludes zero but not the margin,
+  and only the first of those is supported. The frozen rule names post-hoc enlargement of n as the
+  defect it exists to prevent, so closing this needs a **new pre-registration** with geometry, sets
+  and margin fixed in advance, not a bigger `--n-windows` on this one. What stays undecided until
+  then: the orthology filter discards **81%** of the withheld set (C/A = **0.18931**) to remove a
+  leak whose size is not resolvable at this geometry, so whether that price is worth paying is an
+  open question rather than a settled yes or no.
+- [ ] **Two estimators of the null-side leak disagree by 14x and that is unexplained.** Over ALL
+  2,830 and ALL 519 windows at ALL 147 positions it is **0.0007** nats; the same quantity implied by
+  the 120-window samples is about **0.0100**. The all-window figure is far better powered, which
+  points at sampling variation in which 120 windows were drawn rather than a systematic null-side
+  leak — but they are different estimators on different samples. **Do not quote either as settled**,
+  and do not use the small one to argue the leak is small for the model: it measures the null's
+  share only.
+- [ ] **The committed artifact's confidence intervals are not reproducible from it.** Its point
+  estimates reproduce exactly, which is what makes the decomposition trustworthy; no `--boot` value
+  tried reproduces its CIs, because it recorded neither a seed nor a boot count. Left as
+  **unexplained rather than explained away**. The scorer now stamps seed, boot and selection seed
+  into `run_args`, so this cannot recur for runs made after 2026-11-24 — it does not repair the
+  committed one.
+- [ ] **The representative re-pretrain arm is DECLARED and NOT RUN, and retiring it is a USER call.**
+  It sits in `soraya_runs/arms-ledger.json` under the `generator-ceiling:` criterion as
+  `representative-re-pretrain-excluding-draft-ecoli`, `cost_tier: large`, `status: planned`. Its
+  stated rationale — that the eval set is uninformative — is **weakened** by the admissibility
+  result, but under R6 an arm dies only on its own executed evidence, and retiring an expensive arm
+  because a cheap result undercut its motivation is an authority decision, never a bookkeeping
+  consequence.
+- [ ] **`dna_decode/glm/eval_admissibility.py`'s module docstring still motivates itself with the
+  superseded reading.** It states the 2026-11-22 numbers (model 1.4098, strong null 1.4291, both
+  worse than uniform 1.3863) as the case the module exists for, and carries no note that the same
+  set reads **ADMISSIBLE** at 3,600 predictions. Nothing it says is false of that run; what is
+  missing is the correction, so a reader lands on "the orthology-free set is sub-uniform" as the
+  module's worked example. **A code edit, not documentation scope** — flagged here rather than taken.
 
 ## Pre-existing known limitations (not bugs)
 

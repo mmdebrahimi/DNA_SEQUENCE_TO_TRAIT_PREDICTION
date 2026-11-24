@@ -1016,3 +1016,76 @@ Reconciled memo: `wiki/glm_instrument_reconciled_2026-11-21.md`. Commits 44fe325
 **Open and worth naming:** the architecture choice of diffusion over autoregressive is REASONED from
 the positional finding, not MEASURED - an AR baseline on the identical corpus and scorer has not been
 run, and that is the highest-value untested comparison in the arm.
+
+## 2026-11-24 — the committed beyond-k-mer refusal was a 48-prediction artifact
+
+Artifacts: `wiki/glm_eval_set_inventory_2026-11-23.json` (set sizes plus a null-only admissibility
+screen), `wiki/glm_two_set_reading_rule_2026-11-24.json` (the bar, frozen before any model number
+existed at this geometry), `wiki/glm_beyond_kmer_two_sets_2026-11-23.json` (the four-set result).
+Commits 391e84e0..6bab3692. The committed 2026-11-22 artifact was not edited.
+
+**The correction comes first, because it retires a result this project had been reasoning from.**
+The committed run scored the orthology-free eval set at **6 windows x 8 positions = 48 predictions**
+and returned `EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM`, on a strong order-3 null reading **1.4291**
+nats against uniform `ln(4) = 1.3863`. The same null, on the same set, over **every window and every
+position** reads **1.3571** — below uniform, so the gate clears. At the scorer's own defaults
+(120 windows x 30 positions, 3,600 predictions) **all four candidate sets are ADMISSIBLE**: the
+refusal does not stand, and the explanation recorded beside it — accessory-gene out-of-distribution
+failure, with a representative re-pretrain named as the only route to an informative measurement —
+does not account for a set whose own strong null predicts well above chance.
+
+**What replaces it is a stronger result, not an absence.** On matched left-only context the order-3
+chain BEATS the generator on 3 of 4 sets: orthology-free **-0.0191** `[-0.0320,-0.0068]`,
+sequence-withheld **-0.0222**, ortholog-bearing **-0.0248**, and withheld-orthology-free **-0.0094**,
+unresolved. The model does beat uniform on every set, so it learned something — just nothing a 4-mer
+conditional distribution cannot already express on this substrate.
+
+**Six lessons.**
+
+1. **An unbiased estimate at tiny n is not a weak result; it is an uninformative one** — and this one
+   was read as a property of the eval set for two days. The committed 48-prediction paired delta was
+   **+0.0192**, the model ahead. At 120 windows it is **-0.0191**, the model behind and resolvably so.
+   Nearly equal magnitude, opposite sign: the estimate carried no information about the direction of
+   the effect, let alone its size.
+
+2. **A refusal needs the same power as a claim, because a refusal is also a finding.** Nothing forced
+   the scoring down to 6 windows. The orthology-free set holds **648 list entries / 634 distinct
+   sequences**, the scorer refuses only when `len(of) < --n-windows`, and its own default of 120 would
+   have run. The 6 was a choice, not a ceiling the orthology filter imposed — and "the filter left too
+   few windows to score" is exactly the story the resulting number was read through.
+
+3. **Locate a cause by varying one factor at a time before naming it.** Holding the same six windows
+   and scoring every position moves the null 1.4291 -> **1.3541**, across uniform; holding eight
+   positions and using every window gives **1.3565**; all windows at all positions, **1.3571**. So the
+   factor is the TOTAL number of predictions, not which windows were drawn — the first six sit at
+   ordinary percentiles within the set (0.335, 0.41, 0.955, 0.531, 0.347, 0.054). The committed cell
+   reproduces exactly, which is what makes the other three cells trustworthy.
+
+4. **A permissive writer API is not the invariant.** Declaring the re-pretrain arm created a ledger
+   criterion whose key began `ceiling:`. `ArmsLedger.declare_arm` uses `setdefault` and accepts any
+   criterion key, but a CONSUMER — `scripts/declare_successor_arms.py::ceiling_criterion` — requires
+   **exactly one** such key and raises otherwise. That single raise took down **125 tests across eight
+   arms-ledger files**, none of which this plan touched, so a targeted run over the files the plan
+   named could not have seen it. Before adding a key to a shared ledger, grep its consumers for what
+   they require of the key SPACE and run their tests. Renaming the key to `generator-ceiling:`
+   restored all eight files (313 passed, 4 skipped) with the arm payload untouched.
+
+5. **An artifact that records no seed and no boot cannot have its intervals reproduced.** The
+   committed artifact's point estimates reproduce exactly; its confidence intervals do not, and no
+   `--boot` value tried explains them. That is recorded as unexplained rather than explained away, and
+   the scorer now stamps seed, boot and selection seed into every run's `run_args` so the next reader
+   is not in the same position.
+
+6. **An interval that excludes zero but not the equivalence margin supports only the first claim.**
+   The near-ortholog leak contrast is **-0.015372**, two-sample bootstrap 95% CI
+   `[-0.030708,-0.001625]`, against a margin of **0.01** nats frozen before the run, so the verdict is
+   `UNRESOLVED_CONTRAST_SPANS_THE_MARGIN`. Decomposed, the null improves on the ortholog-bearing arm
+   (-0.01) by more than the model worsens (+0.0054), so on this measurement the near-ortholog leak
+   favours the 4-mer chain rather than the model — the opposite direction from the concern the
+   orthology filter exists to address. The frozen rule's own clause forbids enlarging n until the
+   contrast resolves.
+
+**Open and worth naming:** none of this closes the autoregressive baseline named open on 2026-11-21.
+An order-3 Markov chain is a null, not an AR model, so a generator losing to a 4-mer conditional
+distribution says nothing about whether an AR architecture on the identical corpus and scorer would
+have done better. That comparison is still unrun.

@@ -30,6 +30,28 @@ Phase 1 ships matplotlib + TSV viz (ship-path plan D4). Phase 2 adds publication
 
 ## Medium priority (Phase 3 — architectural upgrades)
 
+### Null-only admissibility screening as a pre-flight for any eval set — 24/11/2026
+`dna_decode/glm/eval_admissibility.py` extracted a predicate that had lived inline in one scorer, and
+only after a checkpoint had been loaded and every window scored: **is an eval set capable of carrying
+a model-vs-null verdict at all?** Extracted, it is answerable from the NULL ALONE
+(`model_ce_nats=None`), so a candidate set is screenable in seconds with no GPU work, and the alphabet
+size is a keyword argument rather than a hardcoded `ln(4)`. The motivating failure was not
+GLM-specific: a refusal was issued on **48 predictions** and read as a property of the eval set for
+two days, when the same set clears the gate comfortably once the null is scored over every window and
+every position. A screen that loads no checkpoint would have caught that *before* the scoring run
+rather than after it. Two parts to the generalisation. (a) Wire it as a pre-flight into every
+arm/sweep runner that scores a candidate against a null — it has exactly two call sites today
+(`scripts/glm_beyond_kmer.py`, `scripts/glm_eval_set_inventory.py`) and both are in one family, so
+the module is general and its adoption is not. (b) Keep the predicate an **AND** over both halves
+(reading it as "at least one" is what makes a refusal look half as strong as it is) and keep callers
+rendering its four states from the exported `STATES` tuple rather than restating the list, which is
+how a fourth state goes unhandled. **Scope note, carried from the module's own docstring and
+load-bearing:** admissible is *not* unconfounded — a set can clear uniform and still leak
+near-orthologs from training — so this must never be presented as a leakage check; it is necessary,
+not sufficient. As with `sweep_gates.py` below, the `glm` framing in the name should go before a
+second adopter arrives, so a shared home (`dna_decode/eval/`) is part of the work rather than a
+rename afterthought.
+
 ### Arm scripts should state their question against the measured INCUMBENT, and report an orthogonality MATRIX not a pair — 26/10/2026
 `scripts/glm_tile_hybrid_arm.py` carried `_paired_hybrid3_vs_comparator` for weeks: a correct number that compares a 3-channel combine against the single-scalar BASELINE and therefore never answered whether the third channel beats the measured 2-channel best. The stacking generalisation (`COMBOS` 2 -> 4, `_paired_<combo>_vs_hybrid2`, an `orthogonality_matrix` over all channel pairs) cost one plan and immediately overturned a prediction that had been used to decline a run. The generic form, for every arm/sweep script here: (a) when a new arm becomes the incumbent, add the paired statistic against the INCUMBENT rather than re-reading the baseline one, and put the comparator in the statistic's name; (b) emit the pairwise matrix over all scorers present, not just the one pair the current question needs, since the matrix is what makes a screen falsifiable — the 2026-10-26 run showed the most-redundant channel adds and a less-redundant one subtracts, so a single pair cannot support the screen it was being used for. **SCOPED 26/10/2026, and the scope bounds what this clause may be cited for:** the counterexample pair is a *reduction/superset* pair, **not two modalities** — `scripts/glm_tile_predictions.py` hands the SAME decomposition dict to `tile_features()` and `max_tx_scalar()`, so `max_tx` is a lossy scalar reduction of what the `decomposition` channel sees in full, and their +0.7812 redundancy is mechanically expected rather than surprising. Prediction-vector Spearman is therefore refuted **across that pair**, NOT between genuinely different modality families — none were tested here, and the separately-measured ProteinGym result that orthogonality IS the condition for a rank-average to pay (`wiki/forward_modality_hybrid_2026-07-17.md`) is untouched by it. Read the tile finding as *“finer-grained access to a channel already present pays”*, not *“a new kind of information pays”* (`wiki/glm_tile_stack_arm_2026-10-26.md` § SCOPE). The MATRIX recommendation stands regardless — it is what allowed the pair to be identified as a reduction/superset pair at all; (c) keep any such screen REPORTED and never a gate (`precondition.not_a_gate`), pinned by a test. Candidate adopters: `promcalc_decomposition_arm.py`, `glm_tile_selection.py`, the sampling-sweep scripts.
 
