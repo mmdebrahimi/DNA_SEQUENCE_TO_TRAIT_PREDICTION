@@ -1111,3 +1111,16 @@ nothing to remove.
 - Scope deliberately excludes adding a generator ceiling criterion to `soraya_runs/arms-ledger.json` until the criterion question is settled.
 
 ---
+
+## [plan_file: Score_The_Checkpoint_On_Both_Eval_Sets_And_Measure_What_The_Orthology_Filter_Costs_Plan/] 2026-11-23
+**Summary:** Run the committed step-6000 checkpoint against the sequence-withheld set and the orthology-free set, with the Markov null and uniform on both, and report the admissibility verdict per set.
+**Status:** active (executing 2026-11-24 via /execute-plan, sequential mode; live state file at .claude/execute-plan-state/)
+
+**Key decisions:**
+- Scoped to measuring the NEAR-ORTHOLOG LEAK SIZE, not to producing a beyond-k-mer verdict. `scripts/glm_beyond_kmer.py:246-250` already records that no eval-side shortcut can be both orthology-free and representative, so the plan's own Problem Statement states it cannot deliver the verdict the question wants.
+- The admissibility gate is EXTRACTED, not invented: it already exists inline at `scripts/glm_beyond_kmer.py:228-245`. Step 1 lifts it into `dna_decode/glm/eval_admissibility.py` with `model_ce_nats` OPTIONAL, so a candidate eval set can be screened from the null alone with no checkpoint loaded.
+- Set A (the 3,349-window withhold) is NOT persisted -- the manifest records only `withheld_union_size` -- so Step 2 recomputes it via the pure `falsifier_eval_windows` and REFUSES unless it reproduces exactly 3,349, which is the geometry-drift tripwire.
+- Step 3 parameterises the ONE scorer with `--eval-set` rather than forking a second script, and its first test is behaviour-preservation: the default path must still reproduce diffusion 1.4098 / null 1.4291 / delta +0.0192.
+- Step 4 declares the representative re-pretrain (excluding draft E. coli) as a `cost_tier: large` arm under R6 at declaration time, so a cheap eval-side result cannot retire it as redundant. Declared, NOT run.
+
+---
