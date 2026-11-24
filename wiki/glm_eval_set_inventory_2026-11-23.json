@@ -129,6 +129,20 @@
     "reading": "The committed cell REPRODUCES exactly, which is what makes the other three cells trustworthy. Holding the windows fixed and scoring every position instead of eight moves the null from 1.4291 to 1.3541 -- across uniform. Holding the positions at eight and using every window gives 1.3565. So the factor is the TOTAL number of predictions, not which windows were chosen: the first six sit at ordinary percentiles within set C, so `of[:6]` is not a biased selection. 48 predictions is simply too few, and the committed run drew an unlucky 48. The estimator is unbiased and was read as a property of the eval set.",
     "what_this_does_NOT_establish": "That the generator beats the null. This is the NULL alone. It establishes that set C is admissible and that the committed refusal rests on 48 predictions, nothing more. It also does not remove the near-ortholog confound from any set."
   },
+  "null_side_leak_contrast": {
+    "A_minus_C_ortholog_bearing": {
+      "n_windows": 2830,
+      "null_ce_nats": 1.3562
+    },
+    "A_inter_C_orthology_free": {
+      "n_windows": 519,
+      "null_ce_nats": 1.3569
+    },
+    "null_side_leak_nats": 0.0007,
+    "sign_convention": "positive = the null scores the ortholog-BEARING half better, i.e. the null gained from the leak",
+    "scoring": "ALL scoreable positions on every window of each half; no sampling, no seed",
+    "reading": "This is the NULL half of the leak only. It does not measure the model's share, and a near-zero value here does NOT mean the leak is small for the model -- only that the null is not the party benefiting from it."
+  },
   "committed_run_geometry_reconstructed": {
     "n_windows": 6,
     "positions_per_window": 8,
@@ -138,9 +152,10 @@
     "note": "the committed artifact records no seed or boot argument, so its CI is not reproducible from it; the POINT estimates are. The scorer refuses when len(of) < --n-windows, and len(of) is 648, so the scorer default of 120 windows would have run -- the 6 was a choice, not a ceiling the filter imposed."
   },
   "uniform_ce_nats": 1.3863,
-  "seconds": 26.5,
+  "seconds": 25.3,
   "emits_no_verdict_about_the_generator": true,
-  "headline": "The orthology-free set holds 648 list entries (634 DISTINCT sequences), not 6. The committed 2026-11-22 run scored 6 of them at 8 positions each, and its strong null read 1.4291 nats -- above uniform 1.3863 -- which is what made the runner refuse a verdict and record the representative re-pretrain as the only informative route. The same null on the same set over every window and position reads 1.3571, below uniform, and all three candidate sets screen ADMISSIBLE. The decomposition isolates the cause as the 48-prediction sample size rather than which windows were picked. So the refusal is a small-sample excursion, and the premise that the orthology filter leaves too little to score is false: the scorer refuses only when len(of) < --n-windows, and at 648 its own default of 120 would have run.",
+  "headline": "TWO claims, and the second is deliberately narrower than it first looks. (1) The orthology-free set holds 648 list entries (634 DISTINCT sequences), not 6, so the premise that the gene-level filter leaves too little to score is FALSE: the scorer refuses only when len(of) < --n-windows, and at 648 its own default of 120 would have run. The 6 was a choice, not a ceiling the filter imposed. (2) The NULL half of the admissibility gate clears uniform at scale: the committed run read the strong null at 1.4291 nats on set C, above uniform 1.3863, while the same null on the same set over every window and position reads 1.3571, below it. The decomposition isolates the cause as the 48-prediction sample size, not which windows were picked.",
+  "what_claim_2_does_NOT_settle": "Whether the committed refusal stands. The gate is an AND -- it requires the null AND the model to beat uniform -- and this probe measures the NULL only, by design, since its whole point is to screen a set with no checkpoint loaded. The model's committed 1.4098 nats is equally a 48-prediction number and is equally unmeasured at scale. If the model stays above uniform at full geometry while the null clears it, the refusal still fires, but it then means something different: a model negative on a set that is demonstrably predictable, NOT an uninformative eval set. Scoring the model at full geometry is what decides between those, and it is not done here.",
   "duplicate_slot_finding": "The orthology-free LIST carries 14 duplicate sequences (648 entries, 634 distinct) and `held` carries 17 (3923 entries, 3906 distinct), one sequence appearing 6 times. The scorer slices the LIST, so a duplicate occupies a scoring slot and would be scored twice -- inflating apparent n and breaking the independence the paired bootstrap assumes. MEASURED: neither of[:6] (the committed run) nor of[:120] (the scorer default) contains a duplicate, so no committed number is affected and Step 3 at 120 windows is safe. The duplicates sit later in the list, which is why this is recorded as a latent hazard rather than a live defect.",
   "what_the_headline_does_not_claim": "It does not claim the generator beats the null, or that any set is unconfounded. The near-ortholog leak is untouched by all of this, and the strong null shares it.",
   "honest_limits": [

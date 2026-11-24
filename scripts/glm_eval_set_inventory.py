@@ -147,6 +147,50 @@ def null_ce_on(chain: MarkovGenerator, seqs, *, length: int) -> dict:
     }
 
 
+def null_side_leak_contrast(chain: MarkovGenerator, a_seqs, of_seqs, *, length: int) -> dict:
+    """How much of the near-ortholog leak accrues to the NULL rather than the model?
+
+    The orthology filter exists because a window whose gene has a draft counterpart may have a
+    95%-identical ortholog in training. But the STRONG null was fit on exactly those draft windows,
+    so it has seen those same near-orthologs -- which means the leak is not a one-sided model
+    advantage, and an A-vs-C delta difference is model-leak MINUS null-leak.
+
+    This measures the null half directly and for free, by splitting the withheld set A into its
+    ortholog-BEARING part (A minus C) and its orthology-FREE part (A intersect C). Both halves are
+    withheld from the corpus and both come from the same builder, so the only systematic difference
+    between them is whether a draft counterpart exists. A null that gained from the leak scores the
+    ortholog-bearing half LOWER (better).
+    """
+    all_pos = list(range(ORDER, length))
+    a = {s.upper() for s in a_seqs}
+    c = {s.upper() for s in of_seqs}
+    bearing = sorted(a - c)
+    free = sorted(a & c)
+
+    def mean_ce(seqs):
+        if not seqs:
+            return None
+        return statistics.fmean(
+            statistics.fmean(markov_nll(chain, s, p) for p in all_pos) for s in seqs)
+
+    ce_bearing, ce_free = mean_ce(bearing), mean_ce(free)
+    gap = (None if ce_bearing is None or ce_free is None else ce_free - ce_bearing)
+    return {
+        "A_minus_C_ortholog_bearing": {"n_windows": len(bearing),
+                                       "null_ce_nats": None if ce_bearing is None else round(ce_bearing, 4)},
+        "A_inter_C_orthology_free": {"n_windows": len(free),
+                                     "null_ce_nats": None if ce_free is None else round(ce_free, 4)},
+        "null_side_leak_nats": None if gap is None else round(gap, 4),
+        "sign_convention": "positive = the null scores the ortholog-BEARING half better, i.e. the "
+                           "null gained from the leak",
+        "scoring": "ALL scoreable positions on every window of each half; no sampling, no seed",
+        "reading": (
+            "This is the NULL half of the leak only. It does not measure the model's share, and a "
+            "near-zero value here does NOT mean the leak is small for the model -- only that the "
+            "null is not the party benefiting from it."),
+    }
+
+
 def decompose_committed_cell(chain: MarkovGenerator, of_seqs, *, length: int,
                              n_windows: int = 6, n_positions: int = 8, seed: int = 0) -> dict:
     """Why did the committed run measure the null ABOVE uniform when the full set is BELOW it?
@@ -300,6 +344,15 @@ def main(argv=None) -> int:
           f"{decomp['windows_whose_own_null_ce_is_worse_than_uniform']}"
           f"/{decomp['windows_total']} windows individually worse than uniform")
 
+    leak = null_side_leak_contrast(chain_ec, a_seqs, of_seqs, length=a.length)
+    print("\nnull-side near-ortholog leak (within the withheld set A):")
+    print(f"  A\\C ortholog-bearing  n={leak['A_minus_C_ortholog_bearing']['n_windows']:<5} "
+          f"null CE {leak['A_minus_C_ortholog_bearing']['null_ce_nats']}")
+    print(f"  A&C orthology-free    n={leak['A_inter_C_orthology_free']['n_windows']:<5} "
+          f"null CE {leak['A_inter_C_orthology_free']['null_ce_nats']}")
+    print(f"  null-side leak: {leak['null_side_leak_nats']} nats "
+          f"(positive = null gained from the leak)")
+
     res = {
         "record": "glm-eval-set-inventory-v1",
         "date": "2026-11-24",
@@ -334,6 +387,7 @@ def main(argv=None) -> int:
         },
         "admissibility_screens": screens,
         "committed_cell_decomposition": decomp,
+        "null_side_leak_contrast": leak,
         "committed_run_geometry_reconstructed": {
             "n_windows": COMMITTED_N_WINDOWS,
             "positions_per_window": COMMITTED_N_POSITIONS,
@@ -350,16 +404,24 @@ def main(argv=None) -> int:
         "seconds": round(time.time() - t0, 1),
         "emits_no_verdict_about_the_generator": True,
         "headline": (
-            "The orthology-free set holds 648 list entries (634 DISTINCT sequences), not 6. The "
-            "committed 2026-11-22 run scored 6 of them at 8 positions each, and its strong null "
-            "read 1.4291 nats -- above uniform 1.3863 -- which is what made the runner refuse a "
-            "verdict and record the representative re-pretrain as the only informative route. The "
-            "same null on the same set over every window and position reads 1.3571, below uniform, "
-            "and all three candidate sets screen ADMISSIBLE. The decomposition isolates the cause "
-            "as the 48-prediction sample size rather than which windows were picked. So the refusal "
-            "is a small-sample excursion, and the premise that the orthology filter leaves too "
-            "little to score is false: the scorer refuses only when len(of) < --n-windows, and at "
-            "648 its own default of 120 would have run."),
+            "TWO claims, and the second is deliberately narrower than it first looks. (1) The "
+            "orthology-free set holds 648 list entries (634 DISTINCT sequences), not 6, so the "
+            "premise that the gene-level filter leaves too little to score is FALSE: the scorer "
+            "refuses only when len(of) < --n-windows, and at 648 its own default of 120 would have "
+            "run. The 6 was a choice, not a ceiling the filter imposed. (2) The NULL half of the "
+            "admissibility gate clears uniform at scale: the committed run read the strong null at "
+            "1.4291 nats on set C, above uniform 1.3863, while the same null on the same set over "
+            "every window and position reads 1.3571, below it. The decomposition isolates the cause "
+            "as the 48-prediction sample size, not which windows were picked."),
+        "what_claim_2_does_NOT_settle": (
+            "Whether the committed refusal stands. The gate is an AND -- it requires the null AND "
+            "the model to beat uniform -- and this probe measures the NULL only, by design, since "
+            "its whole point is to screen a set with no checkpoint loaded. The model's committed "
+            "1.4098 nats is equally a 48-prediction number and is equally unmeasured at scale. If "
+            "the model stays above uniform at full geometry while the null clears it, the refusal "
+            "still fires, but it then means something different: a model negative on a set that is "
+            "demonstrably predictable, NOT an uninformative eval set. Scoring the model at full "
+            "geometry is what decides between those, and it is not done here."),
         "duplicate_slot_finding": (
             "The orthology-free LIST carries 14 duplicate sequences (648 entries, 634 distinct) and "
             "`held` carries 17 (3923 entries, 3906 distinct), one sequence appearing 6 times. The "

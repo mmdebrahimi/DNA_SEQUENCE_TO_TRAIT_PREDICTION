@@ -1,7 +1,8 @@
 """Is an eval set CAPABLE of carrying a model-vs-null verdict at all? Ask before scoring.
 
-THE POINT. A model-minus-null delta only means something if at least one of them beats a random
-guess. Measured 2026-11-22 on the orthology-free (accessory-gene) set, the diffusion model scored
+THE POINT. A model-minus-null delta only means something if BOTH of them beat a random guess -- the
+predicate is an AND, and reading it as "at least one" is the mistake that makes a refusal look half
+as strong as it is. Measured 2026-11-22 on the orthology-free (accessory-gene) set, the model scored
 1.4098 nats and the strong order-3 null 1.4291, both WORSE than uniform ln(4)=1.3863: a model
 confident about the wrong base loses to one that commits to nothing. Ranking two sub-chance
 predictors is the same error class as a broken detector reading as a clean result, so the only
