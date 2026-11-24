@@ -1,0 +1,49 @@
+{
+  "record": "glm-representative-repretrain-reading-rule-companion-v1",
+  "frozen_at": "2026-11-24T09:26:00-05:00",
+  "companion_to": "wiki/glm_representative_repretrain_reading_rule_2026-11-24.json",
+  "why_a_companion_and_not_an_edit": "the rule file asserts it was frozen before any cross-entropy existed. Editing it would muddy that claim even though it is still true, so this is a SECOND pre-number document with its own timestamp and the rule file stays byte-unchanged. It adds no threshold and changes no branch condition; it fixes how two already-named branches are READ.",
+  "frozen_before": "any cross-entropy from either new checkpoint existed, and before wiki/glm_residual_leak_2026-11-24.json was written -- the probe was at 25 of 120 windows on its first arm when this was frozen",
+  "credit": "both items raised by a sibling Claude session (Soraya Development) reviewing the running probe's design. The corpus-size arithmetic is theirs; the extension that validates it against a published figure is this session's.",
+
+  "ONE_the_corpus_size_confound_measured_not_argued": {
+    "objection": "longest-common-substring against a random corpus grows with corpus size, so a SMALLER corpus has a LOWER chance level. A fall toward chance in the representative arm could therefore be an artifact of having removed 3,463 windows rather than of having removed E. coli. This is the first objection a reader will raise and it was not named in the rule.",
+    "expected_random_lcs_formula": "log4(N_chars * L_query) -- the query's own L start positions each get a shot at the corpus, so omitting L under-predicts",
+    "committed": {"n_windows": 63925, "mbp": 9.59, "log4_N": 11.596, "log4_N_times_L": 15.211},
+    "representative": {"n_windows": 60462, "mbp": 9.07, "log4_N": 11.556, "log4_N_times_L": 15.171},
+    "shift_bp": 0.0402,
+    "shift_is_formula_independent": "L cancels in a difference of logs, so log4(N) and log4(N*L) give the SAME 0.0402 bp shift. The formula choice matters for the LEVEL, not for this confound.",
+    "the_chance_model_is_validated_not_asserted": "log4(N*L) predicts 15.21 bp for the committed corpus and wiki/glm_copying_penalty_2026-11-22.json measured a uniform-random median of 15.0 bp. An independently measured figure reproducing the formula is what licenses using it here. log4(N) alone predicts 11.60 and under-predicts by ~3.6 bp.",
+    "verdict": "the measurable range is 55.0 bp observed down to 15.0 bp chance = 40.0 bp. A 5.4% smaller corpus spends 0.0402 bp of that, which is 0.10%. A fall toward chance CANNOT be a corpus-size artifact.",
+    "and_the_design_is_paired_anyway": "the same 120 windows are scored against both corpora, so this confound would have to act within a window rather than across samples."
+  },
+
+  "TWO_there_are_two_leak_channels_and_they_need_different_instruments": {
+    "channel_1_verbatim_memorisation": {
+      "what": "the model has seen the literal string and can reproduce it",
+      "instrument": "longest common substring",
+      "status": "this is the RIGHT instrument for this channel, not a limited proxy, because memorisation is of exact strings. The probe covers channel 1 cleanly.",
+      "correction_to_my_own_honest_limit": "the rule's limit note read as though LCS were a weak proxy for one thing. It is a STRONG instrument for channel 1 and BLIND to channel 2. That is a sharper and more useful statement than `bounds exact DNA, does not prove absence of homology`, which is true but files a second measurable channel under caveat."
+    },
+    "channel_2_homology_mediated_transfer": {
+      "what": "a 90%-identical homolog in training teaches the local statistics, so the model effectively knows the window without ever copying it. This is REAL leakage for this task.",
+      "instrument": "alignment identity, not exact matching",
+      "status": "structurally invisible to any substring measure, so the probe says nothing about it",
+      "where_it_is_actually_measured": "the reading rule's CROSS_ORGANISM_COST_DOMINATES branch is this channel seen from the far side -- `the model got much worse than the 0.0054 leak predicts` is what removing same-genus homology looks like."
+    },
+    "so_the_two_documents_are_complementary_instruments": "the probe and the reading rule measure the two channels, rather than being one measurement plus one caveat.",
+    "THE_ANTI_MISREAD_CLAUSE_the_reason_this_is_frozen_now": {
+      "the_pattern": "probe lands NEAR CHANCE and the model comes back WORSE BY MUCH MORE than +0.0054",
+      "wrong_reading": "a contradiction, or evidence that one of the two measurements is broken",
+      "correct_reading": "jointly coherent: the VERBATIM channel is closed and the HOMOLOGY channel is carrying the cost. Both can be true at once and together they are more informative than either alone.",
+      "why_pre_registered": "this is the easiest misread available on these two results and naming it after seeing them would be indistinguishable from fitting the story to the numbers."
+    },
+    "the_named_disambiguator": "a Klebsiella-substituted corpus restores same-genus homology while still containing no E. coli, which separates channel 2 from channel 1. The builder's blind rule produces exactly this if the E. coli SPECIES is excluded, because Klebsiella pneumoniae shares E. coli's lineage key Pseudomonadota;Gammaproteobacteria and 17 of its assemblies are in data/refseq_cache. This reframes it from `confounded follow-up` to `the instrument for channel 2`, and it is NOT part of the current arm."
+  },
+
+  "a_transferable_rule_from_the_same_exchange": {
+    "rule": "a grep negative is only evidence about RECORDED facts. For a COMPUTED quantity, the absence of a hit carries no information at all -- stop searching and start recomputing.",
+    "provenance": "this session searched every tracked text file for a figure another session was blocked on and correctly found nothing; that session then reproduced it on the first attempt by testing candidate definitions against the data. Both were right and were answering different questions.",
+    "same_shape_as": "a probe returning nothing because it cannot see the thing, rather than because the thing is absent -- the vacuous-guard failure mode this repo has recorded several times."
+  }
+}
