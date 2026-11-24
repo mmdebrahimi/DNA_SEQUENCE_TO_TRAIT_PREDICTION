@@ -36,14 +36,23 @@ OUT = Path("/kaggle/working")
 STEPS = 6000
 CAP_HOURS = 11.5          # the kernel is killed near 12 h; leave room to write output
 
-#: (label, corpus, manifest, seed, ckpt_dir, tag, expected corpus line count)
+#: THE CORPORA DO NOT COME FROM THE CLONE. v1 of this kernel assumed they were tracked and refused
+#: at 11.9 s with `missing corpus wiki/glm_training_corpus_representative_2026-11-22.txt` -- they are
+#: DELIBERATELY gitignored BY NAME at .gitignore:187-188 (9.2 MB and 9.7 MB), so no clone can ever
+#: carry them. They ride in as a private Kaggle dataset instead, and the clone supplies CODE only.
+#: The guard firing in seconds rather than after six hours is why it sits before the cost.
+DATASET = Path("/kaggle/input/glm-repretrain-corpora")
+
+#: (label, corpus, manifest, seed, ckpt_dir, tag, expected lines, expected sha256)
 ARMS = [
     ("run1_representative", "wiki/glm_training_corpus_representative_2026-11-22.txt",
      "wiki/glm_training_corpus_representative_manifest_2026-11-22.json", 0,
-     "data/glm_ckpt_representative", "representative", 60462),
+     "data/glm_ckpt_representative", "representative", 60462,
+     "228d705e77c9206a1b4d58adf7bf0a7563b8775eb2996aabec91953c9e01ba58"),
     ("run2_reseed_seed1", "wiki/glm_training_corpus_2026-11-21.txt",
      "wiki/glm_training_corpus_manifest_2026-11-21.json", 1,
-     "data/glm_ckpt_reseed_control", "reseed_seed1", 63925),
+     "data/glm_ckpt_reseed_control", "reseed_seed1", 63925,
+     "f1479ef524aa463c5c7512841ba2c306fdb774d7dba073baf52e08a3a5a33333"),
 ]
 
 
@@ -77,27 +86,42 @@ def main() -> int:
         print(f"REFUSING: checkout landed on {head}, not the pinned {SHA}", file=sys.stderr)
         return 2
 
-    # ---- corpora must be the expected ones, checked BEFORE spending hours ----
-    for label, corpus, man, _seed, _cd, _tag, want in ARMS:
+    # ---- stage the corpora from the dataset, then verify BEFORE spending hours ----
+    if not DATASET.exists():
+        print(f"REFUSING: the corpora dataset is not mounted at {DATASET}. The corpora are "
+              f"gitignored, so the clone cannot supply them; attach the dataset to the kernel.",
+              file=sys.stderr)
+        return 3
+    print("dataset contents:", sorted(p.name for p in DATASET.iterdir()), flush=True)
+
+    for label, corpus, man, _seed, _cd, _tag, want, want_sha in ARMS:
+        for rel in (corpus, man):
+            src, dst = DATASET / Path(rel).name, SRC / rel
+            if not src.exists():
+                print(f"REFUSING: {src.name} absent from the dataset", file=sys.stderr)
+                return 3
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
         p = SRC / corpus
-        if not p.exists():
-            print(f"REFUSING: missing corpus {corpus}", file=sys.stderr)
-            return 3
+        # sha256 FIRST: it pins the exact bytes, where a line count only pins the shape.
+        got_sha = hashlib.sha256(p.read_bytes()).hexdigest()
         n = sum(1 for _ in p.open(encoding="utf-8"))
-        print(f"{label}: {corpus} -> {n} lines (expect {want})", flush=True)
+        print(f"{label}: {Path(corpus).name} -> {n} lines, sha256 {got_sha[:16]}... "
+              f"(expect {want} lines, {want_sha[:16]}...)", flush=True)
+        if got_sha != want_sha:
+            print(f"REFUSING: {corpus} sha256 is {got_sha}, expected {want_sha}. The dataset does "
+                  f"not hold the corpus this arm was specified against.", file=sys.stderr)
+            return 3
         if n != want:
             print(f"REFUSING: {corpus} has {n} lines, expected {want}. Wrong corpus.",
                   file=sys.stderr)
-            return 3
-        if not (SRC / man).exists():
-            print(f"REFUSING: missing manifest {man}", file=sys.stderr)
             return 3
 
     # ---- launch both arms in parallel, partitioning the cores ----
     threads = max(1, cores // 2)
     print(f"cores={cores} -> OMP_NUM_THREADS={threads} per arm, both in parallel", flush=True)
     procs, logs = {}, {}
-    for label, corpus, man, seed, ckpt_dir, tag, _want in ARMS:
+    for label, corpus, man, seed, ckpt_dir, tag, _want, _sha in ARMS:
         (SRC / ckpt_dir).mkdir(parents=True, exist_ok=True)
         log = OUT / f"{label}.log"
         logs[label] = log
