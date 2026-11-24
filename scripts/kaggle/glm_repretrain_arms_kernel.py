@@ -41,7 +41,11 @@ CAP_HOURS = 11.5          # the kernel is killed near 12 h; leave room to write 
 #: DELIBERATELY gitignored BY NAME at .gitignore:187-188 (9.2 MB and 9.7 MB), so no clone can ever
 #: carry them. They ride in as a private Kaggle dataset instead, and the clone supplies CODE only.
 #: The guard firing in seconds rather than after six hours is why it sits before the cost.
-DATASET = Path("/kaggle/input/glm-repretrain-corpora")
+#:
+#: There is deliberately NO mount-path constant here. `/kaggle/input/<slug>` is a convention and not
+#: a guarantee: v3 showed Kaggle mounting this dataset nested under `/kaggle/input/datasets/`, so
+#: the files are LOCATED BY NAME under /kaggle/input and then verified by sha256. Re-introducing a
+#: hardcoded mount path would reinstate the exact dependency that failed twice.
 
 #: (label, corpus, manifest, seed, ckpt_dir, tag, expected lines, expected sha256)
 ARMS = [
@@ -87,28 +91,46 @@ def main() -> int:
         return 2
 
     # ---- stage the corpora from the dataset, then verify BEFORE spending hours ----
-    if not DATASET.exists():
-        # Say WHAT IS mounted, not just what is missing. v2 failed here and the message alone could
-        # not distinguish "nothing mounted" from "mounted under a different name" -- the real cause
-        # was that the dataset was still PROCESSING at push time, and Kaggle mounts an unready
-        # dataset silently as nothing rather than erroring. This listing settles it in one read.
-        root = Path("/kaggle/input")
-        present = sorted(p.name for p in root.iterdir()) if root.exists() else "/kaggle/input absent"
-        print(f"REFUSING: the corpora dataset is not mounted at {DATASET}.\n"
-              f"  /kaggle/input holds: {present}\n"
-              f"  The corpora are gitignored (.gitignore:187-188), so the clone CANNOT supply them.\n"
-              f"  If the listing is empty, the dataset was likely still processing when this kernel "
-              f"was pushed -- wait for `kaggle datasets status <slug>` to read `ready` first.",
+    # LOCATE BY NAME, NOT BY AN ASSUMED MOUNT PATH. v2 and v3 both died here on the path:
+    # `/kaggle/input/<slug>` is a convention, not a guarantee, and v3's listing showed Kaggle had
+    # mounted this dataset NESTED under `/kaggle/input/datasets/` instead. Walking for the files and
+    # then verifying them by sha256 removes the dependency on the layout entirely -- the hash is
+    # what makes accepting a file from an unexpected path safe.
+    root = Path("/kaggle/input")
+    if not root.exists():
+        print("REFUSING: /kaggle/input does not exist, so no dataset is attached at all.",
               file=sys.stderr)
         return 3
-    print("dataset contents:", sorted(p.name for p in DATASET.iterdir()), flush=True)
+    found: dict[str, list[Path]] = {}
+    for p in root.rglob("*"):
+        if p.is_file():
+            found.setdefault(p.name, []).append(p)
+    print(f"/kaggle/input top level: {sorted(q.name for q in root.iterdir())}", flush=True)
+    print(f"/kaggle/input holds {sum(len(v) for v in found.values())} files; "
+          f"names: {sorted(found)[:12]}", flush=True)
+
+    def locate(name: str) -> Path | None:
+        hits = found.get(name, [])
+        if len(hits) == 1:
+            return hits[0]
+        if len(hits) > 1:
+            # Ambiguity is refused rather than resolved by sort order: picking one of two files
+            # with the same name is exactly how the wrong corpus gets trained on silently.
+            print(f"REFUSING: {name} appears {len(hits)} times under /kaggle/input: "
+                  f"{[str(h) for h in hits]}", file=sys.stderr)
+        return None
 
     for label, corpus, man, _seed, _cd, _tag, want, want_sha in ARMS:
         for rel in (corpus, man):
-            src, dst = DATASET / Path(rel).name, SRC / rel
-            if not src.exists():
-                print(f"REFUSING: {src.name} absent from the dataset", file=sys.stderr)
+            src, dst = locate(Path(rel).name), SRC / rel
+            if src is None:
+                print(f"REFUSING: {Path(rel).name} not found anywhere under /kaggle/input. The "
+                      f"corpora are gitignored (.gitignore:187-188), so the clone CANNOT supply "
+                      f"them; the dataset must be attached AND `kaggle datasets status` must read "
+                      f"`ready` at push time.", file=sys.stderr)
                 return 3
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, dst)
             dst.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, dst)
         p = SRC / corpus
