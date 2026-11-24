@@ -122,7 +122,19 @@ def set_algebra(a_seqs, held_seqs, of_seqs) -> dict:
         "B_inter_C": len(b & c),
         "C_is_subset_of_B": True,
         "A_is_subset_of_B": a <= b,
+        # CAUTION, and the name below is kept only because tests pin it: this is a SIZE RATIO
+        # between two differently-built sets, NOT a subset share. C is not inside A -- they share
+        # 519 windows and C holds 115 that A never saw, because A is built at limit=1200 and C at
+        # limit=None. Reading it as "the filter discards 81% of the withheld set" is wrong: the
+        # filter is not applied to A at all.
         "C_over_A_the_filters_measured_cost": (round(len(c) / len(a), 6) if a else None),
+        "C_over_A_is_a_size_ratio_NOT_a_subset_share": True,
+        # THIS is the filter's cost where the question is well posed: of the windows actually IN the
+        # designed withhold, the share that is orthology-free. It is also exactly the arm the leak
+        # contrast scores, and |A&C| + |A\C| = |A| is asserted below.
+        "A_inter_C_over_A_the_filters_cost_WITHIN_the_withheld_set": (
+            round(len(a & c) / len(a), 6) if a else None),
+        "A_partitions_into_the_two_contrast_arms": (len(a - c) + len(a & c) == len(a)),
         "A_minus_B": len(a - b),
         "B_minus_A": len(b - a),
     }

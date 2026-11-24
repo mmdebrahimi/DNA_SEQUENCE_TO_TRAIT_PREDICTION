@@ -265,6 +265,30 @@ def main(argv=None) -> int:
                                      "positions of each arm",
         },
 
+        "A_CORRECTION_TO_THE_FROZEN_RULE_RECORDED_NOT_EDITED": {
+            "where": "the LEAK_SMALL_FILTER_OVERPRICED branch description in "
+                     "wiki/glm_two_set_reading_rule_2026-11-24.json",
+            "the_error": "it says the orthology filter 'discards 81% of the withheld set (C/A = "
+                         "0.18931)'. That reads 634/3349 as a SUBSET SHARE, and C is not a subset "
+                         "of A: they share 519 windows and C holds 115 that A never saw, because A "
+                         "is built at limit=1200 and C at limit=None. The filter is not applied to "
+                         "A at all, so nothing is 'discarded from the withheld set' by it.",
+            "the_correct_quantity": "of the 3349 windows IN the designed withhold, 519 are "
+                                    "orthology-free = 0.154972, and 2830 are ortholog-bearing. "
+                                    "Those two numbers sum to 3349, which is why the leak contrast "
+                                    "partitions A exactly.",
+            "why_it_is_not_edited": "the branch carrying the error DID NOT FIRE (this run is "
+                                    "UNRESOLVED_CONTRAST_SPANS_THE_MARGIN), and the error is in "
+                                    "descriptive prose, not in the margin, the estimator or any "
+                                    "branch predicate -- so no outcome depended on it. Amending a "
+                                    "bar after seeing its result is the defect freezing exists to "
+                                    "prevent, and this repo has a recorded instance of a "
+                                    "mis-specified bar LEFT unedited for exactly that reason. The "
+                                    "correction is recorded here instead.",
+            "the_measurement_was_never_affected": "the contrast arms were built from A minus C and "
+                                                  "A intersect C throughout, i.e. from the correct "
+                                                  "quantities; only the ratio's LABEL was wrong.",
+        },
         "honest_limits": [
             "This measures the near-ortholog LEAK SIZE and the admissibility gate state per set. It "
             "is NOT a beyond-k-mer verdict, and no outcome here licenses one.",
