@@ -1,0 +1,74 @@
+{
+  "record": "glm-representative-repretrain-sign-correction-v1",
+  "added_at": "2026-11-24T13:25:00-05:00",
+  "companion_to": "wiki/glm_representative_repretrain_reading_rule_2026-11-24.json",
+  "second_companion_to": "wiki/glm_representative_repretrain_reading_rule_addendum_2026-11-24.json",
+  "why_a_separate_file": "the rule asserts it was frozen at a time, and the addendum exists precisely so that a later addition cannot hide under an earlier timestamp. Editing the rule to fix this would make its freeze claim cover text written after the arm was launched. The rule file stays BYTE-UNCHANGED across all four documents. This also follows the precedent already in this project: wiki/glm_beyond_kmer_two_sets_2026-11-23.json carries `A_CORRECTION_TO_THE_FROZEN_RULE_RECORDED_NOT_EDITED`.",
+
+  "THE_INCONSISTENCY_the_rule_specifies_two_opposite_computations": {
+    "quantity_as_written": "paired per-window change in MODEL cross-entropy, representative checkpoint minus committed checkpoint",
+    "sign_convention_as_written": "positive = the representative model has LOWER cross-entropy = BETTER. Negative = removing the draft E. coli COST the model.",
+    "why_these_contradict": "`left_only` is a CROSS-ENTROPY in nats, so LOWER is better. If the representative model is better its cross-entropy is lower, and (representative - committed) is therefore NEGATIVE. The subtraction order as written makes `positive` mean the representative model is WORSE, which is the opposite of what the sign convention says positive means. Exactly one of the two sentences can be implemented.",
+    "this_is_not_a_quibble": "the pre-registered expectation is that the representative model gets WORSE. Implementing the subtraction order literally while reading the sign convention's words would report a worse model as a POSITIVE number and invite exactly the misreading the whole companion discipline exists to prevent."
+  },
+
+  "EVIDENCE_that_left_only_is_a_cross_entropy_where_higher_is_worse": {
+    "measured_from": "the committed checkpoint's own run artifact at the frozen 120x30 geometry (eval set orthology_free, seed 0, selection seed 0, boot 2000)",
+    "model_left_only_mean_nats": 1.3726,
+    "order3_markov_ecoli_mean_nats": 1.3535,
+    "uniform_mean_nats": 1.38629,
+    "the_uniform_arm_is_the_decisive_anchor": "ln(4) = 1.3862943611, and the uniform arm reads 1.38629. A uniform distribution over a 4-letter alphabet has cross-entropy exactly ln(4) nats. That the uniform arm lands on ln(4) to five decimals proves these columns are cross-entropies in nats, not log-likelihoods and not a delta-vs-null, so higher IS worse. This is an identity, not a fit.",
+    "corroborated_by_the_recorded_verdict": "the same artifact records verdict WORSE_THAN_ORDER3_ON_THIS_SET with paired_delta_nats -0.0191, i.e. the model loses. Model 1.3726 > null 1.3535 confirms the direction: the LARGER cross-entropy is the WORSE model."
+  },
+
+  "THE_RESOLUTION_follow_the_sign_convention_not_the_subtraction_order": {
+    "implemented_quantity": "delta_i = committed.per_window[i].left_only - representative.per_window[i].left_only",
+    "so_that": "positive = the representative model has LOWER cross-entropy = BETTER, exactly as the frozen sign convention states.",
+    "why_the_sign_convention_is_the_half_that_survives": "it states the MEANING of the number in words ('lower cross-entropy = BETTER') and additionally spells out what negative means ('removing the draft E. coli COST the model'). The subtraction order is a mechanical detail stated once; the convention is stated twice and interpreted. A reader of the final artifact will read the meaning, so the meaning is the contract.",
+    "INDEPENDENT_corroboration_from_the_scorer_itself": "scripts/glm_beyond_kmer.py computes its own paired statistic as `d = [mk - ce for ce, mk in pairs]` with the in-code comment `positive = diffusion BETTER (lower CE)` -- that is BASELINE minus ASSESSED. Our orientation is the same shape with the committed checkpoint as the baseline, so this correction makes the arm CONSISTENT with the existing scorer rather than introducing a new convention.",
+    "the_floor_is_oriented_identically": "floor_i = committed.per_window[i].left_only - reseed_seed1.per_window[i].left_only, so the primary and the noise floor are the same quantity with a different second arm and are directly comparable."
+  },
+
+  "WHY_THIS_IS_OUTCOME_NEUTRAL_and_therefore_safe_to_fix": {
+    "the_gate_is_sign_invariant": "the rule gates on `the magnitude of (representative - committed) exceeds the magnitude of (seed1 - committed)`. Magnitudes are unchanged by flipping the subtraction order, so no choice here can move the RESOLVED / UNRESOLVED decision.",
+    "the_branches_are_named_by_direction_words_not_by_a_sign": "LEAK_WAS_REAL_AND_SMALL and CROSS_ORGANISM_COST_DOMINATES both say `representative is worse`; LEAK_WAS_NOT_HELPING_THE_MODEL says `equal or better`. These are read off the measured DIRECTION, which is a physical fact about the two cross-entropies and is independent of how it is encoded. The branch selected cannot change.",
+    "the_escalation_criterion_is_also_a_magnitude": "`within 2x the single floor draw` is a magnitude comparison, so it is untouched.",
+    "what_this_fix_does_change": "only which printed number carries a minus sign, and therefore only whether a reader is misled. Nothing measured and nothing decided."
+  },
+
+  "A_SECOND_GAP_THE_RULE_NAMES_TWO_BRANCHES_WITH_NO_BOUNDARY_BETWEEN_THEM": {
+    "the_gap": "LEAK_WAS_REAL_AND_SMALL is defined as `worse by an amount consistent with the measured +0.0054 leak` and CROSS_ORGANISM_COST_DOMINATES as `worse by substantially MORE than the leak size`. `consistent` and `substantially more` are not numbers, so without an operationalization the branch would be selected by judgement AFTER seeing the result -- which is the one thing the rule exists to prevent.",
+    "operationalization_frozen_here": "express the primary as a positive COST with its bootstrap CI. The leak is `consistent` iff 0.0054 lies INSIDE that CI; `exceeds` iff the whole CI lies above 0.0054; `falls_short` iff the whole CI lies below it.",
+    "why_the_CI_rather_than_a_hand_picked_ratio": "it invents no new threshold. It uses only two quantities that were frozen before this arm ran: the +0.0054 leak decomposition from wiki/glm_beyond_kmer_two_sets_2026-11-23.json, and the bootstrap the rule already pre-registered (boot 2000, seed 0).",
+    "the_rule_has_no_branch_for_worse_but_by_LESS_than_predicted": "a `falls_short` result fits no frozen branch cleanly. The grader reports the nearest one, LEAK_WAS_REAL_AND_SMALL, and stamps `branch_fit: PARTIAL` with the reason, rather than inventing a fifth branch after the fact or presenting a mismatch as a match. Naming this case now is what stops it being resolved by preference later.",
+    "implemented_in": "scripts/glm_repretrain_grade.py::grade"
+  },
+
+  "THE_GRADER_IS_PART_OF_THIS_FREEZE": {
+    "file": "scripts/glm_repretrain_grade.py",
+    "why_it_counts_as_pre_registration": "the gate, the escalation threshold, the branch boundary and the five refusals are all code, committed before any representative or reseed cross-entropy existed. A grader written after the numbers land can be tuned to them; this one cannot.",
+    "ordered_refusals_each_demonstrated_to_FIRE_not_merely_written": {
+      "exit_3_geometry": "refuses unless all three arms share the frozen 120x30 / seed 0 / selection seed 0 / boot 2000 / orthology_free, compared as an ORDERED tuple because {30,120} once passed as {120,30}. Demonstrated by feeding a sequence_withheld artifact.",
+      "exit_4_unfinished_checkpoint": "refuses any arm whose checkpoint_step is not 6000. The first representative attempt was KILLED at step 3500 and a partial checkpoint scores perfectly cleanly, so this is the guard that stops a crashed run being read as the arm. Demonstrated by feeding a step-3500 artifact.",
+      "exit_5_pairing_invariant": "per_window rows carry NO window identifier, so pairing is BY INDEX. The two Markov columns and uniform do not depend on the checkpoint, so they must be identical row by row; any mismatch means the windows, the sampled positions or the fitted chain differ. Demonstrated to catch a 1e-9 perturbation in a single cell.",
+      "exit_6_bootstrap_self_test": "the grader REPLICATES the scorer's bootstrap (the scorer defines it as a closure over its own argparse namespace, so there is nothing importable). The self-test reproduces the committed checkpoint's PUBLISHED left_only|markov_ecoli cell -- -0.0191 with CI [-0.032, -0.0068] -- to four decimals, which is what makes the replication checkable rather than claimed. Demonstrated to fail on a 0.01-nat shift.",
+      "exit_7_malformed_input": "refuses an artifact lacking per_window / run_args / cells / checkpoint_step."
+    },
+    "an_operational_trap_recorded_because_it_destroys_evidence": "scripts/glm_beyond_kmer.py's `--out` DEFAULTS to wiki/glm_beyond_kmer_2026-11-22.json, the committed artifact. Every scoring run for this arm must pass an explicit --out or it overwrites the published committed result. The scorer's own help text says so."
+  },
+
+  "ORDERING_CLAIM_stated_precisely_because_it_is_the_whole_point": {
+    "claim": "written and committed while BOTH pretrains were at an early step of 6000, before any representative or reseed cross-entropy existed anywhere",
+    "what_was_known_when_this_was_written": "that the first representative attempt was KILLED at step 3500 having produced no eval artifact, and that both arms had been relaunched. No cross-entropy has ever been computed for either new checkpoint.",
+    "what_is_NOT_claimed": "that no representative checkpoint file has ever existed. One did, at step 3500, and it was never scored; it is preserved as data/glm_ckpt_representative/KILLED_at_step3500_2026-11-24.pt and the grader REFUSES any checkpoint whose internal step is not 6000.",
+    "verifiable_by": "commit ordering -- this file and scripts/glm_repretrain_grade.py are committed before any run artifact for either new checkpoint exists."
+  },
+
+  "what_is_NOT_changed_by_this_document": [
+    "wiki/glm_representative_repretrain_reading_rule_2026-11-24.json stays byte-unchanged, as it has across the companion and the addendum.",
+    "The PRIMARY's set, geometry, seeds and bootstrap count are untouched: orthology_free, 120 windows x 30 positions, selection seed 0, scoring seed 0, boot 2000.",
+    "The noise floor and its gate are untouched.",
+    "The four pre-registered branches are untouched, in wording and in meaning.",
+    "The pre-registered expectation that the representative model gets WORSE is untouched, and this correction does not make a worse model read as a better one."
+  ]
+}
