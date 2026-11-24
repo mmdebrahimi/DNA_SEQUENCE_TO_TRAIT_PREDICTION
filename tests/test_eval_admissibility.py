@@ -163,3 +163,35 @@ def test_to_dict_is_json_serialisable():
     import json
     json.loads(json.dumps(admissibility(1.30, 1.25).to_dict()))
     json.loads(json.dumps(admissibility(1.45).to_dict()))
+
+
+# ---- BOTH model forms at once: the shape the scorer actually calls ------------------------------
+# `glm_beyond_kmer.py` passes model_ce_nats AND model_uniform_delta_nats together, because it wants
+# the cross-entropy recorded in the artifact while the DECISION is taken on the rounded delta. No
+# test exercised that call shape, so the documented precedence was unenforced: if precedence
+# silently flipped to the cross-entropy, the extraction would stop being bit-identical to the
+# inline original exactly in the near-boundary cases the delta form exists to handle.
+
+def test_the_delta_takes_precedence_over_the_cross_entropy_when_both_are_given():
+    """Documented precedence: the delta decides, the cross-entropy is only carried through."""
+    got = admissibility(null_ce_nats=1.30, model_ce_nats=1.45, model_uniform_delta_nats=0.01)
+    # 1.45 is WORSE than uniform, so a cross-entropy-led decision would refuse here.
+    assert got.state == ADMISSIBLE
+    assert got.model_margin_nats == 0.01
+    # ...and the cross-entropy is still reported, unrounded, for the artifact.
+    assert got.model_ce_nats == 1.45
+    assert got.model_assessed is True
+
+
+def test_the_reverse_disagreement_refuses_on_the_delta_too():
+    """The mirror case, so the test above cannot pass by the predicate being constant."""
+    got = admissibility(null_ce_nats=1.30, model_ce_nats=1.25, model_uniform_delta_nats=-0.01)
+    assert got.state == REFUSED_MODEL_BELOW_UNIFORM
+    assert got.model_ce_nats == 1.25 and got.model_margin_nats == -0.01
+
+
+def test_a_negative_delta_with_a_failing_null_is_still_the_both_state():
+    """The committed call shape at the committed numbers reaches REFUSED_BOTH through the delta."""
+    got = admissibility(null_ce_nats=COMMITTED_NULL_CE, model_ce_nats=COMMITTED_MODEL_CE,
+                        model_uniform_delta_nats=COMMITTED_UNIFORM_DELTA)
+    assert got.state == REFUSED_BOTH_BELOW_UNIFORM

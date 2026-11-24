@@ -15,6 +15,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import math
+import statistics
 import sys
 from pathlib import Path
 
@@ -237,3 +238,344 @@ def test_the_slices_the_scorer_actually_uses_are_duplicate_free():
     assert ss["distinct_in_first_120"] == 120
     # And the full list is NOT duplicate-free -- otherwise the guard above is vacuous.
     assert ss["first_648_is_duplicate_free"] is False
+
+
+# ================================================================================================
+# `null_ce_on` and `null_side_leak_contrast`: the two scoring helpers, previously untested.
+#
+# Both are pure given a chain, and `markov_nll` reads ONLY `chain._counts`, so a two-line stub
+# exercises them exactly. That matters because `null_side_leak_contrast` produces the 0.0007-nat
+# null-side leak figure that `wiki/glm_beyond_kmer_two_sets_2026-11-23.json` quotes and reasons
+# from, and its SIGN decides which party the near-ortholog leak favours. A flipped sign there would
+# invert a published claim while every number still looked plausible.
+# ================================================================================================
+
+from types import SimpleNamespace  # noqa: E402
+
+# p(A | AAA) = 97/100, so one such prediction costs -ln(0.97) nats. Every other context is absent
+# from the table, so it backs off to the add-one uniform and costs exactly ln(4).
+PREDICTABLE = SimpleNamespace(_counts={"AAA": [97, 1, 1, 1]})
+EMPTY_TABLE = SimpleNamespace(_counts={})
+
+EASY = "A" * 10          # every scoreable position is A|AAA -> -ln(0.97)
+HARD = "ACGTACGTAC"      # no position's context is in the table -> ln(4) throughout
+
+# A window whose positions do NOT all cost the same, which is what makes "scores ALL positions"
+# a checkable claim: over positions 3..9 the costs are -ln(0.97), -ln(0.97), -ln(0.01) and then
+# ln(4) four times, so the all-position mean is a value no subset of positions reproduces.
+HETEROGENEOUS = "AAAAACGTAC"
+HET_ALL_POSITION_MEAN = 1.4588
+
+
+def test_null_ce_on_computes_a_hand_checkable_cross_entropy():
+    got = INV.null_ce_on(PREDICTABLE, [EASY], length=10)
+    assert got["null_ce_nats"] == round(-math.log(0.97), 4) == 0.0305
+    assert got["n_windows"] == 1
+
+
+def test_null_ce_on_really_averages_EVERY_position_not_a_subset():
+    """THE claim that distinguishes this helper from the scorer, on a window whose positions cost
+    different amounts. The homogeneous fixtures above cannot test it: if the implementation scored
+    a sample of positions they would return the identical value, so they pin the arithmetic while
+    this pins the GEOMETRY. 1.4588 is the mean over all seven positions; the first three alone give
+    1.5554 and the last four give 1.3863, so neither a head slice nor a tail slice reaches it."""
+    got = INV.null_ce_on(PREDICTABLE, [HETEROGENEOUS], length=10)
+    assert got["null_ce_nats"] == HET_ALL_POSITION_MEAN
+    hand = [-math.log(0.97), -math.log(0.97), -math.log(0.01)] + [math.log(4)] * 4
+    assert got["null_ce_nats"] == round(statistics.fmean(hand), 4)
+    assert got["n_positions_per_window"] == 7 == len(hand)
+
+
+def test_null_ce_on_means_over_WINDOWS_after_meaning_over_positions():
+    """Two windows of differing difficulty: the reported figure is the mean of the per-window means.
+    With the heterogeneous window beside the easy one, a pooled mean over all positions would give
+    the same answer only because both windows have equal position counts -- so this pins the pair
+    rather than claiming to separate the two estimators."""
+    got = INV.null_ce_on(PREDICTABLE, [HETEROGENEOUS, EASY], length=10)
+    expected = statistics.fmean([HET_ALL_POSITION_MEAN, -math.log(0.97)])
+    assert got["null_ce_nats"] == pytest.approx(expected, abs=5e-5)
+    assert got["n_windows"] == 2
+
+
+def test_the_leak_contrast_also_averages_every_position_of_each_half():
+    """Same claim on the leak contrast, whose halves were otherwise only ever homogeneous."""
+    got = INV.null_side_leak_contrast(PREDICTABLE, [HETEROGENEOUS, HARD], [HARD], length=10)
+    assert got["A_minus_C_ortholog_bearing"]["null_ce_nats"] == HET_ALL_POSITION_MEAN
+    assert got["A_inter_C_orthology_free"]["null_ce_nats"] == 1.3863
+
+
+def test_null_ce_on_scores_every_position_from_ORDER_to_length():
+    """The geometry the two-set artifact's `why_147` field leans on: 150 - order 3 = 147."""
+    from scripts.glm_beyond_kmer import ORDER
+    for length in (10, 20, 150):
+        got = INV.null_ce_on(PREDICTABLE, ["A" * length], length=length)
+        assert got["n_positions_per_window"] == length - ORDER
+    assert INV.null_ce_on(PREDICTABLE, ["A" * 150], length=150)["n_positions_per_window"] == 147
+
+
+def test_null_ce_on_raises_when_length_OVERRUNS_the_sequences():
+    """`length` is an ARGUMENT here while the scorer derives it from the checkpoint config, so the
+    two can disagree. Scoped deliberately to the OVERRUN direction: that one raises. The UNDER-RUN
+    direction does NOT -- a length below the true window length silently scores fewer positions and
+    reports the short count as `n_positions_per_window` -- so this is not a general guard against a
+    geometry mismatch, and the |A| == 3349 refusal remains the real tripwire for one."""
+    with pytest.raises(IndexError):
+        INV.null_ce_on(PREDICTABLE, ["A" * 10], length=150)
+
+
+def test_null_ce_on_returns_None_rather_than_crashing_on_an_empty_set():
+    """A `statistics.fmean([])` would raise; a 0.0 would read as a perfect null. Neither happens."""
+    got = INV.null_ce_on(PREDICTABLE, [], length=10)
+    assert got["null_ce_nats"] is None
+    assert got["n_windows"] == 0
+
+
+def test_an_unseen_context_backs_off_to_uniform_and_the_gate_then_REFUSES():
+    """End-to-end on the two modules: a chain that has learned nothing scores exactly uniform, and
+    the gate's strict comparison must refuse it rather than admitting a set on a chance-level null.
+    This is the composition the probe performs per set, and it was untested."""
+    from dna_decode.glm.eval_admissibility import REFUSED_NULL_BELOW_UNIFORM, admissibility
+    got = INV.null_ce_on(EMPTY_TABLE, [HARD, EASY], length=10)
+    assert got["null_ce_nats"] == 1.3863 == round(INV.UNIFORM, 4)
+    gate = admissibility(null_ce_nats=got["null_ce_nats"])
+    assert gate.state == REFUSED_NULL_BELOW_UNIFORM
+    assert not gate.admissible
+
+
+def test_null_ce_on_consumes_no_randomness():
+    """The documented difference from the scorer: no sampling, so no seed. If a draw crept in, the
+    probe figures would stop being comparable across runs while still looking clean."""
+    import random
+    state = random.getstate()        # restored, so this cannot perturb any later test
+    try:
+        random.seed(1234)
+        first = INV.null_ce_on(PREDICTABLE, [EASY, HARD], length=10)
+        random.seed(999)
+        assert INV.null_ce_on(PREDICTABLE, [EASY, HARD], length=10) == first
+    finally:
+        random.setstate(state)
+    assert "no seed involved" in first["scoring"]
+
+
+# ---- the leak contrast, where the SIGN is the finding -------------------------------------------
+
+def test_the_leak_is_POSITIVE_when_the_null_scores_the_ortholog_bearing_half_BETTER():
+    """The documented convention: positive = the null gained from the leak. Here A\\C is the EASY
+    window (low cross-entropy = better) and A&C is the HARD one, so the sign must be positive."""
+    got = INV.null_side_leak_contrast(PREDICTABLE, [EASY, HARD], [HARD], length=10)
+    assert got["A_minus_C_ortholog_bearing"]["null_ce_nats"] == 0.0305
+    assert got["A_inter_C_orthology_free"]["null_ce_nats"] == 1.3863
+    assert got["null_side_leak_nats"] > 0
+    assert got["null_side_leak_nats"] == round(math.log(4) + math.log(0.97), 4)
+
+
+def test_the_leak_is_NEGATIVE_when_the_bearing_half_is_the_harder_one():
+    """The mirror, so the test above cannot pass on a sign-blind implementation."""
+    got = INV.null_side_leak_contrast(PREDICTABLE, [EASY, HARD], [EASY], length=10)
+    assert got["A_minus_C_ortholog_bearing"]["null_ce_nats"] == 1.3863
+    assert got["A_inter_C_orthology_free"]["null_ce_nats"] == 0.0305
+    assert got["null_side_leak_nats"] < 0
+
+
+def test_the_sign_convention_string_matches_the_direction_the_code_computes():
+    """Prose and arithmetic must agree; this artifact reader is told how to read the number."""
+    got = INV.null_side_leak_contrast(PREDICTABLE, [EASY, HARD], [HARD], length=10)
+    assert "positive" in got["sign_convention"] and "BEARING half better" in got["sign_convention"]
+    assert got["null_side_leak_nats"] > 0
+
+
+def test_an_empty_half_yields_None_and_NOT_a_zero_leak():
+    """A 0.0 would read as 'measured, and the leak is nil' -- a finding -- when nothing was
+    measured at all. Each half's own CE is None too, so the emptiness is visible, not inferred."""
+    both_free = INV.null_side_leak_contrast(PREDICTABLE, [EASY], [EASY], length=10)
+    assert both_free["A_minus_C_ortholog_bearing"]["n_windows"] == 0
+    assert both_free["A_minus_C_ortholog_bearing"]["null_ce_nats"] is None
+    assert both_free["null_side_leak_nats"] is None
+
+    none_free = INV.null_side_leak_contrast(PREDICTABLE, [EASY, HARD], [], length=10)
+    assert none_free["A_inter_C_orthology_free"]["null_ce_nats"] is None
+    assert none_free["null_side_leak_nats"] is None
+
+
+def test_the_two_halves_partition_set_A_and_nothing_else_enters_either():
+    """A window in C but NOT in A belongs to neither half -- the contrast is defined strictly
+    inside the withheld set, so an outside window must not be silently scored."""
+    outsider = "GGGGGGGGGG"
+    got = INV.null_side_leak_contrast(PREDICTABLE, [EASY, HARD], [HARD, outsider], length=10)
+    assert got["A_minus_C_ortholog_bearing"]["n_windows"] == 1
+    assert got["A_inter_C_orthology_free"]["n_windows"] == 1
+
+
+def test_the_leak_contrast_uppercases_so_a_case_mismatch_cannot_empty_a_half():
+    """The same trap the module documents for `set_algebra`: `fit_eval_halves` returns raw `w.seq`.
+    Unnormalised, a lowercase A against an uppercase C makes A&C empty, which would report
+    `null_side_leak_nats: None` and read as 'this could not be measured'."""
+    got = INV.null_side_leak_contrast(PREDICTABLE, [EASY.lower(), HARD.lower()], [HARD], length=10)
+    assert got["A_inter_C_orthology_free"]["n_windows"] == 1
+    assert got["null_side_leak_nats"] is not None
+
+
+def test_the_leak_contrast_is_deterministic_and_says_it_uses_no_sampling():
+    a = INV.null_side_leak_contrast(PREDICTABLE, [EASY, HARD], [HARD], length=10)
+    b = INV.null_side_leak_contrast(PREDICTABLE, [HARD, EASY], [HARD], length=10)
+    assert a["null_side_leak_nats"] == b["null_side_leak_nats"]
+    assert "no sampling, no seed" in a["scoring"]
+
+
+# ---- the position draw inside the decomposition ------------------------------------------------
+
+def test_the_decomposition_advances_ONE_rng_across_windows():
+    """The identity that makes the committed 1.4291 reproduce. `decompose_committed_cell` must draw
+    each window positions from a SINGLE `random.Random(seed)` advanced across windows -- if it were
+    re-seeded per window, every window would get the SAME positions and the committed figure would
+    not come out of the first cell."""
+    import random
+    draws = []
+    real = random.Random.sample
+
+    def spy(self, population, k):
+        got = real(self, population, k)
+        draws.append(list(got))
+        return got
+
+    seqs = [("ACGT" * 5)[:20] for _ in range(6)]
+    try:
+        random.Random.sample = spy
+        INV.decompose_committed_cell(EMPTY_TABLE, seqs, length=20, n_windows=6, n_positions=8)
+    finally:
+        random.Random.sample = real
+
+    # Two sampled cells are computed: the first six windows, then all six -> 12 draws of 8.
+    assert len(draws) == 12 and all(len(d) == 8 for d in draws)
+    # Compared against the DRAWS of a single advanced RNG, not against object identity: a
+    # per-window `random.Random(seed)` is a short-lived temporary and CPython reuses its address,
+    # so an id()-based check can collapse to one value and pass on the very bug it names.
+    expect = random.Random(0)
+    assert draws[:6] == [expect.sample(list(range(3, 20)), 8) for _ in range(6)]
+    # NON-VACUITY: a per-window reseed would make all six draws IDENTICAL, so the assertion above
+    # is only meaningful because they are not.
+    assert len({tuple(d) for d in draws[:6]}) > 1, "the draws are identical, so nothing was pinned"
+
+
+# ---- set_algebra fields that nothing read -------------------------------------------------------
+
+def test_A_is_subset_of_B_is_COMPUTED_and_not_asserted():
+    """The module documents that A and B are built with different limits so nesting is NOT
+    guaranteed. `C_is_subset_of_B` is hardcoded True (a violation raises instead), so this field is
+    the only one reporting a genuine observation -- it must be able to come out False."""
+    assert INV.set_algebra(["AAA"], ["AAA", "CCC"], ["AAA"])["A_is_subset_of_B"] is True
+    assert INV.set_algebra(["AAA", "GGG"], ["AAA"], [])["A_is_subset_of_B"] is False
+
+
+def test_the_filters_cost_is_None_rather_than_a_crash_when_A_is_empty():
+    got = INV.set_algebra([], [], [])
+    assert got["C_over_A_the_filters_measured_cost"] is None
+    assert got["A_sequence_withheld"] == 0
+
+
+# ---- the drift guard is WIRED INTO main, not just defined --------------------------------------
+
+def test_main_REFUSES_with_exit_3_when_set_A_drifts_and_writes_no_artifact(tmp_path, monkeypatch):
+    """`assert_expected_a` is unit-tested, but nothing proved `main` consults it before scoring.
+    A guard that exists and is never called is the vacuous shape this repo has paid for. No real
+    data is touched: the inputs are stubbed and the refusal must come before any set is built."""
+    fake_mg = tmp_path / "GCF_fake"
+    fake_mg.mkdir()
+    (fake_mg / "annotations.gff3").write_text("##gff-version 3\n", encoding="utf-8")
+    monkeypatch.setattr(INV, "MG1655", fake_mg)
+    monkeypatch.setattr(INV, "load_corpus_windows", lambda *a, **k: ["ACGT" * 10])
+    monkeypatch.setattr(INV, "falsifier_eval_windows", lambda *a, **k: {"ACGT" * 10})
+
+    def exploding(*a, **k):  # pragma: no cover - must never be reached
+        raise AssertionError("main built the candidate sets despite a drifted set A")
+
+    monkeypatch.setattr(INV, "mg1655_candidate_sets", exploding)
+    out = tmp_path / "must_not_exist.json"
+    assert INV.main(["--out", str(out)]) == 3
+    assert not out.exists()
+
+
+def test_main_REFUSES_with_exit_2_when_the_mg1655_annotation_is_absent(tmp_path, monkeypatch):
+    monkeypatch.setattr(INV, "MG1655", tmp_path / "nothing_here")
+    out = tmp_path / "must_not_exist.json"
+    assert INV.main(["--out", str(out)]) == 2
+    assert not out.exists()
+
+
+def test_the_default_out_is_a_committed_artifact_so_tests_must_redirect():
+    """Pins the hazard rather than the fix: `main` default --out overwrites the committed inventory
+    artifact, whose numbers the tests above pin. Every test here passes --out."""
+    assert INV.OUT == ARTIFACT
+
+
+# ---- the corpus reader and the chain scorer, both shared with the scorer ------------------------
+
+def test_load_corpus_windows_skips_comments_and_blanks_and_uppercases(tmp_path):
+    """Documented as 'the ONE way every consumer reads this file': a probe that strips differently
+    sees a different `held` set, and `held` is the basis of every candidate set. Untested until now
+    except indirectly through the real corpus."""
+    from scripts.glm_beyond_kmer import load_corpus_windows
+    p = tmp_path / "corpus.txt"
+    p.write_text("# a header comment\nacgt\n\n  GGGG  \n#another\ntTtT\n", encoding="utf-8")
+    assert load_corpus_windows(p) == ["ACGT", "GGGG", "TTTT"]
+
+
+def test_markov_nll_reads_the_fitted_counts_on_a_real_chain():
+    """Exact arithmetic on a real `MarkovGenerator`: 'AAAA' fitted once gives p(A|AAA) = 2/5 under
+    add-one smoothing, so the cost is -ln(0.4)."""
+    from dna_decode.glm.baselines import MarkovGenerator
+    from scripts.glm_beyond_kmer import markov_nll
+    chain = MarkovGenerator(order=3, seed=0).fit(["AAAA"])
+    assert chain._counts["AAA"] == [2, 1, 1, 1]
+    assert markov_nll(chain, "AAAA", 3) == pytest.approx(-math.log(0.4))
+    # the four bases at one context form a distribution, so the implied probabilities sum to 1
+    total = sum(math.exp(-markov_nll(chain, "AAA" + b, 3)) for b in "ACGT")
+    assert total == pytest.approx(1.0)
+
+
+def test_markov_nll_does_not_consume_the_chain_own_rng():
+    """It must read `_counts`, never sample: `_next` would draw a base and measure sampling noise
+    instead of the assigned probability. A consumed RNG is the observable signature of that."""
+    from dna_decode.glm.baselines import MarkovGenerator
+    from scripts.glm_beyond_kmer import markov_nll
+    chain = MarkovGenerator(order=3, seed=0).fit(["ACGTACGTACGT"])
+    before = chain.rng.getstate()
+    for p in range(3, 12):
+        markov_nll(chain, "ACGTACGTACGT", p)
+    assert chain.rng.getstate() == before
+
+
+def test_mg1655_candidate_sets_applies_the_symbol_filter_to_the_HELD_list(monkeypatch):
+    """Two existing tests re-implement this filter inline, so neither would notice the real function
+    changing. This calls it, with the three data-reading dependencies stubbed.
+
+    The failure it guards: `of` must be built from `held` (corpus-absent windows), not from all
+    windows -- otherwise a window the model trained on could enter the eval set."""
+    from scripts import glm_beyond_kmer as gbk
+
+    wins = [_W("AAAACCCC", "g_only"), _W("GGGGTTTT", "g_shared"),
+            _W("CCCCAAAA", "g_only"), _W("TTTTGGGG", "g_unmapped")]
+    monkeypatch.setattr(gbk, "build_natural_set", lambda *a, **k: (wins, None))
+    monkeypatch.setattr(gbk, "symbols",
+                        lambda p: {"thrL", "prophageX"} if "GCF_000005845.2" in str(p)
+                        else {"thrL"})
+    monkeypatch.setattr(gbk, "id_to_symbol",
+                        lambda p: {"g_only": "prophageX", "g_shared": "thrL"})
+
+    # "CCCCAAAA" is IN the corpus, so it must be excluded from `held` and therefore from `of`.
+    got = gbk.mg1655_candidate_sets({"CCCCAAAA"}, length=8)
+    assert got["only"] == {"prophageX"}
+    assert [w.seq for w in got["held"]] == ["AAAACCCC", "GGGGTTTT", "TTTTGGGG"]
+    # only the MG1655-only symbol survives; the shared and the unmapped gene are both dropped
+    assert got["orthology_free"] == ["AAAACCCC"]
+
+
+def test_ecoli_fit_windows_keeps_only_windows_that_are_IN_the_corpus(monkeypatch):
+    """The strong null must never be fit on a window it will score. The filter direction is the
+    opposite of `held`, so an inverted comparison would silently fit the null on the eval set."""
+    from scripts import glm_beyond_kmer as gbk
+    wins = [_W("aaaacccc", "g1"), _W("GGGGTTTT", "g2")]
+    monkeypatch.setattr(gbk, "build_natural_set", lambda *a, **k: (wins, None))
+    # uppercased before the membership test, so a lowercase draft window still matches
+    assert gbk.ecoli_fit_windows({"AAAACCCC"}, length=8) == ["AAAACCCC"]
+    assert gbk.ecoli_fit_windows(set(), length=8) == []

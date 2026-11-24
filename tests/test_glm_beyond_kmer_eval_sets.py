@@ -389,3 +389,436 @@ def test_the_re_pretrain_arm_is_declared_and_blocks_its_criterion():
     assert name == "representative-re-pretrain-excluding-draft-ecoli"
     assert arm["cost_tier"] == "large"
     assert "order-3 Markov chain" in crit
+
+
+# ================================================================================================
+# `select_eval_windows` EDGE CASES.
+#
+# The tests above cover the happy paths of all four sets. These cover the boundaries where the
+# selector's two branches differ from each other, which is where a between-set comparison could
+# quietly stop being apples-to-apples.
+# ================================================================================================
+
+def test_requesting_exactly_the_pool_size_succeeds_on_both_branches():
+    """Boundary on `len(pool) < n_windows`. Off by one here would refuse a fully-available set, or
+    worse, admit a request for one window more than exists."""
+    seqs, prov = select_eval_windows("orthology_free", of_seqs=OF, withheld_seqs=WITHHELD,
+                                     n_windows=len(OF), selection_seed=0)
+    assert seqs == OF and prov["n_scored"] == len(OF)
+
+    seqs, prov = select_eval_windows("sequence_withheld", of_seqs=OF, withheld_seqs=WITHHELD,
+                                     n_windows=len(WITHHELD), selection_seed=0)
+    assert set(seqs) == {s.upper() for s in WITHHELD}
+    assert prov["n_scored"] == len(WITHHELD)
+
+    with pytest.raises(EvalSetUnavailable):
+        select_eval_windows("sequence_withheld", of_seqs=OF, withheld_seqs=WITHHELD,
+                            n_windows=len(WITHHELD) + 1, selection_seed=0)
+
+
+def test_the_default_path_needs_no_withheld_set_at_all():
+    """The cost claim in `main`: set A costs ten natural-set builds, so it is only computed for a
+    set that needs it and the default path is handed an EMPTY set. If the default branch ever read
+    `withheld_seqs`, the committed path would silently acquire that cost -- or crash."""
+    seqs, prov = select_eval_windows("orthology_free", of_seqs=OF, withheld_seqs=set(),
+                                     n_windows=6, selection_seed=0)
+    assert seqs == OF[:6]
+    assert prov["n_available"] == len(OF)
+
+
+def test_the_default_path_ignores_the_selection_seed_entirely():
+    """It is a fixed coordinate-order slice, so the seed must not perturb it -- otherwise the
+    reproduction pin would depend on a value the committed run never recorded."""
+    base = select_eval_windows("orthology_free", of_seqs=OF, withheld_seqs=set(),
+                               n_windows=6, selection_seed=0)[0]
+    for seed in (1, 7, 99):
+        assert select_eval_windows("orthology_free", of_seqs=OF, withheld_seqs=set(),
+                                   n_windows=6, selection_seed=seed)[0] == base
+
+
+def test_the_default_path_PRESERVES_a_duplicate_while_every_other_set_removes_it():
+    """The deliberate asymmetry, and the hazard the inventory artifact records: the orthology-free
+    LIST carries 14 repeated sequences, and the committed slice is kept byte-exact rather than
+    silently deduplicated. `of[:6]` and `of[:120]` happen to be clean, which is the only reason
+    this is latent. A slice that reaches the duplicate scores one window twice."""
+    seqs, prov = select_eval_windows("orthology_free", of_seqs=OF, withheld_seqs=set(),
+                                     n_windows=len(OF), selection_seed=0)
+    assert len(seqs) == 41 and len(set(seqs)) == 40
+    assert seqs.count("SEQ000") == 2
+    assert prov["deduplicated"] is False
+    # ...while a sampled set cannot repeat a window, whatever its pool looked like.
+    dup_pool = list(WITHHELD) + list(WITHHELD)
+    s2, p2 = select_eval_windows("sequence_withheld", of_seqs=OF, withheld_seqs=dup_pool,
+                                 n_windows=20, selection_seed=0)
+    assert len(s2) == len(set(s2)) == 20 and p2["deduplicated"] is True
+
+
+def test_the_default_path_passes_sequences_through_unchanged():
+    """No uppercasing on the committed branch: `mg1655_candidate_sets` already uppercased them, and
+    re-normalising here could only mask a problem upstream."""
+    lower = ["acgt", "ggtt", "ttaa"]
+    seqs = select_eval_windows("orthology_free", of_seqs=lower, withheld_seqs=set(),
+                               n_windows=3, selection_seed=0)[0]
+    assert seqs == lower
+
+
+def test_the_sampled_branch_uppercases_so_a_case_mismatch_cannot_mis_split_the_arms():
+    """The case trap the inventory module documents, in the selector that builds the contrast arms.
+    Unnormalised, a lowercase withheld set against an uppercase orthology-free list makes A&C empty
+    and A\\C the whole of A -- so the 'ortholog-bearing' arm would silently become all of set A and
+    the 'orthology-free' arm would vanish, which reads as a set-definition finding, not a bug."""
+    lower_withheld = [s.lower() for s in sorted(WITHHELD)[:10]]      # all present in OF, uppercased
+    free, prov = select_eval_windows("withheld_orthology_free", of_seqs=OF,
+                                     withheld_seqs=lower_withheld, n_windows=10,
+                                     selection_seed=0)
+    assert prov["n_available"] == 10 and set(free) == {s.upper() for s in lower_withheld}
+    # and the complementary arm must therefore be EMPTY, not the whole of A
+    with pytest.raises(EvalSetUnavailable):
+        select_eval_windows("ortholog_bearing", of_seqs=OF, withheld_seqs=lower_withheld,
+                            n_windows=1, selection_seed=0)
+
+
+def test_the_sampled_branch_draws_from_the_SORTED_pool():
+    """Pins reproducibility across processes. A set's iteration order varies with the hash seed, so
+    sampling an unsorted set would give a different draw in a different interpreter while every
+    same-process determinism test still passed."""
+    import random as _r
+    pool = sorted({s.upper() for s in WITHHELD})
+    expected = _r.Random(0).sample(pool, 10)
+    got = select_eval_windows("sequence_withheld", of_seqs=OF, withheld_seqs=WITHHELD,
+                              n_windows=10, selection_seed=0)[0]
+    assert got == expected
+
+
+def test_the_two_contrast_arms_availabilities_sum_to_the_withheld_set():
+    """A&C and A\\C partition A, so their `n_available` must add up. A gap would mean windows are
+    being dropped from the contrast without anything saying so."""
+    def avail(name):
+        return select_eval_windows(name, of_seqs=OF, withheld_seqs=WITHHELD,
+                                   n_windows=1, selection_seed=0)[1]["n_available"]
+    assert avail("ortholog_bearing") + avail("withheld_orthology_free") == avail(
+        "sequence_withheld")
+
+
+# ================================================================================================
+# `paired_deltas`: the SIGN convention, which decides the direction of every published claim.
+# ================================================================================================
+
+def _rows(*pairs):
+    """Rows with DECOY values in the arms and nulls that must not be read."""
+    return {"per_window": [{"left_only": a, "markov_ecoli": n,
+                            "bidirectional": 9.0, "markov_pooled": -9.0, "uniform": 1.3863}
+                           for a, n in pairs]}
+
+
+def test_paired_deltas_is_POSITIVE_when_the_model_has_LOWER_cross_entropy():
+    """Matches the scorer's `d = [mk - ce]`: positive = the model is better. An inverted sign here
+    would flip the two-set artifact's whole reading while every magnitude stayed identical."""
+    from scripts.glm_two_set_contrast import paired_deltas
+    got = paired_deltas(_rows((1.0, 1.2)))
+    assert got == [pytest.approx(0.2)]
+    # and NEGATIVE when the null is better
+    assert paired_deltas(_rows((1.2, 1.0))) == [pytest.approx(-0.2)]
+
+
+def test_paired_deltas_reads_the_primary_cell_by_default_and_ignores_the_decoys():
+    """Defaults must be the primary cell `left_only|markov_ecoli`; the decoy values above would
+    produce wildly different deltas if the wrong keys were read."""
+    from scripts.glm_two_set_contrast import PRIMARY_ARM, PRIMARY_NULL, paired_deltas
+    assert (PRIMARY_ARM, PRIMARY_NULL) == ("left_only", "markov_ecoli")
+    assert paired_deltas(_rows((1.0, 1.2))) == [pytest.approx(0.2)]
+
+
+def test_paired_deltas_honours_an_explicit_arm_and_null():
+    from scripts.glm_two_set_contrast import paired_deltas
+    art = _rows((1.0, 1.2))
+    assert paired_deltas(art, "bidirectional", "markov_pooled") == [pytest.approx(-18.0)]
+    assert paired_deltas(art, "left_only", "uniform") == [pytest.approx(0.3863)]
+
+
+def test_paired_deltas_returns_one_delta_per_row_in_row_order():
+    """`n` and the bootstrap's resampling both depend on this being one-to-one with the rows."""
+    from scripts.glm_two_set_contrast import paired_deltas
+    got = paired_deltas(_rows((1.0, 1.2), (1.0, 0.9), (2.0, 2.0)))
+    assert got == [pytest.approx(0.2), pytest.approx(-0.1), pytest.approx(0.0)]
+
+
+def test_paired_deltas_refuses_an_EMPTY_per_window_list_too():
+    """Distinct from the missing-key case: a present-but-empty list would otherwise flow on and
+    make the bootstrap refuse later with a message about arms rather than about the artifact."""
+    from scripts.glm_two_set_contrast import ContrastRefusal, paired_deltas
+    with pytest.raises(ContrastRefusal):
+        paired_deltas({"per_window": []})
+
+
+def test_paired_deltas_raises_loudly_for_an_arm_the_artifact_never_scored():
+    """It must not silently yield nothing or zero for an unscored arm."""
+    from scripts.glm_two_set_contrast import paired_deltas
+    with pytest.raises(KeyError):
+        paired_deltas(_rows((1.0, 1.2)), "an_arm_that_was_never_scored")
+
+
+# ================================================================================================
+# `two_sample_bootstrap`: the contrast's own sampling distribution.
+# ================================================================================================
+
+def test_the_bootstrap_refuses_an_empty_SECOND_arm_as_well():
+    """Only the first arm was covered, so a one-sided guard would have passed."""
+    from scripts.glm_two_set_contrast import ContrastRefusal, two_sample_bootstrap
+    with pytest.raises(ContrastRefusal):
+        two_sample_bootstrap([0.1, 0.2], [], b=10, seed=0)
+
+
+def test_swapping_the_arms_negates_the_observed_contrast():
+    """Pins which arm is x. The rule reads positive as 'the model did better on the
+    ortholog-BEARING arm', so bearing must be the first argument -- and `main` passes it first."""
+    from scripts.glm_two_set_contrast import two_sample_bootstrap
+    x, y = [0.10, 0.12, 0.08], [0.0, 0.01, -0.01]
+    fwd = two_sample_bootstrap(x, y, b=100, seed=0)["observed"]
+    rev = two_sample_bootstrap(y, x, b=100, seed=0)["observed"]
+    assert fwd == pytest.approx(-rev)
+    assert fwd > 0
+
+
+def test_constant_arms_give_a_degenerate_interval_at_the_observed_difference():
+    """With no within-arm variance there is nothing to resample, so the CI must collapse onto the
+    point estimate rather than producing spurious width."""
+    from scripts.glm_two_set_contrast import two_sample_bootstrap
+    got = two_sample_bootstrap([0.05] * 8, [0.0] * 8, b=200, seed=0)
+    assert got["observed"] == pytest.approx(0.05)
+    assert got["ci95"] == [pytest.approx(0.05), pytest.approx(0.05)]
+
+
+def test_the_interval_is_ordered_and_brackets_the_observed_difference():
+    from scripts.glm_two_set_contrast import two_sample_bootstrap
+    got = two_sample_bootstrap([0.3, 0.1, 0.2, 0.25], [0.0, 0.05, -0.05, 0.02], b=500, seed=0)
+    lo, hi = got["ci95"]
+    assert lo <= got["observed"] <= hi
+
+
+def test_the_bootstrap_echoes_its_own_geometry_so_the_artifact_is_self_describing():
+    from scripts.glm_two_set_contrast import two_sample_bootstrap
+    got = two_sample_bootstrap([0.1, 0.2, 0.3], [0.0, 0.1], b=321, seed=5)
+    assert (got["b"], got["seed"], got["n_x"], got["n_y"]) == (321, 5, 3, 2)
+
+
+def test_a_smaller_arm_widens_the_interval():
+    """Each arm is resampled at its OWN n, so the CI must carry per-arm power. If both arms were
+    resampled at a shared or fixed size, a tiny arm would report a falsely tight interval."""
+    from scripts.glm_two_set_contrast import two_sample_bootstrap
+    spread = [0.0, 0.1, 0.2, 0.3, -0.1, -0.2, 0.15, -0.15]
+    wide = two_sample_bootstrap(spread[:3], [0.0] * 3, b=800, seed=0)["ci95"]
+    tight = two_sample_bootstrap(spread * 8, [0.0] * 64, b=800, seed=0)["ci95"]
+    assert (wide[1] - wide[0]) > (tight[1] - tight[0])
+
+
+# ---- grade_contrast boundaries the existing tests leave open -----------------------------------
+
+def test_a_ci_only_PARTLY_beyond_the_POSITIVE_margin_is_unresolved():
+    """The existing unresolved case tests the negative side only. The rule says LEAK_LARGE requires
+    the interval ENTIRELY above the margin."""
+    from scripts.glm_two_set_contrast import grade_contrast
+    assert grade_contrast([0.005, 0.03], 0.01) == "UNRESOLVED_CONTRAST_SPANS_THE_MARGIN"
+
+
+def test_a_ci_whose_endpoint_sits_exactly_ON_the_margin_is_not_resolved():
+    """`lo == margin` is not 'entirely above' and `hi == -margin` is not 'entirely below', so both
+    must fall through to unresolved. Asserted against the rule's own wording in the frozen JSON."""
+    from scripts.glm_two_set_contrast import grade_contrast
+    rule = json.loads(RULE.read_text(encoding="utf-8"))
+    branches = rule["QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK"]["branches"]
+    assert "entirely ABOVE" in branches["LEAK_LARGE_FILTER_LOAD_BEARING"]
+    assert grade_contrast([0.01, 0.03], 0.01) == "UNRESOLVED_CONTRAST_SPANS_THE_MARGIN"
+    assert grade_contrast([-0.03, -0.01], 0.01) == "UNRESOLVED_CONTRAST_SPANS_THE_MARGIN"
+
+
+# ================================================================================================
+# `glm_two_set_contrast.main`: the grader's refusals and its derived fields.
+#
+# No test executed `main` at all -- the artifact-reading tests above stay green however the grading
+# code changes. It needs no checkpoint, so synthetic run artifacts exercise it completely.
+# ================================================================================================
+
+CONTRAST_SETS = ("orthology_free", "sequence_withheld",
+                 "ortholog_bearing", "withheld_orthology_free")
+
+
+def _fake_run(*, state="ADMISSIBLE", admissible=True, delta=0.0, n_windows=120, positions=30,
+              seed=0, selection_seed=0, rows=10):
+    """A minimal run artifact carrying every field `main` reads."""
+    return {
+        "checkpoint_step": 6000,
+        "verdict": "UNRESOLVED",
+        "run_args": {"n_windows": n_windows, "positions": positions, "seed": seed,
+                     "selection_seed": selection_seed},
+        "admissibility": {"state": state, "admissible": admissible,
+                          "uniform_ce_nats": 1.3862943611198906},
+        "eval": {"n_predictions": n_windows * positions, "n_windows": n_windows,
+                 "positions_per_window": positions, "provenance": {"n_available": 500}},
+        "cells": {f"{arm}|{null}": {"diffusion_ce_nats": 1.30, "null_ce_nats": 1.30 + delta,
+                                    "paired_delta_nats": delta, "ci95": [-0.01, 0.01],
+                                    "resolved": False, "n_windows": n_windows}
+                  for arm in ("left_only", "bidirectional")
+                  for null in ("markov_ecoli", "markov_pooled", "uniform")},
+        "per_window": [{"left_only": 1.0, "bidirectional": 1.0, "markov_ecoli": 1.0 + delta,
+                        "markov_pooled": -9.0, "uniform": 1.3863} for _ in range(rows)],
+    }
+
+
+def _grade(tmp_path, arts, *, omit=None):
+    """Lay the artifacts out and run `main`, always writing to tmp_path."""
+    from scripts.glm_two_set_contrast import main
+    runs = tmp_path / "runs"
+    runs.mkdir(exist_ok=True)
+    for s, art in arts.items():
+        if s == omit:
+            continue
+        (runs / f"run_{s}_120x30.json").write_text(json.dumps(art), encoding="utf-8")
+    repro = tmp_path / "repro.json"
+    repro.write_text(json.dumps(_fake_run(state="REFUSED_BOTH_BELOW_UNIFORM", admissible=False,
+                                          delta=0.0192, n_windows=6, positions=8)),
+                     encoding="utf-8")
+    out = tmp_path / "graded.json"
+    rc = main(["--runs-dir", str(runs), "--repro", str(repro), "--out", str(out)])
+    return rc, (json.loads(out.read_text(encoding="utf-8")) if out.exists() else None), out
+
+
+def test_the_grader_refuses_a_missing_run_artifact_and_writes_nothing(tmp_path):
+    rc, got, out = _grade(tmp_path, {s: _fake_run() for s in CONTRAST_SETS},
+                          omit="ortholog_bearing")
+    assert rc == 2 and got is None and not out.exists()
+
+
+def test_the_grader_refuses_when_the_SEED_differs_across_sets(tmp_path):
+    """The guard that keeps a between-set difference from being a geometry difference. The seed is
+    part of the compared tuple, so a re-run of one arm under a different seed must not be graded."""
+    arts = {s: _fake_run() for s in CONTRAST_SETS}
+    arts["sequence_withheld"] = _fake_run(seed=9)
+    rc, got, out = _grade(tmp_path, arts)
+    assert rc == 3 and not out.exists()
+
+
+def test_the_grader_refuses_when_the_SELECTION_seed_differs_across_sets(tmp_path):
+    """Different window draws per arm would make the contrast partly a sampling difference."""
+    arts = {s: _fake_run() for s in CONTRAST_SETS}
+    arts["ortholog_bearing"] = _fake_run(selection_seed=3)
+    rc, _, out = _grade(tmp_path, arts)
+    assert rc == 3 and not out.exists()
+
+
+def test_the_grader_refuses_a_geometry_that_is_not_the_frozen_120x30(tmp_path):
+    rc, _, out = _grade(tmp_path, {s: _fake_run(n_windows=60) for s in CONTRAST_SETS})
+    assert rc == 3 and not out.exists()
+
+
+def test_the_grader_grades_a_LARGE_leak_when_the_bearing_arm_does_better(tmp_path):
+    """End-to-end through paired_deltas -> two_sample_bootstrap -> grade_contrast, which nothing
+    composed before. Bearing better by 0.05 is far beyond the 0.01 margin."""
+    arts = {s: _fake_run() for s in CONTRAST_SETS}
+    arts["ortholog_bearing"] = _fake_run(delta=0.05)
+    arts["withheld_orthology_free"] = _fake_run(delta=0.0)
+    rc, got, _ = _grade(tmp_path, arts)
+    assert rc == 0
+    q2 = got["QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK"]
+    assert q2["branch"] == "LEAK_LARGE_FILTER_LOAD_BEARING"
+    assert q2["two_sample_bootstrap"]["observed"] == pytest.approx(0.05)
+    assert q2["ortholog_bearing_mean_delta"] == pytest.approx(0.05)
+    assert q2["orthology_free_mean_delta"] == pytest.approx(0.0)
+
+
+def test_the_grader_grades_an_INVERTED_leak_when_the_free_arm_does_better(tmp_path):
+    """The mirror, so the test above cannot pass on a sign-insensitive grader."""
+    arts = {s: _fake_run() for s in CONTRAST_SETS}
+    arts["ortholog_bearing"] = _fake_run(delta=0.0)
+    arts["withheld_orthology_free"] = _fake_run(delta=0.05)
+    rc, got, _ = _grade(tmp_path, arts)
+    assert rc == 0
+    q2 = got["QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK"]
+    assert q2["branch"] == "LEAK_INVERTED_FILTER_SELECTS_EASIER_WINDOWS"
+    assert q2["two_sample_bootstrap"]["observed"] == pytest.approx(-0.05)
+
+
+def test_the_Q1_fields_are_DERIVED_from_the_gate_states_and_not_hardcoded(tmp_path):
+    """`refusal_stands`, `branch` and `all_four_sets_admissible` have only ever been observed at
+    one value each -- all-admissible -- so nothing proved they could come out the other way. Here
+    the set the committed run actually scored REFUSES and the other three admit."""
+    arts = {s: _fake_run() for s in CONTRAST_SETS}
+    arts["orthology_free"] = _fake_run(state="REFUSED_MODEL_BELOW_UNIFORM", admissible=False)
+    rc, got, _ = _grade(tmp_path, arts)
+    assert rc == 0
+    q1 = got["QUESTION_1_DOES_THE_COMMITTED_REFUSAL_STAND"]
+    assert q1["refusal_stands"] is True
+    assert q1["all_four_sets_admissible"] is False
+    assert q1["branch"] == "REFUSED_MODEL_BELOW_UNIFORM"
+    # and that branch must be one the frozen rule actually anticipates
+    rule = json.loads(RULE.read_text(encoding="utf-8"))
+    assert q1["branch"] in rule["QUESTION_1_DOES_THE_COMMITTED_REFUSAL_STAND"]["branches"]
+
+
+def test_a_refusal_on_a_NON_primary_set_leaves_the_refusal_not_standing(tmp_path):
+    """Q1 is keyed on `orthology_free` specifically, because that is the set the committed run
+    scored. A refusal elsewhere lowers `all_four_sets_admissible` without reviving the refusal."""
+    arts = {s: _fake_run() for s in CONTRAST_SETS}
+    arts["sequence_withheld"] = _fake_run(state="REFUSED_MODEL_BELOW_UNIFORM", admissible=False)
+    rc, got, _ = _grade(tmp_path, arts)
+    q1 = got["QUESTION_1_DOES_THE_COMMITTED_REFUSAL_STAND"]
+    assert rc == 0
+    assert q1["refusal_stands"] is False
+    assert q1["all_four_sets_admissible"] is False
+    assert q1["branch"] == "ADMISSIBLE"
+
+
+def test_the_graded_artifact_carries_the_margin_from_the_frozen_rule(tmp_path):
+    """The margin must be READ from the frozen rule, never restated in the grader."""
+    rule = json.loads(RULE.read_text(encoding="utf-8"))
+    margin = rule["QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK"]["equivalence_margin_nats"]
+    _, got, _ = _grade(tmp_path, {s: _fake_run() for s in CONTRAST_SETS})
+    assert got["QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK"]["equivalence_margin_nats"] == margin
+
+
+def test_the_grader_default_out_is_a_committed_artifact_so_tests_must_redirect():
+    """Same hazard as the scorer's: the default --out overwrites the committed two-set artifact
+    whose numbers the tests above pin. Every test here passes --out."""
+    from scripts.glm_two_set_contrast import OUT
+    assert OUT == TWO_SETS
+
+
+# ================================================================================================
+# The persisted per-window rows, which exist ONLY so the between-set contrast is computable later.
+# ================================================================================================
+
+@needs_model
+def test_the_scorer_persists_per_window_rows_that_reconcile_with_every_cell(tmp_path):
+    """The rows are the whole reason the scorer was modified: the committed artifact kept only cell
+    summaries, which made a two-sample bootstrap on a difference of paired deltas impossible after
+    the fact. Nothing checked that what is persisted actually reproduces the cells it ships with --
+    so a row written from the wrong arm would be invisible until a grader quietly mis-graded."""
+    import statistics
+
+    from scripts import glm_beyond_kmer as gbk
+    from scripts.glm_two_set_contrast import paired_deltas
+
+    out = tmp_path / "rows.json"
+    old = sys.argv
+    try:
+        sys.argv = ["glm_beyond_kmer.py", "--n-windows", "3", "--positions", "4",
+                    "--boot", "50", "--out", str(out)]
+        assert gbk.main() == 0
+    finally:
+        sys.argv = old
+
+    art = json.loads(out.read_text(encoding="utf-8"))
+    rows = art["per_window"]
+    assert len(rows) == 3
+    for row in rows:
+        assert set(row) == {"left_only", "bidirectional", "markov_pooled", "markov_ecoli",
+                            "uniform"}
+    # every cell's paired delta must be recoverable from the rows alone
+    for key, cell in art["cells"].items():
+        arm, null = key.split("|")
+        assert statistics.fmean(paired_deltas(art, arm, null)) == pytest.approx(
+            cell["paired_delta_nats"], abs=1e-4), key
+    # and the run is self-describing, which the committed artifact was not
+    assert art["run_args"] == {"n_windows": 3, "positions": 4, "seed": 0, "boot": 50,
+                               "eval_set": "orthology_free", "selection_seed": 0}
+    assert art["eval"]["provenance"]["set"] == "orthology_free"
