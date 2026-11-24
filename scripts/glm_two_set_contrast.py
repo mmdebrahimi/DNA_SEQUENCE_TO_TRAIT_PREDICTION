@@ -169,6 +169,7 @@ def main(argv=None) -> int:
         "rule_frozen_before_any_model_number_at_this_geometry": True,
         "checkpoint_step": arts["orthology_free"]["checkpoint_step"],
         "geometry": {"n_windows": 120, "positions_per_window": 30, "n_predictions_per_set": 3600,
+                     "window_length_bp": 150, "markov_order": 3,
                      "selection_seed": 0, "scoring_seed": 0, "boot": BOOT},
 
         "QUESTION_1_DOES_THE_COMMITTED_REFUSAL_STAND": {
@@ -245,6 +246,19 @@ def main(argv=None) -> int:
                 "estimators on different samples and they disagree."),
             "sign_convention": "positive = the model does BETTER on the ortholog-bearing arm, "
                                "i.e. the model GAINED from the near-ortholog leak",
+            # Availability per arm, carried HERE so every figure the prose above leans on is
+            # checkable from this artifact alone rather than only from the inventory artifact.
+            "arm_availability": {
+                "ortholog_bearing_n_available": arts["ortholog_bearing"][
+                    "eval"]["provenance"]["n_available"],
+                "orthology_free_n_available": arts["withheld_orthology_free"][
+                    "eval"]["provenance"]["n_available"],
+                "n_scored_per_arm": arts["ortholog_bearing"]["eval"]["n_windows"],
+                "positions_scored_per_window": arts["ortholog_bearing"][
+                    "eval"]["positions_per_window"],
+                "all_positions_per_window_in_the_null_side_measurement": 147,
+                "why_147": "window length 150 minus the order-3 left context the chain requires",
+            },
             "null_side_leak_for_comparison_nats": 0.0007,
             "null_side_leak_source": "wiki/glm_eval_set_inventory_2026-11-23.json "
                                      "null_side_leak_contrast, measured over ALL windows and ALL "

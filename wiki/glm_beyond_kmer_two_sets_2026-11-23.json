@@ -8,6 +8,8 @@
     "n_windows": 120,
     "positions_per_window": 30,
     "n_predictions_per_set": 3600,
+    "window_length_bp": 150,
+    "markov_order": 3,
     "selection_seed": 0,
     "scoring_seed": 0,
     "boot": 2000
@@ -121,6 +123,14 @@
     },
     "A_TENSION_RECORDED_RATHER_THAN_RESOLVED": "The null-side gap implied by these 120-window samples is about 0.0100 nats, while the same quantity measured over ALL 2830 and ALL 519 windows at ALL 147 positions is 0.0007 nats -- a 14x disagreement. The all-window figure is far better powered, which suggests the 0.0100 here is largely sampling variation in which 120 windows were drawn, not a systematic null-side leak. The two-sample CI already carries that uncertainty, which is part of why this contrast lands UNRESOLVED against the margin. Do not quote either null-side figure as settled; they are different estimators on different samples and they disagree.",
     "sign_convention": "positive = the model does BETTER on the ortholog-bearing arm, i.e. the model GAINED from the near-ortholog leak",
+    "arm_availability": {
+      "ortholog_bearing_n_available": 2830,
+      "orthology_free_n_available": 519,
+      "n_scored_per_arm": 120,
+      "positions_scored_per_window": 30,
+      "all_positions_per_window_in_the_null_side_measurement": 147,
+      "why_147": "window length 150 minus the order-3 left context the chain requires"
+    },
     "null_side_leak_for_comparison_nats": 0.0007,
     "null_side_leak_source": "wiki/glm_eval_set_inventory_2026-11-23.json null_side_leak_contrast, measured over ALL windows and ALL positions of each arm"
   },
