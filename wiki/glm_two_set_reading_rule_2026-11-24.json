@@ -1,0 +1,73 @@
+{
+  "schema": "glm-two-set-reading-rule-v1",
+  "frozen": "2026-11-24",
+  "frozen_before_any_model_number_at_this_geometry_existed": true,
+  "why_this_file_exists": "The technical plan's Step 4 named three outcomes -- LEAK_SMALL_FILTER_OVERPRICED, LEAK_LARGE_FILTER_LOAD_BEARING, GATE_UNSATISFIABLE_ON_THIS_COMPARTMENT -- and ALL THREE presuppose that set C refuses the admissibility gate. Step 2 measured the null half of that gate on set C at 1.3571 nats against uniform 1.3863, i.e. CLEARING it, so the presupposition is false for at least one half and the outcome set is no longer exhaustive. Re-deriving the outcomes AFTER seeing the model numbers would be bar-shopping, so they are re-derived now, before the scoring run.",
+
+  "authority": "Deviation from the saved plan's Step 4, taken on the executing session's judgement and recorded rather than silently applied. The plan's three outcome NAMES are preserved where they still apply; what changes is that they are conditioned on a measured gate state instead of an assumed one, and an explicit unresolved branch is added.",
+
+  "GEOMETRY_FIXED_NOW": {
+    "n_windows": 120,
+    "positions_per_window": 30,
+    "n_predictions_per_set": 3600,
+    "basis": "the scorer's OWN defaults (--n-windows 120 --positions 30), i.e. the geometry the committed run could have afforded but did not use. 3600 predictions against the committed run's 48 is a 75x increase.",
+    "selection_seed": 0,
+    "scoring_seed": 0,
+    "bootstrap_resamples": 2000,
+    "n_is_FIXED_BEFORE_THE_RUN": "and may not be enlarged after seeing a result. Enlarging n until a contrast resolves is the defect this clause exists to prevent.",
+    "window_selection_rule": "sort the DISTINCT uppercased sequences of the set, then draw a seeded random sample with random.Random(0). NOT the first n of the sorted order: a lexicographic prefix is a biased sample of DNA (it over-selects A-rich windows), and NOT `of[:n]` either, which is MG1655 coordinate order. The reproduction path keeps `of[:n]` unchanged so the committed pin still holds.",
+    "same_geometry_and_seed_for_every_set": "so a difference between sets cannot be a difference in how they were sampled."
+  },
+
+  "SETS_TO_SCORE": {
+    "C_orthology_free": {"n_available_distinct": 634, "role": "decides whether the committed refusal stands at power"},
+    "A_sequence_withheld": {"n_available_distinct": 3349, "role": "the designed withhold, the plan's primary comparison set"},
+    "A_minus_C_ortholog_bearing": {"n_available_distinct": 2830, "role": "the leak contrast's exposed arm"},
+    "A_inter_C_orthology_free": {"n_available_distinct": 519, "role": "the leak contrast's clean arm"}
+  },
+  "why_the_contrast_is_A_minus_C_vs_A_inter_C_and_NOT_A_vs_C": "A and C overlap in 519 windows, so a 120-window sample of A is roughly 15% set C and the two arms would not be disjoint -- the contrast would be diluted toward zero by construction. A-minus-C against A-intersect-C is disjoint, both arms are withheld from the corpus, and both come from one builder, so the only systematic difference between them is whether the gene has a draft counterpart. That is the leak, isolated.",
+
+  "QUESTION_1_DOES_THE_COMMITTED_REFUSAL_STAND": {
+    "statistic": "the admissibility gate state on set C at the fixed geometry, read BEFORE any delta",
+    "branches": {
+      "ADMISSIBLE": "both halves clear uniform at power. The committed EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM was a 48-prediction artifact in BOTH halves, and the recorded explanation (accessory-gene out-of-distribution failure) is false as stated.",
+      "REFUSED_MODEL_BELOW_UNIFORM": "the set is demonstrably predictable and the MODEL is sub-uniform on it. The refusal stands but its MEANING changes: this is a model negative, not an uninformative eval set, and the runner's recorded 'no eval-side shortcut can be representative' sentence does not explain it.",
+      "REFUSED_NULL_BELOW_UNIFORM": "CONTRADICTS Step 2's all-position measurement of 1.3571 on the same set with the same null. Do not interpret -- investigate the instrument first, because two measurements of one quantity disagree.",
+      "REFUSED_BOTH_BELOW_UNIFORM": "same contradiction as above, plus a model failure. Investigate the instrument before reading either half."
+    },
+    "ordering_is_semantic": "the gate state is read and recorded before the paired delta is looked at, because a delta between sub-chance predictors is what the gate exists to refuse."
+  },
+
+  "QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK": {
+    "statistic": "the DIFFERENCE between two mean paired deltas -- (model vs markov_ecoli, left_only arm) on A-minus-C, minus the same quantity on A-intersect-C.",
+    "estimator": "a TWO-SAMPLE bootstrap percentile 95% CI on that difference, B=2000, RNG seed 0. NOT an overlap test between the two arms' own CIs: two CIs can overlap while their difference is resolvably non-zero, and can both span zero while the difference does not.",
+    "sign_convention": "positive = the model does BETTER on the ortholog-bearing arm, i.e. the model gained from the leak",
+    "equivalence_margin_nats": 0.01,
+    "margin_is_DERIVED_not_chosen": {
+      "committed_primary_paired_delta": 0.0192,
+      "measured_null_side_leak": 0.0007,
+      "reasoning": "0.01 nats is 52% of the committed model-vs-null delta the project is trying to interpret, and 14x the measured null-side leak. A model-side leak below it cannot overturn a delta of the committed size; above it, it can. Stated as a ratio to two measured quantities so it is not a round number picked for looking reasonable."
+    },
+    "branches": {
+      "LEAK_SMALL_FILTER_OVERPRICED": "the 95% CI lies ENTIRELY within +/- 0.01. The leak is too small to overturn a delta of the committed size, and the orthology filter discards 81% of the withheld set (C/A = 0.18931) to remove it.",
+      "LEAK_LARGE_FILTER_LOAD_BEARING": "the CI lies entirely ABOVE +0.01. The model gained materially from near-orthologs, the filter is doing real work, and the representative re-pretrain is the route the code already recorded.",
+      "LEAK_INVERTED_FILTER_SELECTS_EASIER_WINDOWS": "the CI lies entirely BELOW -0.01. The orthology-free windows are EASIER for the model than the ortholog-bearing ones, which would invert the filter's entire rationale. Named because it is possible, not because it is expected.",
+      "UNRESOLVED_CONTRAST_SPANS_THE_MARGIN": "the CI straddles +0.01 or -0.01. FIRST-CLASS, not a failure: report the interval and n, do NOT re-grade on the point estimate, do NOT widen the margin, and do NOT enlarge n after the fact."
+    }
+  },
+
+  "WHAT_NO_OUTCOME_HERE_LICENSES": [
+    "A beyond-k-mer verdict. The plan is scoped to leak-size measurement and the gate state per set; a positive model delta on an admissible set is still confounded by the near-ortholog leak this very contrast is measuring, and measuring a confound does not remove it.",
+    "Retiring the representative re-pretrain. Its rationale is weakened if the refusal turns out to be an artifact, but it is declared under R6 and killing it is a USER authority decision, never a bookkeeping consequence of a cheap result.",
+    "Any claim about generation quality. This scores infilling and continuation on held-out sequence; the project's own scorer docstring already records that a model can score well here and sample badly.",
+    "Any claim about set A being confound-free. Withholding is by SEQUENCE, so a 95%-identical ortholog in the draft E. coli remains in training for every window of A-minus-C by construction."
+  ],
+
+  "honest_limits": [
+    "One checkpoint, one step (6000), one organism pair, one window length. Nothing here is a claim about the architecture.",
+    "The committed artifact records no seed or boot, so its CONFIDENCE INTERVALS are not reproducible from it; its point estimates reproduce exactly. No bootstrap count tried reproduces the committed CI, and that remains unexplained rather than explained away.",
+    "The margin of 0.01 nats is derived from two measured quantities but is still a judgement about what size of leak matters. A reader who disagrees with it can read the interval, which ships beside every verdict.",
+    "The null-side leak was measured at 0.0007 nats over ALL positions of ALL windows in each arm, while the model contrast runs on a 120-window seeded sample at 30 positions. The two are not the same estimator, and the null figure is the lower-variance one.",
+    "This bar was frozen by the session executing the plan it deviates from. The user can redirect it; no frozen artifact was edited and the committed 2026-11-22 run keeps its verdict."
+  ]
+}
