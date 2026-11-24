@@ -1,0 +1,59 @@
+{
+  "record": "glm-representative-repretrain-reading-rule-addendum-v1",
+  "added_at": "2026-11-24T09:48:00-05:00",
+  "companion_to": "wiki/glm_representative_repretrain_reading_rule_2026-11-24.json",
+  "second_companion_to": "wiki/glm_representative_repretrain_reading_rule_companion_2026-11-24.json",
+  "why_a_third_document": "the companion asserts it was frozen at 09:26. Appending to it would make that timestamp cover content written later, so each addition gets its own file and its own honest time. The rule file remains byte-unchanged across all three.",
+
+  "ORDERING_CLAIM_stated_precisely_because_it_is_the_whole_point": {
+    "claim": "written before this session read ANY value from the probe output",
+    "what_this_session_has_seen_of_the_probe": "its startup lines and one progress line reading `committed: 25/120 (122s)`. No median, no max, no artifact.",
+    "what_is_NOT_claimed": "that the probe had not finished. By the clock it probably had. The guarantee is on what was READ, not on what had run, and those are different claims. The weaker one is the true one.",
+    "why_it_matters": "this addendum sets a chance-level expectation for the MAX. Writing that after seeing a max would be indistinguishable from explaining away an inconvenient number, which is the objection this whole companion discipline exists to pre-empt.",
+    "verifiable_by": "commit ordering -- this file is committed before any command in this session reads logs/residual_leak_2026-11-24.log or wiki/glm_residual_leak_2026-11-24.json"
+  },
+
+  "THE_POINT_a_max_of_n_has_its_own_chance_level_and_the_companion_gave_it_none": {
+    "problem": "the companion anchored the chance level at a MEDIAN of 15.0 bp. The probe also reports a MAX, and a maximum over n windows is shifted upward by sampling alone. A reader seeing `median 15.0, max 19` would reasonably read that max as surviving leakage. It is not.",
+    "distribution": "longest-match scores are approximately Gumbel -- right-skewed with a long upper tail. This is the standard extreme-value result for maximal exact-match scores against a database.",
+    "scale_parameter_beta": 0.72135,
+    "beta_derivation": "1/ln(4), because the per-base match probability for a 4-letter alphabet is 1/4 and the Gumbel scale for a geometric tail is 1/ln(1/p)",
+    "sd_of_a_max_bp": 0.9252,
+    "sd_derivation": "beta * pi / sqrt(6), the Gumbel standard deviation -- carried so a single observed max is read against its own spread rather than as a point",
+    "max_shift_formula": "median(max of n) minus median(single) = beta * ln(n), exactly; the Gumbel location shifts by beta*ln(n) and the median offset cancels",
+    "shift_at_n_120_bp": 3.4534,
+    "shift_at_n_3906_bp": 5.9657
+  },
+
+  "VALIDATED_against_published_data_not_asserted": {
+    "method": "the published copying-penalty run has a UNIFORM-RANDOM arm at the same n=120, so it pins the chance max directly",
+    "published_uniform_median_bp": 15.0,
+    "predicted_max_of_120_bp": 18.45,
+    "published_observed_max_bp": 18,
+    "difference_bp": 0.45,
+    "difference_in_sd_of_the_max": 0.49,
+    "reading": "the Gumbel max-shift model reproduces an independently measured maximum to within half its own sampling SD. Both halves of the chance model are now anchored to published measurements: the MEDIAN via log4(N*L) (15.21 predicted, 15.0 observed) and the MAX via median + beta*ln(n) (18.45 predicted, 18 observed).",
+    "source": "wiki/glm_copying_penalty_2026-11-22.json"
+  },
+
+  "CONSEQUENCE_FOR_READING_THE_PROBE": {
+    "a_representative_max_near_18_5_bp_is_PURE_CHANCE": "with a chance median of 15.0 and n=120, an observed max of roughly 18.5 bp is exactly what random sequence produces. Do NOT read such a max as residual leakage.",
+    "the_threshold_that_would_mean_something": "a max materially above ~18.5 bp, judged against the 0.93 bp SD of a max, is the figure that would indicate surviving verbatim overlap.",
+    "it_STRENGTHENS_the_committed_baseline": "the committed arm observed max is 148 of 150, which is 129.5 bp above the chance max of 18.45. Quantifying the chance max is what licenses calling that unambiguous verbatim overlap rather than a tail effect. Had the committed arm been chance-like its max would have been 58.45; it is 148.",
+    "the_median_is_unaffected": "none of this touches the median, so the headline statistic chosen for this probe is the robust one. This bites only the max -- which is the figure most likely to be quoted."
+  },
+
+  "PRE_EMPTION_for_a_future_exhaustive_rerun": {
+    "the_ready_made_false_finding": "the probe defaults to n=120 of 3,906 held-out windows. Anyone rerunning it exhaustively will observe a HIGHER max and may report worsened leakage.",
+    "expected_rise_from_sample_size_alone_bp": 2.5123,
+    "derivation": "beta * ln(3906/120); the max sits 5.97 bp above the median at n=3906 against 3.45 bp at n=120",
+    "instruction": "a max that rises by about 2.5 bp on an exhaustive rerun is SAMPLE SIZE, not worse leakage. Compare any rerun max against median + beta*ln(n) for ITS OWN n, never against the n=120 figure.",
+    "why_written_now": "the person who runs that comparison may be neither of the two sessions that understood this, and a cross-n max comparison is a trap that produces a confident wrong answer."
+  },
+
+  "credit": {
+    "raised_by": "a sibling Claude session (Soraya Development), which supplied the Gumbel framing, beta = 1/ln4, the beta*ln(n) shift, the n=120 and exhaustive-rerun figures, and the observation that it strengthens rather than weakens the committed baseline",
+    "added_by_this_session": "the validation against the published uniform-random max (18.45 predicted against 18 observed, 0.49 SD), the SD of the max as the scale for reading a single observed value, and the ordering claim above",
+    "note": "the same session earlier corpus-size arithmetic was correct while its level formula under-predicted by 3.4 bp; that asymmetry is recorded in the companion. Here the framing and the arithmetic both hold."
+  }
+}
