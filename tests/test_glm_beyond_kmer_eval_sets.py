@@ -819,6 +819,14 @@ def test_the_scorer_persists_per_window_rows_that_reconcile_with_every_cell(tmp_
         assert statistics.fmean(paired_deltas(art, arm, null)) == pytest.approx(
             cell["paired_delta_nats"], abs=1e-4), key
     # and the run is self-describing, which the committed artifact was not
-    assert art["run_args"] == {"n_windows": 3, "positions": 4, "seed": 0, "boot": 50,
-                               "eval_set": "orthology_free", "selection_seed": 0}
+    # Exact-shape equality is kept deliberately: it is what catches a field silently vanishing.
+    # `ckpt` is held out of the comparison only because it is an absolute, machine-specific path,
+    # and is then asserted on its own rather than dropped.
+    run_args = dict(art["run_args"])
+    ckpt = run_args.pop("ckpt")
+    assert run_args == {"n_windows": 3, "positions": 4, "seed": 0, "boot": 50,
+                        "eval_set": "orthology_free", "selection_seed": 0,
+                        "ckpt_is_committed": True,
+                        "eval_sets_and_nulls_pinned_to": "glm_training_corpus_2026-11-21.txt"}
+    assert Path(ckpt).resolve() == gbk.CKPT.resolve()
     assert art["eval"]["provenance"]["set"] == "orthology_free"

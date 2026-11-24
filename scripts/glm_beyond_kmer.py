@@ -230,6 +230,14 @@ def main() -> int:
                     help="which candidate set to score; the default is the committed path")
     ap.add_argument("--selection-seed", type=int, default=0,
                     help="seeds the window sample for every set except the committed default")
+    ap.add_argument("--ckpt", type=Path, default=CKPT,
+                    help="checkpoint to score. The training corpus is NOT parameterised with it, "
+                         "deliberately: the eval sets, the pooled chain and the strong E. coli null "
+                         "are all defined against the COMMITTED corpus, so two checkpoints are "
+                         "scored on identical windows against an identical yardstick. Scoring a "
+                         "model trained on a different corpus therefore measures the MODEL, and the "
+                         "`chain fit on exactly what the model trained on` reading holds only for "
+                         "the committed checkpoint -- see run_args.ckpt_is_committed.")
     ap.add_argument("--out", type=Path, default=OUT,
                     help="artifact path; the default OVERWRITES the committed 2026-11-22 artifact")
     a = ap.parse_args()
@@ -237,13 +245,13 @@ def main() -> int:
 
     import torch
 
-    for p in (MG1655 / "annotations.gff3", DRAFT_GFF, CORPUS, CKPT):
+    for p in (MG1655 / "annotations.gff3", DRAFT_GFF, CORPUS, a.ckpt):
         if not p.exists():
             print(f"REFUSING: missing {p}", file=sys.stderr)
             return 2
 
     # ---- the model ----
-    blob = torch.load(CKPT, map_location="cpu", weights_only=False)
+    blob = torch.load(a.ckpt, map_location="cpu", weights_only=False)
     cfg_d = dict(blob["config"])
     step = blob.get("step")
     cfg = DiffusionConfig(**{k: v for k, v in cfg_d.items()
@@ -251,7 +259,13 @@ def main() -> int:
     model = build_model(cfg)
     model.load_state_dict(blob["model"])
     model.eval()
+    ckpt_is_committed = a.ckpt.resolve() == CKPT.resolve()
     print(f"checkpoint step {step}, length {cfg.length}, d_model {cfg.d_model}")
+    if not ckpt_is_committed:
+        print(f"NOTE: scoring a NON-committed checkpoint ({a.ckpt}). The eval sets, the pooled "
+              f"chain and the strong E. coli null stay pinned to {CORPUS.name} so the comparison "
+              f"is controlled; `markov_ecoli` is then a FIXED yardstick rather than a chain fit on "
+              f"this model's own training data.")
 
     # ---- the chain, fit on exactly what the model trained on ----
     corpus = load_corpus_windows()
@@ -371,7 +385,9 @@ def main() -> int:
         # cannot be reproduced from it while its point estimates can. Recorded here so this one can.
         "run_args": {"n_windows": a.n_windows, "positions": a.positions, "seed": a.seed,
                      "boot": a.boot, "eval_set": a.eval_set,
-                     "selection_seed": a.selection_seed},
+                     "selection_seed": a.selection_seed,
+                     "ckpt": str(a.ckpt), "ckpt_is_committed": ckpt_is_committed,
+                     "eval_sets_and_nulls_pinned_to": CORPUS.name},
         "cells": {f"{arm}|{null}": summarise(arm, null) for arm, null in CELLS},
         # PER-WINDOW rows, persisted so a BETWEEN-SET contrast is computable without re-running.
         # The committed artifact kept only cell summaries, which makes a two-sample bootstrap on a

@@ -1,0 +1,59 @@
+{
+  "record": "glm-representative-repretrain-reading-rule-v1",
+  "frozen_at": "2026-11-24T08:50:00-05:00",
+  "frozen_before": "any cross-entropy from either new checkpoint existed; both pretrains were launched at 08:48 and the first writes no scorable checkpoint until step 500",
+  "arm": "representative-re-pretrain-excluding-draft-ecoli",
+  "criterion": "generator-ceiling: does the masked-diffusion promoter generator capture structure an order-3 Markov chain cannot, on withheld MG1655 windows",
+
+  "what_is_being_varied_and_what_is_held": {
+    "varied": "ONLY the training corpus. Run 1 trains on wiki/glm_training_corpus_representative_2026-11-22.txt (60,462 windows, 17 genomes, zero E. coli) instead of the committed 63,925/18.",
+    "held_fixed": [
+      "steps 6000, batch 64, lr 3e-4, AdamW, weight_decay 0.01, grad_clip 1.0, seed 0 -- copied from wiki/glm_diffusion_train_2026-11-21.json",
+      "no LR schedule exists (flat AdamW), so a fresh --steps 6000 is genuinely matched to the committed run rather than being a truncation of a longer decay",
+      "the eval sets, the pooled chain and the strong E. coli null stay pinned to the COMMITTED corpus, enforced by the scorer not parameterising them with --ckpt"
+    ],
+    "why_the_nulls_are_pinned": "ecoli_fit_windows defines the strong null's fitting set as draft E. coli windows that are IN the corpus. On the representative corpus that set is EMPTY and the scorer refuses (exit 5). Re-fitting the null per model would also compare two models against two different yardsticks. So markov_ecoli becomes a FIXED 4-mer reference line, and the committed scorer's phrase `fit on exactly what the model trained on` holds ONLY for the committed checkpoint. run_args.ckpt_is_committed records which reading applies."
+  },
+
+  "PRIMARY": {
+    "quantity": "paired per-window change in MODEL cross-entropy, representative checkpoint minus committed checkpoint, on identical eval windows at identical sampled positions with identical seed",
+    "field": "per_window[i].left_only",
+    "sign_convention": "positive = the representative model has LOWER cross-entropy = BETTER. Negative = removing the draft E. coli COST the model.",
+    "set": "orthology_free at the frozen 120x30 geometry, selection seed 0, scoring seed 0, boot 2000",
+    "why_not_delta_vs_null": "the model-vs-null delta widens partly by construction once the null is a fixed chain fit on E. coli the new model never saw. The model's own cross-entropy on held-out MG1655 windows is the quantity the corpus change acts on directly.",
+    "n_windows": 120,
+    "boot": 2000
+  },
+
+  "NOISE_FLOOR_AND_IT_GATES_THE_PRIMARY": {
+    "why": "one retrain cannot separate `draft E. coli removed` from `a different training trajectory` at the 0.005-0.02 nat scale this question lives at. A difference smaller than trajectory noise is not evidence about the corpus.",
+    "control": "Run 2 trains on the COMMITTED corpus with seed 1, everything else identical, so (seed1 - committed) is pure trajectory noise with the corpus held constant.",
+    "gate": "the PRIMARY is reported as RESOLVED only if the magnitude of (representative - committed) exceeds the magnitude of (seed1 - committed) AND the primary bootstrap CI excludes zero. Otherwise the branch is UNRESOLVED_WITHIN_TRAJECTORY_NOISE.",
+    "stated_weakness": "a single reseed is ONE draw of trajectory noise, not a distribution, so this floor is a point estimate and not a calibrated null.",
+    "pre_registered_escalation": "if |representative - committed| lands within 2x the single floor draw, additional reseeds (seed 2, seed 3 on the committed corpus) will be run before any branch is reported. Deciding to escalate on that criterion is pre-registered HERE so it is not a post-hoc rescue."
+  },
+
+  "pre_registered_expectation": {
+    "direction": "the representative model is expected to be WORSE, not better.",
+    "why": "wiki/glm_beyond_kmer_two_sets_2026-11-23.json decomposed the near-ortholog leak as delta_model +0.0054 nats, i.e. the model GAINED about that much from windows with draft near-orthologs. Removing the draft removes that gain. The corpus also loses 5.4% of its windows and its only same-genus genome.",
+    "so_this_arm_cannot_rescue_the_model": "the committed finding is that the generator LOSES to an order-3 chain. Removing a leak that was HELPING the model should widen that deficit. This arm is therefore a CONFIRMATION-or-confound test, not a rescue attempt, and must not be reported as though a worse number were a surprise."
+  },
+
+  "branches_named_before_the_numbers": {
+    "LEAK_WAS_REAL_AND_SMALL": "representative is worse by an amount consistent with the measured +0.0054 leak and outside the noise floor. The beyond-k-mer negative stands and is now measured on a corpus that cannot leak at all.",
+    "CROSS_ORGANISM_COST_DOMINATES": "representative is worse by substantially MORE than the leak size. Removing ALL E. coli cost same-genus generalisation, which is confounded with the leak, so this run does not cleanly price the leak and a Klebsiella-substituted corpus would be the disambiguating follow-up.",
+    "LEAK_WAS_NOT_HELPING_THE_MODEL": "representative is equal or better outside the noise floor. The near-ortholog windows were not carrying the model's performance.",
+    "UNRESOLVED_WITHIN_TRAJECTORY_NOISE": "the difference does not exceed the reseed floor, or the CI includes zero. Reported as unresolved; no leak size is quoted."
+  },
+
+  "SECONDARY_the_headline_the_project_cares_about": {
+    "quantity": "does the representative model still lose to the FIXED order-3 E. coli chain on all four eval sets",
+    "note": "reported against an identical chain for both checkpoints, so it is comparable across models even though it is no longer `the chain fit on the model's own training data` for the representative run."
+  },
+
+  "what_this_arm_does_NOT_settle": [
+    "It does not produce a same-strain beyond-k-mer verdict. The representative corpus has NO E. coli, so a model trained on it alone is a cross-ORGANISM generator. scripts/glm_build_representative_corpus.py records that the same-strain measurement additionally needs a fine-tune on MG1655's own 991 trainable windows (4,340 minus the 3,349 withheld) on top of this pretrain. That fine-tune is NOT part of this arm.",
+    "It does not retire the order-3 comparator. A 4-mer chain remains the thing to beat.",
+    "It changes every trained number in the generator line, so nothing scored against the committed checkpoint transfers without re-scoring."
+  ]
+}

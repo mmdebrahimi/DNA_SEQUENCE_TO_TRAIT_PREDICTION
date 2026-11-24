@@ -43,6 +43,19 @@ MANIFEST = ROOT / "wiki" / "glm_training_corpus_manifest_2026-11-21.json"
 CKPT_DIR = ROOT / "data" / "glm_diffusion_ckpt"
 OUT_DIR = ROOT / "wiki"
 
+def _show(p: Path) -> str:
+    """Display path, repo-relative when inside the repo and absolute when not.
+
+    `Path.relative_to` RAISES on a path outside ROOT, and this ran only after the final
+    checkpoint was written -- so an out-of-repo `--ckpt-dir` exited non-zero on a run that had
+    fully succeeded. In a long background job that reads as a training failure.
+    """
+    try:
+        return p.resolve().relative_to(ROOT).as_posix()
+    except ValueError:
+        return str(p)
+
+
 EVAL_FRACTION = 0.02
 TOKENS_PER_PARAM_HEURISTIC = 20
 
@@ -252,9 +265,9 @@ def main(argv=None) -> int:
     out = OUT_DIR / ("glm_diffusion_train_smoke.json" if a.smoke
                      else f"glm_diffusion_train_2026-11-21{('_' + a.tag) if a.tag else ''}.json")
     out.write_text(json.dumps(rec, indent=2), encoding="utf-8")
-    print(f"\n{rec['wall_seconds']}s -> {out.relative_to(ROOT).as_posix()}")
-    print(f"              -> {samples_path.relative_to(ROOT).as_posix()}")
-    print(f"              -> {ckpt_path.relative_to(ROOT).as_posix()}")
+    print(f"\n{rec['wall_seconds']}s -> {_show(out)}")
+    print(f"              -> {_show(samples_path)}")
+    print(f"              -> {_show(ckpt_path)}")
     return 0
 
 
