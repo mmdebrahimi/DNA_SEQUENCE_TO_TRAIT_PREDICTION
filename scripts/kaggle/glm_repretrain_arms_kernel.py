@@ -88,8 +88,17 @@ def main() -> int:
 
     # ---- stage the corpora from the dataset, then verify BEFORE spending hours ----
     if not DATASET.exists():
-        print(f"REFUSING: the corpora dataset is not mounted at {DATASET}. The corpora are "
-              f"gitignored, so the clone cannot supply them; attach the dataset to the kernel.",
+        # Say WHAT IS mounted, not just what is missing. v2 failed here and the message alone could
+        # not distinguish "nothing mounted" from "mounted under a different name" -- the real cause
+        # was that the dataset was still PROCESSING at push time, and Kaggle mounts an unready
+        # dataset silently as nothing rather than erroring. This listing settles it in one read.
+        root = Path("/kaggle/input")
+        present = sorted(p.name for p in root.iterdir()) if root.exists() else "/kaggle/input absent"
+        print(f"REFUSING: the corpora dataset is not mounted at {DATASET}.\n"
+              f"  /kaggle/input holds: {present}\n"
+              f"  The corpora are gitignored (.gitignore:187-188), so the clone CANNOT supply them.\n"
+              f"  If the listing is empty, the dataset was likely still processing when this kernel "
+              f"was pushed -- wait for `kaggle datasets status <slug>` to read `ready` first.",
               file=sys.stderr)
         return 3
     print("dataset contents:", sorted(p.name for p in DATASET.iterdir()), flush=True)
