@@ -184,6 +184,11 @@ def select_eval_windows(eval_set: str, *, of_seqs, withheld_seqs, n_windows: int
     """
     if eval_set not in EVAL_SETS:
         raise EvalSetUnavailable(f"unknown eval set {eval_set!r}; expected one of {EVAL_SETS}")
+    # A non-positive request must REFUSE, not slice. `n_windows=0` returned an empty eval set and
+    # `-1` returned `pool[:-1]` -- every window but the last -- both silently, and a downstream
+    # artifact would then report whatever it happened to score as the run.
+    if n_windows <= 0:
+        raise EvalSetUnavailable(f"n_windows must be positive, got {n_windows}")
 
     if eval_set == "orthology_free":
         pool: list[str] = list(of_seqs)

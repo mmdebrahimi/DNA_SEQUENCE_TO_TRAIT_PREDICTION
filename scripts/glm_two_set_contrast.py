@@ -34,6 +34,12 @@ if str(ROOT) not in sys.path:
 
 RULE = ROOT / "wiki" / "glm_two_set_reading_rule_2026-11-24.json"
 OUT = ROOT / "wiki" / "glm_beyond_kmer_two_sets_2026-11-23.json"
+COMMITTED = ROOT / "wiki" / "glm_beyond_kmer_2026-11-22.json"
+
+#: The primary-cell fields the reproduction claim is MEASURED over. The committed artifact's CIs
+#: are deliberately excluded: it records no seed and no boot, so they are not reproducible from it,
+#: while these point estimates reproduce exactly.
+REPRO_FIELDS = ("diffusion_ce_nats", "null_ce_nats", "paired_delta_nats")
 
 PRIMARY_ARM = "left_only"
 PRIMARY_NULL = "markov_ecoli"
@@ -125,9 +131,12 @@ def main(argv=None) -> int:
     if len(set(geoms.values())) != 1:
         print(f"REFUSING: geometry differs across sets: {geoms}", file=sys.stderr)
         return 3
-    if set(next(iter(geoms.values()))[:2]) != {120, 30}:
-        print(f"REFUSING: geometry is not the frozen 120x30: {next(iter(geoms.values()))}",
-              file=sys.stderr)
+    # ORDERED comparison. A set comparison here accepted a 30-window x 120-position run as "the
+    # frozen 120x30", because {30,120} == {120,30} -- the two numbers are not interchangeable and
+    # swapping them is a different experiment with the same total.
+    if tuple(next(iter(geoms.values()))[:2]) != (120, 30):
+        print(f"REFUSING: geometry is not the frozen 120x30 (windows, positions): "
+              f"{tuple(next(iter(geoms.values()))[:2])}", file=sys.stderr)
         return 3
 
     # ---- Q1: the gate state per set, read before any delta ----
@@ -162,6 +171,54 @@ def main(argv=None) -> int:
     boot = two_sample_bootstrap(bearing, free)
     q2_branch = grade_contrast(boot["ci95"], margin)
 
+    # Does the reproduction run still match the committed artifact? MEASURED, not asserted.
+    if COMMITTED.exists():
+        _com = json.loads(COMMITTED.read_text(encoding="utf-8"))
+        _cpri = _com["cells"][f"{PRIMARY_ARM}|{PRIMARY_NULL}"]
+        reproduces = (all(repro_pri[f] == _cpri[f] for f in REPRO_FIELDS)
+                      and repro["verdict"] == _com["verdict"])
+    else:
+        reproduces = None
+
+    # ---- prose DERIVED from the computed state, never asserted ----
+    # The previous version stated "The committed refusal does NOT stand" unconditionally, so it
+    # would have contradicted its own `refusal_stands` field on any run where the gate still
+    # refused. That is the same defect as the scorer's hardcoded strain note, which this plan
+    # fixed in the scorer and then reintroduced here.
+    of1 = q1["orthology_free"]
+    if all_admissible:
+        q1_reading = (
+            f"The committed refusal does NOT stand. At {of1['n_predictions']} predictions per set "
+            f"instead of {repro['eval']['n_predictions']}, every one of the four candidate sets is "
+            f"ADMISSIBLE -- the model and the strong null both beat uniform "
+            f"{of1['uniform_ce_nats']} on all of them. {repro['verdict']} was a small-sample "
+            f"artifact in BOTH halves of the gate, and the accessory-gene out-of-distribution "
+            f"explanation recorded alongside it does not account for a set its own strong null "
+            f"predicts comfortably above chance.")
+    elif not of1["admissible"]:
+        q1_reading = (
+            f"The committed refusal STANDS at {of1['n_predictions']} predictions: the set the "
+            f"committed run scored reads {of1['gate_state']}. What it MEANS still depends on which "
+            f"half failed -- read the per-set gate states below before any delta.")
+    else:
+        q1_reading = (
+            f"The set the committed run scored is ADMISSIBLE at {of1['n_predictions']} predictions, "
+            f"so its refusal does not stand -- but NOT every set is "
+            f"({sorted(k for k, v in q1.items() if not v['admissible'])} still refuse), so the "
+            f"all-admissible reading is unavailable. Read the per-set gate states.")
+
+    d_now, d_then = of1["paired_delta_nats"], repro_pri["paired_delta_nats"]
+    flipped = (d_now < 0) != (d_then < 0)
+    sign_note = (
+        f"On the committed {repro['eval']['n_windows']} windows the paired delta was {d_then:+}, "
+        f"the model {'AHEAD' if d_then > 0 else 'BEHIND'}. On {of1['n_windows']} windows of the "
+        f"same set it is {d_now:+}, the model {'AHEAD' if d_now > 0 else 'BEHIND'}"
+        f"{' and resolvably so' if of1['resolved'] else ' but unresolved'}. "
+        + ("Nearly equal magnitude, OPPOSITE SIGN: the committed estimate carried no information "
+           "about the direction of the effect, let alone its size."
+           if flipped else
+           "The sign did NOT flip, so this run does not support the direction-reversal reading."))
+
     res = {
         "record": "glm-beyond-kmer-two-sets-v1",
         "date": "2026-11-24",
@@ -170,7 +227,12 @@ def main(argv=None) -> int:
         "checkpoint_step": arts["orthology_free"]["checkpoint_step"],
         "geometry": {"n_windows": 120, "positions_per_window": 30, "n_predictions_per_set": 3600,
                      "window_length_bp": 150, "markov_order": 3,
-                     "selection_seed": 0, "scoring_seed": 0, "boot": BOOT},
+                     # READ from the runs, not asserted. The geometry guard above already proved
+                     # these are identical across the four sets, so taking the first is safe --
+                     # but writing literals here would survive a run that used other seeds.
+                     "selection_seed": next(iter(geoms.values()))[3],
+                     "scoring_seed": next(iter(geoms.values()))[2],
+                     "boot": BOOT},
 
         "QUESTION_1_DOES_THE_COMMITTED_REFUSAL_STAND": {
             "branch": q1_branch,
@@ -188,20 +250,13 @@ def main(argv=None) -> int:
                 "paired_delta_nats": repro_pri["paired_delta_nats"],
                 "gate_state": repro["admissibility"]["state"],
                 "verdict": repro["verdict"],
-                "reproduces_the_committed_artifact": True,
+                # DERIVED by comparing against the committed artifact, not asserted. A literal
+                # True here would keep claiming reproduction after the scorer stopped reproducing.
+                "reproduces_the_committed_artifact": reproduces,
+                "reproduction_compared_fields": sorted(REPRO_FIELDS),
             },
-            "reading": (
-                "The committed refusal does NOT stand. At 3600 predictions per set instead of 48, "
-                "every one of the four candidate sets is ADMISSIBLE -- the model and the strong null "
-                "both beat uniform 1.3863 on all of them. EVAL_SET_UNINFORMATIVE_BELOW_UNIFORM was a "
-                "48-prediction artifact in BOTH halves of the gate, and the accessory-gene "
-                "out-of-distribution explanation recorded alongside it does not account for a set "
-                "its own strong null predicts comfortably above chance."),
-            "the_sign_flipped_and_that_is_the_point": (
-                "On the committed 6 windows the paired delta was +0.0192, the model AHEAD. On 120 "
-                "windows of the same set it is -0.0191, the model BEHIND and resolvably so. Nearly "
-                "equal magnitude, opposite sign: the committed estimate carried no information "
-                "about the direction of the effect, let alone its size."),
+            "reading": q1_reading,
+            "the_sign_flipped_and_that_is_the_point": sign_note,
         },
 
         "QUESTION_2_HOW_BIG_IS_THE_MODEL_SIDE_LEAK": {
@@ -277,14 +332,21 @@ def main(argv=None) -> int:
                                     "orthology-free = 0.154972, and 2830 are ortholog-bearing. "
                                     "Those two numbers sum to 3349, which is why the leak contrast "
                                     "partitions A exactly.",
-            "why_it_is_not_edited": "the branch carrying the error DID NOT FIRE (this run is "
-                                    "UNRESOLVED_CONTRAST_SPANS_THE_MARGIN), and the error is in "
-                                    "descriptive prose, not in the margin, the estimator or any "
-                                    "branch predicate -- so no outcome depended on it. Amending a "
-                                    "bar after seeing its result is the defect freezing exists to "
-                                    "prevent, and this repo has a recorded instance of a "
-                                    "mis-specified bar LEFT unedited for exactly that reason. The "
-                                    "correction is recorded here instead.",
+            # DERIVED: whether the erroneous branch fired is a property of THIS run, so it is
+            # computed rather than stated. Asserting "did not fire" would have been false on any
+            # run that landed in LEAK_SMALL_FILTER_OVERPRICED.
+            "the_erroneous_branch_fired": q2_branch == "LEAK_SMALL_FILTER_OVERPRICED",
+            "branch_this_run_landed_in": q2_branch,
+            "why_it_is_not_edited": (
+                (f"the branch carrying the error DID NOT FIRE (this run is {q2_branch}), and the "
+                 if q2_branch != "LEAK_SMALL_FILTER_OVERPRICED" else
+                 "the branch carrying the error DID fire on this run, so read its description "
+                 "against the correction above and not as written. The ")
+                + "error is in descriptive prose, not in the margin, the estimator or any branch "
+                  "predicate -- so no outcome depended on it. Amending a bar after seeing its "
+                  "result is the defect freezing exists to prevent, and this repo has a recorded "
+                  "instance of a mis-specified bar LEFT unedited for exactly that reason. The "
+                  "correction is recorded here instead."),
             "the_measurement_was_never_affected": "the contrast arms were built from A minus C and "
                                                   "A intersect C throughout, i.e. from the correct "
                                                   "quantities; only the ratio's LABEL was wrong.",
@@ -326,7 +388,8 @@ def main(argv=None) -> int:
     for s, v in q1.items():
         print(f"  {s:<26} {v['gate_state']:<28} delta {v['paired_delta_nats']:>8}  "
               f"{'resolved' if v['resolved'] else 'unresolved'}")
-    print(f"  -> branch {q1_branch}: the refusal does NOT stand")
+    stands = "STANDS" if not q1["orthology_free"]["admissible"] else "does NOT stand"
+    print(f"  -> branch {q1_branch}: the refusal {stands}")
     print()
     print("Q2  how big is the model-side leak?")
     print(f"  ortholog-bearing mean delta {statistics.fmean(bearing):+.6f}")

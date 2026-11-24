@@ -149,6 +149,16 @@ def null_ce_on(chain: MarkovGenerator, seqs, *, length: int) -> dict:
     lower-variance estimate of the SAME quantity. A sampled figure from the scorer is a noisy draw
     around this one, which is why the two will not agree to 4dp.
     """
+    # The geometry check must be TWO-directional. An overrun already raised from markov_nll's
+    # indexing, but a `length` BELOW the true window length silently scored fewer positions and
+    # then reported the short count as `n_positions_per_window` -- a quietly different measurement
+    # wearing the right label.
+    bad = {len(s) for s in seqs} - {length}
+    if bad:
+        raise InventoryRefusal(
+            f"every window must be exactly {length} bases to score positions "
+            f"[{ORDER}, {length}); found lengths {sorted(bad)}. Scoring a shorter window would "
+            f"report fewer positions under the full-geometry label.")
     per_window = [statistics.fmean(markov_nll(chain, s, p) for p in range(ORDER, length))
                   for s in seqs]
     return {
@@ -339,6 +349,15 @@ def main(argv=None) -> int:
                        ("B_held_out_of_corpus", sorted({s.upper() for s in held_seqs})),
                        ("C_orthology_free", sorted({s.upper() for s in of_seqs}))):
         scored = null_ce_on(chain_ec, seqs, length=a.length)
+        # An EMPTY set has no cross-entropy, and `admissibility(None)` raises on float(None). A
+        # set with nothing in it is not admissible or inadmissible -- it is unscoreable, and saying
+        # so is the honest third answer rather than a crash or a fabricated verdict.
+        if scored["null_ce_nats"] is None:
+            screens[name] = {**scored, "gate": None,
+                             "unscoreable": "the set is empty, so it has no cross-entropy and no "
+                                            "admissibility verdict is available"}
+            print(f"  {name:<24} EMPTY  ->  UNSCOREABLE")
+            continue
         gate = admissibility(null_ce_nats=scored["null_ce_nats"])
         screens[name] = {**scored, "gate": gate.to_dict()}
         print(f"  {name:<24} null CE {scored['null_ce_nats']}  ->  {gate.state}")

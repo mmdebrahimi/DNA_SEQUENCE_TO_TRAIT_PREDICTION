@@ -315,12 +315,21 @@ def test_null_ce_on_scores_every_position_from_ORDER_to_length():
 
 def test_null_ce_on_raises_when_length_OVERRUNS_the_sequences():
     """`length` is an ARGUMENT here while the scorer derives it from the checkpoint config, so the
-    two can disagree. Scoped deliberately to the OVERRUN direction: that one raises. The UNDER-RUN
-    direction does NOT -- a length below the true window length silently scores fewer positions and
-    reports the short count as `n_positions_per_window` -- so this is not a general guard against a
-    geometry mismatch, and the |A| == 3349 refusal remains the real tripwire for one."""
-    with pytest.raises(IndexError):
+    two can disagree. BOTH directions must refuse, and the under-run direction is the one that
+    matters: it used to score fewer positions silently and report the short count as
+    `n_positions_per_window`, i.e. a quietly different measurement under the full-geometry label.
+    The overrun direction previously surfaced only as an `IndexError` from indexing; it now refuses
+    by name, before any scoring, with the expected length in the message."""
+    # OVERRUN: windows shorter than `length`
+    with pytest.raises(INV.InventoryRefusal) as over:
         INV.null_ce_on(PREDICTABLE, ["A" * 10], length=150)
+    assert "150" in str(over.value)
+    # UNDER-RUN: windows longer than `length` -- the direction that used to pass silently
+    with pytest.raises(INV.InventoryRefusal) as under:
+        INV.null_ce_on(PREDICTABLE, ["A" * 150], length=10)
+    assert "10" in str(under.value)
+    # and a matching length is still scored normally, so the guard is not blanket
+    assert INV.null_ce_on(PREDICTABLE, ["A" * 10], length=10)["n_windows"] == 1
 
 
 def test_null_ce_on_returns_None_rather_than_crashing_on_an_empty_set():
