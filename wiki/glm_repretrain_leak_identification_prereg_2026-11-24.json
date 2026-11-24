@@ -1,0 +1,58 @@
+{
+  "record": "glm-repretrain-leak-identification-prereg-v1",
+  "added_at": "2026-11-24T14:15:00-05:00",
+  "companion_to": "wiki/glm_representative_repretrain_reading_rule_2026-11-24.json",
+  "also_companion_to": [
+    "wiki/glm_representative_repretrain_reading_rule_addendum_2026-11-24.json",
+    "wiki/glm_representative_repretrain_sign_correction_2026-11-24.json"
+  ],
+  "why_a_fourth_document": "the rule file stays BYTE-UNCHANGED, as it has across all three prior companions. This one adds a measurement the rule does not contain, so appending it to the rule would make the rule's freeze timestamp cover text written after the arm was launched.",
+
+  "THE_DEFECT_THIS_EXISTS_TO_FIX": {
+    "statement": "the PRIMARY cannot distinguish two of its own four branches, because it is scored on a set the leak cannot act on.",
+    "the_mechanism_read_from_the_code_not_inferred": "scripts/glm_beyond_kmer.py::mg1655_candidate_sets builds `of` (the `orthology_free` pool) as `[w for w in held if (m.get(w.gene_id) or '') in only]` where `only = symbols(MG1655) - symbols(DRAFT_GFF)`. So every window in the PRIMARY's set is one whose GENE SYMBOL HAS NO COUNTERPART IN THE DRAFT ASSEMBLY. The scorer's own SET_STRAIN_NOTES says it outright: `eval genes have NO draft counterpart`.",
+    "why_that_is_fatal_to_the_branch_distinction": "a near-ortholog leak is carried by the presence of a draft counterpart in training. On a set defined to EXCLUDE draft counterparts there is no near-ortholog to lose. Any cross-entropy change the representative model shows there is cross-ORGANISM cost (the corpus lost its only same-genus genome and 5.4% of its windows) plus trajectory noise. It is not the leak.",
+    "consequence": "LEAK_WAS_REAL_AND_SMALL and CROSS_ORGANISM_COST_DOMINATES are BOTH consistent with any worse number on the primary set. The rule asks the primary to choose between them and the primary cannot.",
+    "the_yardstick_is_also_not_a_primary_set_quantity": "the +0.0054 the rule cites is `delta_model_bearing_minus_free` from wiki/glm_beyond_kmer_two_sets_2026-11-23.json -- a difference between the two OTHER sets. It was never a measurement on `orthology_free`.",
+    "and_the_yardstick_itself_is_unresolved": "that contrast is graded UNRESOLVED_CONTRAST_SPANS_THE_MARGIN, and the same artifact's A_TENSION_RECORDED_RATHER_THAN_RESOLVED says its null-side figure (0.0100 nats on 120 windows) disagrees 14x with the better-powered all-window estimate (0.0007 nats) and instructs: `Do not quote either null-side figure as settled`. So the boundary between two branches rests on a number its own artifact says not to treat as settled."
+  },
+
+  "THE_IDENTIFYING_MEASUREMENT_difference_in_differences": {
+    "quantity": "DiD = (mean paired per-window delta on ortholog_bearing) - (mean paired per-window delta on withheld_orthology_free), where each per-window delta is `committed.left_only[i] - assessed.left_only[i]` (positive = the assessed model has LOWER cross-entropy = BETTER, per the sign correction)",
+    "why_this_identifies_the_leak": "the two sets are both WITHHELD BY SEQUENCE and differ in exactly ONE property: whether the window's gene has a draft counterpart in training. `ortholog_bearing` = a - c and `withheld_orthology_free` = a & c in select_eval_windows, so they are DISJOINT halves of the same withheld pool at the same geometry and seed. Removing the draft removes the near-ortholog ONLY from the bearing half. Cross-organism cost acts on both halves, so it CANCELS in the difference. The DiD is therefore the leak-specific term.",
+    "this_is_the_same_contrast_the_two_sets_artifact_already_used": "that artifact contrasted these two sets within ONE checkpoint. This contrasts the SAME two sets ACROSS checkpoints, which is what converts a correlational decomposition into a direct corpus-intervention measurement. The pairing is within-set across checkpoints; the between-set comparison is TWO-SAMPLE because the sets are disjoint.",
+    "statistic": "two-sample percentile bootstrap on the two sets' per-window delta vectors, b and seed inherited from the run artifacts (boot 2000, seed = run_args.seed + 1), mirroring scripts/glm_two_set_contrast.py::two_sample_bootstrap",
+    "noise_floor_for_it": "the identical DiD computed with the seed-1 reseed checkpoint in place of the representative one. Trajectory noise affects both halves, so its DiD should be near zero; a floor DiD comparable to the primary DiD means the design cannot resolve the leak at this sample size.",
+    "gate": "the leak is reported as IDENTIFIED only if |DiD_primary| exceeds |DiD_floor| AND the DiD bootstrap CI excludes zero. Otherwise LEAK_NOT_IDENTIFIABLE_AT_THIS_SAMPLE_SIZE, and no leak size is quoted."
+  },
+
+  "PRE_REGISTERED_EXPECTATION_with_a_magnitude_because_one_is_derivable": {
+    "direction": "DiD_primary is expected NEGATIVE -- the representative model should lose MORE on the ortholog-bearing half than on the orthology-free half, because that is the half whose near-ortholog was removed.",
+    "expected_magnitude_nats": -0.0054,
+    "where_that_comes_from": "the decomposition's delta_model_bearing_minus_free = +0.0054, i.e. the committed model was ABOUT that much better on the bearing half than on the free half. If that advantage was caused by the draft near-ortholog, removing the draft should erase it, so the DiD should land near -0.0054.",
+    "what_a_near_zero_DiD_would_mean": "the committed model's bearing-half advantage was NOT caused by the draft near-ortholog. That would make the +0.0054 decomposition a correlational artifact rather than a leak, and it would be a finding about the DECOMPOSITION, not a rescue of the model.",
+    "what_a_much_larger_DiD_would_mean": "the leak was bigger than the decomposition priced it. Recorded as a named possibility now so it cannot be presented later as the expected result."
+  },
+
+  "HOW_IT_REPAIRS_THE_BRANCHES_without_editing_the_frozen_rule": {
+    "the_rule_s_branches_are_untouched": "the four branches and the primary gate are computed exactly as frozen. This adds an ATTRIBUTION layer beside them, it does not replace them.",
+    "what_the_grader_now_refuses_to_do": "assert `branch_fit: CLEAN` on LEAK_WAS_REAL_AND_SMALL or CROSS_ORGANISM_COST_DOMINATES from the primary set alone. Without the two extra sets it stamps `attribution_identifiable: false` with the reason, because those two branches are not separable there.",
+    "why_a_scoping_stamp_and_not_a_bar_change": "stating that a design cannot distinguish two outcomes is a measurement fact about the design, established by reading the set-construction code. It is not a redefinition of the acceptance bar, and it does not move any threshold. Editing the rule's branch definitions after the arm was launched WOULD be a retro-fit, which is why that is not done here.",
+    "cost": "four additional scoring runs -- ortholog_bearing and withheld_orthology_free for each of the representative and reseed checkpoints. The committed checkpoint's two are ALREADY MEASURED and preserved at wiki/glm_beyond_kmer_runs_committed_2026-11-24/, so the committed arm costs nothing."
+  },
+
+  "ORDERING_CLAIM": {
+    "claim": "written before ANY cross-entropy exists for either new checkpoint",
+    "what_was_true_when_this_was_written": "the first representative attempt was killed at step 3500 and never scored; two relaunches were killed by machine crashes before step 500; no representative or reseed checkpoint has ever been scored on any set.",
+    "what_is_NOT_claimed": "that the committed checkpoint's numbers on these sets are unknown. They are known, published, and preserved -- bearing -0.0248 and free -0.0094, which reproduce the two_sets artifact's -0.024778 and -0.009406 exactly. The expectation above is DERIVED from those committed numbers, which is legitimate because they predate this arm; what does not exist is any number from the arm itself.",
+    "verifiable_by": "commit ordering -- this file and the grader that implements it are committed before any run artifact for either new checkpoint exists."
+  },
+
+  "honest_limits": [
+    "The DiD cancels cross-organism cost only to the extent that it acts EQUALLY on both halves. If the bearing half is systematically easier or harder in some way correlated with having a draft counterpart, that difference does not cancel. The two halves are not randomised -- they are defined by a biological property.",
+    "Both halves are 120-window samples of their pools, so the DiD carries the sampling variation of two subsamples, not one. Its CI will be wider than the primary's.",
+    "The reseed floor remains ONE draw of trajectory noise, now applied to a difference of two differences, so it is a noisier point estimate than the primary's floor.",
+    "A resolved DiD prices the leak for THIS corpus change, which removed an entire genome. It does not isolate the near-ortholog contribution from the loss of that genome's other 3,463 windows, because both happened in the same intervention.",
+    "None of this produces a same-strain beyond-k-mer verdict. The representative corpus has no E. coli at all, so the model remains a cross-organism generator."
+  ]
+}
