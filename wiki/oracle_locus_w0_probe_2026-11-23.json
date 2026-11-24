@@ -1,0 +1,278 @@
+{
+  "schema": "oracle-locus-w0-probe-v1",
+  "date": "2026-11-23",
+  "question": "can the locus-level intersect be built -- is the S3 coordinate schema pinnable, is the oracle footprint what its sidecar says, and what is the random-element null at each tier?",
+  "our_side_s3_schema": {
+    "HepG2": {
+      "sheet": "HepG2 large-scale",
+      "header_row_1based": 4,
+      "columns": [
+        "name",
+        "category",
+        "chr.hg19",
+        "start.hg19",
+        "stop.hg19",
+        "str.hg19",
+        "chr.hg38",
+        "start.hg38",
+        "stop.hg38",
+        "str.hg38",
+        "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)"
+      ],
+      "assemblies_present": [
+        "hg19",
+        "hg38"
+      ],
+      "hg38_column_index": {
+        "chr": 6,
+        "start": 7,
+        "stop": 8
+      },
+      "is_hg19_native": true,
+      "n_sampled": 4000,
+      "n_hg38_absent_in_sample": 0,
+      "chromosome_convention": "chr_prefixed",
+      "n_bare_chromosome_in_sample": 0,
+      "n_names_ending_underscore_F": 0,
+      "interval_convention": "half_open_0_based",
+      "interval_convention_basis": "modal stop-start is 200 against a 200 nt element",
+      "width_census_sample": {
+        "200": 3998,
+        "201": 2
+      }
+    },
+    "K562": {
+      "sheet": "K562 large-scale",
+      "header_row_1based": 2,
+      "columns": [
+        "name",
+        "category",
+        "chr.hg38",
+        "start.hg38",
+        "stop.hg38",
+        "str.hg38",
+        "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)"
+      ],
+      "assemblies_present": [
+        "hg38"
+      ],
+      "hg38_column_index": {
+        "chr": 2,
+        "start": 3,
+        "stop": 4
+      },
+      "is_hg19_native": false,
+      "n_sampled": 4000,
+      "n_hg38_absent_in_sample": 0,
+      "chromosome_convention": "chr_prefixed",
+      "n_bare_chromosome_in_sample": 0,
+      "n_names_ending_underscore_F": 0,
+      "interval_convention": "half_open_0_based",
+      "interval_convention_basis": "modal stop-start is 200 against a 200 nt element",
+      "width_census_sample": {
+        "200": 4000
+      }
+    },
+    "WTC11": {
+      "sheet": "WTC11 large-scale",
+      "header_row_1based": 1,
+      "columns": [
+        "name",
+        "category",
+        "chr.hg38",
+        "start.hg38",
+        "stop.hg38",
+        "str.hg38",
+        "230nt sequence (15nt 5' adaptor - 200nt element - 15nt 3' adaptor)"
+      ],
+      "assemblies_present": [
+        "hg38"
+      ],
+      "hg38_column_index": {
+        "chr": 2,
+        "start": 3,
+        "stop": 4
+      },
+      "is_hg19_native": false,
+      "n_sampled": 4000,
+      "n_hg38_absent_in_sample": 0,
+      "chromosome_convention": "bare",
+      "n_bare_chromosome_in_sample": 4000,
+      "n_names_ending_underscore_F": 2000,
+      "interval_convention": "half_open_0_based",
+      "interval_convention_basis": "modal stop-start is 200 against a 200 nt element",
+      "width_census_sample": {
+        "200": 4000
+      }
+    }
+  },
+  "oracle_side_footprint": {
+    "train": {
+      "split": "train",
+      "n_runs": 247767,
+      "merged_bp": 54388968,
+      "base_fraction_pct": 1.7545,
+      "n_chromosomes": 18,
+      "chromosomes": [
+        "chr1",
+        "chr10",
+        "chr11",
+        "chr12",
+        "chr14",
+        "chr15",
+        "chr16",
+        "chr17",
+        "chr18",
+        "chr2",
+        "chr20",
+        "chr22",
+        "chr3",
+        "chr4",
+        "chr5",
+        "chr6",
+        "chr8",
+        "chr9"
+      ],
+      "parse_accounting": {
+        "track_or_comment": 1,
+        "malformed": 0,
+        "blank": 0
+      },
+      "merge_integrity": {
+        "unsorted": 0,
+        "overlapping": 0,
+        "abutting": 0
+      },
+      "sidecar_agrees_on_verifiable_fields": [
+        "merged_covered_bases",
+        "chromosomes"
+      ],
+      "sidecar_premerge_cross_check": {
+        "intervals_premerge": 1542544,
+        "implied_compression": 5.672268,
+        "sidecar_compression": 5.672267949632727,
+        "agrees": true,
+        "note": "`intervals` is PRE-MERGE and not verifiable from a merged BED. This identity is the available cross-check; it assumes every pre-merge interval is exactly 200 bp."
+      },
+      "random_element_null_per_tier": {
+        ">=1bp": {
+          "k_bp": 1,
+          "exact_qualifying_starts": 99722676,
+          "exact_pct_of_genome": 3.2169,
+          "naive_sum_pct": 3.345,
+          "naive_inflation_x": 1.0398
+        },
+        ">=50bp": {
+          "k_bp": 50,
+          "exact_qualifying_starts": 78340216,
+          "exact_pct_of_genome": 2.5271,
+          "naive_sum_pct": 2.5617,
+          "naive_inflation_x": 1.0137
+        },
+        ">=100bp": {
+          "k_bp": 100,
+          "exact_qualifying_starts": 54636735,
+          "exact_pct_of_genome": 1.7625,
+          "naive_sum_pct": 1.7625,
+          "naive_inflation_x": 1.0
+        },
+        "identical_interval": {
+          "k_bp": 200,
+          "exact_qualifying_starts": 5097373,
+          "exact_pct_of_genome": 0.1644,
+          "naive_sum_pct": 0.1644,
+          "naive_inflation_x": 1.0
+        }
+      },
+      "inter_run_gaps": {
+        "n": 247749,
+        "median_bp": 1388,
+        "p10_bp": 123,
+        "p25_bp": 368,
+        "frac_under_element_bp": 0.1544
+      }
+    },
+    "val": {
+      "split": "val",
+      "n_runs": 21291,
+      "merged_bp": 4768609,
+      "base_fraction_pct": 0.1538,
+      "n_chromosomes": 3,
+      "chromosomes": [
+        "chr19",
+        "chr21",
+        "chrX"
+      ],
+      "parse_accounting": {
+        "track_or_comment": 1,
+        "malformed": 0,
+        "blank": 0
+      },
+      "merge_integrity": {
+        "unsorted": 0,
+        "overlapping": 0,
+        "abutting": 0
+      },
+      "plumbing_gate_chromosomes_match_split_rule": true,
+      "plumbing_gate_is_true_by_construction_never_evidence": true
+    },
+    "test": {
+      "split": "test",
+      "n_runs": 24740,
+      "merged_bp": 5441088,
+      "base_fraction_pct": 0.1755,
+      "n_chromosomes": 2,
+      "chromosomes": [
+        "chr13",
+        "chr7"
+      ],
+      "parse_accounting": {
+        "track_or_comment": 1,
+        "malformed": 0,
+        "blank": 0
+      },
+      "merge_integrity": {
+        "unsorted": 0,
+        "overlapping": 0,
+        "abutting": 0
+      },
+      "plumbing_gate_chromosomes_match_split_rule": true,
+      "plumbing_gate_is_true_by_construction_never_evidence": true
+    }
+  },
+  "frozen_tier_set": [
+    {
+      "name": ">=1bp",
+      "min_overlap_bp": 1
+    },
+    {
+      "name": ">=50bp",
+      "min_overlap_bp": 50
+    },
+    {
+      "name": ">=100bp",
+      "min_overlap_bp": 100
+    },
+    {
+      "name": "identical_interval",
+      "min_overlap_bp": 200
+    }
+  ],
+  "frozen_outcome_vocabulary": [
+    "LOCUS_OVERLAP_EXCEEDS_NULL",
+    "LOCUS_OVERLAP_AT_NULL",
+    "LOCUS_OVERLAP_BELOW_NULL",
+    "REFUSED_POSITIVE_CONTROL_FAILED"
+  ],
+  "separate_class_not_a_tier": {
+    "name": "same_interval_different_sequence",
+    "why": "a ref/alt pair at one locus shares the interval and differs in sequence. The exact-sequence hash join was blind to this BY CONSTRUCTION, so it is a class of its own and must never be folded into the exact-match count."
+  },
+  "assembly_rail": "coordinates are read from NAMED assembly columns only. No coordinate is derived from or cross-checked against an element ID, and an absent hg38 coordinate is reported missing rather than filled from hg19.",
+  "honest_limits": [
+    "Schema figures come from a header read plus a bounded row sample, not a full parse, so per-cell absent-hg38 counts are SAMPLE rates and not cohort totals.",
+    "The nulls assume UNIFORM element placement over a 3.1 Gbp genome. They are a reference for reading an observed rate, never a prediction about our corpus, which is cCRE/DNase/TSS-selected and non-uniform by construction.",
+    "The chromosome-geography checks are TRUE BY CONSTRUCTION from the published split rule. They detect a broken parse and nothing else, and are blind to assembly and off-by-one error. They are labelled plumbing gates and are not evidence.",
+    "This probe establishes FEASIBILITY and denominators only. It measures no overlap, and a pinned schema is not a validated join."
+  ]
+}
