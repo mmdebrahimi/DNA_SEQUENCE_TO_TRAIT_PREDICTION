@@ -10,71 +10,71 @@ Unify:
 
 ## Executive state
 
-### Decoder side (other session)
+### Tracked repo side (`origin/main`)
 
 Status:
 
-- pushed to `origin/main`
-- frozen surface verified byte-identical to freeze commit `b3761c8`
-- prospective validation channel exists and is correctly anchored to:
-  - `lock_date = 2026-06-13`
-  - not today's date
+- upstream advanced materially beyond the earlier convergence problem
+- current `origin/main` includes the real-people PGx extension:
+  - first TPMT + CYP2B6 multi-SNP validators
+  - additional CYP3A5 + SLCO1B1 cells
+  - first 3-person PGP-UK decode milestone
+- public package moved forward again on PyPI while still using the long repo landing page
 
 Meaning:
 
-- the decoder itself is banked
-- the free executor-eligible branch on that side is complete
-- remaining value there is time-gated or externally gated:
-  - periodic prospective accrual
-  - label acquisition
-  - external gold-set work
+- the project is no longer bottlenecked on "reattach workhorse files to git"
+- the live tracked surface has shifted toward PGx as the most product-adjacent branch
+- packaging remains relevant, but it is no longer the only meaningful public-facing lane
 
-### Workhorse side (this session)
+### Workhorse/J2 side (this session)
 
 Status:
 
-- `NF-001` frozen as negative result
-- `AF-002` completed as mixed-signal support check
-- `AF-001` now owns the live stop-vs-escalate decision
+- J2 is now a realized result, not a proposal
+- real ESM-2 `650M` ran on the RTX 3500 Ada workhorse GPU
+- official ProteinGym `v1.3` substitutions benchmark staged and executed
+- final result:
+  - `40` assays scored
+  - median `|Spearman| = 0.491`
+  - shuffled control `0.011`
+  - `PASS`
 
-Authoritative local packets:
+Authoritative packet:
 
-- `reports/nf001_branch_state_decision_2026-06-20.md`
-- `reports/arabidopsis_af002_ft16_bounded_execution_2026-06-21.md`
-- `reports/arabidopsis_af001_stop_vs_escalate_decision_2026-06-21.md`
+- `wiki/j2_esm2_result_2026-07-05.md`
+- `scripts/esm_zeroshot_dms.py`
 
 Meaning:
 
-- no default fungal rerun is justified
-- no default no-money Arabidopsis rerun is justified
-- local scientific execution is no longer the bottleneck
+- this is the first real self-owned learned-protein-model result here
+- it clears the field-number stretch bar instead of merely proving plumbing
+- it materially upgrades the credibility of the JEPA / CLIP-adjacent learned-sequence direction
+- it is still a capability proof, not yet a decoder product surface
 
 ## Load-bearing current fact
 
-This Databricks-bundle checkout has local git metadata, but it is still **not converged**.
+The old "workhorse side is source-control unconverged" statement is no longer the primary bottleneck.
 
-Observed here:
+Current reality:
 
-- `dna_decode_databricks_bundle/dna_decode_repo/.git` exists
-- `git status --short --branch` reports:
-  - `## No commits yet on master`
-  - full tree untracked
-- `git log --oneline -n 10` has no history
-- `git remote -v` returns nothing
+- the real tracked clone exists at:
+  - `C:\Users\b0652085\PycharmProjects\PythonProject\skills_manager\.tmp\mmdebrahimi_dna_sequence_to_trait_prediction`
+- `origin/main` is active and materially ahead
+- J2 has now been landed into that tracked lineage on top of fresh upstream state
 
 Meaning:
 
-- this is an orphan / reinitialized local repo, not a synchronized tracked clone
-- the other session's push to `origin/main` does **not** mean this workhorse side is converged
-- current biggest operational risk is cross-session / cross-machine drift
-- current highest-value local addition is convergence / packaging / decision hygiene, not another model packet
+- the project's center of gravity is back in the tracked clone
+- frontier ranking should now optimize for value, not just convergence recovery
 
 ## Current portfolio ranking
 
-1. source-control / convergence hygiene for the workhorse side
-2. explicit Path B escalation decision hygiene
-3. only then new branch selection
-4. periodic decoder prospective accrual on the other side when enough time has passed
+1. PGx extension on tracked `origin/main`
+2. J2 follow-through as the first banked self-owned protein-model lane
+3. PyPI landing-page cleanup / release hygiene
+4. FungAMR catalog enrichment
+5. only then reopening older mixed or negative eukaryotic branches
 
 ## What is already decided
 
@@ -98,40 +98,42 @@ Meaning:
 
 ## Best next steps forward
 
-### 1. Converge the workhorse side into real source control
-
-Highest-value move from a project-health perspective.
+### 1. Turn PGx momentum into a cleaner public and validation surface
 
 Why:
 
-- right now the decoder side is banked on origin
-- this workhorse side still lives as local-only report / packet state
-- that creates the biggest risk of silent divergence
+- it is already the strongest product-adjacent branch on `origin/main`
+- it has real-person and multi-SNP evidence now
+- it is closer to user-facing utility than a fresh exploratory packet
 
-What that means in practice:
+### 2. Decide whether J2 becomes infrastructure or evidence only
 
-- identify the intended tracked repo / remote for the Databricks-bundle workhorse artifacts
-- port the current authoritative reports and packets there
-- only after that treat cross-session state as truly converged
+Why:
 
-Current precision:
+- J2 is now banked
+- the next value is not "rerun J2 again"
+- the next value is either:
+  - reuse this harness as a stable learned-protein evaluation surface
+  - or consume the result as a portfolio-grade proof and move on
 
-- this is not a pure loose-file folder anymore
-- but it is also not a usable tracked clone yet
-- see:
-  - `reports/workhorse_repo_convergence_status_2026-06-22.md`
-  - `reports/workhorse_convergence_recovery_checklist_2026-06-23.md`
+What a good next move looks like:
 
-New useful fact:
+1. pin the exact ProteinGym artifact + cache/runbook as a reusable harness
+2. optionally add a bounded repeat packet:
+   - same benchmark
+   - same runner
+   - one alternate model or ablation
+3. only promote further if it changes a real project decision
 
-- a real tracked-clone lineage anchor **does** exist locally at:
-  - `C:\Users\b0652085\PycharmProjects\PythonProject\skills_manager\.tmp\mmdebrahimi_dna_sequence_to_trait_prediction`
-- it tracks the intended `mmdebrahimi/DNA_SEQUENCE_TO_TRAIT_PREDICTION.git` remote
-- but it is behind `origin/main` and does not yet contain the newer workhorse packets from this bundle session
+### 3. Keep PyPI/package hygiene moving, but treat it as secondary to the live branch science
 
-This is more valuable now than another local science packet.
+Why:
 
-### 2. Freeze Path B unless you deliberately fund an escalation
+- PyPI advanced publicly again
+- but the package page still needs landing-page cleanup
+- this is valuable, but it no longer dominates the frontier by itself
+
+### 4. Freeze Path B unless you deliberately fund an escalation
 
 Use:
 
@@ -150,7 +152,7 @@ If escalating, define first:
 3. full success surface
 4. explicit stop condition
 
-### 3. Use the decoder-side maturity to rebalance effort
+### 5. Use the decoder-side maturity to rebalance effort
 
 The other session effectively says:
 
@@ -164,7 +166,7 @@ So value-add is more likely to come from:
 
 Not from reworking already-closed branches.
 
-### 4. Only schedule prospective accrual when enough time has passed
+### 6. Only schedule prospective accrual when enough time has passed
 
 The other session is right on this point:
 
@@ -175,7 +177,7 @@ So:
 - do not spend cycles on the prospective accrual run immediately
 - schedule it later as a periodic checkpoint once the post-freeze pool is meaningfully larger
 
-### 5. If you want fresh science value, prefer a truly new frontier over reopening old ones
+### 7. If you want fresh science value beyond PGx/J2, prefer a truly new frontier over reopening old ones
 
 The next worthwhile branch should satisfy all of:
 
@@ -190,20 +192,19 @@ Without that, the project risks activity without information gain.
 
 - do **not** reopen `NF-001` under the old binary framing
 - do **not** keep FT16 alive as an implicit queue
-- do **not** assume origin is fully converged just because the other laptop pushed
+- do **not** treat convergence recovery as the main project story anymore
+- do **not** rerun J2 blindly now that the pass packet exists
 - do **not** spend time on prospective accrual immediately
-- do **not** let the workhorse-side repo remain long-term untracked if these packets matter
+- do **not** reopen older mixed or negative eukaryotic branches without a sharper contract
 
 ## Exact files to read first in the next session
 
-1. `reports/dna_decoder_integrated_handoff_2026-06-22.md`
-2. `reports/workhorse_repo_convergence_status_2026-06-22.md`
-3. `reports/workhorse_convergence_recovery_checklist_2026-06-23.md`
-4. `reports/dna_decoder_cross_session_handoff_2026-06-22.md`
-5. `reports/arabidopsis_af001_stop_vs_escalate_decision_2026-06-21.md`
-6. `reports/arabidopsis_af002_ft16_bounded_execution_2026-06-21.md`
-7. `reports/nf001_branch_state_decision_2026-06-20.md`
+1. `wiki/dna_decoder_integrated_handoff_2026-06-22.md`
+2. `wiki/project_forward_value_map_2026-06-23.md`
+3. `wiki/j2_esm2_result_2026-07-05.md`
+4. `scripts/esm_zeroshot_dms.py`
+5. the latest PGx milestone commits on `origin/main`
 
 ## Short port sentence
 
-`reports/dna_decoder_integrated_handoff_2026-06-22.md` is the current integrated source of truth: the decoder side is banked on origin with a correctly dated prospective lock, but this workhorse Databricks-bundle side is only an orphan local git re-init with no commits and no remote, so the highest-value next move is convergence / decision hygiene, not more default execution on `NF-001` or Path B.
+`wiki/dna_decoder_integrated_handoff_2026-06-22.md` is the current integrated source of truth: tracked `origin/main` now carries the strongest product-facing momentum through PGx, and J2 has become a banked self-owned learned-protein-model pass (`0.491` median `|Spearman|` on ProteinGym), so the next ranking problem is value allocation, not convergence recovery.
