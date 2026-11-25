@@ -1089,3 +1089,93 @@ conditional distribution cannot already express on this substrate.
 An order-3 Markov chain is a null, not an AR model, so a generator losing to a 4-mer conditional
 distribution says nothing about whether an AR architecture on the identical corpus and scorer would
 have done better. That comparison is still unrun.
+
+## 2026-11-24 (b) — a register write that never happened, a retracted wall, and a suite run with no summary
+
+Artifacts: `wiki/encode_roadmap_cloud_sizing.md` (the memo) ·
+`wiki/encode_substrate_census_2026-11-24.json` ·
+`wiki/encode_roadmap_training_budget_sources.json` ·
+`wiki/encode_roadmap_gate_screen_2026-11-24.json`. Commits `568e6a9e..1e8063d9`. Plan
+`plans/Price_The_Re_Opened_Epigenomics_Goal_On_Measured_Compute_And_Measured_Substrate_Plan/technical-plan.md`.
+The plan priced the ENCODE / Roadmap regulatory goal abandoned on 2026-05-12; it built and trained
+nothing, and the open residuals are in `TODOS.md`.
+
+1. **`ConstraintRegister.register()` mutates memory and returns a `Constraint`, so a registration
+   that never reached disk looks exactly like one that did.** In
+   `~/.claude/skills/soraya/scripts/constraint_expiry.py`, `register()` writes into `self._data` and
+   returns the object; **`save()` is a separate public method**, and its only call site in the whole
+   module is the CLI's `--register` branch (line 465). So the *library* API — the one an agent reaches
+   for when it imports the module — is write-silent, and `resolve()` and `check()` have the same
+   shape. Measured consequence: two registrations this session reported success, printed plausible
+   before/after row counts, and left `git diff` **completely empty**; and commit `cfdf4452`, whose
+   message reads *"Register the epigenomics goal's real constraint"*, added **no register row at
+   all** — `git show --numstat cfdf4452` is one line of `project_state/glm-umbrella-2026-10-07.md`
+   and nothing else. **The tell was arithmetic, not an error message**: two registrations each
+   claiming +1 produced a total that had not moved. Same family as the exit-0-while-doing-nothing
+   traps already recorded for this host (`robocopy` without `MSYS_NO_PATHCONV`, the piped-timeout
+   kill). **The rule: after a write through a register-style API, re-read from disk into a FRESH
+   object and confirm with `git numstat`** — never the returned value and never an in-memory row
+   count, since both are produced *before* the write that may not happen. Done that way the real
+   write is visible: 16 → 18 rows, 10 → 12 unresolved.
+
+2. **A retraction — and both sides of the comparison were the wrong quantity.** Commit `615c5467`
+   published *"data is the wall: 64,046.7 GiB against 21.3 GB free local disk"*, and it was said
+   aloud before it was checked; `15998565` carries the retraction in the memo as a visible
+   correction rather than a quiet edit. The **numerator** was a census of every released bigWig in
+   four assay families — unfiltered by organism (mouse included), by assembly, by output type and by
+   replicate, and raw signal rather than 128 bp bins — which against the reference's sourced track
+   composition is **20.7× its histone and 16.4× its DNase/ATAC tracks**. The census stays correct
+   *as a count*; it was a count of a different thing. The **denominator** was the wrong machine:
+   training runs on the cloud card the memo measures, so the ceiling is cloud storage, not this
+   laptop's `C:`. Computed properly the training tensor is **301.7–517.1 GiB**, so the retracted
+   figure overstated the quantity that matters by **212×** — and ~300–520 GiB is not obviously
+   blocking. **Two checks before any feasibility verdict: ask what the numerator is a count OF (a
+   released-file inventory is not a training set), and ask which machine the denominator belongs
+   to.** A wall is the single claim most worth re-deriving before publishing, because its only
+   function is to stop work.
+
+3. **A whole-suite `pytest tests/` run on this host crashes at teardown and prints NO summary, so
+   the exit code you read can be the pipeline's rather than pytest's.** The crash is a `pluggy`
+   `AttributeError` raised inside `pytest_unconfigure`, then `0xc0000374` (heap corruption) — *after*
+   every test has run, which is the dangerous part: the work completed and only the report was lost,
+   so the failure looks like an aborted run. **Splitting into 4 chunks with `--junit-xml` per chunk
+   works**, and produced a complete, nameable failure set: **9,924 collected / 9,738 passed / 14
+   failed / 172 skipped** over 9,924 unique test ids with **zero overlap between chunks** (checked,
+   not assumed) and 1,758 s of summed chunk time — which is not wall-clock, since the chunks ran
+   separately. Prefer the XML over stdout whenever the totals matter — it is
+   written per chunk and survives a teardown that eats the terminal report. Read a missing summary
+   as a crash to work around, not as a run to re-interpret.
+
+4. **A screen that REFUSES is saying the candidate is outside its vocabulary, which is not the same
+   as rejecting it.** `rejection_gates` accepts exactly two `intended_layer` values (`L1_AMR_RS`,
+   `L4_forward_continuous`) and refused this candidate outright, because L4 is defined as
+   *constructed-variation continuous fitness* while a regulatory track is natural-population and
+   non-fitness. **Declaring L4 anyway would have been worse than a mislabel:** only G6 takes the
+   layer itself, but the declaration asserts `variation_is_constructed`, and **five gates dispatch
+   on that**, so it would have changed which gates ran. The gates therefore neither cleared nor
+   rejected the label question — **the refusal IS the result**, and `REFUSED` must not be read as
+   `REJECTED`. Called directly, **G1/G2/G3/G7 pass and none trips**; the six gaps are
+   `insufficient_data` for three distinct reasons, which is the part worth carrying. **UNDEFINED,
+   so no cohort helps:** G9/G10 presuppose a variant-keyed rule and there is no causal-variant
+   catalog at all (supplying 0.0 would assert every locus records one), and G4's
+   surveillance-domination has no chromatin analogue. **A number exists but is the WRONG
+   quantity:** G5 wants fetchable assemblies and the census counted 60,055 *files*; G8 wants
+   effective lineages and the census counted biosample *ontology terms* — either substitution
+   would manufacture a PASS. **Genuinely unmeasured and cheap:** G6 needs the distribution of
+   signal VALUES, and the census never read one. Withholding an input is the honest move when the
+   available number is not the asked-for one.
+
+5. **The endpoint field is chosen by what was MEASURED, not by the organism it was measured in.**
+   The commissioning plan placed this candidate in `natural_organism_supervised`; the correct cell
+   is `natural_molecular_supervised_blindspot`, because a coverage-at-a-locus readout is a
+   **molecular** quantity however complex the organism. The error ran in the cautious direction
+   (`REQUIRES_DECONFOUNDING` is stricter than `WORKS`), which is the only reason it cost nothing —
+   and the `WORKS` verdict must not be quoted in support here, since its evidence base is supervised
+   variant-effect scoring in **one virus**. `eval/regime.py` was read, not edited: recording which
+   cell a candidate occupies is a read; adding a row is an authority call.
+
+**Open and worth naming:** compute is cleared and the data question is **not**. The requirement is
+computed; the cloud storage ceiling is unverified because every Kaggle-owned docs page is
+client-rendered and returned only its HTML title across 7 fetch attempts on 5 URLs, and **no number
+was recalled from memory** — the same refusal the absent wall-clock got, and the same shape as the
+ECOFF catalog's unsourced-value rejection. One browser lookup resolves it; see `TODOS.md`.

@@ -395,7 +395,7 @@ classification is superseded twice over: measured directly on this host 2026-11-
 (`pytest tests/test_freeze_frame_bar.py tests/test_human_natural.py` -> 2 failed / 37 passed, 123 s),
 two DIFFERENT failures are neither absent data nor the count rail, and both pre-date this plan's
 commits.
-**The suite totals were NOT re-measured**, so only the classification is corrected, not the counts.
+**[UPDATED 2026-11-24] The suite totals HAVE since been re-measured, and this classification is now confirmed by NAME rather than left to arithmetic**: a 4-chunk `--junit-xml` run (the one-shot run crashes at teardown with no summary — `LESSONS_LEARNED.md` 2026-11-24 (b)) gives 9,924 collected / 9,738 passed / **14 failed** / 172 skipped, of which 12 are absent DATA (cyp4f2 7, essentiality-ladder 3, pneumo 1, README-quickstart 1) and the other 2 are exactly the two below. **Read from the junit `<failure>` messages, not from file names** — 11 of the 12 name the missing path or the literal `D: data absent`, but `test_essentiality_report_card_ladder::test_the_committed_card_kept_its_two_original_rows_field_identical` asserts a committed-card field (`NOT_EVALUATED` != `TRANSFER_SCORED`), which is consistent with the same absent rung but does not say so itself.
 README has been corrected in place; `CLAUDE.md` has ~one word of headroom and was left alone.
 
 - [ ] **`tests/test_freeze_frame_bar.py::test_the_check_order_MATCHES_the_graders_check_order_exactly`
@@ -469,6 +469,63 @@ committed 2026-11-22 artifact is deliberately **unedited** and keeps its verdict
   set reads **ADMISSIBLE** at 3,600 predictions. Nothing it says is false of that run; what is
   missing is the correction, so a reader lands on "the orthology-free set is sub-uniform" as the
   module's worked example. **A code edit, not documentation scope** — flagged here rather than taken.
+
+## ENCODE / Roadmap regulatory goal — PRICED; compute cleared, data open (2026-11-24)
+
+Plan `plans/Price_The_Re_Opened_Epigenomics_Goal_On_Measured_Compute_And_Measured_Substrate_Plan/technical-plan.md`;
+memo `wiki/encode_roadmap_cloud_sizing.md`. **The 2026-05-12 compute cut no longer binds.** On a free
+T4 the reference architecture's full 196,608 bp context fits at 1,024 channels / 134.63M params in
+10.86 of 14.56 GiB (44 of 45 configs fit; the only OOM is fp32 at the largest shape, so half precision
+is the *enabling* lever). Nothing was downloaded and nothing was trained, and **the memo deliberately
+does not recommend pursuing the goal** — it prices what can be priced.
+
+- [ ] **[OPEN — one browser lookup, and it is the whole remaining blocker] Read Kaggle's three storage
+      limits and write them to `wiki/kaggle_storage_limits.md`.** That path *is* the expiry test of
+      constraint `regulatory-training-tensor-vs-unverified-cloud-storage`, which reads
+      **still-binding** until the file exists. Needed: maximum private dataset size, `/kaggle/working`
+      space, and the session / weekly GPU caps. **Why a human:** every Kaggle-owned docs page is
+      client-rendered and returned only its HTML title across 7 fetch attempts on 5 URLs, and no
+      number was recalled from memory — a plausible-looking limit produces a fully self-consistent
+      feasibility verdict that is entirely wrong. The other side is already computed (**301.7 GiB** at
+      the reference's sourced 896 bins in float16; 517.1 at the 1,536 bins measured here; 603.3 at 896
+      bins in float32; +6.2 GiB input sequence), so the verdict resolves the moment this lands.
+- [ ] **[USER AUTHORITY] Is a 1,024-channel variant still "the goal"?** The input context matches the
+      reference **exactly**; the width does not (1,024 measured against 1,536 sourced), and the
+      reference's total parameter count is **unpublished**, so no sourced parameter comparison exists.
+      A scope question, not a technical one. Related: the training-time ratio the plan asked for is
+      **not computable** — the reference's wall-clock and step count are both unpublished (a scan over
+      all 78,591 readable characters found zero duration-shaped expressions), so it is recorded
+      `unsourced` with no number rather than approximated.
+- [ ] **[USER AUTHORITY] Whether to add a third `intended_layer` to `rejection_gates.py`.** The gate
+      screen **REFUSED** this candidate for want of a layer that fits
+      (`wiki/encode_roadmap_gate_screen_2026-11-24.json`). **A REFUSED screen is not a rejection** —
+      the gates never ran as a whole screen, so the label question is unresolved, not closed. Declaring
+      `L4_forward_continuous` anyway would not merely mislabel it: only G6 takes the layer, but the
+      declaration asserts `variation_is_constructed` and **five gates dispatch on that**, changing
+      which gates run. Called directly, **G1/G2/G3/G7 pass and none trips**; of the 6
+      `insufficient_data` gaps, **3 are UNDEFINED** (G9/G10 presuppose a variant-keyed rule — there is
+      no causal-variant catalog; G4's surveillance domination has no chromatin analogue), **2 have a
+      number that is the wrong quantity** (G5 wants fetchable assemblies, the census counted files;
+      G8 wants effective lineages, it counted biosample ontology terms), and **only G6 is genuinely
+      unmeasured and cheap** — it needs the distribution of signal VALUES, i.e. one bigWig read.
+- [ ] **[USER AUTHORITY] Does `local-gpu-vram-blocks-dna-lm-finetune`'s `resolved=True` still stand?**
+      Left untouched, because that field asserts a *user action*. Its `gpu-vram-gte 8` test returns
+      `unknown` on this host, so it is now **measured** rather than argued that the test could never
+      have fired for a cloud card. Its sibling `encode-roadmap-regulatory-goal-unsized-on-cloud` reads
+      **EXPIRED** — `file-exists` fires on the memo *existing*, not on its verdict, so a pessimistic
+      memo expires it exactly as a favourable one would. EXPIRED there means *it was measured*.
+- [ ] **[OPEN — outside this repo, so a user call] `ConstraintRegister.register()` silently drops its
+      write.** `~/.claude/skills/soraya/scripts/constraint_expiry.py`: `register()` (and `resolve()`,
+      and `check()`) mutate `self._data` and return a value without calling `save()`, whose only call
+      site in the module is the CLI's `--register` branch. Pairing the library API with a save — or
+      making the mutators refuse without one — is the fix; it is a skill file, not project source.
+      Until then **every write through that API needs a disk re-read into a fresh object plus
+      `git numstat`**. Full account in `LESSONS_LEARNED.md` 2026-11-24 (b).
+- [ ] **[OPEN] No bigWig → binned-tensor pipeline exists in this repo.** The substrate was *counted*,
+      not acquired: 10,388 experiments / 60,055 bigWigs / 232–892 distinct biosample terms per assay
+      (`scripts/encode_substrate_census.py`, read-only, not a console entry point). The census's
+      per-file byte figures are themselves median-sampled estimates. Acquisition is a separate
+      question from sizing, and neither is started.
 
 ## Pre-existing known limitations (not bugs)
 
