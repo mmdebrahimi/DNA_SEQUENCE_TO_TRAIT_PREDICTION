@@ -1,0 +1,117 @@
+{
+  "record": "encode-roadmap-training-budget-sources-v1",
+  "date": "2026-11-24",
+  "question": "what did the reference architecture's published training actually cost, sourced per figure, so the measured T4 capacity can be read against it rather than guessed at",
+  "extraction_method": "Every `verbatim_quote` was pulled programmatically out of the fetched page text by regex rather than typed, so a quote cannot be a transcription error. Whitespace is normalised (runs of spaces collapsed); wording is untouched. The generator REFUSES to emit if any quote fails to match.",
+  "reference_architectures": {
+    "enformer": {
+      "citation": "Avsec et al., 'Effective gene expression prediction from sequence by integrating long-range interactions'; read from the bioRxiv full text.",
+      "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full",
+      "fetched": "2026-11-24",
+      "readable_chars": 78591,
+      "figures": {
+        "training_hardware": {
+          "n_devices": 64,
+          "device": "TPU v3 core",
+          "batch_per_device": 1,
+          "batch_total": 64,
+          "verbatim_quote": "The main Enformer model with 1,536 channels was trained on 64 TPU v3 cores with batch size of 64 (1 per core) using all-reduce gradient aggregation across the cores at every step.",
+          "note": "Subject is explicit: this is the MAIN model, not an ablation.",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
+        "main_model_channels": {
+          "channels": 1536,
+          "verbatim_quote": "The main Enformer model with 1,536 channels",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
+        "input_context_bp": {
+          "context_bp": 196608,
+          "prior_context_bp": 131072,
+          "verbatim_quote": "196,608 bp from the original 131,072 bp",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
+        "output_tracks_human": {
+          "n_tracks": 5313,
+          "verbatim_quote": "each example contains 2,131 transcription factor (TF) ChIP-seq, 1,860 histone modification ChIP-seq, 684 DNase-seq or ATAC-seq, and 638 CAGE tracks (total 5,313, Supplementary Table 2 )",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
+        "training_sequences_human": {
+          "n_train": 34021,
+          "n_val": 2213,
+          "n_test": 1937,
+          "verbatim_quote": "The dataset contains 34,021 training, 2,213 validation, and 1,937 test sequences for the human genome",
+          "note": "FOUND ONLY ON THE SECOND PROBE. A first regex expecting '34,021 training sequences' returned ZERO hits, because the text lists the three splits before the noun. A probe returning no hits is evidence about the PROBE, not about the source -- this figure came within one step of being recorded `unsourced` while being plainly stated.",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
+        "lr_warmup_steps": {
+          "warmup_steps": 5000,
+          "verbatim_quote": "We linearly increased the learning rate from 0 to target value in the first 5,000 steps of training.",
+          "note": "This is a LEARNING-RATE RAMP, not a training length.",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
+        "human_finetune_steps": {
+          "finetune_steps": 30000,
+          "verbatim_quote": "Finally, we fine-tuned the Enformer model on human data for 30k steps using a lower learning rate of 0.",
+          "note": "A fine-tune ON TOP of the main run, so it is not the main run's step count.",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
+        "ablation_budget": {
+          "channels": 768,
+          "context_bp": 131072,
+          "batch_total": 32,
+          "n_devices": 32,
+          "steps": 500000,
+          "verbatim_quote": "For the ablation studies and hyperparameter sweeps shown in Extended Data Fig. 2 , we used 768 channels",
+          "second_quote_budget": "a shorter 131 kb input sequence, and batch size of 32 trained on 32 TPU v3 cores.",
+          "second_quote": "All models were trained for 500k steps while only storing the model with the highest Spearman correlation of CAGE TSS gene expression across genes averaged across experiments computed on the validation set every 1,000 steps.",
+          "note": "LOAD-BEARING SCOPE. The '500k steps' sentence sits INSIDE the ablation/sweep methods paragraph, which opens by stating those models used 768 channels, a 131 kb context, batch 32 on 32 cores, and were NOT fine-tuned on human data. Reading 'all models' as the MAIN run is therefore unsupported by its own context. An earlier sub-agent report made exactly that attribution; it was corrected here against the source.",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        }
+      },
+      "unsourced_figures": {
+        "main_model_parameter_count": {
+          "unsourced": true,
+          "reason": "No total parameter count for the main model is stated in the fetched full text."
+        },
+        "main_model_training_steps": {
+          "unsourced": true,
+          "reason": "The only step count in the methods is the 500k figure, whose own paragraph scopes it to the ablation/sweep models. The MAIN run's step count is not stated."
+        },
+        "wall_clock_training_duration": {
+          "unsourced": true,
+          "reason": "MEASURED ABSENCE, not an oversight: a scan for any duration-shaped expression (minutes/hours/days/weeks adjacent to a number) across all 78,591 readable characters returned ZERO matches. The paper states hardware, not time."
+        }
+      }
+    }
+  },
+  "derived": {
+    "requested_by_plan": "reference training compute / one measured T4 session",
+    "computable": false,
+    "unsourced": true,
+    "reason": "The numerator needs the main run's wall-clock or its step count. Neither is published (see the two `unsourced` entries above). Under this project's own refusal discipline a figure without a locator is recorded with NO number rather than approximated, so no training-time ratio is stated here. Inventing one would yield a fully self-consistent feasibility verdict that is entirely wrong, with nothing downstream able to catch it.",
+    "what_IS_computable_instead": {
+      "name": "examples_in_flight_per_step_ratio",
+      "label": "derived",
+      "value": 64.0,
+      "arithmetic": "64 / 1",
+      "input_a": {
+        "name": "reference_examples_per_step",
+        "value": 64,
+        "provenance": "sourced -- training_hardware (64 cores x batch 1 per core)"
+      },
+      "input_b": {
+        "name": "measured_examples_per_step",
+        "value": 1,
+        "provenance": "measured -- scripts/kaggle/encode_sizing_t4_kernel.py builds its input as torch.randn(1, 4, context_bp), i.e. batch size 1"
+      },
+      "reading": "The reference run carried 64x more examples per optimiser step than the measured T4 configuration. A step here is NOT a step there, so the measured 31,509 steps per 9-hour session must never be set against a published step count without this factor applied.",
+      "is_NOT": "a training-time ratio, a compute-FLOP ratio, or any statement about how much of the reference training a T4 could complete. It is a batch-size normaliser and a device-count contrast, nothing more."
+    }
+  },
+  "honest_limits": [
+    "ONE reference architecture. The plan allowed 'any successor whose paper states one'; no successor was fetched, so this speaks for Enformer only.",
+    "Sourced from the bioRxiv full text, which is what was actually read. The journal version may differ; the citation names the version fetched rather than the version of record.",
+    "A sourced hardware figure is not a cost figure. 64 TPU v3 cores bounds the hardware CLASS; with no duration it does not bound total compute.",
+    "The absent wall-clock is a measured absence in THIS text, not proof it is unpublished anywhere -- a supplement or a later paper could state it."
+  ]
+}
