@@ -1,0 +1,173 @@
+{
+  "record": "encode-roadmap-gate-screen-v1",
+  "date": "2026-11-24",
+  "candidate": "ENCODE multi-tissue regulatory-activity prediction (Enformer-shaped)",
+  "question": "does a usable LABEL exist for a tissue-specific regulatory-activity target, and is the rule scoreable at all, screened through the project's own ten rejection gates",
+  "whole_candidate_result": {
+    "candidate": "ENCODE multi-tissue regulatory-activity prediction (Enformer-shaped)",
+    "intended_layer": "L_regulatory_track_regression",
+    "verdict": "REFUSED",
+    "reason": "intended_layer must be one of ('L1_AMR_RS', 'L4_forward_continuous'); got 'L_regulatory_track_regression'. The layer decides which gates even apply, so it cannot be inferred.",
+    "gates": [],
+    "contract": "A PASS bounds only whether a usable LABEL exists and whether the rule is scoreable. It is NOT a build recommendation: reachability of the artifact, regime fit (eval/regime.py) and worth-doing are separate questions.",
+    "THE_FINDING": "REFUSED, and the refusal is the result rather than an obstacle to it. The screen accepts exactly two intended layers, L1_AMR_RS and L4_forward_continuous, and L4 is defined in the module as a CONSTRUCTED-VARIATION CONTINUOUS-FITNESS substrate. This candidate's variation is natural and its readout is not fitness, so no declared layer fits it. Declaring L4 anyway would not merely mislabel the candidate -- five gates dispatch on `variation_is_constructed`, so it would change which gates run.",
+    "what_this_does_NOT_mean": "it is NOT a rejection of the candidate. The gates never ran as a whole screen, so they neither cleared nor rejected the label question. Adding a third layer to rejection_gates.py is a separate authority call and is deliberately out of scope."
+  },
+  "per_gate_detail": {
+    "method": "the gate functions were called DIRECTLY, because a REFUSED whole-candidate result returns an empty gate list. Only G6 takes a layer, and it was passed the honest non-declared layer name, which routes it to the censored-fraction branch.",
+    "gates": {
+      "G1": {
+        "gate": "G1",
+        "verdict": "pass",
+        "reason": "label recorded as a measurement: ENCODE signal tracks are instrument readings from wet-lab assays -- DNase-seq, ATAC-seq, histone ChIP-seq and RNA-seq -- processed by ENCODE's uniform pipeline into per-base coverage. No genomic prediction tool produces the label; the sequencer does.",
+        "evidence": {
+          "label_provenance_evidence": "ENCODE signal tracks are instrument readings from wet-lab assays -- DNase-seq, ATAC-seq, histone ChIP-seq and RNA-seq -- processed by ENCODE's uniform pipeline into per-base coverage. No genomic prediction tool produces the label; the sequencer does."
+        }
+      },
+      "G2": {
+        "gate": "G2",
+        "verdict": "pass",
+        "reason": "largest source holds 39% of the cohort (bar 60%); this is the COHORT-WIDE fallback, weaker than the class x source contingency the memo specifies",
+        "evidence": {
+          "largest_source_share": 0.39
+        }
+      },
+      "G3": {
+        "gate": "G3",
+        "verdict": "pass",
+        "reason": "label is an assay reading: the readout is read coverage at a genomic position in a named biosample, which is an assay measurement. It is not a collection-context proxy such as isolation site: the quantity is produced by the assay, not by where or why the sample was obtained.",
+        "evidence": {
+          "label_semantics_evidence": "the readout is read coverage at a genomic position in a named biosample, which is an assay measurement. It is not a collection-context proxy such as isolation site: the quantity is produced by the assay, not by where or why the sample was obtained."
+        }
+      },
+      "G4": {
+        "gate": "G4",
+        "verdict": "insufficient_data",
+        "reason": "no `non_ecosystem_min_class_n` supplied",
+        "evidence": {},
+        "withheld_input": "non_ecosystem_min_class_n",
+        "why_not_supplied": "surveillance domination is an AMR-epidemiology concept -- a class supplied mostly by routine surveillance sampling. There is no analogue for chromatin signal across cell types, so the quantity is UNDEFINED here, not unmeasured. No substitute exists that would be this number."
+      },
+      "G5": {
+        "gate": "G5",
+        "verdict": "insufficient_data",
+        "reason": "no `n_fetchable_assemblies` supplied",
+        "evidence": {},
+        "withheld_input": "n_fetchable_assemblies",
+        "why_not_supplied": "the census measured 60,055 released bigWig FILES, which is not an assembly count. Supplying it would clear a bar built for genome-assembly attrition in AMR cohorts (G5 asks how many records survive to a fetchable assembly) and would manufacture a PASS from an unrelated quantity."
+      },
+      "G6": {
+        "gate": "G6",
+        "verdict": "insufficient_data",
+        "reason": "no `censored_fraction` supplied",
+        "evidence": {},
+        "withheld_input": "censored_fraction / mode_share",
+        "why_not_supplied": "NOTHING HAS BEEN DOWNLOADED. Measuring label censoring or assay degeneracy needs the distribution of signal VALUES, which requires reading at least one bigWig. The census counted files, experiments, biosample terms and bytes -- it never read a value. This is genuinely unmeasured and cheaply measurable."
+      },
+      "G7": {
+        "gate": "G7",
+        "verdict": "pass",
+        "reason": "submitter/center/collection populated on 100% of records",
+        "evidence": {
+          "provenance_field_populated_fraction": 1.0
+        }
+      },
+      "G8": {
+        "gate": "G8",
+        "verdict": "insufficient_data",
+        "reason": "no `min_effective_lineages` supplied",
+        "evidence": {},
+        "withheld_input": "min_effective_lineages",
+        "why_not_supplied": "the census measured distinct biosample TERMS (505 DNase, 232 ATAC, 266 histone, 892 RNA). A biosample term is an ontology label, not an effective lineage; the nearest real analogue is distinct DONORS, which was not measured. Supplying a term count would clear a clonality bar with a number that is not clonality."
+      },
+      "G9": {
+        "gate": "G9",
+        "verdict": "insufficient_data",
+        "reason": "no `loci_without_recorded_variant_fraction` supplied",
+        "evidence": {},
+        "withheld_input": "loci_without_recorded_variant_fraction",
+        "why_not_supplied": "G9 presupposes a VARIANT-KEYED rule: it asks what share of loci record no concrete causal variant. This candidate's rule is a sequence-to-signal regression with no causal-variant catalog at all, so the quantity is UNDEFINED rather than unmeasured. Supplying 0.0 would assert that every locus records a causal variant, which is false."
+      },
+      "G10": {
+        "gate": "G10",
+        "verdict": "insufficient_data",
+        "reason": "no `off_panel_variant_fraction` supplied",
+        "evidence": {},
+        "withheld_input": "off_panel_variant_fraction",
+        "why_not_supplied": "same shape as G9 -- it asks what share of recorded causal variants are indel or structural. There are no recorded causal variants, so the denominator is zero and the fraction is undefined."
+      }
+    },
+    "summary": {
+      "pass": [
+        "G1",
+        "G2",
+        "G3",
+        "G7"
+      ],
+      "trip": [],
+      "insufficient_data": [
+        "G10",
+        "G4",
+        "G5",
+        "G6",
+        "G8",
+        "G9"
+      ],
+      "not_applicable": [],
+      "needs_human_evidence": []
+    }
+  },
+  "judgment_gates_supplied": {
+    "G1": {
+      "assertion": "label_is_measured = True",
+      "basis": "ENCODE signal tracks are instrument readings from wet-lab assays -- DNase-seq, ATAC-seq, histone ChIP-seq and RNA-seq -- processed by ENCODE's uniform pipeline into per-base coverage. No genomic prediction tool produces the label; the sequencer does."
+    },
+    "G3": {
+      "assertion": "label_is_assay_reading = True",
+      "basis": "the readout is read coverage at a genomic position in a named biosample, which is an assay measurement. It is not a collection-context proxy such as isolation site: the quantity is produced by the assay, not by where or why the sample was obtained."
+    },
+    "note": "both are JUDGMENTS, not measurements. They are asserted here with their evidence rather than defaulted, because the screen refuses a verdict while a judgment gate lacks its human reading -- a screen that defaulted them to pass would be theatre."
+  },
+  "measured_this_session": {
+    "provenance_field_populated_fraction": {
+      "value": 1.0,
+      "how": "ENCODE `lab.title` facet summed across the four assays: 10,388 of 10,388 experiments carry a populated lab. One request per assay at limit=0."
+    },
+    "largest_source_share": {
+      "value": 0.39,
+      "how": "largest lab (John Stamatoyannopoulos, UW) holds 4,052 of 10,388 experiments; 27 labs",
+      "scope_note": "this IS `largest_source_share`, so it is supplied. But G2's named confound -- does the SOURCE predict the CLASS -- is additionally ILL-POSED here, because the target is a continuous signal rather than a class. Read the PASS as 'no evidence of source domination', NOT as 'the confound was tested and found absent'. The gate's own reason string already flags that the cohort-wide share is weaker than the class x source contingency."
+    }
+  },
+  "regime_map": {
+    "correct_cell": {
+      "queried": "population=natural, endpoint=molecular, method=supervised",
+      "result": {
+        "regime": "natural_molecular_supervised_blindspot",
+        "verdict": "WORKS",
+        "reason": "SCOPED TO THE BLIND SPOT, not to replacing the catalog: the subset is catalog-NEGATIVE by construction, so the model cannot be rediscovering the catalog, and it still does NOT beat the catalog's 0.926 full-cohort AUC. The LINEAR one-hot model was called a FLOOR on the supervised family until 2026-09-30; it is now MEASURED to be the CEILING for this feature space -- pairwise interactions and a non-linear learner both LOSE on both genes (4 of 4 negative, 2 with a CI entirely below zero; wiki/hiv_context_vs_linear_floor_2026-09-30.md), corroborating the independent 2026-07-11 epistasis negative. That is NOT 'resistance is additive' (capacity may be unaffordable at this sample size) and does NOT test attention over RAW SEQUENCE, which remains unmeasured. All three genes are ONE virus. ALSO CLOSED 2026-10-01: the ORTHOGONAL-MODALITY lever has no room either -- one-hot's blindness to zero-training-signal columns is real (coefficients measured at exactly 0.0) but ABSORBED by per-isolate redundancy (median 1 blind column of 12), so the model scores slightly BETTER where it is blind (0.8229 vs 0.8163); see wiki/hiv_onehot_unseen_headroom_2026-10-01.md. A modality adds where the incumbent representation is STARVED of signal, not where it is merely blind in principle -- which is why the forward cell's single-variant modality lift does not transfer here.",
+        "evidence": "HIV catalog blind spot, now on THREE genes: supervised genotype-token model 0.8102 (RT/EFV) and 0.8923 (integrase/RAL) leave-one-STUDY-out, both PASSING the bar zero-shot ESM2 failed at 0.4485; generalizes across 7 of 8 RT drugs. Protease is UNSCOREABLE -- its own catalog calls 74.2% positive, leaving 3 R of 910 in its blind spot",
+        "artifact": "wiki/glm_alphabet_headroom_2026-09-30.md",
+        "conditions": [],
+        "refused": false
+      },
+      "why_molecular": "a regulatory-activity track is a MOLECULAR readout -- coverage at a locus -- not an organism-level trait. Endpoint is chosen by what is measured, not by the organism it was measured in.",
+      "DO_NOT_OVER_READ": "the verdict is WORKS, and quoting that as support for this candidate would be a serious over-read. The regime's evidence base is the HIV catalog blind spot: a supervised genotype-token model over RT and integrase variants in ONE virus, scored leave-one-STUDY-out on catalog-negative subsets. Its own reason string opens 'SCOPED TO THE BLIND SPOT'. Nothing in that evidence speaks to predicting chromatin signal across human tissues from sequence. The cell matches on three axes and not on substrate."
+    },
+    "cell_the_plan_claimed": {
+      "queried": "population=natural, endpoint=organism, method=supervised",
+      "regime": "natural_organism_supervised",
+      "verdict": "REQUIRES_DECONFOUNDING",
+      "correction": "the commissioning plan asserted this cell. It is the WRONG one: it assigns an ORGANISM endpoint to a molecular readout. Worth recording that the error ran in the CAUTIOUS direction -- REQUIRES_DECONFOUNDING is a more guarded verdict than the correct cell's WORKS -- so the mis-assignment would have under-claimed rather than over-claimed."
+    },
+    "regime_py_NOT_edited": true,
+    "note": "recording which cell a candidate occupies is a read; adding a row is an authority call."
+  },
+  "verdict_scope": "A gate PASS bounds the LABEL question ONLY. It is not a build recommendation, and it says nothing about artifact reachability, regime fit, or whether the work is worth doing. Here it does not even bound the label question, because the screen refused for want of a fitting layer.",
+  "honest_limits": [
+    "The whole-candidate screen did not run. Six of ten gates have no usable input, four of them because the quantity is UNDEFINED for this candidate rather than unmeasured.",
+    "G6 is the one withheld gate that is both genuinely unmeasured and cheap to measure: it needs the distribution of signal values, i.e. one downloaded bigWig.",
+    "G1 and G3 are asserted judgments. A reader who disagrees with either assertion should re-screen rather than trust the PASS.",
+    "The two measured inputs describe ENCODE's experiment catalog, not a built cohort. No cohort has been constructed, so no per-class quantity exists to measure."
+  ]
+}
