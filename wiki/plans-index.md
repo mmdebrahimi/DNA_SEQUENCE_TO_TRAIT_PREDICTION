@@ -1124,3 +1124,16 @@ nothing to remove.
 - Step 4 declares the representative re-pretrain (excluding draft E. coli) as a `cost_tier: large` arm under R6 at declaration time, so a cheap eval-side result cannot retire it as redundant. Declared, NOT run.
 
 ---
+
+## [plan_file: Price_The_Re_Opened_Epigenomics_Goal_On_Measured_Compute_And_Measured_Substrate_Plan/] 2026-11-24
+**Summary:** Turn a completed T4 capacity measurement plus a verified-reachable ENCODE API into a decidable go/no-go on the goal abandoned 2026-05-12, without building or training anything.
+**Status:** executed
+
+**Key decisions:**
+- Prices BOTH missing halves and then stops: it produces the memo that discharges `encode-roadmap-regulatory-goal-unsized-on-cloud`, a measured ENCODE substrate census, and a gate-screen verdict from the project's own rejection gates — but does NOT build, train, fine-tune, or fetch training data.
+- Step 2 sources the published training budget BEFORE Step 3 places the measured capacity beside it, so "sufficient" becomes a reading rather than a claim. Every figure carries `source_url` plus a `verbatim_quote`, or is recorded `unsourced: true` with no number, mirroring the refusal discipline in `dna_decode/data/ecoff_catalog.py`.
+- Step 1 counts aligned-signal FILES and distinct `biosample_ontology` terms separately from the 3,582 EXPERIMENT total, because the two differ by roughly an order of magnitude and conflating them would inflate the substrate; the probe refuses rather than reporting zero when `total` is absent.
+- Two high-severity risk flags are carried deliberately: the `file-exists` expiry fires on the memo's EXISTENCE so a pessimistic memo expires the constraint too, and the 31,509-steps-per-session figure is partly a function of the chosen model rather than of the reference architecture.
+- Step 4 records the `regime.py` cell (`natural_organism_supervised`, `REQUIRES_DECONFOUNDING`) WITHOUT editing `regime.py`, and Step 5 leaves the old `local-gpu-vram-blocks-dna-lm-finetune` record's `resolved` flag untouched — both are separate authority calls.
+
+---
