@@ -1,0 +1,100 @@
+{
+  "record": "kaggle-session-storage-measured-v1",
+  "paths": {
+    "/": {
+      "exists": true,
+      "total_gib": 8156.88,
+      "used_gib": 5643.78,
+      "free_gib": 2513.09,
+      "writable": true
+    },
+    "/kaggle": {
+      "exists": true,
+      "total_gib": 8156.88,
+      "used_gib": 5643.78,
+      "free_gib": 2513.09,
+      "writable": true
+    },
+    "/kaggle/working": {
+      "exists": true,
+      "total_gib": 19.52,
+      "used_gib": 0.0,
+      "free_gib": 19.5,
+      "writable": true
+    },
+    "/kaggle/input": {
+      "exists": true,
+      "total_gib": 19.52,
+      "used_gib": 0.0,
+      "free_gib": 19.5,
+      "writable": false
+    },
+    "/kaggle/temp": {
+      "exists": false
+    },
+    "/tmp": {
+      "exists": true,
+      "total_gib": 8156.88,
+      "used_gib": 5643.78,
+      "free_gib": 2513.09,
+      "writable": true
+    },
+    "/root": {
+      "exists": true,
+      "total_gib": 8156.88,
+      "used_gib": 5643.78,
+      "free_gib": 2513.09,
+      "writable": true
+    },
+    "/opt/conda": {
+      "exists": false
+    },
+    "/dev/shm": {
+      "exists": true,
+      "total_gib": 14.0,
+      "used_gib": 0.0,
+      "free_gib": 14.0,
+      "writable": true
+    }
+  },
+  "notes": [],
+  "df": "Filesystem                      Size  Used Avail Use% Mounted on\noverlay                         8.0T  5.6T  2.5T  70% /\ntmpfs                            64M     0   64M   0% /dev\nshm                              14G     0   14G   0% /dev/shm\n/dev/loop2                       20G  124K   20G   1% /kaggle/src\nkkb-production-mirror-us-west1  1.0P     0  1.0P   0% /kaggle/input/datasets/emanueleebrahimi/ft-ckpt-roundtrip-probe\n/dev/mapper/snap                8.0T  5.6T  2.5T  70% /etc/hosts\ntmpfs                           4.0K     0  4.0K   0% /proc/acpi\n",
+  "mounts_kaggle": [
+    "overlay / overlay rw,relatime,lowerdir=l/ZHH7GFKFJS4D666CBHWGWGLDII:l/CVBIOT7GYXILBQ27APVSGX4V3C:l/JBLJEK7MSTF2RUSLD44R2JO7VG:l/KWAJVBMR2PHGKVY2KKTO4JJ5S2:l/A2IEB7EHOR5FDYFDNHSK4IDPO2:l/JFTDG62BTKR6TEZWMP37LPYAI5:l/72RWQOTF7MD3JIFGRCWQIOCDFM:l/BI2ZWYY32RPSCAFICGH4VYYIX4:l/ZAJ4PGKACNP2JX7EWLWYR2U6BK:l/3ZDO6P6HQD3VIRCGAANRVSQRI7:l/HHD6ECXBV3YATZVTMKYHTLMVKJ:l/4PUVLRFPWQMQPMWXGKDAL5AYHH:l/E767GQL2RA6BW3WMM3CGHUHCPA:l/5O3XDVDKDFYFHXPYCDPBNRGU6E:l/TEHEC6DQ4IV37EHHDNEIXAHFZA:l/BKXPHCR62XBRGFHS6OBGQ2VAFY:l/VBOY6HNKYT4VBP7QPQ26WQUBAB:l/AFAHEYSFRA5DTIF2RTYL6FOPXG:l/TJ534DG4QIVEV7T43JOK4CUCIE:l/I5OPM4RBJH76S2UFGMJG5BVSWW:l/6SRJO4HTLLNKUUCDYO4RFMSFN3:l/K5MUTEGTLQZTQ67RQESZYFNU2C:l/2HEWM4HYAEUXDMA35MZL65SAEN:l/JSHJ5KKEBRNBCNIYOXKP4FNWQT:l/FPOBFAT2NGJT7PDORDMJOBJREF:l/YT2YTNLL2DGE33Z55QSEF6FML3:l/LSNYNLJDBKAG7VIQDHGVVXZDBN:l/O3DSZVTGILUGR6Q2WLMZZPN7JN:l/V7VOYSMMKLT65KM4C7Z3QO7ZEE:l/6W5DZYCS5I5M4MOWJXREWOG5KW:l/PX6AKMKPFI4PUQ7GRHZUUOV4TT:l/MOR5GD7NLAWGQXL4PMEO3KHEPP:l/LFVBZ45VTF6A4V6FLQ26VN4JQS:l/AXVINMWCPBKYWZ2ZSSK3MD3ZYM:l/JADMLJZJKISU5KCQMEHSQENFWA:l/6LA3UMQTHJLL753UF3LBZ24UR6:l/6ARPDG3LGEDBIESPIUFBGY3XIM:l/D53YKHHTVKETZPRHHFBDOUIDPG:l/EFJ7Z2LST5M722PNCNPEJNARDG:l/U7ITGYBAGYS5SVIEHIBJSNPI4Y:l/FKKNTUF5J3CPSXM7Z4PN2R4E6O:l/PVEFUTXPRAENJO5H4JIETUM7F5:l/4LVRKDA375KQOQIGVAENVVGQFU:l/5GGQGPGN6AZPQGFEX2JGAYJWM2:l/QBDLW6IBCCPDTSMZLT4FLWUOGT:l/F7HE6QDSSDUDASESD3RGE7WZGD:l/PQC7CQ675UM6HFVAPEYZKCERGE:l/COFBGGTUDU5A5DTNY5VM27QS3I:l/IIYDK3BUL5HTOONH75QLYNOFRF:l/Z2G4XOD3NTIF2FCPAP3JUFWS6T:l/3M7FHHZTTXVNPJCPI3FS5CM5K5:l/LPLK5VJCQ5YEQPL5MUIJMQF7PK:l/R5IH5WIEDLZYDMGGBK3XVTAHAW:l/X2UWXKPWKQXEY2YBSVJYES2WYX:l/5QOYJFM4JKXS3PQBLXRPBMAGIQ:l/COL6JJ7G672XSOIWYIHSNMINAY:l/H5PIGGUQAAYY6FFYSEMRYGG3UZ:l/JNA4KRE4HF35AWWLUB7YZEQIRK:l/4UL6RWHC64FT5ZM7UVCRHZV3WF:l/G7SN3EQ4BE6QGCFAKNM47STBN3:l/J7IAVBQ7VWITKSXJX3J2LJQICX:l/BEINXRLKXOXC7DGF5EY32CZI22:l/CNHEFSVKCI7Z5Q45U5WPRWJN45:l/BX7UQ7PHUSO5ZKQXUVYOX6LZ7X:l/DY45EFV7677FQITKTBONGBQVOJ:l/RHNY3JO6CRWWNZTUPDHH5JLVDX:l/Z3S3WFOPQALJZ7WMCRKECLSFOA:l/QTOAV46BFRKXPGB47XHRYPN7HL:l/YLILBYPBBWDELWWUFP4CQ2S5VZ:l/OLADTI2BGUKPCF5V7PBTCHHZTT:l/BREH6GFLO7VW45PV6PG5S5Q6ZS:l/PQEC6QVDBZJV7A53F6TP2G4CTT:l/Q34GOVU2TRPXVDROQNL6LJ3HNX:l/UHZSDD2HHLUKCE7MPRERJNI3TZ:l/YR6TM3HCADIIH65L5A3R56DH3S:l/43NRWXKC3IFTNJR6NPZAN5NTGR:l/5GXZJZULCSGYFJFC4HYJEQCFB4:l/74X56GOZMWNXLXAMHH6CYRNMPV:l/4ZKZUXSBMVCVVS6JHJOMAWXGHF:l/N73RM4ELXLXXVCVGH5437IKGHV:l/SVHDCHEMN4V4BSGRY7JTKSDZ4U,upperdir=308b2226e1a4c9540080bef37539a8b49933aa80b548a5dbce0d524940bed165/diff,workdir=308b2226e1a4c9540080bef37539a8b49933aa80b548a5dbce0d524940bed165/work 0 0\n",
+    "/dev/loop2 /kaggle/src ext4 ro,relatime 0 0\n",
+    "/dev/loop2 /kaggle/nbdev ext4 rw,relatime 0 0\n",
+    "/dev/loop2 /kaggle/huggingface ext4 rw,relatime 0 0\n",
+    "/dev/loop2 /kaggle/lib ext4 ro,relatime 0 0\n",
+    "/dev/loop2 /kaggle/input ext4 ro,relatime 0 0\n",
+    "kkb-production-mirror-us-west1 /kaggle/input/datasets/emanueleebrahimi/ft-ckpt-roundtrip-probe fuse.gcsfuse ro,nosuid,nodev,relatime,user_id=0,group_id=0,default_permissions,allow_other 0 0\n",
+    "/dev/loop2 /kaggle/working ext4 rw,relatime 0 0\n",
+    "/dev/loop2 /etc/secrets/kaggle ext4 ro,relatime 0 0\n"
+  ],
+  "env_kaggle": {
+    "KAGGLE_CONTAINER_NAME": "kaggle_hDBU0XqxoYbDJabYMKDNy53xSUcedcGpbXPCI0cIaM-373971965-webtier",
+    "KAGGLE_DATA_PROXY_PROJECT": "kaggle-161607",
+    "KAGGLE_DATA_PROXY_URL": "https://dp.kaggle.net",
+    "KAGGLE_DOCKER_IMAGE": "gcr.io/kaggle-images/python@sha256:7de5e1496c568335455c8bb1f86f5c36f0591e87e92e9aa9f0eefcd07f227c66",
+    "KAGGLE_GCP_ZONE": "us-west1-c",
+    "KAGGLE_GRPC_DATA_PROXY_URL": "dp.kaggle.net:443",
+    "KAGGLE_KERNEL_INTEGRATIONS": "",
+    "KAGGLE_KERNEL_RUN_TYPE": "Batch",
+    "KAGGLE_URL_BASE": "https://api.kaggle.com"
+  },
+  "verdict": {
+    "largest_writable_mount": "/",
+    "largest_writable_free_gib": 2513.09,
+    "training_tensor_gib": {
+      "896 bins float16": 301.7,
+      "896 bins float32": 603.3,
+      "1536 bins float16": 517.1
+    },
+    "fits": {
+      "896 bins float16": true,
+      "896 bins float32": true,
+      "1536 bins float16": true
+    },
+    "shortfall_gib_smallest_variant": -2211.4,
+    "what_this_does_NOT_measure": "the per-dataset and per-account UPLOAD ceilings, which are server-side policy and invisible from inside a kernel. This measures what a running session can read and write."
+  }
+}

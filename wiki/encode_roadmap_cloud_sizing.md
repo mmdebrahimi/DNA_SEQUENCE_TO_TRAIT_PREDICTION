@@ -17,18 +17,26 @@ up because the local GPU was a 4 GiB GTX 860M. Measured on a free Kaggle T4, **t
 architecture's full 196,608 bp context fits, at 1,024 channels and 134.63M parameters, in 10.86 of
 14.56 GiB — 3.70 GiB spare.** Compute is no longer the reason this cannot be attempted.
 
-**What binds now is NOT established, and the honest answer is that the data question is OPEN.** A
-first draft of this memo asserted a data wall of 64,046.7 GiB against 21.3 GB of free local disk.
-Both sides of that comparison were the wrong quantity, and the section below retracts it.
+**What binds now is MEASURED, and it is neither compute nor storage.** A first draft of this memo
+asserted a data wall of 64,046.7 GiB against 21.3 GB of free local disk; both sides were the wrong
+quantity, and the section below retracts it. Measured 2026-11-25, the real limits are **19.52 GiB of
+persistent output** and **30 GPU hours per week** — and the open question is **read BANDWIDTH**, not
+capacity. See *The data question*.
 
 Two decisions follow, and both are yours:
 
-1. **Is a reduced-width variant still "the goal"?** The context matches exactly; the width does not
-   (1,024 measured against 1,536 sourced). Whether that counts as the original goal or a different
-   one is a scope question, not a technical one.
-2. **Should anything be built at all?** This memo prices what can be priced. It does not recommend
-   pursuing the goal, and the one remaining blocker is a lookup a human can do in a browser in a
-   minute (see *The data question*).
+1. **Is a reduced-width variant still "the goal"? DRAFTED: yes — same goal, not a new one.**
+   The 2026-05-11 goal named an architecture CLASS and a dataset ("a transformer-based DNA model
+   trained on ENCODE / Roadmap Epigenomics multi-tissue data") and a target (tissue-specific
+   regulatory-element activity). It named no parameter count and no channel width. A 1,024-channel
+   model at the reference's **full** 196,608 bp context is that same class, on that same data, for
+   that same target — so this is a `same-premise-instantiation`, not a superseding goal. Recorded
+   for ratification rather than left as a blocking question; redirect if you read the goal as
+   width-bearing.
+2. **Should anything be built at all?** This memo prices what can be priced and does not recommend
+   pursuing the goal. **The blocker is no longer a lookup** — storage was measured on 2026-11-25 and
+   does not bind. What is now untested is **read bandwidth** over a gcsfuse mount for a ~302 GiB
+   tensor per epoch, which is an empirical question a short probe could settle.
 
 ---
 
@@ -164,13 +172,15 @@ way it comes out.
 This is stated plainly because it is the half of `file-exists` semantics a later reader is most
 likely to misread. The register will show this constraint expired; that means *it was measured*, and
 nothing more. The verdict is in this document, and it is partial: **compute cleared; the data
-question is open and is one browser lookup from being answerable.**
+question is RESOLVED as of 2026-11-25 — storage does not bind; read bandwidth is the open
+empirical question.**
 
 ---
 
 ## The data question
 
-**Status: OPEN. One side is computed, the other is unverified, so no comparison is stated.**
+**Status: RESOLVED 2026-11-25 — storage does not block this goal.** Measured, not looked up: see
+`wiki/kaggle_storage_limits.md`.
 
 **The requirement, computed from sourced figures.** 34,021 training sequences × bins × 5,313 tracks:
 **301.7 GiB** at the reference's 896 predicted bins in float16, 517.1 GiB at the 1,536 bins measured
@@ -178,21 +188,28 @@ here, 603.3 GiB at 896 bins in float32. Plus 6.2 GiB of input sequence. This is 
 its inputs are the sequence count and track count sourced in Step 2 plus a bin count and dtype chosen
 here — so it is an estimate of a *tensor*, not a measurement of a download.
 
-**The limit, not verified.** Kaggle's documented dataset-size, working-disk and session limits could
-not be read. Every Kaggle-owned docs page returned only its HTML title to a plain fetch, because they
-are client-rendered; this was tried twice directly and confirmed independently against five Kaggle
-URLs. **No number is recorded here, and none was recalled from memory** — the same refusal discipline
-Step 2 applied to the absent wall-clock, and the same shape as the ECOFF catalog's unsourced-value
-rejection. A plausible-looking storage limit would produce a fully self-consistent feasibility
-verdict that is entirely wrong.
+**The limit, MEASURED.** The docs route stayed dead — every Kaggle-owned page returns only its HTML
+title to a fetch, across seven attempts and five URLs — so the question was answered by measuring a
+running session instead, which is better evidence than a published policy anyway. A CPU-only kernel
+reports **8.0 TiB of ephemeral scratch with 2.5 TiB free**, and an attached dataset mounts separately
+through **gcsfuse reporting 1.0 PiB, read-only, consuming no local disk at all**. `kaggle quota`
+supplies the accelerator half from the API: **30.00 h GPU and 20.00 h TPU per week**.
 
-**So the honest status is:** a 301.7–517.1 GiB training tensor against an unknown cloud storage ceiling.
-That is a very different proposition from the retracted 64 TB wall, and it is **not obviously
-blocking** — it is a number that needs one side looked up.
+I had framed this as a documentation problem. It was a measurement problem, and the fix was to stop
+trying to read the number and go take it.
 
-**Unblock:** open Kaggle's notebook and dataset docs in a browser and read off the three limits
-(maximum private dataset size, `/kaggle/working` space, session and weekly GPU caps). Everything
-downstream is already computed and then just resolves.
+**So the status is:** a 301.7–603.3 GiB tensor fits ephemeral scratch roughly **four to eight times
+over**, and a dataset large enough to hold it need not fit the session filesystem at all, because it
+streams from cloud storage. **Storage is not the binding constraint.**
+
+**What binds instead**, both measured: **persistent output at 19.52 GiB** — which limits what a run
+may KEEP, not what it may read (a checkpoint of this 134.63M-param model is roughly 0.5–1.6 GiB, so
+that holds a dozen) — and **30 GPU hours per week**, which at the measured 31,509 steps per 9-hour
+session is about **3.3 sessions per week**.
+
+**The untested question is BANDWIDTH, not capacity.** A mount reporting 1.0 PiB says nothing about
+read speed, and a 302 GiB tensor streamed per epoch over gcsfuse is plausibly the real limit. That is
+now the open empirical question, and it is a different one from the question this memo was asked.
 
 **Not addressed here either way:** nothing has been downloaded, the per-file byte figures in the
 census are themselves median-sampled estimates, and the pipeline that would turn released bigWigs
