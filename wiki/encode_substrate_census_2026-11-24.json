@@ -1,0 +1,236 @@
+{
+  "record": "encode-substrate-census-v1",
+  "date": "2026-11-24",
+  "question": "what multi-tissue regulatory substrate does ENCODE actually expose, counted rather than estimated, for the goal abandoned 2026-05-12",
+  "api": {
+    "base": "https://www.encodeproject.org/search/",
+    "verified_live": true,
+    "cheap_route": "limit=0 returns `total` with an empty @graph while still carrying `facets`, so one request per assay needs zero record paging"
+  },
+  "per_assay": {
+    "DNase-seq": {
+      "assay_title": "DNase-seq",
+      "n_experiments": 3582,
+      "n_bigwig_files": 8854,
+      "file_to_experiment_ratio": 2.47,
+      "n_distinct_tissue_terms": 505,
+      "tissue_terms_sample": [
+        "CD4-positive, alpha-beta T cell",
+        "stimulated activated CD4-positive, alpha-beta T cell",
+        "dorsolateral prefrontal cortex",
+        "head of caudate nucleus",
+        "cerebellum",
+        "T-cell",
+        "HUDEP-2",
+        "activated CD8-positive, alpha-beta memory T cell",
+        "T47D",
+        "activated CD4-positive, alpha-beta T cell",
+        "K562",
+        "MCF-7",
+        "caudate nucleus",
+        "putamen",
+        "anterior cingulate cortex",
+        "amygdala",
+        "nucleus accumbens",
+        "Ammon's horn",
+        "hypothalamus",
+        "posterior cingulate gyrus",
+        "substantia nigra",
+        "activated T-cell",
+        "CD8-positive, alpha-beta T cell",
+        "suppressor macrophage",
+        "heart"
+      ],
+      "assemblies": [
+        "GRCh38",
+        "hg19",
+        "mm10"
+      ],
+      "file_size_sample": {
+        "n_sampled": 200,
+        "median_bytes": 413836871,
+        "min_bytes": 66278380,
+        "max_bytes": 746271044,
+        "p25_bytes": 316314846,
+        "p75_bytes": 525831902
+      },
+      "volume": {
+        "estimated_total_bytes": 3664111655834,
+        "estimated_total_gib": 3412.5,
+        "method": "median of 200 sampled file_size values x 8854 counted files. The COUNT is measured; the per-file size is SAMPLED, so this is an estimate and not a measurement."
+      }
+    },
+    "ATAC-seq": {
+      "assay_title": "ATAC-seq",
+      "n_experiments": 560,
+      "n_bigwig_files": 2386,
+      "file_to_experiment_ratio": 4.26,
+      "n_distinct_tissue_terms": 232,
+      "tissue_terms_sample": [
+        "K562",
+        "dendritic cell",
+        "HCT116",
+        "heart left ventricle",
+        "heart right ventricle",
+        "foreskin keratinocyte",
+        "motor neuron",
+        "adrenal gland",
+        "liver",
+        "T-cell",
+        "forebrain",
+        "heart",
+        "hindbrain",
+        "midbrain",
+        "ovary",
+        "A549",
+        "activated T-cell",
+        "right lobe of liver",
+        "stomach",
+        "embryonic facial prominence",
+        "kidney",
+        "left cardiac atrium",
+        "limb",
+        "lung",
+        "natural killer cell"
+      ],
+      "assemblies": [
+        "GRCh38",
+        "mm10"
+      ],
+      "file_size_sample": {
+        "n_sampled": 200,
+        "median_bytes": 566839711,
+        "min_bytes": 99166970,
+        "max_bytes": 1457756837,
+        "p25_bytes": 431889187,
+        "p75_bytes": 723874861
+      },
+      "volume": {
+        "estimated_total_bytes": 1352479550446,
+        "estimated_total_gib": 1259.6,
+        "method": "median of 200 sampled file_size values x 2386 counted files. The COUNT is measured; the per-file size is SAMPLED, so this is an estimate and not a measurement."
+      }
+    },
+    "Histone ChIP-seq": {
+      "assay_title": "Histone ChIP-seq",
+      "n_experiments": 3992,
+      "n_bigwig_files": 38479,
+      "file_to_experiment_ratio": 9.64,
+      "n_distinct_tissue_terms": 266,
+      "tissue_terms_sample": [
+        "dorsolateral prefrontal cortex",
+        "BLaER1",
+        "liver",
+        "A549",
+        "heart left ventricle",
+        "heart",
+        "stomach",
+        "heart right ventricle",
+        "spleen",
+        "forebrain",
+        "hindbrain",
+        "midbrain",
+        "mesenchymal stem cell",
+        "lung",
+        "H1",
+        "kidney",
+        "limb",
+        "embryonic facial prominence",
+        "adrenal gland",
+        "neural tube",
+        "H9",
+        "common myeloid progenitor, CD34-positive",
+        "sigmoid colon",
+        "IMR-90",
+        "pancreas"
+      ],
+      "assemblies": [
+        "GRCh38",
+        "hg19",
+        "mm10"
+      ],
+      "file_size_sample": {
+        "n_sampled": 200,
+        "median_bytes": 1639597953,
+        "min_bytes": 1042340956,
+        "max_bytes": 2322372287,
+        "p25_bytes": 1480587771,
+        "p75_bytes": 1821070304
+      },
+      "volume": {
+        "estimated_total_bytes": 63090089633487,
+        "estimated_total_gib": 58757.2,
+        "method": "median of 200 sampled file_size values x 38479 counted files. The COUNT is measured; the per-file size is SAMPLED, so this is an estimate and not a measurement."
+      }
+    },
+    "total RNA-seq": {
+      "assay_title": "total RNA-seq",
+      "n_experiments": 2254,
+      "n_bigwig_files": 10336,
+      "file_to_experiment_ratio": 4.59,
+      "n_distinct_tissue_terms": 892,
+      "tissue_terms_sample": [
+        "whole organism",
+        "CD4-positive, alpha-beta T cell",
+        "dorsolateral prefrontal cortex",
+        "macrophage",
+        "K562",
+        "T-cell",
+        "CD8-positive, alpha-beta T cell",
+        "adrenal gland",
+        "dendritic cell",
+        "heart",
+        "gastrocnemius",
+        "inflammatory macrophage",
+        "left cerebral cortex",
+        "HCT116",
+        "suppressor macrophage",
+        "layer of hippocampus",
+        "T-helper 1 cell",
+        "placenta",
+        "CD14-positive monocyte",
+        "ML-DmBG3-c2",
+        "T-helper 2 cell",
+        "A549",
+        "T-helper 17 cell",
+        "WTC11",
+        "heart right ventricle"
+      ],
+      "assemblies": [
+        "GRCh38",
+        "hg19",
+        "mm10",
+        "dm3",
+        "mm9"
+      ],
+      "file_size_sample": {
+        "n_sampled": 200,
+        "median_bytes": 64136707,
+        "min_bytes": 1538592,
+        "max_bytes": 133214895,
+        "p25_bytes": 54447989,
+        "p75_bytes": 77751575
+      },
+      "volume": {
+        "estimated_total_bytes": 662917003552,
+        "estimated_total_gib": 617.4,
+        "method": "median of 200 sampled file_size values x 10336 counted files. The COUNT is measured; the per-file size is SAMPLED, so this is an estimate and not a measurement."
+      }
+    }
+  },
+  "rollup": {
+    "n_assays": 4,
+    "total_experiments": 10388,
+    "total_bigwig_files": 60055,
+    "file_to_experiment_ratio": 5.78,
+    "distinct_tissue_terms_union_of_samples": 69,
+    "estimated_total_gib_all_assays": 64046.7,
+    "what_this_does_NOT_say": "nothing about whether this substrate SUFFICES for the goal, nothing about label quality, and nothing about whether the volume is affordable here. It is a count."
+  },
+  "honest_limits": [
+    "Experiment counts and FILE counts are different denominators. Both are recorded with their measured ratio; neither may be quoted as the other.",
+    "The volume figure is an ESTIMATE: the file count is measured, the per-file size is a bounded median sample. Its spread is recorded so its reliability is visible.",
+    "Only ENCODE was probed. The Roadmap Epigenomics download surface is UNVERIFIED and is named in the commissioning plan as such -- this artifact does not speak for it.",
+    "A count is not a label-quality judgement and not a feasibility verdict. The gate screen and the sizing memo are separate artifacts for separate questions."
+  ]
+}
