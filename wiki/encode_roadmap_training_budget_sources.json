@@ -30,6 +30,15 @@
           "verbatim_quote": "196,608 bp from the original 131,072 bp",
           "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
         },
+        "output_length_bins": {
+          "output_bins": 896,
+          "target_bp": 114688,
+          "bin_bp": 128,
+          "input_bp": 196608,
+          "verbatim_quote": "each of length 896 corresponding to 114,688 bp aggregated into 128 bp bins",
+          "note": "LOAD-BEARING for any size estimate. The model predicts the CENTRAL 896 bins (114,688 bp) of its 196,608 bp input, not the whole input. The sizing sweep measured here used bins = context/128 = 1,536, i.e. it predicted the FULL context -- a LARGER output head than the reference's. So the measured VRAM and throughput figures are conservative with respect to the reference's actual output shape.",
+          "source_url": "https://www.biorxiv.org/content/10.1101/2021.04.07.438649v1.full"
+        },
         "output_tracks_human": {
           "n_tracks": 5313,
           "verbatim_quote": "each example contains 2,131 transcription factor (TF) ChIP-seq, 1,860 histone modification ChIP-seq, 684 DNase-seq or ATAC-seq, and 638 CAGE tracks (total 5,313, Supplementary Table 2 )",

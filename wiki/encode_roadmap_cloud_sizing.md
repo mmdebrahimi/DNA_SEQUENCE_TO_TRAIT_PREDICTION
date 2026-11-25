@@ -17,21 +17,18 @@ up because the local GPU was a 4 GiB GTX 860M. Measured on a free Kaggle T4, **t
 architecture's full 196,608 bp context fits, at 1,024 channels and 134.63M parameters, in 10.86 of
 14.56 GiB — 3.70 GiB spare.** Compute is no longer the reason this cannot be attempted.
 
-What binds now is **data volume: an estimated 64,046.7 GiB** across the four assay families such a
-model needs, against 21.3 GB free on this host's C: drive (measured 2026-11-24; an earlier draft said "about 26 GB", carried over from the plan rather than measured). That is the finding Step 5 registers as a
-new constraint with its own expiry test, rather than leaving it in prose.
+**What binds now is NOT established, and the honest answer is that the data question is OPEN.** A
+first draft of this memo asserted a data wall of 64,046.7 GiB against 21.3 GB of free local disk.
+Both sides of that comparison were the wrong quantity, and the section below retracts it.
 
-Three decisions follow, and all three are yours:
+Two decisions follow, and both are yours:
 
-1. **Is a reduced-context or reduced-width variant still "the goal"?** The context matches exactly;
-   the width does not (1,024 measured against 1,536 sourced). Whether that counts as the original
-   goal or a different one is a scope question.
-2. **Is a subset substrate acceptable?** Histone ChIP-seq alone carries 58,757.2 of the 64,046.7
-   GiB. DNase-seq plus ATAC-seq together is **4,672.1 GiB** — still far past this laptop, but a
-   different proposition. (Stated in GiB because that is the census's own unit: the same quantity is
-   4.563 TiB or 5.02 TB depending on convention, and an earlier draft of this memo said "about
-   4.7 TB", which matches neither. Unit conversion is where this figure goes wrong.)
-3. **Should anything be built at all?** This memo prices the goal. It does not recommend pursuing it.
+1. **Is a reduced-width variant still "the goal"?** The context matches exactly; the width does not
+   (1,024 measured against 1,536 sourced). Whether that counts as the original goal or a different
+   one is a scope question, not a technical one.
+2. **Should anything be built at all?** This memo prices what can be priced. It does not recommend
+   pursuing the goal, and the one remaining blocker is a lookup a human can do in a browser in a
+   minute (see *The data question*).
 
 ---
 
@@ -51,6 +48,25 @@ holds, on the channel-width evidence instead of a parameter count.
 pair. Measured, the ratio **varies strongly with shape**: 14.0× at 384 channels (2683.7 → 191.7 ms)
 but **4.2× at 768** (2960.2 → 702.0 ms). The largest shape has no fp32 timing to compare against at
 all, because that configuration is the one that does not fit. Quote the range, not the 14×.
+
+**3. RETRACTED — "data is the wall", as this memo first stated it, compared the wrong numerator to
+the wrong denominator.** The retraction is kept visible rather than edited away, because the claim
+was published in commit `615c5467` and reported aloud before it was checked.
+
+- **Wrong numerator.** 64,046.7 GiB is the census's estimate of *every released bigWig in those four
+  assay families*. That is not a training set. It is unfiltered by organism (it includes mouse),
+  by assembly, by output type and by replicate, and it is raw signal rather than 128 bp bins. The
+  sourced track composition of one reference example is 2,131 TF ChIP-seq, 1,860 histone, 684
+  DNase/ATAC and 638 CAGE tracks — so the census counted **20.7× the histone tracks and 16.4× the
+  DNase/ATAC tracks the reference actually used.**
+- **Wrong denominator.** Training would run on the cloud card this memo measures, so the relevant
+  limit is Kaggle's storage, not this laptop's C: drive. Comparing a cloud-trained model's data
+  requirement to local free space answers a question nobody asked.
+- **Computed properly, from figures already sourced**, the training-set-shaped target tensor is
+  34,021 sequences × bins × 5,313 tracks: **301.7 GiB** at the reference's 896 predicted bins in
+  float16, 517.1 GiB at the 1,536 bins measured here, 603.3 GiB at 896 bins in float32. The input
+  sequence adds 6.2 GiB and is negligible beside it. **The retracted figure was a 212×
+  overstatement** of the quantity that matters.
 
 ---
 
@@ -112,6 +128,13 @@ the published record. The honest statement is the first half only.
 **Do not compare the step counts.** 31,509 measured steps carry one example each; the reference's
 carried 64. A step here is not a step there.
 
+**One measured difference runs in feasibility's favour, so it is stated rather than banked.** The
+reference predicts the **central 896 bins (114,688 bp)** of its 196,608 bp input — sourced. The sweep
+measured here used `bins = context / 128 = 1,536`, predicting the **full** context, so it carried a
+**larger output head than the reference's** across all 5,313 tracks. The VRAM and throughput figures
+above are therefore conservative with respect to the reference's actual output shape, not flattering
+to it.
+
 ---
 
 ## What this does NOT conclude
@@ -140,4 +163,37 @@ way it comes out.
 
 This is stated plainly because it is the half of `file-exists` semantics a later reader is most
 likely to misread. The register will show this constraint expired; that means *it was measured*, and
-nothing more. The verdict is in this document, and it is mixed: **compute cleared, data did not.**
+nothing more. The verdict is in this document, and it is partial: **compute cleared; the data
+question is open and is one browser lookup from being answerable.**
+
+---
+
+## The data question
+
+**Status: OPEN. One side is computed, the other is unverified, so no comparison is stated.**
+
+**The requirement, computed from sourced figures.** 34,021 training sequences × bins × 5,313 tracks:
+**301.7 GiB** at the reference's 896 predicted bins in float16, 517.1 GiB at the 1,536 bins measured
+here, 603.3 GiB at 896 bins in float32. Plus 6.2 GiB of input sequence. This is a derived figure, and
+its inputs are the sequence count and track count sourced in Step 2 plus a bin count and dtype chosen
+here — so it is an estimate of a *tensor*, not a measurement of a download.
+
+**The limit, not verified.** Kaggle's documented dataset-size, working-disk and session limits could
+not be read. Every Kaggle-owned docs page returned only its HTML title to a plain fetch, because they
+are client-rendered; this was tried twice directly and confirmed independently against five Kaggle
+URLs. **No number is recorded here, and none was recalled from memory** — the same refusal discipline
+Step 2 applied to the absent wall-clock, and the same shape as the ECOFF catalog's unsourced-value
+rejection. A plausible-looking storage limit would produce a fully self-consistent feasibility
+verdict that is entirely wrong.
+
+**So the honest status is:** a 301.7–517.1 GiB training tensor against an unknown cloud storage ceiling.
+That is a very different proposition from the retracted 64 TB wall, and it is **not obviously
+blocking** — it is a number that needs one side looked up.
+
+**Unblock:** open Kaggle's notebook and dataset docs in a browser and read off the three limits
+(maximum private dataset size, `/kaggle/working` space, session and weekly GPU caps). Everything
+downstream is already computed and then just resolves.
+
+**Not addressed here either way:** nothing has been downloaded, the per-file byte figures in the
+census are themselves median-sampled estimates, and the pipeline that would turn released bigWigs
+into a binned training tensor does not exist in this repo.
