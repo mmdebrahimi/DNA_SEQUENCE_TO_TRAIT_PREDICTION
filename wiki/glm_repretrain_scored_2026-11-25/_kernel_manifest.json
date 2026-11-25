@@ -1,0 +1,121 @@
+{
+  "env": {
+    "python": "3.13.18",
+    "platform": "Linux-6.18.55+-x86_64-with-glibc2.39",
+    "machine": "x86_64",
+    "cpu_count": 4,
+    "threads_per_arm": 2,
+    "pinned_commit": "b10b54750d2ad93cc3261971fde89f8bf8268637",
+    "deps": {
+      "Bio": "1.88",
+      "pandas": "2.3.3",
+      "torch": "2.11.0+cpu"
+    }
+  },
+  "preflight": {
+    "20": {
+      "run1_representative": {
+        "rc": 0,
+        "wall_s": 66.8,
+        "ckpt": true,
+        "log": "/kaggle/working/run1_representative_pre20.log",
+        "tail": "tokens/param: 10.9 (heuristic target 20; imported from language models, NOT validated for DNA)\n/tmp/dna_decode/scripts/glm_train_diffusion.py:211: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n  row = {\"step\": step + 1, \"train_loss\": round(float(loss), 4),\n  step     20  train   2.4791  eval   2.8619     50.6s\n\ngenerating 8 sequences at 150 bp...\n  GC generated 0.5725 vs corpus 0.5032\n\n54.4s -> wiki/glm_diffusion_train_2026-11-21_representative_pre20.json\n              -> wiki/glm_diffusion_samples_2026-11-21_representative_pre20.txt\n              -> data/glm_ckpt_representative_pre20/latest.pt"
+      },
+      "run2_reseed_seed1": {
+        "rc": 0,
+        "wall_s": 66.9,
+        "ckpt": true,
+        "log": "/kaggle/working/run2_reseed_seed1_pre20.log",
+        "tail": "tokens/param: 11.5 (heuristic target 20; imported from language models, NOT validated for DNA)\n/tmp/dna_decode/scripts/glm_train_diffusion.py:211: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n  row = {\"step\": step + 1, \"train_loss\": round(float(loss), 4),\n  step     20  train   2.5922  eval   2.8795     50.6s\n\ngenerating 8 sequences at 150 bp...\n  GC generated 0.6717 vs corpus 0.5091\n\n54.3s -> wiki/glm_diffusion_train_2026-11-21_reseed_seed1_pre20.json\n              -> wiki/glm_diffusion_samples_2026-11-21_reseed_seed1_pre20.txt\n              -> data/glm_ckpt_reseed_control_pre20/latest.pt"
+      }
+    },
+    "120": {
+      "run1_representative": {
+        "rc": 0,
+        "wall_s": 306.2,
+        "ckpt": true,
+        "log": "/kaggle/working/run1_representative_pre120.log",
+        "tail": "tokens/param: 10.9 (heuristic target 20; imported from language models, NOT validated for DNA)\n/tmp/dna_decode/scripts/glm_train_diffusion.py:211: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n  row = {\"step\": step + 1, \"train_loss\": round(float(loss), 4),\n  step    120  train   2.5521  eval   2.8106    295.6s\n\ngenerating 8 sequences at 150 bp...\n  GC generated 0.4767 vs corpus 0.5032\n\n299.2s -> wiki/glm_diffusion_train_2026-11-21_representative_pre120.json\n              -> wiki/glm_diffusion_samples_2026-11-21_representative_pre120.txt\n              -> data/glm_ckpt_representative_pre120/latest.pt"
+      },
+      "run2_reseed_seed1": {
+        "rc": 0,
+        "wall_s": 306.9,
+        "ckpt": true,
+        "log": "/kaggle/working/run2_reseed_seed1_pre120.log",
+        "tail": "tokens/param: 11.5 (heuristic target 20; imported from language models, NOT validated for DNA)\n/tmp/dna_decode/scripts/glm_train_diffusion.py:211: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.\nConsider using tensor.detach() first. (Triggered internally at /pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:836.)\n  row = {\"step\": step + 1, \"train_loss\": round(float(loss), 4),\n  step    120  train   2.5793  eval   2.8396    296.4s\n\ngenerating 8 sequences at 150 bp...\n  GC generated 0.5750 vs corpus 0.5091\n\n299.7s -> wiki/glm_diffusion_train_2026-11-21_reseed_seed1_pre120.json\n              -> wiki/glm_diffusion_samples_2026-11-21_reseed_seed1_pre120.txt\n              -> data/glm_ckpt_reseed_control_pre120/latest.pt"
+      }
+    }
+  },
+  "projection": {
+    "run1_representative": {
+      "wall_20s": 66.8,
+      "wall_120s": 306.2,
+      "s_per_step": 2.394,
+      "fixed_overhead_s": 18.9,
+      "projected_hours": 4.0
+    },
+    "run2_reseed_seed1": {
+      "wall_20s": 66.9,
+      "wall_120s": 306.9,
+      "s_per_step": 2.4,
+      "fixed_overhead_s": 18.9,
+      "projected_hours": 4.01
+    }
+  },
+  "wall_hours": 4.156,
+  "steps_requested": 6000,
+  "arms": {
+    "run1_representative": {
+      "rc": 0,
+      "wall_s": 14564.9,
+      "ckpt": true,
+      "log": "/kaggle/working/run1_representative.log",
+      "ckpt_dir": "data/glm_ckpt_representative",
+      "tag": "representative",
+      "internal_step": 6000,
+      "finished_at_requested_steps": true,
+      "config": {
+        "length": 150,
+        "d_model": 128,
+        "n_layers": 4,
+        "n_heads": 4,
+        "d_ff": 512,
+        "dropout": 0.1,
+        "seed": 0,
+        "vocab": 5,
+        "mask_id": 4,
+        "n_params_estimate": 806784
+      },
+      "bytes": 9821617,
+      "sha256": "fac66e1a917cffd2eccbd883558e16938ca8c7b6bb66eb719c09d62922c3bf77",
+      "output_file": "run1_representative_latest.pt"
+    },
+    "run2_reseed_seed1": {
+      "rc": 0,
+      "wall_s": 14564.9,
+      "ckpt": true,
+      "log": "/kaggle/working/run2_reseed_seed1.log",
+      "ckpt_dir": "data/glm_ckpt_reseed_control",
+      "tag": "reseed_seed1",
+      "internal_step": 6000,
+      "finished_at_requested_steps": true,
+      "config": {
+        "length": 150,
+        "d_model": 128,
+        "n_layers": 4,
+        "n_heads": 4,
+        "d_ff": 512,
+        "dropout": 0.1,
+        "seed": 1,
+        "vocab": 5,
+        "mask_id": 4,
+        "n_params_estimate": 806784
+      },
+      "bytes": 9821617,
+      "sha256": "bd9d0823aef7d7c188b3a955cb7f5d84013e5f4d234c71a8f397696db9fc19a3",
+      "output_file": "run2_reseed_seed1_latest.pt"
+    }
+  },
+  "BOTH_ARMS_FINISHED": true,
+  "what_to_do_next": "pull both *_latest.pt, score each on orthology_free (plus ortholog_bearing and withheld_orthology_free for the leak-identification layer) with scripts/glm_beyond_kmer.py passing an EXPLICIT --out, then grade with scripts/glm_repretrain_grade.py"
+}

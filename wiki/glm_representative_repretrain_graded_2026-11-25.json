@@ -1,0 +1,219 @@
+{
+  "record": "glm-representative-repretrain-result-v1",
+  "date": "2026-11-25",
+  "graded_against": "wiki/glm_representative_repretrain_reading_rule_2026-11-24.json",
+  "sign_convention_corrected_by": "wiki/glm_representative_repretrain_sign_correction_2026-11-24.json",
+  "grader_frozen_before_any_number": "scripts/glm_repretrain_grade.py was committed while both pretrains were still running, so the gate, the escalation threshold and the branch boundary were all fixed before any representative or reseed cross-entropy existed. Verifiable by commit order.",
+  "inputs": {
+    "committed": "wiki/glm_beyond_kmer_runs_committed_2026-11-24/run_committed_orthology_free_120x30.json",
+    "representative": "C:/Users/LAPTOP~1/AppData/Local/Temp/claude/f0f4ede77745879a/95959058-844a-462a-87f2-f7fc265c5b06/scratchpad/v5_scored/run1_representative_orthology_free_120x30.json",
+    "reseed_seed1": "[WindowsPath('C:/Users/LAPTOP~1/AppData/Local/Temp/claude/f0f4ede77745879a/95959058-844a-462a-87f2-f7fc265c5b06/scratchpad/v5_scored/run2_reseed_seed1_orthology_free_120x30.json')]"
+  },
+  "checkpoint_steps": {
+    "committed": 6000,
+    "representative": 6000,
+    "reseed_1": 6000
+  },
+  "geometry": {
+    "n_windows": 120,
+    "positions_per_window": 30,
+    "scoring_seed": 0,
+    "selection_seed": 0,
+    "boot": 2000,
+    "eval_set": "orthology_free",
+    "n_predictions_per_arm": 3600
+  },
+  "REFUSALS_THAT_PASSED": {
+    "geometry_identical_and_frozen": true,
+    "all_checkpoints_finished_at_6000": true,
+    "pairing_invariant": {
+      "columns_verified_identical": [
+        "markov_ecoli",
+        "markov_pooled",
+        "uniform"
+      ],
+      "n_windows": 120,
+      "what_this_proves": "row i is the same eval window at the same sampled positions against the same fitted order-3 chain in all three arms, so an index-paired difference isolates the MODEL.",
+      "what_it_does_not_prove": "it cannot detect a change that moves the model columns alone, which is exactly what the arm is measuring and therefore cannot be controlled for here."
+    },
+    "arm_identity": {
+      "ckpt_paths": {
+        "committed": null,
+        "representative": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\claude\\f0f4ede77745879a\\95959058-844a-462a-87f2-f7fc265c5b06\\scratchpad\\v5_score\\run1_representative.pt",
+        "reseed_1": "C:\\Users\\LAPTOP~1\\AppData\\Local\\Temp\\claude\\f0f4ede77745879a\\95959058-844a-462a-87f2-f7fc265c5b06\\scratchpad\\v5_score\\run2_reseed_seed1.pt"
+      },
+      "ckpt_is_committed": {
+        "committed": null,
+        "representative": false,
+        "reseed_1": false
+      },
+      "distinct_columns_verified": true,
+      "path_fields_present": true,
+      "note_when_absent": ""
+    },
+    "bootstrap_self_test": {
+      "what": "reproduce the committed checkpoint's published left_only|markov_ecoli cell",
+      "published_delta_nats": -0.0191,
+      "recomputed_delta_nats": -0.0191,
+      "published_ci95": [
+        -0.032,
+        -0.0068
+      ],
+      "recomputed_ci95": [
+        -0.032,
+        -0.0068
+      ],
+      "seed_used": 1,
+      "boot_used": 2000,
+      "passed": true,
+      "why_it_gates_everything": "the grader's bootstrap is a replication of the scorer's closure, not an import. This test is the only thing that makes the replication checkable. A mismatch means every confidence interval below is wrong in the same way, so no number is reported."
+    }
+  },
+  "SIGN": {
+    "implemented": "committed.left_only - assessed.left_only",
+    "positive_means": "the assessed model has LOWER cross-entropy = BETTER",
+    "why_not_the_rule_s_literal_subtraction_order": "the rule's `quantity` and its `sign_convention` specify opposite subtractions. The convention states the MEANING and is followed; the correction artifact records the evidence and shows the choice cannot move the gate or the branch."
+  },
+  "PRIMARY": {
+    "quantity": "paired per-window change in model cross-entropy, representative vs committed, on identical windows at identical positions",
+    "bootstrap": {
+      "n_windows": 120,
+      "mean_nats": -0.0035715499999999993,
+      "ci95": [
+        -0.006596891666666658,
+        -0.0005450166666666737
+      ],
+      "excludes_zero": true,
+      "b": 2000,
+      "seed": 1
+    }
+  },
+  "NOISE_FLOOR": {
+    "quantity": "the same quantity with a committed-corpus reseed as the second arm",
+    "n_draws": 1,
+    "selected": "reseed_1",
+    "selection_rule": "largest |mean| across draws, the most conservative available",
+    "bootstrap": {
+      "n_windows": 120,
+      "mean_nats": 0.0010217416666666737,
+      "ci95": [
+        -0.002709083333333323,
+        0.004826383333333339
+      ],
+      "excludes_zero": false,
+      "b": 2000,
+      "seed": 1
+    },
+    "all_draws": {
+      "reseed_1": {
+        "n_windows": 120,
+        "mean_nats": 0.0010217416666666737,
+        "ci95": [
+          -0.002709083333333323,
+          0.004826383333333339
+        ],
+        "excludes_zero": false,
+        "b": 2000,
+        "seed": 1
+      }
+    }
+  },
+  "LEAK_IDENTIFICATION": {
+    "quantity": "DiD = mean paired delta on ortholog_bearing minus mean paired delta on withheld_orthology_free; each delta is committed - assessed, so positive = the assessed model is better",
+    "why_it_identifies_the_leak": "the two halves are DISJOINT and differ in exactly one property -- whether the window's gene has a draft counterpart in training. Removing the draft removes the near-ortholog from the bearing half only, while cross-organism cost acts on both and cancels.",
+    "expected_did_nats": -0.0054,
+    "bearing_set": "ortholog_bearing",
+    "free_set": "withheld_orthology_free",
+    "primary": {
+      "bearing_mean_delta_nats": -0.00299,
+      "free_mean_delta_nats": -0.001093,
+      "did_nats": -0.001897,
+      "ci95": [
+        -0.006801,
+        0.002813
+      ],
+      "excludes_zero": false,
+      "n_bearing": 120,
+      "n_free": 120
+    },
+    "floor": {
+      "bearing_mean_delta_nats": 0.00317,
+      "free_mean_delta_nats": 0.00036,
+      "did_nats": 0.00281,
+      "ci95": [
+        -0.00183,
+        0.007774
+      ],
+      "excludes_zero": false,
+      "n_bearing": 120,
+      "n_free": 120
+    },
+    "gate": {
+      "rule": "|DiD_primary| must exceed |DiD_floor| AND the DiD CI must exclude zero",
+      "primary_magnitude": 0.001897,
+      "floor_magnitude": 0.00281,
+      "exceeds_floor": false,
+      "ci_excludes_zero": false
+    },
+    "verdict": "LEAK_NOT_IDENTIFIABLE_AT_THIS_SAMPLE_SIZE",
+    "reading": "the leak-specific term does not clear its own noise floor, so no leak size is quoted and the primary's branch keeps attribution_identifiable=false."
+  },
+  "GRADED": {
+    "primary_mean_nats": -0.003572,
+    "primary_ci95": [
+      -0.006597,
+      -0.000545
+    ],
+    "primary_magnitude_nats": 0.003572,
+    "floor_mean_nats": 0.001022,
+    "floor_magnitude_nats": 0.001022,
+    "primary_exceeds_floor": true,
+    "primary_ci_excludes_zero": true,
+    "floor_is_a_point_estimate_not_a_null": "a single reseed is ONE draw of trajectory noise. The rule says so and this grader does not dress it up as a calibrated null.",
+    "direction": "representative_WORSE",
+    "n_floor_draws": 1,
+    "floor_selection_rule": "the single available floor draw",
+    "escalation_criterion": {
+      "rule": "|primary| <= 2x |floor| requires seeds 2 and 3 before ANY branch; it RETIRES at >=3 floor draws, because its purpose is to turn a point estimate into a distribution and 3 draws have done that",
+      "threshold_nats": 0.002043,
+      "within_2x_of_floor": false,
+      "retired_by_draw_count": false,
+      "triggered": false
+    },
+    "verdict": "RESOLVED",
+    "attribution": {
+      "leak_vs_cross_organism_identifiable_from_the_primary_set": false,
+      "why": "the primary's eval set `orthology_free` is built as held-out MG1655 windows whose gene symbol has NO counterpart in the draft assembly, so there is no near-ortholog there to lose. A worse model on that set is cross-organism cost plus trajectory, not the leak.",
+      "the_identifying_measurement": "paired difference-in-differences on ortholog_bearing minus withheld_orthology_free, pre-registered in wiki/glm_repretrain_leak_identification_prereg_2026-11-24.json",
+      "supplied": true,
+      "verdict": "LEAK_NOT_IDENTIFIABLE_AT_THIS_SAMPLE_SIZE",
+      "did_nats": -0.001897,
+      "ci95": [
+        -0.006801,
+        0.002813
+      ]
+    },
+    "cost_nats": 0.003572,
+    "cost_ci95": [
+      0.000545,
+      0.006597
+    ],
+    "leak_size_nats": 0.0054,
+    "how_consistent_was_operationalised": {
+      "decision": "the measured leak is `consistent` iff it lies INSIDE the primary's own bootstrap CI expressed as a positive cost; `exceeds` iff the whole CI lies above it; `falls_short` iff the whole CI lies below it",
+      "why_the_CI_and_not_a_hand_picked_ratio": "the rule names LEAK_WAS_REAL_AND_SMALL and CROSS_ORGANISM_COST_DOMINATES without a numeric boundary between them. Using the interval the data already produces avoids inventing a threshold, and it uses only quantities frozen before the run: the +0.0054 leak decomposition and the pre-registered bootstrap.",
+      "frozen_before_any_number": true
+    },
+    "branch": "LEAK_WAS_REAL_AND_SMALL",
+    "magnitude_vs_prediction": "consistent",
+    "branch_fit": "PARTIAL_ATTRIBUTION_NOT_IDENTIFIED",
+    "reading": "the representative model is worse by 0.003572 nats, CI [0.000545, 0.006597], which CONTAINS the 0.0054 nat leak the decomposition measured independently and before this arm ran. The beyond-k-mer negative stands and is now measured on a corpus that cannot leak at all. ATTRIBUTION NOT ESTABLISHED: this branch names the leak as the cause, but the primary's set excludes draft counterparts by construction, so the leak cannot act there and this branch is not separable from the other `worse` branch on this evidence. The branch is reported as the rule defines it and its fit is marked PARTIAL rather than presented as a settled attribution.",
+    "contradicts_pre_registered_direction": false
+  },
+  "honest_limits": [
+    "The noise floor is ONE draw of trajectory noise, not a distribution. The rule says so.",
+    "The representative corpus has NO E. coli, so this model is a cross-ORGANISM generator and this arm produces no same-strain beyond-k-mer verdict. That needs an additional fine-tune on MG1655's own 991 trainable windows, which is not part of this arm.",
+    "Removing the draft removes BOTH the leak and the only same-genus genome, so the leak and the cross-organism cost are confounded by construction. Only the CROSS_ORGANISM_COST_DOMINATES branch is diagnostic of that confound; the other branches do not separate them.",
+    "A closed verbatim channel alongside a model much worse than +0.0054 is COHERENT, not contradictory: the companion froze homology-mediated transfer as a second channel that a longest-substring measure is structurally blind to."
+  ]
+}
