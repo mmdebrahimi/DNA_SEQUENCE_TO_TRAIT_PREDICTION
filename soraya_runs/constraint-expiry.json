@@ -8,8 +8,8 @@
       "expiry_kind": "file-exists",
       "expiry_arg": "wiki/glm_generator_baseline_panel.json",
       "registered_at": "2026-10-10T12:52:49Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "still-binding",
       "resolved": false
     },
     "ecoff-values-still-unsourced": {
@@ -19,8 +19,8 @@
       "expiry_kind": "manual",
       "expiry_arg": "READ AMRgen's get_eucast_mic_distribution() implementation and port its URL/query construction, then populate ecoff_catalog with source_url + verbatim_quote per value. DO NOT fill the catalog from memory or from a search paraphrase -- a wrong cut-off yields a fully self-consistent evaluation that is entirely wrong and that nothing downstream can catch.",
       "registered_at": "2026-10-10T12:52:49Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": false
     },
     "f5-etd-route-retired-with-remainder": {
@@ -30,8 +30,8 @@
       "expiry_kind": "manual",
       "expiry_arg": "Query DART-Europe and ProQuest Dissertations & Theses DIRECTLY (not via web search), plus the institutional repositories that host AMR-genomics theses with linked Zenodo/figshare MIC datasets: Cambridge Apollo, Oxford ORA, Edinburgh ERA, Wageningen, DTU Orbit. Also still unsearched: figshare specifically.",
       "registered_at": "2026-10-10T12:52:49Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": false
     },
     "atlas-pfizer-vivli-request-gated": {
@@ -41,8 +41,8 @@
       "expiry_kind": "manual",
       "expiry_arg": "A user decision to submit a Vivli data request. On receipt, screen it through scripts/screen_candidate_gates.py at L1_AMR_RS -- expect the genotype side to be the binding question, not the phenotype side.",
       "registered_at": "2026-10-10T12:52:49Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": false
     },
     "align-foundation-benchmark-is-a-proposal": {
@@ -52,8 +52,8 @@
       "expiry_kind": "manual",
       "expiry_arg": "Re-check zenodo.org/records/21456142 for a NEW VERSION carrying actual sequence and MIC files (the record is CC-BY and versioned, so a data release would appear there). Backers include CARB-X, Oxford, Bristol, Monash, LSHTM and ATCC, so a release is plausible rather than speculative. Suggested cadence: every ~6 months.",
       "registered_at": "2026-10-10T12:52:49Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": false
     },
     "cabbage-genomes-tree-coverage-uncensused": {
@@ -63,8 +63,8 @@
       "expiry_kind": "manual",
       "expiry_arg": "HEAD-request the genomes/ tree for a random sample of >=200 assembly_IDs drawn from phenotype.parquet and record the hit rate per organism. Use dna_decode.data.amr_portal.genome_url to build the URLs -- it already encodes the three-three accession split.",
       "registered_at": "2026-10-10T12:52:49Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": false
     },
     "cabbage-clonality-g8-blocked-no-mash": {
@@ -74,8 +74,8 @@
       "expiry_kind": "manual",
       "expiry_arg": "Either (a) start Docker Desktop and run the Mash route, or (b) install a native mash binary, or (c) check whether a later AMR Portal release adds an MLST/ST column to phenotype.parquet -- any one unblocks it. Re-check when Docker is next up on this host.",
       "registered_at": "2026-10-10T22:47:53Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": false
     },
     "local-gpu-vram-blocks-dna-lm-finetune": {
@@ -85,8 +85,8 @@
       "expiry_kind": "gpu-vram-gte",
       "expiry_arg": "8",
       "registered_at": "2026-10-18T01:07:15Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "unknown",
       "resolved": true
     },
     "gd-finetune-gated-on-sampling-sweep-not-compute": {
@@ -96,8 +96,8 @@
       "expiry_kind": "file-exists",
       "expiry_arg": "wiki/glm_generator_sampling_sweep.json",
       "registered_at": "2026-10-18T01:11:19Z",
-      "last_checked": "2026-10-29",
-      "last_verdict": "still-binding (sweep ran; 2 of 3 points not plan-eligible)",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "EXPIRED",
       "resolved": true
     },
     "env-python-pinned-313-no-315-wheels": {
@@ -107,8 +107,8 @@
       "expiry_kind": "test-exit-0",
       "expiry_arg": "C:\\ProgramData\\miniforge3\\Scripts\\conda.exe create -n _probe315 --dry-run -c conda-forge --override-channels python=3.15 pytorch-cpu",
       "registered_at": "2026-10-18T15:49:28Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-runner",
       "resolved": false
     },
     "glm-fragment-rung-kmer6-full-size-ram-bound": {
@@ -118,8 +118,8 @@
       "expiry_kind": "test-exit-0",
       "expiry_arg": "python -c \"import psutil,sys; sys.exit(0 if psutil.virtual_memory().available > 24*1024**3 else 1)\"",
       "registered_at": "2026-10-18T21:50:06Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-runner",
       "resolved": false
     },
     "glm-tile-chain-promcalc-substrate-absent": {
@@ -129,7 +129,7 @@
       "expiry_kind": "file-exists",
       "expiry_arg": "D:/dna_decode_cache/promcalc/decomposition.rebuilt.csv.gz",
       "registered_at": "2026-10-21T19:53:33Z",
-      "last_checked": "2026-10-30T02:18:50Z",
+      "last_checked": "2026-11-25T00:46:33Z",
       "last_verdict": "EXPIRED",
       "resolved": true
     },
@@ -140,8 +140,8 @@
       "expiry_kind": "file-exists",
       "expiry_arg": "E:/hf_cache",
       "registered_at": "2026-10-29T19:48:29Z",
-      "last_checked": "2026-10-29",
-      "last_verdict": "RESOLVED_BY_CLOUD_ROUTE",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "still-binding",
       "resolved": true
     },
     "mvp-bar-parser-blind-to-table-format": {
@@ -151,7 +151,7 @@
       "expiry_kind": "test-exit-0",
       "expiry_arg": "uv run python -c \"import sys;sys.path.insert(0,r'C:/my_skills/skills/soraya/scripts');import mvp_criteria as m,pathlib;t=pathlib.Path('project_state/glm-condition-conditioning-2026-10-07.md').read_text(encoding='utf-8',errors='replace');sys.exit(0 if len(m.parse_mvp_criteria(t))==6 else 1)\"",
       "registered_at": "2026-10-30T02:30:56Z",
-      "last_checked": "2026-10-30T02:30:56Z",
+      "last_checked": "2026-11-25T00:46:33Z",
       "last_verdict": "needs-runner",
       "resolved": false
     },
@@ -162,8 +162,8 @@
       "expiry_kind": "manual",
       "expiry_arg": "a new authorised unattended window of known length (re-derive the ceiling from it), OR a user decision to re-route this arm to kaggle_t4 now that retrieval is possible, OR a user decision to accept a multi-day attended local run.",
       "registered_at": "2026-11-14T15:58:59Z",
-      "last_checked": "",
-      "last_verdict": "",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": true
     },
     "finetune-arm-link4-kaggle-gpu-quota-exhausted": {
@@ -173,9 +173,31 @@
       "expiry_kind": "manual",
       "expiry_arg": "NOTHING TO RE-CHECK. Do NOT wait for the quota refresh and do NOT push a link 5 -- the arm is finished. If a future rung needs more fine-tuning, that is a NEW arm with a new bar, and it must use a FRESH slug: never pa-finetune-arm-v1/v2/v3, pa-finetune-ckpt-probe/2/3, or pa-finetune-chain-s1/s2/s3/s4 -- s4 now holds retrieved output too.",
       "registered_at": "2026-11-17T16:36:45Z",
-      "last_checked": "2026-11-18T03:29:17Z",
-      "last_verdict": "retracted:false-premise",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "needs-human",
       "resolved": true
+    },
+    "encode-roadmap-regulatory-goal-unsized-on-cloud": {
+      "cid": "encode-roadmap-regulatory-goal-unsized-on-cloud",
+      "blocked": "sizing the ENCODE / Roadmap regulatory-activity goal on CLOUD hardware. The 2026-05-12 pivot gave the goal up on LOCAL compute (4 GiB GTX 860M), and the record of that cut lives inside `local-gpu-vram-blocks-dna-lm-finetune`, whose expiry test is `gpu-vram-gte` -- a LOCAL VRAM probe. The compute that actually arrived was CLOUD (free Kaggle T4s, in use since 2026-07-09), so that test could never fire for it, and the row is additionally marked resolved=True with an empty last_checked, which excludes it from the default scan. Doubly unable to fire, so the cut could outlive its constraint silently -- the exact R9 failure this register exists to prevent.",
+      "rationale": "REGISTERED LATE, AND THE REASON MATTERS. Commit cfdf4452, whose message reads 'Register the epigenomics goal's real constraint: its old test cannot fire', changed ONLY one line of project_state/glm-umbrella-2026-10-07.md and added NO register row (verified by git show --stat). The cause is an API footgun: ConstraintRegister.register() mutates in memory and returns a Constraint object, but never calls save(), so a register-without-save reports success and writes nothing. There was therefore no row for this plan's Step 5 to flip. It is created here so the question has an auditable dated row. Because Step 3 ran before Step 5, the memo its file-exists test points at ALREADY EXISTS, so this registers as IMMEDIATELY EXPIRED. That is correct rather than awkward -- the test records that the goal was SIZED, whichever way the answer came out, and the answer is in the memo: compute cleared at the reference's full 196,608 bp context, data open pending a storage lookup.",
+      "expiry_kind": "file-exists",
+      "expiry_arg": "wiki/encode_roadmap_cloud_sizing.md",
+      "registered_at": "2026-11-25T00:46:33Z",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "EXPIRED",
+      "resolved": false
+    },
+    "regulatory-training-tensor-vs-unverified-cloud-storage": {
+      "cid": "regulatory-training-tensor-vs-unverified-cloud-storage",
+      "blocked": "deciding whether the regulatory training tensor fits free-tier cloud storage. The requirement is COMPUTED -- 301.7 GiB at the reference's sourced 896 bins in float16, 517.1 at the 1,536 bins measured, 603.3 at 896 bins in float32, from 34,021 sourced sequences x 5,313 sourced tracks -- but the CEILING is unknown, so no data-feasibility verdict can be stated either way. Compute is already measured sufficient for the reference's full 196,608 bp context. NOT the retracted '64 TB wall': that figure counted every released bigWig in four assay families, unfiltered by organism, assembly, output type or replicate, and overstated the quantity that matters by 212x.",
+      "rationale": "Kaggle's dataset-size, working-disk and session limits could not be read: every Kaggle-owned docs page returns only its HTML title to a fetch because they are client-rendered. Tried twice directly and confirmed independently across five Kaggle URLs. NO number was recorded and none was recalled from memory, following the same refusal discipline the absent Enformer wall-clock got in wiki/encode_roadmap_training_budget_sources.json and that ecoff_catalog.py applies to unsourced values -- a plausible-looking storage limit would produce a fully self-consistent feasibility verdict that is entirely wrong. Unblocked by a human reading three figures in a browser.",
+      "expiry_kind": "file-exists",
+      "expiry_arg": "wiki/kaggle_storage_limits.md",
+      "registered_at": "2026-11-25T00:46:33Z",
+      "last_checked": "2026-11-25T00:46:33Z",
+      "last_verdict": "still-binding",
+      "resolved": false
     }
   }
 }
