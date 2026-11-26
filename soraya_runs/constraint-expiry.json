@@ -198,6 +198,28 @@
       "last_checked": "2026-11-25T00:46:33Z",
       "last_verdict": "still-binding",
       "resolved": false
+    },
+    "glm-months-scale-readout-arms-deferred": {
+      "cid": "glm-months-scale-readout-arms-deferred",
+      "blocked": "FOUR months-scale generator directions, deferred 2026-11-25 by user decision: (5) GENERATOR-AS-PROPOSAL scored by an external activity oracle; (6) CROSS-SPECIES TRANSFER as the discriminator for learned grammar; (7) SAMPLE-FUNCTIONAL scoring instead of infilling cross-entropy; (8) CONDITIONING on genomic context (operon position, upstream gene, local GC). None is refuted. None has been attempted. They are the LARGEST budgets in the generator gap and were deferred for sequencing, not on merit.",
+      "rationale": "User, verbatim: 'none should be selected before the cheap in-distribution eval resolves - choosing among them now would be spending the largest budgets against the weakest evidence.' The measured context, so a later session does not re-derive it: the TOTAL promoter signal budget at this geometry is ~+0.0394 nats below uniform (k-mer ceiling +0.0326 at tuned order 4, plus a positional gap of +0.0042 to +0.0067) and the generator captures 0.0101-0.0213 of it, i.e. 26-54 percent of a very small prize. Published practice says this readout is the wrong one: D3LM (arXiv 2603.01780) criticises perplexity-only evaluation as not capturing 'biological validity', and BEND 2.0 (arXiv 2611.03806) measures the dissociation directly - Evo 2 recovers 55.2 percent of reference bases while its allele scores correlate only 0.045 with reporter effects. So arms 5 and 7 (readout changes) and arms 6 and 8 (same-readout variations) are NOT symmetric bets, and which pair is worth funding depends on one cheap measurement. WHAT LIFTS THIS: the readout-validity gate - score the committed generator's per-sequence likelihood against measured activity on the 44,106 PromoterAtlas tiles (geometry already matches at 150 bp), with GC-alone and the tuned order-4 chain as same-run baselines, on the committed leave-peak-out splits. Bar frozen 2026-11-25: |rho| >= 0.15 means likelihood carries functional signal and arms 6 and 8 stay live; |rho| < 0.05 means it does not and arms 5 and 7 become mandatory rather than preferred; in between, report both and prefer the oracle route. THE EXPIRY TEST POINTS AT wiki/glm_likelihood_activity_gate.json - whoever runs that gate MUST write its result to exactly that path, or this deferral will never lift even once the work is done.",
+      "expiry_kind": "file-exists",
+      "expiry_arg": "wiki/glm_likelihood_activity_gate.json",
+      "registered_at": "2026-11-26T02:35:23Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
+    },
+    "glm-frame-aligned-cds-capacity-probe-deferred": {
+      "cid": "glm-frame-aligned-cds-capacity-probe-deferred",
+      "blocked": "The CODON-FRAME capacity probe: score the generator on protein-coding sequence to separate 'the model cannot capture structure' from 'promoter sequence at this geometry has little structure to capture'. Deferred 2026-11-25 as a BUILD, not a cheap diagnostic.",
+      "rationale": "Its premise was MEASURED AND HOLDS, which is why this is deferred rather than dropped: scripts/glm_frame_headroom_probe.py (wiki/glm_frame_headroom_probe_2026-11-25.json) finds frame-awareness buys +0.0503 nats beyond a homogeneous order-3 chain on in-frame MG1655 CDS, against a TOTAL promoter signal budget of ~+0.0394 - so the frame prize exceeds everything available on promoters by about 1.3x. The substrate hypothesis has real support. WHY IT IS NOT CHEAP, both confounds found by reading the corpus manifest rather than by argument: (a) DOMAIN SHIFT - glm_training_corpus_manifest_2026-11-21.json records natural_set_arg 'promoter', window_length_bp 150, domain share bacteria 1.0, so the model has never seen coding sequence and a loss on CDS would measure out-of-distribution failure, the exact confound the scorer's own honest limits already name for the accessory-biased eval set - and composition statistics transfer more robustly than learned grammar, so the chain would be ADVANTAGED and the test biased toward a false negative; (b) FRAME BLINDNESS - 150 bp windows are cut at promoter-relative offsets, so positional embeddings index window position, not codon position, and unless CDS windows are extracted FRAME-ALIGNED the model gets no frame information either and the premise collapses at the implementation. WHAT LIFTS THIS: a frame-aligned CDS training corpus plus a pretrain or fine-tune on it. The expiry test points at wiki/glm_cds_corpus_manifest.json - whoever builds that corpus MUST write its manifest to exactly that path or this deferral will never lift. The probe also needs a frame-SHUFFLED control to separate frame phase from composition.",
+      "expiry_kind": "file-exists",
+      "expiry_arg": "wiki/glm_cds_corpus_manifest.json",
+      "registered_at": "2026-11-26T02:35:23Z",
+      "last_checked": "",
+      "last_verdict": "",
+      "resolved": false
     }
   }
 }
