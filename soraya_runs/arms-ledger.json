@@ -165,7 +165,7 @@
       "pyramid-4scale-1.70decades-150bp": {
         "cost_tier": "expensive",
         "declared_at": "2026-10-12T00:48:51Z",
-        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json \u2014 median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
+        "evidence": "wiki/glm_pyramid_arm_2026-10-11.json — median 0.3167 over the 10 REGISTERED seeds; PAIRED mean +0.0069 vs GC, 6/10 wins, CI95 [-0.0124,0.0262] INCLUDES ZERO. WORSE than encoder-multi (0.3234, paired +0.0125) at 2.1x the parameters (27,649 vs 13,217). Own shuffled null clean (-0.0198 median, paired -0.3368, 0/10 wins). registered_protocol_used=True, null_clean=True, reconcile_ok=True.",
         "metric": 0.3167,
         "name": "pyramid-4scale-1.70decades-150bp",
         "resolved_at": "2026-10-12T00:48:51Z",
@@ -212,11 +212,11 @@
       "representative-re-pretrain-excluding-draft-ecoli": {
         "name": "representative-re-pretrain-excluding-draft-ecoli",
         "cost_tier": "large",
-        "status": "planned",
-        "metric": null,
-        "evidence": "",
+        "status": "measured",
+        "metric": 0.6535,
+        "evidence": "wiki/glm_representative_repretrain_graded_2026-11-25.json (branch LEAK_WAS_REAL_AND_SMALL, graded against a rule frozen before any number) + the 6 scored artifacts in wiki/glm_repretrain_scored_2026-11-25/. METRIC 0.6535 = the representative model's signal capture as a FRACTION of the order-3 E. coli chain's, on withheld_orthology_free (this criterion's own 'withheld MG1655 windows'): model margin 0.0198 nats of the chain's 0.0303 below uniform 1.3863. Verdict on that set WORSE_THAN_ORDER3_ON_THIS_SET. Across all six (arm,set) cells FIVE read WORSE_THAN_ORDER3 and ONE -- the noise-floor reseed on withheld_orthology_free -- reads UNRESOLVED; do not quote 'all six worse'. PRIMARY paired delta -0.003572 nats, CI [-0.006597,-0.000545], excludes zero, direction representative_WORSE than the committed model. Leak DiD -0.001897, CI [-0.006801,+0.002813], INCLUDES zero, so the leak is NOT separated from cross-organism cost. SCOPE LIMIT verbatim from the grade's honest_limits: 'The representative corpus has NO E. coli, so this model is a cross-ORGANISM generator and this arm produces no same-strain beyond-k-mer verdict.' HEADROOM CAVEAT: total signal above chance is only 0.0303-0.0403 nats against uniform 1.3863 in every cell (2.2-2.9% of the uniform entropy), so this criterion is being decided in a very small window. Checkpoints preserved byte-identical at data/glm_ckpt_v5_arms/.",
         "declared_at": "2026-11-24T07:04:39Z",
-        "resolved_at": ""
+        "resolved_at": "2026-11-26T01:31:48Z"
       }
     }
   },

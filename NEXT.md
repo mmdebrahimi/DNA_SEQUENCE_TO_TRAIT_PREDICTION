@@ -1,4 +1,4 @@
-## LIVE STATE 2026-11-16 — the finetune arm chain, and the slugs that must NEVER be re-pushed
+## LIVE STATE 2026-11-25 — the finetune arm is RESOLVED; the slugs that must NEVER be re-pushed are still live
 
 **NEVER re-push these Kaggle slugs — every one holds retrieved output** (verified file-by-file against
 `wiki/finetune_arm_kaggle_logs/`): `pa-finetune-arm-v1` / `v2` / `v3`, `pa-finetune-ckpt-probe` /
@@ -10,34 +10,38 @@ instruction would have overwritten retrieved output — and `plan_run` would hav
 anyway, for the reason below. Recorded rather than quietly deleted, because the instruction was written
 in good faith from a route decision that a later measurement killed.
 
-**Where the arm actually stands** (`wiki/decisions-log.md`, chained sessions 1-3, 2026-11-15/16):
+**THE ARM IS DONE — this section's old body said otherwise and was stale by two days.** Corrected
+2026-11-25 against `soraya_runs/arms-ledger.json` + `wiki/finetune_arm_verdict_2026-11-17.json`.
 
-- **9 of 10 seeds complete at the frozen budget** — 0.6557 / 0.6453 / 0.6307 / 0.6879 / 0.6442 /
-  0.6102 / 0.6214 / 0.6196 / 0.7070, **median 0.6442**, read from `per_seed[*].frozen_budget.value`
-  (the field the verdict reads) rather than recomputed from the curves.
-- **It is NOT a result, and the blocker is a GATE not a sample size.** ZERO of the three required
-  shuffled-label nulls have run; `verdict_secured` is false; the bar's verdict is a PAIRED bootstrap
-  needing all ten seeds. The arm correctly reads `planned` / `blocked:untried-arm`. **Do not quote
-  0.6442 as a verdict** — without the null, nothing bounds how much of it is a random readout of an
-  already-informative representation.
-- Per-epoch rate pooled over 51 steady epochs / 9 seeds is **974.7 s**. The three session figures
-  (923.6 / 990.0 / 960.0) are a **BAND, not a trend**. **21 of the 28 remaining epochs are NULL epochs
-  and a null epoch has never been timed** — three quarters of the remaining work rests on that
-  assumption, which is now the dominant uncertainty rather than the rate.
-- Link 4 is sized at a **9.5 h** ceiling with `horizon_epochs == frozen_epochs == 7`, which secures the
-  verdict while skipping the pre-declared-INELIGIBLE horizon-extension phase, so the run terminates on
-  completion rather than on the clock and unused ceiling costs nothing.
+- **`finetuned-promoteratlas-encoder-150bp` is `measured`, metric 0.6405, resolved 2026-11-18T03:28:09Z,
+  verdict `FINETUNE_ADDS`**, all five of the frozen bar's `check_order` gates confirmed.
+- **All ten seeds completed** (median 0.6405; min 0.6102, max 0.7070) against an incumbent median of
+  0.5076 — delta **0.1329** against a required margin of 0.02.
+- **All three shuffled-label nulls RAN** (0.1799 / 0.1997 / 0.1725). `verdict_secured` is **true** in
+  `wiki/finetune_arm_session4_2026-11-16.json`, whose `status` is `COMPLETE`.
+- Against the pooled 0.941 ceiling, fine-tuning moves the fraction of achievable signal from **0.3437 to
+  0.6807** — roughly doubling it. Wall time 7.93 h against the 9.5 h ceiling, so it terminated on
+  completion, not on the clock.
 
-**Two platform questions the older resume checkpoint still lists as UNVERIFIED are RESOLVED — do not
+**What the old body got wrong, recorded rather than deleted:** it said 9 of 10 seeds, zero nulls run,
+`verdict_secured` false, and that the arm "correctly reads `planned` / `blocked:untried-arm`". Every one of
+those is superseded. It also presented a four-option authority fork (chain / re-size the bar / re-route /
+accept a gradeable prefix) as *"unchanged and still the user's"*. **That fork is CLOSED — the chain was run
+and it completed.** Nothing is owed on it.
+
+**The honest limit that DOES survive, and is not in the old body:** the bar specifies a 38-epoch diagnostic
+horizon and the run executed **7**. The verdict is unaffected, because it reads only the frozen 7-epoch
+prefix while the horizon governs a pre-declared INELIGIBLE tail — but the tail existed to answer
+*"would more budget have helped, empirically"*, and **that question is NOT closed.** This is a
+frozen-budget result, not a converged one. Second surviving caveat: the nulls clear the ratio gate but are
+not the benign case — they sit ~0.29 ABOVE an untrained baseline that is negative (-0.1123 / -0.0481 /
+-0.1530), i.e. training on destroyed labels still reaches ~0.18 where an untrained encoder reaches ~-0.11.
+
+**Two platform questions the older resume checkpoint lists as UNVERIFIED are RESOLVED — do not
 re-litigate them:** the checkpoint-mount directory name
 (`ckpt_mount_probe3_CONFIRMED_2026-11-15.log.json`) and cross-session resume, proven in all three
 chained links by the reconciler AND independently by the kernel log — two routes sharing no code,
 insisted on because the reconciler has a recorded vacuous pass on exactly that measurement.
-
-**The live authority fork is unchanged and is still the user's.** The frozen bar cannot complete in one
-Kaggle session, so finishing it means chaining (~4 links against a ~30 h weekly quota). The options stay
-(a) chain, (b) re-size or re-scope the bar, (c) re-route, (d) accept a gradeable prefix — **each one
-edits a frozen pre-registration**, which is why no executor run may pick for you.
 
 ## CORRECTION 2026-11-01 — CLAUDE.md's "14 failures, none a code defect" is wrong on the COUNT, and the one code defect is now FIXED
 
