@@ -1,0 +1,66 @@
+{
+ "record": "glm-frame-headroom-probe-v1",
+ "question": "how much structure can a HOMOGENEOUS order-3 Markov chain NOT represent, on coding sequence (frame) vs promoter windows (window position)?",
+ "order": 3,
+ "alpha": 0.5,
+ "seed": 0,
+ "uniform_ce_nats": 1.386294,
+ "estimator": "held-out cross-entropy, 50/50 sequence-level split, add-alpha smoothing, unseen cell backs off to uniform; identical protocol for both substrates",
+ "cds": {
+  "homogeneous": {
+   "label": "cds_homogeneous_order3",
+   "held_out_ce_nats": 1.340456,
+   "n_predictions": 1037706,
+   "n_train_seqs": 1000,
+   "n_test_seqs": 1000,
+   "n_cells_fitted": 64,
+   "margin_below_uniform_nats": 0.045839
+  },
+  "frame_aware": {
+   "label": "cds_frame_aware_order3",
+   "held_out_ce_nats": 1.290201,
+   "n_predictions": 1037706,
+   "n_train_seqs": 1000,
+   "n_test_seqs": 1000,
+   "n_cells_fitted": 190,
+   "margin_below_uniform_nats": 0.096093
+  },
+  "gap_nats": 0.050255
+ },
+ "promoter": {
+  "homogeneous": {
+   "label": "promoter_homogeneous_order3",
+   "held_out_ce_nats": 1.34618,
+   "n_predictions": 1470000,
+   "n_train_seqs": 10000,
+   "n_test_seqs": 10000,
+   "n_cells_fitted": 64,
+   "margin_below_uniform_nats": 0.040115
+  },
+  "position_aware": {
+   "label": "promoter_position_aware_order3",
+   "held_out_ce_nats": 1.342028,
+   "n_predictions": 1470000,
+   "n_train_seqs": 10000,
+   "n_test_seqs": 10000,
+   "n_cells_fitted": 9408,
+   "margin_below_uniform_nats": 0.044267
+  },
+  "bucket10": {
+   "label": "promoter_bucket10_order3",
+   "held_out_ce_nats": 1.339451,
+   "n_predictions": 1470000,
+   "n_train_seqs": 10000,
+   "n_test_seqs": 10000,
+   "n_cells_fitted": 640,
+   "margin_below_uniform_nats": 0.046843
+  },
+  "gap_nats_full_position": 0.004152,
+  "gap_nats_bucket10": 0.006729
+ },
+ "headroom": {
+  "cds_total_margin_below_uniform_nats": 0.045839,
+  "promoter_total_margin_below_uniform_nats": 0.040115,
+  "reading": "the margin is how much an order-3 chain itself extracts; the gap is what a positionally-aware model could add ON TOP. A substrate with a large margin AND a large gap is where a positional model has room to win."
+ }
+}

@@ -1,0 +1,129 @@
+{
+ "record": "glm-markov-order-sweep-v1",
+ "question": "where is the k-mer ceiling for MG1655 promoter windows, and is order 3 at it?",
+ "PREREGISTERED": {
+  "margin_nats": 0.01,
+  "verdicts": {
+   "WEAK_NULL": "best tuned order beats order 3 by >= 0.0100 nats held-out",
+   "AT_PLATEAU": "best tuned order is within 0.0100 nats of order 3"
+  },
+  "consequence_if_weak_null": "every existing beats/loses-to-order-3 verdict must be restated against the tuned chain before it means anything",
+  "reference": "BEND 2.0 arXiv 2611.03806 uses a tuned order-10 chain with smoothing 64"
+ },
+ "geometry": {
+  "window_bp": 150,
+  "n_windows": 4506,
+  "split": "50 fit / 25 tune / 25 score, sequence-level, seeded"
+ },
+ "uniform_ce_nats": 1.386294,
+ "alphas_searched": [
+  0.01,
+  0.1,
+  0.5,
+  1.0,
+  4.0,
+  16.0,
+  64.0
+ ],
+ "sweep": [
+  {
+   "order": 1,
+   "tuned_alpha": 64.0,
+   "tune_ce_nats": 1.372352,
+   "score_ce_nats": 1.371864,
+   "margin_below_uniform_nats": 0.014431,
+   "n_contexts_fitted": 4,
+   "n_scored_positions": 167923
+  },
+  {
+   "order": 2,
+   "tuned_alpha": 64.0,
+   "tune_ce_nats": 1.364786,
+   "score_ce_nats": 1.363934,
+   "margin_below_uniform_nats": 0.022361,
+   "n_contexts_fitted": 16,
+   "n_scored_positions": 166796
+  },
+  {
+   "order": 3,
+   "tuned_alpha": 16.0,
+   "tune_ce_nats": 1.357284,
+   "score_ce_nats": 1.356305,
+   "margin_below_uniform_nats": 0.02999,
+   "n_contexts_fitted": 64,
+   "n_scored_positions": 165669
+  },
+  {
+   "order": 4,
+   "tuned_alpha": 4.0,
+   "tune_ce_nats": 1.354853,
+   "score_ce_nats": 1.353645,
+   "margin_below_uniform_nats": 0.03265,
+   "n_contexts_fitted": 256,
+   "n_scored_positions": 164542
+  },
+  {
+   "order": 5,
+   "tuned_alpha": 4.0,
+   "tune_ce_nats": 1.354326,
+   "score_ce_nats": 1.35376,
+   "margin_below_uniform_nats": 0.032534,
+   "n_contexts_fitted": 1024,
+   "n_scored_positions": 163415
+  },
+  {
+   "order": 6,
+   "tuned_alpha": 16.0,
+   "tune_ce_nats": 1.359995,
+   "score_ce_nats": 1.360389,
+   "margin_below_uniform_nats": 0.025905,
+   "n_contexts_fitted": 4094,
+   "n_scored_positions": 162288
+  },
+  {
+   "order": 7,
+   "tuned_alpha": 16.0,
+   "tune_ce_nats": 1.369937,
+   "score_ce_nats": 1.370596,
+   "margin_below_uniform_nats": 0.015699,
+   "n_contexts_fitted": 16295,
+   "n_scored_positions": 161161
+  },
+  {
+   "order": 8,
+   "tuned_alpha": 4.0,
+   "tune_ce_nats": 1.375722,
+   "score_ce_nats": 1.378243,
+   "margin_below_uniform_nats": 0.008051,
+   "n_contexts_fitted": 60647,
+   "n_scored_positions": 160034
+  }
+ ],
+ "order3": {
+  "order": 3,
+  "tuned_alpha": 16.0,
+  "tune_ce_nats": 1.357284,
+  "score_ce_nats": 1.356305,
+  "margin_below_uniform_nats": 0.02999,
+  "n_contexts_fitted": 64,
+  "n_scored_positions": 165669
+ },
+ "best": {
+  "order": 4,
+  "tuned_alpha": 4.0,
+  "tune_ce_nats": 1.354853,
+  "score_ce_nats": 1.353645,
+  "margin_below_uniform_nats": 0.03265,
+  "n_contexts_fitted": 256,
+  "n_scored_positions": 164542
+ },
+ "delta_order3_minus_best_nats": 0.00266,
+ "VERDICT": "AT_PLATEAU",
+ "reading": "order 3 scores 1.356305; the best tuned order is 4 at 1.353645; difference +0.002660 nats against a frozen bar of 0.01",
+ "honest_limits": [
+  "Homogeneous chains only -- a positional variable is a separate axis, measured by scripts/glm_frame_headroom_probe.py.",
+  "Promoter windows are REBUILT as 150 bp upstream of annotated gene starts, not the committed corpus's own window list, so absolute CE is not expected to match the committed artifacts digit-for-digit. The order comparison is internal to this run.",
+  "Smoothing is tuned on a disjoint TUNE split; an unseen context backs off to uniform.",
+  "This bounds what K-MER STATISTICS can reach. It says nothing about any model, and it is not evidence the diffusion generator can or cannot beat it."
+ ]
+}
