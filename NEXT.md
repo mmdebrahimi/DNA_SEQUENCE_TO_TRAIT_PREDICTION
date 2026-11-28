@@ -1,5 +1,85 @@
 ## LIVE STATE 2026-11-25 — the finetune arm is RESOLVED; the slugs that must NEVER be re-pushed are still live
 
+## DECISIONS NEEDED 2026-11-28 — three authority calls, none of them mine to make
+
+**1. A frozen bar and its grader have drifted apart.**
+`dna_decode/glm/frame_verdict.CHECK_ORDER` holds **nine** outcomes;
+`wiki/promoteratlas_frame_acceptance_bar.json` names **eight**. The grader gained
+`INDETERMINATE_CONTROL_PREMISE_UNMET` at index 4, so **it can now return a verdict the
+pre-registered bar gives no reading for**. Both files are committed; this predates 2026-11-28.
+Reconciling means either adding an outcome to a pre-registered bar after the fact or removing a
+refusal state from the grader — both authority calls, and the standing rule is to prove
+outcome-neutrality before editing a frozen bar. Caught only by
+`test_freeze_frame_bar.py::test_the_check_order_MATCHES_the_graders_check_order_exactly`;
+`test_the_check_order_lists_every_outcome_exactly_once` PASSES because it checks the artifact
+against its own outcomes, so a self-consistency check cannot see drift between two files.
+
+**2. Ratify (or reject) the 2-of-5 baseline-panel definability split.**
+`wiki/glm_baseline_panel_ce_2026-11-28.json` measures the two mandated baselines that ARE defined
+for a per-position cross-entropy readout (site-independent, shuffled null), records one-hot ridge as
+defined on the ACTIVITY criterion and already measured there, and records mutation-count and
+BLOSUM62 as structurally UNDEFINED with reasons. **Nothing was written to the budget-4 gap's
+`file-exists` artifact**, because that path is also the self-firing expiry argument of
+`north-star-step4-animals-deferred` and one of five non-vacuity fixtures in
+`tests/test_mission_gap_predicates.py` — writing it would close a mission gap, re-open the north
+star's step 4 and flip a test fixture at once. If the split is ratified, the gate can be met by that
+artifact plus a random-proposal null. Until then the gap stands open, correctly.
+
+**3. The working-tree `wiki/data_inventory.{json,md}` is a DEGRADED census — do not commit it.**
+73 datasets / 5 orphans against the committed 257 / 49. Cause: `D:/dna_decode_cache` exists and
+holds `amr_portal`, `mpra`, `mpra_human`, `promcalc`, `promoteratlas_positional` but is **missing
+the required `refseq`**, so the probe correctly reports `fit: false` and refuses to substitute — yet
+the artifact still writes `roots_missing: 0`, so **it does not announce its own degradation**. The
+orphan-signal test is the only thing that catches it, and the orphan signal is the inventory's whole
+purpose. Restore from HEAD rather than commit. Left untouched: another session's in-flight change.
+
+### Measured 2026-11-28 — the leak DiD at 500 windows (the arms ledger is UNCHANGED at 0.6535)
+
+The clean half had 519 windows available and only 120 were scored. Re-scored all three checkpoints
+on both halves at 500 (six runs, ~25 min, always with explicit `--out`; the committed 11-22 and
+11-24 artifacts verified byte-untouched afterwards).
+
+- **`run2_reseed_seed1` is the CONTROL, not a second re-pretrain** (`ckpt_dir
+  data/glm_ckpt_reseed_control`, a reseed on the corpus that still CONTAINS the draft). Nothing in
+  its label says so. A first pass misread it and reported a cross-seed sign disagreement that does
+  not exist; retracted in `800de831`.
+- Treatment DiD **−0.000844** (left_only) / **−0.001970** (bidirectional). Floor, measured at the
+  same n, **0.000824** / **0.000922** — down from 0.00281 at 120 windows.
+- The treatment now **EXCEEDS its floor in both arms**, which it did NOT at 120 windows. The
+  grader's gate still fails on its CI half, so the verdict stays **LEAK_NOT_IDENTIFIABLE**.
+- The pre-registered expected **−0.0054 is now excluded** in both arms — the 120-window run could
+  not establish that. Its own provenance was NOT re-derived, so this is a statement about the
+  recorded expectation, not a re-measured leak. One control draw is still one draw of trajectory
+  noise.
+- Artifacts: `wiki/glm_leak_did_n500_synthesis_2026-11-28.json` + four per-cell + six scored.
+
+
+## HUMAN LOCUS-CAPABILITY RESULT 2026-11-26 — redirect the regulatory arm
+
+The real two-cell lentiMPRA substrate probe ran on 2026-11-26 and returned
+`WITHIN_LOCUS_SUBSTRATE_UNAVAILABLE`.
+
+- Real shared elements: **7,321**, not the earlier 7,819 estimate.
+- HepG2 and K562 observations per shared element: **exactly 2**.
+- Loci meeting the `min_n=30` locus floor: **0**.
+- Cross-tissue HepG2/K562 Spearman: **0.8595**.
+- Artifact: `wiki/human_locus_capability_probe_2026-11-26.json`
+- Runner: `scripts/human_locus_capability_probe.py`
+- Pure and real-data regressions: 53 lentiMPRA/locus tests pass.
+
+The HepG2/K562 panel cannot answer within-locus across-tissue conditioning.
+It can answer per-element cross-cell association and per-cell sequence→activity
+prediction, but it cannot support the instrument's locus floor. Do not launch a
+generator or claim a locus-deconfounded result from this substrate.
+
+Immediate redirect:
+
+- stop expanding the lentiMPRA within-locus/tissue program,
+- preserve the existing human oracle validity result,
+- use lentiMPRA only for per-cell oracle and design-to-spec work,
+- acquire or find a true multi-tissue/multi-biosample assay before revisiting
+  the within-locus across-tissue metric.
+
 **NEVER re-push these Kaggle slugs — every one holds retrieved output** (verified file-by-file against
 `wiki/finetune_arm_kaggle_logs/`): `pa-finetune-arm-v1` / `v2` / `v3`, `pa-finetune-ckpt-probe` /
 `probe2` / `probe3`, `pa-finetune-chain-s1` / `s2` / `s3`. The next link needs a FRESH slug.
