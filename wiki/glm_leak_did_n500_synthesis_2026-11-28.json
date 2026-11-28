@@ -1,15 +1,79 @@
 {
- "record": "glm-leak-did-synthesis-v1",
+ "record": "glm-leak-did-synthesis-v2",
  "date": "2026-11-28",
- "question": "how much of a single-seed leak DiD is noise, and is the predicted leak real?",
+ "question": "at 500 windows, does the leak-specific term clear its own noise floor, and is the pre-registered expected leak size still admissible?",
+ "supersedes": "glm-leak-did-synthesis-v1, which misread the control arm as a second re-pretrain and reported a cross-seed sign disagreement that does not exist. Both of that version's headline claims are withdrawn here.",
+ "arm_roles_derived_from": "wiki\\glm_repretrain_scored_2026-11-25\\_kernel_manifest.json",
+ "arm_roles": {
+  "run1_representative": "treatment",
+  "run2_reseed_seed1": "control"
+ },
+ "n_windows_per_half": {
+  "bearing": 500,
+  "clean": 500
+ },
  "predicted_did_nats": -0.0054,
+ "predicted_is": "the graded artifact's pre-registered `expected_did_nats`; its own provenance was NOT re-derived here",
  "prior_at_120_windows": {
-  "did_nats": -0.001897,
-  "ci95": [
+  "treatment_did_nats": -0.001897,
+  "treatment_ci95": [
    -0.006801,
    0.002813
   ],
-  "verdict": "contained BOTH zero and the predicted size"
+  "control_did_nats_the_floor": 0.00281,
+  "verdict": "LEAK_NOT_IDENTIFIABLE_AT_THIS_SAMPLE_SIZE"
+ },
+ "gate_by_scoring_arm": {
+  "bidirectional": {
+   "rule": "|DiD_treatment| must exceed |DiD_control| AND the treatment DiD CI must exclude zero",
+   "treatment_did_nats": -0.00197,
+   "control_did_nats": 0.000922,
+   "treatment_magnitude": 0.00197,
+   "control_magnitude_the_floor_at_this_n": 0.000922,
+   "exceeds_floor": true,
+   "treatment_ci_excludes_zero": false,
+   "treatment_ci95": [
+    -0.004237,
+    0.000411
+   ],
+   "VERDICT": "LEAK_NOT_IDENTIFIABLE",
+   "treatment_excludes_predicted_size": true,
+   "control_ci95": [
+    -0.001581,
+    0.003514
+   ],
+   "treatment_point_inside_control_ci": false
+  },
+  "left_only": {
+   "rule": "|DiD_treatment| must exceed |DiD_control| AND the treatment DiD CI must exclude zero",
+   "treatment_did_nats": -0.000844,
+   "control_did_nats": 0.000824,
+   "treatment_magnitude": 0.000844,
+   "control_magnitude_the_floor_at_this_n": 0.000824,
+   "exceeds_floor": true,
+   "treatment_ci_excludes_zero": false,
+   "treatment_ci95": [
+    -0.003106,
+    0.001353
+   ],
+   "VERDICT": "LEAK_NOT_IDENTIFIABLE",
+   "treatment_excludes_predicted_size": true,
+   "control_ci95": [
+    -0.001621,
+    0.003276
+   ],
+   "treatment_point_inside_control_ci": true
+  }
+ },
+ "headline": {
+  "VERDICT": "LEAK_NOT_IDENTIFIABLE",
+  "treatment_excludes_predicted_size_in_every_arm": true,
+  "floor_at_500_windows": {
+   "bidirectional": 0.000922,
+   "left_only": 0.000824
+  },
+  "floor_at_120_windows": 0.00281,
+  "reading": "the leak-specific term still does not clear the grader's gate at 4x the windows -- it fails on the CI half in every arm -- while the pre-registered expected size of -0.0054 nats now falls OUTSIDE the treatment interval, which the 120-window run could not establish. The floor itself is measured at this n rather than inherited."
  },
  "inputs": [
   "wiki\\glm_leak_did_n500_run1_representative_left_only_2026-11-28.json",
@@ -17,45 +81,14 @@
   "wiki\\glm_leak_did_n500_run2_reseed_seed1_left_only_2026-11-28.json",
   "wiki\\glm_leak_did_n500_run2_reseed_seed1_bidirectional_2026-11-28.json"
  ],
- "synthesis": {
-  "n_cells": 4,
-  "did_nats": [
-   -0.000844,
-   -0.00197,
-   0.000824,
-   0.000922
-  ],
-  "mean_did_nats": -0.000267,
-  "signs_observed": [
-   "negative",
-   "positive"
-  ],
-  "signs_disagree": true,
-  "cross_seed_spread_nats_by_arm": {
-   "left_only": 0.001668,
-   "bidirectional": 0.002892
-  },
-  "noise_floor_nats": 0.00281,
-  "spread_is_comparable_to_the_estimates": true,
-  "verdicts": [
-   "LEAK_EXCLUDED_AT_PREDICTED_SIZE"
-  ],
-  "all_cells_exclude_predicted_size": true,
-  "any_cell_excludes_zero": false,
-  "envelope_over_all_cells": [
-   -0.004237,
-   0.003514
-  ],
-  "reading": "the predicted leak of -0.0054 nats is excluded in every cell, and no cell separates the DiD from zero; the two seeds of one recipe disagree on sign, so a single-seed DiD of this magnitude is not interpretable",
-  "what_this_does_NOT_show": [
-   "NOT that there is no leak. The predicted SIZE is excluded; the envelope still admits a leak anywhere inside [-0.004237, 0.003514] nats.",
-   "NOT that the true DiD is zero. Sign disagreement between seeds shows a single-seed estimate of this magnitude is uninterpretable, which is a statement about the measurement, not about the parameter.",
-   "NOT a generalisation beyond this corpus and this checkpoint family."
-  ]
- },
+ "what_this_does_NOT_show": [
+  "NOT that there is no leak. The pre-registered SIZE is excluded; a smaller leak is not.",
+  "NOT a calibrated null. ONE control draw is one draw of trajectory noise, exactly as the graded artifact says of its own floor.",
+  "NOT a re-derivation of the predicted -0.0054, which is quoted from the graded artifact and whose provenance was not revisited.",
+  "NOT a generalisation beyond this corpus and this checkpoint family."
+ ],
  "honest_limits": [
-  "Two seeds is the smallest set that can show disagreement; it bounds nothing tightly.",
-  "The DiD identifies a leak only under the design's assumption that cross-organism cost acts equally on both halves and cancels. Not testable from these numbers.",
-  "The clean half uses 500 of 519 available windows, so the bootstrap treats a near-exhaustive sample as an infinite population. That makes the intervals CONSERVATIVE: a finite-population correction would narrow them, never widen them."
+  "The DiD identifies a leak only if cross-organism cost acts equally on both halves and cancels. That is the design's assumption and is not testable from these numbers.",
+  "The clean half uses 500 of 519 available windows, so the bootstrap treats a near-exhaustive sample as an infinite population. The intervals are therefore CONSERVATIVE: a finite-population correction would narrow them, never widen them."
  ]
 }

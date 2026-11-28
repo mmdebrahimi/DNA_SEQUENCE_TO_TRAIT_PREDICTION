@@ -1,29 +1,51 @@
-"""Two re-pretrains of ONE recipe put the leak DiD on OPPOSITE sides of zero. Read them together.
+"""The leak DiD against its OWN noise floor at 500 windows, using the grader's pre-registered gate.
 
-WHY THIS EXISTS. `scripts/glm_leak_did.py` computes the DiD for ONE assessed checkpoint against the
-committed one. Run for both preserved v5 arms it produces four cells (2 checkpoints x 2 scoring
-arms), and the single most informative fact about the quantity is visible only ACROSS them: the two
-arms are re-pretrains of the SAME recipe differing only in seed, so the spread between their DiDs is
-a direct, assumption-free read on how much of a single-seed DiD is noise.
+WHY THIS EXISTS, AND WHAT IT CORRECTS. `scripts/glm_leak_did.py` computes the DiD for ONE assessed
+checkpoint against the committed one. Two v5 checkpoints were preserved and both were re-scored at
+500 windows, which yields four cells (2 checkpoints x 2 scoring arms). The first version of this
+script read those four as "two re-pretrains of one recipe" and reported that they disagreed on sign.
 
-At 500 windows per half the four cells disagree on SIGN -- one arm negative, the other positive --
-while every interval contains zero and every interval EXCLUDES the predicted -0.0054. A
-between-seed spread comparable to the point estimates is what "noise-dominated" looks like, and it
-corroborates, by a completely different route, the 0.00281 noise floor the graded artifact measured
-from a committed-corpus reseed.
+**That was wrong, and the error mattered.** The two checkpoints are NOT two draws of one recipe:
 
-WHAT THIS IS NOT. Sign disagreement between two seeds does NOT prove the true DiD is zero; it shows
-a single-seed DiD of this magnitude is uninterpretable. And excluding the PREDICTED size does not
-exclude a leak -- it bounds one. Both readings are stated in the output rather than left to a
-reader, because "the leak is excluded" is the tempting over-read and it is wrong.
+    run1_representative   ckpt_dir data/glm_ckpt_representative   -> TREATMENT
+                          the re-pretrain that EXCLUDES the draft E. coli
+    run2_reseed_seed1     ckpt_dir data/glm_ckpt_reseed_control    -> CONTROL
+                          a reseed on the COMMITTED corpus, which still CONTAINS the draft
 
-Pure JSON synthesis over already-written artifacts: no scoring, no torch, nothing re-derived.
+The control has no leak to lose by construction, so its DiD is the NOISE FLOOR, not a second leak
+estimate. The roles are not asserted here -- they are DERIVED from `ckpt_dir` in the scoring
+kernel's own manifest, so a mislabelled run cannot be read as the wrong arm.
+
+Two claims from the first version are WITHDRAWN. "Two re-pretrains disagree on sign" is false: one
+is the treatment and one is the control, and treatment-negative with control-positive is the
+ORDINARY shape of a real-but-small effect against a null, not a contradiction. And the "0.002892
+spread agrees with an independently measured 0.00281 noise floor" was a quantity compared against
+itself: the graded artifact's 0.00281 IS this same control arm's DiD at 120 windows, so the
+closeness was arithmetic coincidence between a treatment-minus-control difference at one n and the
+control's own value at another.
+
+WHAT REPLACES THEM IS STRONGER, because the control measures the floor directly at the SAME n
+instead of inheriting a 120-window figure. The gate is the grader's own, quoted not invented:
+
+    |DiD_treatment| must EXCEED |DiD_control| AND the treatment CI must EXCLUDE ZERO
+
+Both halves are required, which is why a treatment that merely out-sizes the floor does not pass.
+
+HONEST LIMITS.
+* The predicted -0.0054 is the graded artifact's `expected_did_nats`, a PRE-REGISTERED expectation.
+  Its own provenance was not re-derived here, so "excluded at the predicted size" is a statement
+  about that recorded expectation, not about a re-measured leak size.
+* ONE control draw is one draw of trajectory noise. The graded artifact says so of its own floor
+  ("a single reseed is ONE draw ... this grader does not dress it up as a calibrated null") and that
+  caveat carries over unchanged to the 500-window floor computed here.
+* Excluding the predicted SIZE does not exclude a leak. It bounds one.
+* The DiD identifies a leak only if cross-organism cost acts equally on both halves and cancels.
+  That is the design's assumption and is not testable from these numbers.
 """
 from __future__ import annotations
 
 import argparse
 import json
-import statistics
 import sys
 from pathlib import Path
 
@@ -32,70 +54,73 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 PREDICTED = -0.0054
-NOISE_FLOOR = 0.00281
+PRIOR_FLOOR_AT_120 = 0.00281
+MANIFEST = ROOT / "wiki" / "glm_repretrain_scored_2026-11-25" / "_kernel_manifest.json"
 OUT = ROOT / "wiki" / "glm_leak_did_n500_synthesis_2026-11-28.json"
+
+TREATMENT, CONTROL = "treatment", "control"
+
+#: Derived from `ckpt_dir`, never from the run label. The label `run2_reseed_seed1` does not say
+#: "control" anywhere; only its checkpoint directory does.
+_DIR_ROLE = (("glm_ckpt_reseed_control", CONTROL), ("glm_ckpt_representative", TREATMENT))
+
+#: The grader's gate, quoted from LEAK_IDENTIFICATION.gate.rule in the graded artifact.
+GATE_RULE = ("|DiD_treatment| must exceed |DiD_control| AND the treatment DiD CI must exclude zero")
 
 
 class SynthError(RuntimeError):
     pass
 
 
-def synthesise(cells: list[dict]) -> dict:
-    """Read the four cells together. Every claim below is computed, not asserted."""
-    if len(cells) < 2:
-        raise SynthError("a cross-seed reading needs at least two cells")
-    dids = [c["result"]["did_nats"] for c in cells]
-    verdicts = sorted({c["VERDICT"]["VERDICT"] for c in cells})
-    signs = {("negative" if d < 0 else "positive" if d > 0 else "zero") for d in dids}
+def role_for(label: str, manifest: dict) -> str:
+    """TREATMENT or CONTROL, derived from the scoring kernel's recorded checkpoint directory."""
+    arms = manifest.get("arms") or {}
+    arm = arms.get(label)
+    if arm is None:
+        raise SynthError(f"{label!r} is not in the kernel manifest; cannot derive its role")
+    ckpt_dir = str(arm.get("ckpt_dir") or "")
+    for needle, role in _DIR_ROLE:
+        if needle in ckpt_dir:
+            return role
+    raise SynthError(f"{label!r} has ckpt_dir {ckpt_dir!r}, which names neither a treatment nor a "
+                     "control directory; refusing to guess which arm it is")
 
-    # The cross-SEED spread, held at a fixed scoring arm, is the cleanest noise read: same recipe,
-    # same windows, same arm, different seed only.
-    by_arm: dict[str, list[float]] = {}
-    for c in cells:
-        by_arm.setdefault(c["arm"], []).append(c["result"]["did_nats"])
-    seed_spread = {arm: round(max(v) - min(v), 6) for arm, v in by_arm.items() if len(v) > 1}
 
-    all_exclude_predicted = all(c["result"]["excludes_predicted"] for c in cells)
-    any_excludes_zero = any(c["result"]["excludes_zero"] for c in cells)
-    widest_lower = min(c["result"]["ci95"][0] for c in cells)
-    widest_upper = max(c["result"]["ci95"][1] for c in cells)
-
+def apply_gate(treat: dict, ctrl: dict) -> dict:
+    """The grader's pre-registered gate, both halves required."""
+    t_did, c_did = treat["result"]["did_nats"], ctrl["result"]["did_nats"]
+    exceeds = abs(t_did) > abs(c_did)
+    excl_zero = treat["result"]["excludes_zero"]
+    identified = bool(exceeds and excl_zero)
     return {
-        "n_cells": len(cells),
-        "did_nats": [round(d, 6) for d in dids],
-        "mean_did_nats": round(statistics.fmean(dids), 6),
-        "signs_observed": sorted(signs),
-        "signs_disagree": len(signs) > 1,
-        "cross_seed_spread_nats_by_arm": seed_spread,
-        "noise_floor_nats": NOISE_FLOOR,
-        "spread_is_comparable_to_the_estimates": bool(
-            seed_spread and max(seed_spread.values()) >= min(abs(d) for d in dids)),
-        "verdicts": verdicts,
-        "all_cells_exclude_predicted_size": all_exclude_predicted,
-        "any_cell_excludes_zero": any_excludes_zero,
-        "envelope_over_all_cells": [round(widest_lower, 6), round(widest_upper, 6)],
-        "reading": (
-            "the predicted leak of {p} nats is excluded in every cell, and no cell separates the "
-            "DiD from zero; the two seeds of one recipe disagree on sign, so a single-seed DiD of "
-            "this magnitude is not interpretable".format(p=PREDICTED)
-            if all_exclude_predicted and not any_excludes_zero and len(signs) > 1 else
-            "mixed; read the per-cell artifacts rather than this summary"),
-        "what_this_does_NOT_show": [
-            "NOT that there is no leak. The predicted SIZE is excluded; the envelope still admits "
-            f"a leak anywhere inside {[round(widest_lower, 6), round(widest_upper, 6)]} nats.",
-            "NOT that the true DiD is zero. Sign disagreement between seeds shows a single-seed "
-            "estimate of this magnitude is uninterpretable, which is a statement about the "
-            "measurement, not about the parameter.",
-            "NOT a generalisation beyond this corpus and this checkpoint family.",
-        ],
+        "rule": GATE_RULE,
+        "treatment_did_nats": t_did,
+        "control_did_nats": c_did,
+        "treatment_magnitude": round(abs(t_did), 6),
+        "control_magnitude_the_floor_at_this_n": round(abs(c_did), 6),
+        "exceeds_floor": exceeds,
+        "treatment_ci_excludes_zero": excl_zero,
+        "treatment_ci95": treat["result"]["ci95"],
+        "VERDICT": "LEAK_IDENTIFIED" if identified else "LEAK_NOT_IDENTIFIABLE",
+        "treatment_excludes_predicted_size": treat["result"]["excludes_predicted"],
+        "control_ci95": ctrl["result"]["ci95"],
+        "treatment_point_inside_control_ci": bool(
+            ctrl["result"]["ci95"][0] <= t_did <= ctrl["result"]["ci95"][1]),
     }
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--cells", nargs="+", type=Path, required=True)
+    ap.add_argument("--manifest", type=Path, default=MANIFEST)
     ap.add_argument("--out", type=Path, default=OUT)
     a = ap.parse_args()
+
+    if not a.manifest.exists():
+        print(f"REFUSING: missing kernel manifest {a.manifest}; roles would have to be guessed",
+              file=sys.stderr)
+        return 2
+    manifest = json.loads(a.manifest.read_text(encoding="utf-8"))
 
     cells = []
     for p in a.cells:
@@ -106,48 +131,96 @@ def main() -> int:
         if d.get("record") != "glm-leak-did-v1":
             print(f"REFUSING: {p.name} is not a glm-leak-did-v1 artifact", file=sys.stderr)
             return 2
-        cells.append(d)
+        cells.append((p, d))
 
-    # Every cell must describe the same n, or the spread mixes power levels with seeds.
-    ns = {(c["result"]["n_bearing"], c["result"]["n_clean"]) for c in cells}
+    ns = {(d["result"]["n_bearing"], d["result"]["n_clean"]) for _, d in cells}
     if len(ns) != 1:
-        print(f"REFUSING: cells disagree on n: {ns}; a cross-seed spread computed across "
-              "different window counts confounds noise with power", file=sys.stderr)
+        print(f"REFUSING: cells disagree on n: {ns}; comparing a treatment against a floor "
+              "measured at a different window count confounds effect with power", file=sys.stderr)
         return 2
 
     try:
-        syn = synthesise(cells)
+        roled = [(p, d, role_for(d["assessed_label"], manifest)) for p, d in cells]
     except SynthError as exc:
         print(f"REFUSING: {exc}", file=sys.stderr)
         return 2
 
+    by_arm: dict[str, dict] = {}
+    for _, d, role in roled:
+        by_arm.setdefault(d["arm"], {})[role] = d
+    pairs = {arm: v for arm, v in by_arm.items() if TREATMENT in v and CONTROL in v}
+    if not pairs:
+        print("REFUSING: no scoring arm has BOTH a treatment and a control cell; the floor cannot "
+              "be compared against the effect at the same n", file=sys.stderr)
+        return 2
+
+    gates = {arm: apply_gate(v[TREATMENT], v[CONTROL]) for arm, v in sorted(pairs.items())}
+    n = next(iter(ns))
+    all_excl_pred = all(g["treatment_excludes_predicted_size"] for g in gates.values())
+    any_identified = any(g["VERDICT"] == "LEAK_IDENTIFIED" for g in gates.values())
+
     out = {
-        "record": "glm-leak-did-synthesis-v1",
+        "record": "glm-leak-did-synthesis-v2",
         "date": "2026-11-28",
-        "question": "how much of a single-seed leak DiD is noise, and is the predicted leak real?",
+        "question": ("at 500 windows, does the leak-specific term clear its own noise floor, and is "
+                     "the pre-registered expected leak size still admissible?"),
+        "supersedes": ("glm-leak-did-synthesis-v1, which misread the control arm as a second "
+                       "re-pretrain and reported a cross-seed sign disagreement that does not "
+                       "exist. Both of that version's headline claims are withdrawn here."),
+        "arm_roles_derived_from": str(a.manifest.relative_to(ROOT)),
+        "arm_roles": {d["assessed_label"]: role for _, d, role in roled},
+        "n_windows_per_half": {"bearing": n[0], "clean": n[1]},
         "predicted_did_nats": PREDICTED,
-        "prior_at_120_windows": {"did_nats": -0.001897, "ci95": [-0.006801, 0.002813],
-                                 "verdict": "contained BOTH zero and the predicted size"},
-        "inputs": [str(p) for p in a.cells],
-        "synthesis": syn,
+        "predicted_is": ("the graded artifact's pre-registered `expected_did_nats`; its own "
+                         "provenance was NOT re-derived here"),
+        "prior_at_120_windows": {
+            "treatment_did_nats": -0.001897, "treatment_ci95": [-0.006801, 0.002813],
+            "control_did_nats_the_floor": PRIOR_FLOOR_AT_120,
+            "verdict": "LEAK_NOT_IDENTIFIABLE_AT_THIS_SAMPLE_SIZE",
+        },
+        "gate_by_scoring_arm": gates,
+        "headline": {
+            "VERDICT": "LEAK_IDENTIFIED" if any_identified else "LEAK_NOT_IDENTIFIABLE",
+            "treatment_excludes_predicted_size_in_every_arm": all_excl_pred,
+            "floor_at_500_windows": {arm: g["control_magnitude_the_floor_at_this_n"]
+                                     for arm, g in gates.items()},
+            "floor_at_120_windows": PRIOR_FLOOR_AT_120,
+            "reading": (
+                "the leak-specific term still does not clear the grader's gate at 4x the windows -- "
+                "it fails on the CI half in every arm -- while the pre-registered expected size of "
+                f"{PREDICTED} nats now falls OUTSIDE the treatment interval, which the 120-window "
+                "run could not establish. The floor itself is measured at this n rather than "
+                "inherited."),
+        },
+        "inputs": [str(p) for p, _, _ in roled],
+        "what_this_does_NOT_show": [
+            "NOT that there is no leak. The pre-registered SIZE is excluded; a smaller leak is not.",
+            "NOT a calibrated null. ONE control draw is one draw of trajectory noise, exactly as "
+            "the graded artifact says of its own floor.",
+            "NOT a re-derivation of the predicted -0.0054, which is quoted from the graded "
+            "artifact and whose provenance was not revisited.",
+            "NOT a generalisation beyond this corpus and this checkpoint family.",
+        ],
         "honest_limits": [
-            "Two seeds is the smallest set that can show disagreement; it bounds nothing tightly.",
-            "The DiD identifies a leak only under the design's assumption that cross-organism cost "
-            "acts equally on both halves and cancels. Not testable from these numbers.",
+            "The DiD identifies a leak only if cross-organism cost acts equally on both halves and "
+            "cancels. That is the design's assumption and is not testable from these numbers.",
             "The clean half uses 500 of 519 available windows, so the bootstrap treats a near-"
-            "exhaustive sample as an infinite population. That makes the intervals CONSERVATIVE: a "
-            "finite-population correction would narrow them, never widen them.",
+            "exhaustive sample as an infinite population. The intervals are therefore CONSERVATIVE: "
+            "a finite-population correction would narrow them, never widen them.",
         ],
     }
     a.out.write_text(json.dumps(out, indent=1) + "\n", encoding="utf-8")
 
-    print(f"cells {syn['n_cells']} | DiDs {syn['did_nats']}")
-    print(f"  signs {syn['signs_observed']} disagree={syn['signs_disagree']}")
-    print(f"  cross-seed spread by arm {syn['cross_seed_spread_nats_by_arm']} "
-          f"(independently measured noise floor {NOISE_FLOOR})")
-    print(f"  all exclude predicted {PREDICTED}: {syn['all_cells_exclude_predicted_size']} | "
-          f"any excludes zero: {syn['any_cell_excludes_zero']}")
-    print(f"  envelope {syn['envelope_over_all_cells']}")
+    print(f"roles (derived): {out['arm_roles']}")
+    print(f"n per half: bearing {n[0]}, clean {n[1]}")
+    for arm, g in gates.items():
+        print(f"  {arm:14s} treat {g['treatment_did_nats']:+.6f} CI {g['treatment_ci95']} | "
+              f"floor |{g['control_magnitude_the_floor_at_this_n']:.6f}|")
+        print(f"                 exceeds_floor={g['exceeds_floor']} "
+              f"ci_excludes_zero={g['treatment_ci_excludes_zero']} -> {g['VERDICT']}"
+              f" | excludes predicted={g['treatment_excludes_predicted_size']}")
+    print(f"HEADLINE {out['headline']['VERDICT']} | predicted size excluded everywhere: "
+          f"{all_excl_pred}")
     print(f"wrote {a.out}")
     return 0
 
