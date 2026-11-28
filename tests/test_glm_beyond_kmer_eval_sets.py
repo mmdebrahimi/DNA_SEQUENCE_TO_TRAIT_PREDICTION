@@ -378,17 +378,77 @@ def test_the_generator_criterion_does_NOT_squat_the_reserved_ceiling_prefix():
         ceiling_criterion(squatted)
 
 
-def test_the_re_pretrain_arm_is_declared_and_blocks_its_criterion():
-    """R6: a declared-but-unrun expensive arm BLOCKS its criterion instead of evaporating when a
-    cheap result weakens its motivation."""
+RE_PRETRAIN_ARM = "representative-re-pretrain-excluding-draft-ecoli"
+
+
+def test_the_re_pretrain_arm_is_accounted_for_and_never_evaporates():
+    """R6 as an IMPLICATION, converted from an exact-state pin on 2026-11-28.
+
+    **The property R6 rests on is that an expensive declared arm cannot EVAPORATE** when a cheap
+    result weakens its motivation -- it must still be in the ledger, either blocking the criterion
+    because it has not run, or carrying a measurement because it has. The old form asserted
+    `len(planned) == 1` and that the one planned arm was this one, which is that property PLUS a
+    snapshot of the day the arm was declared and unrun.
+
+    The snapshot is what went red: the arm RAN. It is now `measured` at 0.6535 with
+    `wiki/glm_representative_repretrain_graded_2026-11-25.json` as its graded evidence, so
+    `planned` is legitimately empty and the old assertion could only be kept green by writing
+    `planned` back into the ledger -- i.e. by lying about an arm that has results on disk. That is
+    the strongest possible form of R6's intent being satisfied: the arm did not evaporate, it was
+    executed.
+
+    This is the same conversion, for the same reason, that
+    `tests/test_arms_ledger_stack_arm.py::test_the_verdict_is_blocked_IF_AND_ONLY_IF_an_arm_is_untried`
+    already applied to the promoter-activity criterion on 2026-11-02: the implication never moved,
+    only the arm set did.
+
+    Asserted in BOTH directions, so neither a `planned` arm that already carries a metric nor a
+    `measured` arm with no number can pass.
+    """
     led = json.loads((ROOT / "soraya_runs" / "arms-ledger.json").read_text(encoding="utf-8"))
-    arms = {(c, n): v for c, m in led["criteria"].items() for n, v in m.items()}
-    planned = {k: v for k, v in arms.items() if v.get("status") == "planned"}
-    assert len(planned) == 1, f"expected exactly one planned arm, got {sorted(planned)}"
-    (crit, name), arm = next(iter(planned.items()))
-    assert name == "representative-re-pretrain-excluding-draft-ecoli"
-    assert arm["cost_tier"] == "large"
-    assert "order-3 Markov chain" in crit
+    by_crit = {c: m for c, m in led["criteria"].items() if RE_PRETRAIN_ARM in m}
+
+    # ANTI-EVAPORATION: the whole point of R6. Present, exactly once, on the generator criterion.
+    assert len(by_crit) == 1, (
+        f"the expensive re-pretrain arm must appear exactly once; found it on {sorted(by_crit)}. "
+        "An arm that has left the ledger has evaporated, which is what R6 forbids.")
+    crit, arms = next(iter(by_crit.items()))
+    assert "order-3 Markov chain" in crit, f"arm sits on an unexpected criterion: {crit!r}"
+
+    arm = arms[RE_PRETRAIN_ARM]
+    assert arm["cost_tier"] == "large", "the arm's cost tier is what made it R6-relevant"
+    assert arm.get("status") in ("planned", "measured"), (
+        f"status {arm.get('status')!r}: an expensive declared arm is either still blocking or "
+        "measured, never anything else")
+
+    if arm["status"] == "planned":
+        # It has not run, so it must still block and must not be carrying a result.
+        assert arm.get("metric") is None, (
+            "an arm that still reads `planned` must not already carry a metric -- that combination "
+            "means a measurement was recorded without advancing the status")
+    else:
+        # It ran, so the number and its evidence must both exist.
+        assert isinstance(arm.get("metric"), (int, float)), (
+            "a `measured` arm must carry a numeric metric; `measured` with no number is the "
+            "mutate-then-save failure this ledger has already been bitten by")
+        graded = ROOT / "wiki" / "glm_representative_repretrain_graded_2026-11-25.json"
+        assert graded.exists(), (
+            f"the arm reads `measured` but its graded evidence {graded.name} is absent; a status "
+            "without an artifact behind it is an unverifiable claim")
+
+
+def test_the_evaporation_guard_is_NON_VACUOUS():
+    """Removing the arm must fail the guard above, or that guard asserts nothing.
+
+    The check that matters is presence, and a presence check is exactly the kind that passes
+    trivially if the lookup is wrong. So the removal is simulated against the real ledger shape.
+    """
+    led = json.loads((ROOT / "soraya_runs" / "arms-ledger.json").read_text(encoding="utf-8"))
+    stripped = {c: {n: v for n, v in m.items() if n != RE_PRETRAIN_ARM}
+                for c, m in led["criteria"].items()}
+    assert not [c for c, m in stripped.items() if RE_PRETRAIN_ARM in m], (
+        "the simulated removal did not actually remove the arm, so the guard it validates proves "
+        "nothing")
 
 
 # ================================================================================================
