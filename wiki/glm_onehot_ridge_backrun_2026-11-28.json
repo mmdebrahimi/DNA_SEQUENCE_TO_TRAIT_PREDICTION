@@ -1,0 +1,236 @@
+{
+ "record": "glm-onehot-ridge-backrun-v1",
+ "date": "2026-11-28",
+ "question": "the mandatory panel names one-hot ridge and the arms ledger contains it ZERO times -- what happens to the existing claims when it is actually run?",
+ "PREREGISTERED": {
+  "margin_nats_na": "metric is Spearman, not nats",
+  "margin": 0.02,
+  "margin_derivation": "INHERITED verbatim from the arm acceptance bars so this stays commensurable with every arm it is compared against. Not re-chosen.",
+  "outcomes": {
+   "ADDS_NOTHING_OVER_GC": {
+    "when": "one-hot median <= gc median + 0.02",
+    "consequence": "the existing baseline ladder stands; no arm's claim changes, and the panel's one-hot requirement is satisfied by a number that happens to add nothing. This is the outcome that CLEARS the back-run."
+   },
+   "RE_READS_CLAIMS_BELOW_IT": {
+    "when": "one-hot median > gc median + 0.02 AND it exceeds at least one arm that reported a GAIN",
+    "consequence": "every arm it exceeds had its gain measured against a floor lower than the panel requires; those claims must be restated against this baseline before they mean what they say. The arms are NOT invalidated -- their reported MARGIN is."
+   },
+   "DOMINATES_FROZEN_EMBEDDING": {
+    "when": "one-hot median >= 0.5076 - 0.02",
+    "consequence": "a 600-feature linear model matches the frozen 128-dim atlas embedding, which would make the embedding arm's contribution the open question rather than its headline. The largest possible finding here."
+   }
+  },
+  "gate": "GC seed0 0.3000 and median 0.3112, both within 0.01, or REFUSE with exit 2",
+  "alpha_primary_is_not_tuned": true
+ },
+ "protocol": {
+  "loader": "dna_decode.glm.genomewide.load_peak_tiles (the OWNER)",
+  "filter": "category == 'tile' and len(seq) == 150",
+  "split": "dna_decode.glm.genomewide.leave_peak_out(frac=0.25, seed=0..9)",
+  "estimator": "dna_decode.glm.atlas_embed.ridge_spearman, alpha=1.0 (the arm's default)",
+  "features": "150 positions x 4 bases = 600 binary",
+  "n_tiles": 44106
+ },
+ "gc_reconcile_gate": [
+  {
+   "check": "gc.seed0",
+   "got": 0.3,
+   "want": 0.3,
+   "tol": 0.01,
+   "pass": true
+  },
+  {
+   "check": "gc.median",
+   "got": 0.3112,
+   "want": 0.3112,
+   "tol": 0.01,
+   "pass": true
+  }
+ ],
+ "gc": {
+  "per_seed": {
+   "0": 0.3,
+   "1": 0.3151,
+   "2": 0.3073,
+   "3": 0.2917,
+   "4": 0.3191,
+   "5": 0.3347,
+   "6": 0.3091,
+   "7": 0.3191,
+   "8": 0.3133,
+   "9": 0.2747
+  },
+  "median": 0.3112
+ },
+ "onehot": {
+  "per_seed": {
+   "0": 0.2691,
+   "1": 0.2739,
+   "2": 0.2694,
+   "3": 0.2459,
+   "4": 0.2633,
+   "5": 0.2639,
+   "6": 0.2499,
+   "7": 0.2602,
+   "8": 0.2467,
+   "9": 0.2511
+  },
+  "median": 0.2617,
+  "alpha": 1.0
+ },
+ "onehot_swept_SECONDARY": {
+  "per_seed": {
+   "0": {
+    "alpha": 1000000.0,
+    "spearman": 0.3089
+   },
+   "1": {
+    "alpha": 1000000.0,
+    "spearman": 0.3197
+   },
+   "2": {
+    "alpha": 1000000.0,
+    "spearman": 0.3152
+   },
+   "3": {
+    "alpha": 1000000.0,
+    "spearman": 0.2957
+   },
+   "4": {
+    "alpha": 1000000.0,
+    "spearman": 0.3172
+   },
+   "5": {
+    "alpha": 1000000.0,
+    "spearman": 0.33
+   },
+   "6": {
+    "alpha": 1000000.0,
+    "spearman": 0.307
+   },
+   "7": {
+    "alpha": 1000000.0,
+    "spearman": 0.3154
+   },
+   "8": {
+    "alpha": 1000000.0,
+    "spearman": 0.3077
+   },
+   "9": {
+    "alpha": 1000000.0,
+    "spearman": 0.2831
+   }
+  },
+  "median": 0.312,
+  "grid": [
+   1.0,
+   10.0,
+   100.0,
+   1000.0,
+   10000.0,
+   100000.0,
+   1000000.0
+  ],
+  "alphas_chosen": [
+   1000000.0
+  ],
+  "grid_saturated_at_max": true,
+  "why_saturation_matters": "if every seed picks the grid MAXIMUM the tuning wanted more regularization than offered, so the sweep does NOT bound the model and cannot support 'this is not a regularization artifact'. The grid was extended once for exactly this.",
+  "note": "tuned on a TRAIN-INTERNAL 75/25 split, test never consulted. NOT the comparable number -- every arm was run at alpha=1.0."
+ },
+ "n_test_per_seed": {
+  "0": 11198,
+  "1": 11018,
+  "2": 11373,
+  "3": 10883,
+  "4": 11025,
+  "5": 10907,
+  "6": 10590,
+  "7": 11249,
+  "8": 10661,
+  "9": 10690
+ },
+ "committed_arms_same_substrate": {
+  "asgiven-position-resolved-promoteratlas-150bp": 0.5086,
+  "conv-3width-13k-params-150bp": 0.3234,
+  "finetuned-promoteratlas-encoder-150bp": 0.6405,
+  "gc-single-feature": 0.3112,
+  "orthogonal-modality-stack-promcalc-plus-N-channels": 0.4404,
+  "positional-non-mean-pooled-promoteratlas-150bp": 0.4893,
+  "promcalc-full-decomposition-ridge-150bp": 0.3925,
+  "promcalc-plus-conv-rank-average-hybrid-150bp": 0.4254,
+  "promoter-calculator-biophysical-346params-fwd_max_tx": 0.3968,
+  "promoteratlas-base-embeddings-frozen-150bp-padded-to-200": 0.5076,
+  "pyramid-4scale-1.70decades-150bp": 0.3167,
+  "shipped-expression-heads-zeroshot-150bp": 0.1178,
+  "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN": 0.4853
+ },
+ "excluded_off_substrate": {
+  "fragment-rung-321k-rows-size-lever-LB-M9": "off-substrate ('fragment' in name/evidence): a 150 bp TILE Spearman is not comparable to a FRAGMENT-ceiling fraction; the ledger's own SCOPE NOTE forbids it",
+  "pyramid-4scale-2.22decades-499bp-fragments": "off-substrate ('fragment' in name/evidence): a 150 bp TILE Spearman is not comparable to a FRAGMENT-ceiling fraction; the ledger's own SCOPE NOTE forbids it"
+ },
+ "onehot_exceeds_these_arms": [
+  {
+   "arm": "shipped-expression-heads-zeroshot-150bp",
+   "metric": 0.1178
+  }
+ ],
+ "these_arms_exceed_onehot": [
+  {
+   "arm": "finetuned-promoteratlas-encoder-150bp",
+   "metric": 0.6405
+  },
+  {
+   "arm": "asgiven-position-resolved-promoteratlas-150bp",
+   "metric": 0.5086
+  },
+  {
+   "arm": "promoteratlas-base-embeddings-frozen-150bp-padded-to-200",
+   "metric": 0.5076
+  },
+  {
+   "arm": "positional-non-mean-pooled-promoteratlas-150bp",
+   "metric": 0.4893
+  },
+  {
+   "arm": "substrate-change-constructed-eukaryotic-or-human-panel-UNRUN",
+   "metric": 0.4853
+  },
+  {
+   "arm": "orthogonal-modality-stack-promcalc-plus-N-channels",
+   "metric": 0.4404
+  },
+  {
+   "arm": "promcalc-plus-conv-rank-average-hybrid-150bp",
+   "metric": 0.4254
+  },
+  {
+   "arm": "promoter-calculator-biophysical-346params-fwd_max_tx",
+   "metric": 0.3968
+  },
+  {
+   "arm": "promcalc-full-decomposition-ridge-150bp",
+   "metric": 0.3925
+  },
+  {
+   "arm": "conv-3width-13k-params-150bp",
+   "metric": 0.3234
+  },
+  {
+   "arm": "pyramid-4scale-1.70decades-150bp",
+   "metric": 0.3167
+  },
+  {
+   "arm": "gc-single-feature",
+   "metric": 0.3112
+  }
+ ],
+ "VERDICT": "ADDS_NOTHING_OVER_GC",
+ "consequence": "the existing baseline ladder stands; no arm's claim changes, and the panel's one-hot requirement is satisfied by a number that happens to add nothing. This is the outcome that CLEARS the back-run.",
+ "honest_limits": [
+  "Bounds a LINEAR ONE-HOT model on this substrate under this protocol. Not a claim about any arm's architecture.",
+  "Exceeding an arm does NOT invalidate that arm -- it invalidates the MARGIN that arm reported, because the margin was measured against a floor lower than the panel requires.",
+  "alpha=1.0 is the arm's own default and is deliberately NOT tuned for the primary. A 600-feature model and a 1-feature model do not share an optimal penalty, so the swept number is reported separately and is not comparable to the arms.",
+  "One substrate (44,106 peak tiles), one geometry (native 150 bp), one metric (Spearman)."
+ ]
+}
