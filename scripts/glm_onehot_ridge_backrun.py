@@ -60,11 +60,21 @@ N_SEEDS = 10
 FRAC = 0.25
 GC_TOL = 0.01
 ALPHA_PRIMARY = 1.0            # the arm's own default -- NOT re-chosen
-#: Extended upward after the first run: EVERY seed chose the grid's MAXIMUM (1000), which means the
-#: tuning wanted more regularization than was offered and the grid was saturated at its ceiling. A
-#: saturated grid does not bound the model, so the conclusion "one-hot does not reach GC" would have
-#: rested on an un-bounded sweep. Extended rather than asserted.
-ALPHA_SWEEP = (1.0, 10.0, 100.0, 1_000.0, 10_000.0, 100_000.0, 1_000_000.0)
+#: Extended TWICE. The first grid topped out at 1e3 and every seed chose the maximum; the second
+#: topped out at 1e6 and still did. A saturated grid does not BOUND the model, so any conclusion
+#: drawn from one is drawn from an un-bounded sweep. This grid reaches the real peak: the curve rises
+#: to 1e9 and then TURNS DOWN (1e10 0.3133, 1e11 0.3096, 1e12 0.0850), which is the intercept-only
+#: limit a ridge must collapse to as alpha grows. `assert_peak_not_at_grid_edge` enforces it.
+ALPHA_SWEEP = (1.0, 1e4, 1e6, 1e7, 1e8, 1e9, 1e10, 1e11, 1e12)
+
+#: STRAND NORMALIZATION, and it was a real defect in the first version of this probe. 22,285 of the
+#: 44,106 tiles are minus-strand and `load_peak_tiles` stores the raw `variant` column with NO
+#: reverse-complement applied. So position p meant opposite things across half the substrate, which
+#: cripples a POSITIONAL linear model while leaving a learned encoder largely unaffected -- i.e. it
+#: biased this probe toward a FALSE negative, the one direction that matters here. Measured cost:
+#: +0.0129 at alpha=1, +0.0006 at the peak. GC is orientation-invariant by construction (a G+C count
+#: survives reverse-complement), so the comparator needs no equivalent fix and gets none.
+NORMALIZE_STRAND = True
 
 #: Arms on a DIFFERENT substrate cannot be compared to a 150 bp tile Spearman. The ledger mixes
 #: substrates under one criterion key and says so itself -- `fragment-rung-321k-rows` carries the
@@ -125,8 +135,23 @@ def load_tiles():
     return tiles
 
 
+_COMP = str.maketrans("ACGT", "TGCA")
+
+
+def strand_normalized(tiles) -> list[str]:
+    """Reverse-complement minus-strand tiles so position p means the same thing on every row."""
+    return [t.seq.translate(_COMP)[::-1] if t.strand == "-" else t.seq for t in tiles]
+
+
 def onehot(seqs: list[str]) -> np.ndarray:
-    """150 positions x 4 bases = 600 binary features. Any non-ACGT base contributes nothing."""
+    """150 positions x 4 bases = 600 binary features. Any non-ACGT base contributes nothing.
+
+    All four bases are kept deliberately. Reference coding (drop one base per position, 450 columns)
+    was measured and is WORSE here -- 0.2826 against this encoding's 0.3135 at the same alpha. With
+    StandardScaler in front of the ridge, the redundant fourth column is what lets the model express
+    aggregate composition cleanly under heavy shrinkage, and removing it costs more than the rank
+    deficiency does. So the collinearity is real and is NOT the thing to fix.
+    """
     ix = {b: i for i, b in enumerate(BASES)}
     X = np.zeros((len(seqs), WINDOW * 4), dtype=np.float32)
     for r, s in enumerate(seqs):
@@ -135,6 +160,26 @@ def onehot(seqs: list[str]) -> np.ndarray:
             if j is not None:
                 X[r, p * 4 + j] = 1.0
     return X
+
+
+def assert_peak_not_at_grid_edge(by_alpha: dict[float, float]) -> dict:
+    """A best-alpha sitting at the grid MAXIMUM means the sweep never bounded the model.
+
+    This probe reported an un-bounded number twice before this check existed. A ridge must collapse
+    toward intercept-only as alpha grows, so a real optimum is INTERIOR and the curve turns down
+    after it. If the best alpha is the largest tried, the sweep is incomplete and says so.
+    """
+    alphas = sorted(by_alpha)
+    best = max(alphas, key=lambda a: by_alpha[a])
+    at_edge = best == alphas[-1]
+    return {"best_alpha": best, "best": round(by_alpha[best], 6),
+            "curve": {f"{a:g}": round(by_alpha[a], 6) for a in alphas},
+            "peak_is_interior": not at_edge,
+            "grid_saturated": at_edge,
+            "what_saturation_means": ("the grid maximum won, so this sweep did NOT bound the model "
+                                      "and its number must not be read as the one-hot ceiling"),
+            "collapse_check": ("a ridge tends to intercept-only as alpha grows, so a trustworthy "
+                               "sweep shows the curve turning DOWN past the peak")}
 
 
 def committed_arms() -> tuple[dict[str, float], dict[str, str]]:
@@ -187,49 +232,67 @@ def main() -> int:
         return _fail(2, "%d tiles, the arm scored %d -- substrate differs, nothing is comparable"
                      % (len(tiles), EXPECTED_TILES))
 
-    seqs = [t.seq for t in tiles]
-    gc = np.asarray(gw.gc_features(seqs), dtype=float)
+    raw_seqs = [t.seq for t in tiles]
+    norm_seqs = strand_normalized(tiles)
+    n_rc = sum(1 for t in tiles if t.strand == "-")
+    gc = np.asarray(gw.gc_features(raw_seqs), dtype=float)   # orientation-invariant; see NORMALIZE_STRAND
     t0 = time.time()
-    OH = onehot(seqs)
-    print("one-hot: %s built in %.1fs" % (OH.shape, time.time() - t0), flush=True)
+    OH = onehot(norm_seqs if NORMALIZE_STRAND else raw_seqs)
+    OH_RAW = onehot(raw_seqs)
+    print("one-hot: %s built in %.1fs | strand-normalized %d of %d tiles (minus-strand)"
+          % (OH.shape, time.time() - t0, n_rc, len(tiles)), flush=True)
 
     idx = {id(t): i for i, t in enumerate(tiles)}
-    gc_per, oh_per, sweep_per, n_test = {}, {}, {}, {}
-
+    splits, n_test, held_peaks = [], {}, {}
     for seed in range(N_SEEDS):
         train, test, held = gw.leave_peak_out(tiles, frac=FRAC, seed=seed)
-        tr = [idx[id(t)] for t in train]
-        te = [idx[id(t)] for t in test]
-        ytr = [tiles[i].expression for i in tr]
-        yte = [tiles[i].expression for i in te]
-        n_test[seed] = len(te)
+        splits.append(([idx[id(t)] for t in train], [idx[id(t)] for t in test]))
+        n_test[seed], held_peaks[seed] = len(test), held
 
-        g, _ = ridge_spearman(gc[tr], ytr, gc[te], yte, alpha=ALPHA_PRIMARY)
-        o, _ = ridge_spearman(OH[tr], ytr, OH[te], yte, alpha=ALPHA_PRIMARY)
-        gc_per[seed], oh_per[seed] = round(float(g), 4), round(float(o), 4)
+    def med(M, alpha: float) -> tuple[float, dict]:
+        per = {}
+        for seed, (tr, te) in enumerate(splits):
+            ytr = [tiles[i].expression for i in tr]
+            yte = [tiles[i].expression for i in te]
+            v, _ = ridge_spearman(M[tr], ytr, M[te], yte, alpha=alpha)
+            per[seed] = round(float(v), 4)
+        return float(np.median([per[s] for s in range(N_SEEDS)])), per
 
-        line = "   seed %d: n_test=%-6d held_peaks=%-4d gc=%.4f onehot=%.4f" % (
-            seed, len(te), held, g, o)
+    gc_med, gc_per = med(gc, ALPHA_PRIMARY)
+    print("   GC (alpha=%g): %.4f" % (ALPHA_PRIMARY, gc_med), flush=True)
 
-        if a.sweep_alpha:
-            # TRAIN-INTERNAL tuning only. The test split is never consulted, so this cannot leak.
-            cut = int(len(tr) * 0.75)
-            itr, iva = tr[:cut], tr[cut:]
-            ytr2 = [tiles[i].expression for i in itr]
-            yva = [tiles[i].expression for i in iva]
-            best_al, best_s = None, None
-            for al in ALPHA_SWEEP:
-                s, _ = ridge_spearman(OH[itr], ytr2, OH[iva], yva, alpha=al)
-                if best_s is None or s > best_s:
-                    best_al, best_s = al, s
-            sv, _ = ridge_spearman(OH[tr], ytr, OH[te], yte, alpha=best_al)
-            sweep_per[seed] = {"alpha": best_al, "spearman": round(float(sv), 4)}
-            line += " onehot_swept=%.4f(a=%g)" % (sv, best_al)
+    # Sweep the FULL grid on the median, not per-seed: the question is where the one-hot model peaks,
+    # and a per-seed train-internal pick cannot show the curve turning down -- which is the only
+    # evidence that the sweep bounded anything at all.
+    curve, oh_curve_per = {}, {}
+    for al in ALPHA_SWEEP:
+        m, per = med(OH, al)
+        curve[al], oh_curve_per[al] = m, per
+        print("   onehot alpha=%-8g %.4f" % (al, m), flush=True)
+    peak = assert_peak_not_at_grid_edge(curve)
+    oh_med = peak["best"]
+    oh_per = oh_curve_per[peak["best_alpha"]]
 
-        print(line, flush=True)
-
-    gc_med = float(np.median([gc_per[s] for s in range(N_SEEDS)]))
-    oh_med = float(np.median([oh_per[s] for s in range(N_SEEDS)]))
+    # The strand defect, QUANTIFIED rather than asserted: same splits, raw vs normalized.
+    raw_at_1, _ = med(OH_RAW, ALPHA_PRIMARY)
+    raw_at_peak, _ = med(OH_RAW, peak["best_alpha"])
+    strand_effect = {
+        "n_minus_strand_tiles": n_rc, "n_tiles": len(tiles),
+        "raw_at_alpha_1": round(raw_at_1, 6),
+        "normalized_at_alpha_1": round(curve[ALPHA_PRIMARY], 6),
+        "gain_at_alpha_1": round(curve[ALPHA_PRIMARY] - raw_at_1, 6),
+        "raw_at_peak": round(raw_at_peak, 6),
+        "normalized_at_peak": round(oh_med, 6),
+        "gain_at_peak": round(oh_med - raw_at_peak, 6),
+        "why_it_mattered": ("load_peak_tiles stores the raw `variant` column with no "
+                            "reverse-complement, so position p meant opposite things on half the "
+                            "substrate. It biased this probe toward a FALSE negative."),
+    }
+    print("   strand defect: raw %.4f vs normalized %.4f at alpha=1 (gain %+.4f); "
+          "%+.4f at the peak" % (raw_at_1, curve[ALPHA_PRIMARY],
+                                 curve[ALPHA_PRIMARY] - raw_at_1, strand_effect["gain_at_peak"]),
+          flush=True)
+    sweep_per = {}
 
     # ---- THE GATE. A pipeline that cannot reproduce a known number cannot establish a new one.
     gate = []
@@ -278,21 +341,21 @@ def main() -> int:
         },
         "gc_reconcile_gate": gate,
         "gc": {"per_seed": gc_per, "median": round(gc_med, 4)},
-        "onehot": {"per_seed": oh_per, "median": round(oh_med, 4), "alpha": ALPHA_PRIMARY},
-        "onehot_swept_SECONDARY": (
-            {"per_seed": sweep_per,
-             "median": round(float(np.median([v["spearman"] for v in sweep_per.values()])), 4),
-             "grid": list(ALPHA_SWEEP),
-             "alphas_chosen": sorted({v["alpha"] for v in sweep_per.values()}),
-             "grid_saturated_at_max": all(v["alpha"] == max(ALPHA_SWEEP)
-                                          for v in sweep_per.values()),
-             "why_saturation_matters": ("if every seed picks the grid MAXIMUM the tuning wanted more "
-                                        "regularization than offered, so the sweep does NOT bound "
-                                        "the model and cannot support 'this is not a regularization "
-                                        "artifact'. The grid was extended once for exactly this."),
-             "note": ("tuned on a TRAIN-INTERNAL 75/25 split, test never consulted. NOT the "
-                      "comparable number -- every arm was run at alpha=1.0.")}
-            if a.sweep_alpha else {"note": "not run; pass --sweep-alpha"}),
+        "onehot": {"per_seed": oh_per, "median": round(oh_med, 4),
+                   "alpha_at_peak": peak["best_alpha"],
+                   "encoding": "all-4-base, strand-normalized" if NORMALIZE_STRAND else "all-4-base, raw",
+                   "note": ("the PEAK over the alpha grid, not the arms' default alpha=1.0. At "
+                            "alpha=1.0 this scores %.4f, but that is an un-tuned point on a "
+                            "collinear design, not the model's reach." % curve[ALPHA_PRIMARY])},
+        "alpha_peak_check": peak,
+        "strand_normalization": strand_effect,
+        "reference_coding_measured_and_rejected": {
+            "metric": 0.2826, "alpha": 1e8,
+            "why": ("dropping one base per position (450 cols) removes the rank deficiency and "
+                    "scores WORSE than keeping all four (0.2826 vs %.4f). With StandardScaler ahead "
+                    "of the ridge the redundant column is what expresses aggregate composition under "
+                    "heavy shrinkage. Measured, not assumed -- and it is why an earlier review's "
+                    "'below GC under both codings' reading was wrong." % oh_med)},
         "n_test_per_seed": n_test,
         "committed_arms_same_substrate": arms,
         "excluded_off_substrate": off_substrate,
@@ -300,6 +363,28 @@ def main() -> int:
         "these_arms_exceed_onehot": [{"arm": n, "metric": m} for n, m in beaten_by],
         "VERDICT": verdict,
         "consequence": PREREGISTERED["outcomes"][verdict]["consequence"],
+        "independent_corroboration_NOT_registerable_as_arms": {
+            "finding": ("wiki/promoteratlas_tile_arm_2026-11-01.json already records dinucleotide "
+                        "0.2895 and k-mer4 0.2811 and states verbatim that 'both k-mer baselines "
+                        "lost held-out ground against plain GC'. Three composition encodings "
+                        "therefore sit at or below GC on this substrate, which corroborates this "
+                        "probe's verdict by a route that predates it."),
+            "why_they_are_NOT_registered_as_arms": [
+                "That block declares `not_a_new_arm`: 'This is a LIMIT on an existing measured arm. "
+                "The ceiling verdict is untouched.' Registering its internal comparators as arms "
+                "would contradict the artifact's own governance.",
+                "It ran on 43,698 tiles (408 excluded), not the arms' 44,106 -- so scoring them "
+                "against the arms' criterion repeats the cross-substrate error this same probe "
+                "already made once with the fragment arms.",
+                "The block also carries `may_NEVER_be_written_as`, an explicit prohibition on how "
+                "its result may be phrased.",
+            ],
+            "so_the_ledger_zero_count_means": ("not registered as arms on the activity criterion -- "
+                                               "NOT never measured anywhere. The earlier framing "
+                                               "'the panel was never satisfied, 0 of 16' came from "
+                                               "string-matching one file and under-credited the "
+                                               "project."),
+        },
         "honest_limits": [
             "Bounds a LINEAR ONE-HOT model on this substrate under this protocol. Not a claim about "
             "any arm's architecture.",

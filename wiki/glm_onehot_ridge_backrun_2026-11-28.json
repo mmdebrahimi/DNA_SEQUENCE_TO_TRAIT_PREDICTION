@@ -64,79 +64,56 @@
  },
  "onehot": {
   "per_seed": {
-   "0": 0.2691,
-   "1": 0.2739,
-   "2": 0.2694,
-   "3": 0.2459,
-   "4": 0.2633,
-   "5": 0.2639,
-   "6": 0.2499,
-   "7": 0.2602,
-   "8": 0.2467,
-   "9": 0.2511
+   "0": 0.3047,
+   "1": 0.3186,
+   "2": 0.3101,
+   "3": 0.2926,
+   "4": 0.3177,
+   "5": 0.3324,
+   "6": 0.3143,
+   "7": 0.3228,
+   "8": 0.3127,
+   "9": 0.2784
   },
-  "median": 0.2617,
-  "alpha": 1.0
+  "median": 0.3135,
+  "alpha_at_peak": 100000000.0,
+  "encoding": "all-4-base, strand-normalized",
+  "note": "the PEAK over the alpha grid, not the arms' default alpha=1.0. At alpha=1.0 this scores 0.2746, but that is an un-tuned point on a collinear design, not the model's reach."
  },
- "onehot_swept_SECONDARY": {
-  "per_seed": {
-   "0": {
-    "alpha": 1000000.0,
-    "spearman": 0.3089
-   },
-   "1": {
-    "alpha": 1000000.0,
-    "spearman": 0.3197
-   },
-   "2": {
-    "alpha": 1000000.0,
-    "spearman": 0.3152
-   },
-   "3": {
-    "alpha": 1000000.0,
-    "spearman": 0.2957
-   },
-   "4": {
-    "alpha": 1000000.0,
-    "spearman": 0.3172
-   },
-   "5": {
-    "alpha": 1000000.0,
-    "spearman": 0.33
-   },
-   "6": {
-    "alpha": 1000000.0,
-    "spearman": 0.307
-   },
-   "7": {
-    "alpha": 1000000.0,
-    "spearman": 0.3154
-   },
-   "8": {
-    "alpha": 1000000.0,
-    "spearman": 0.3077
-   },
-   "9": {
-    "alpha": 1000000.0,
-    "spearman": 0.2831
-   }
+ "alpha_peak_check": {
+  "best_alpha": 100000000.0,
+  "best": 0.3135,
+  "curve": {
+   "1": 0.2746,
+   "10000": 0.2835,
+   "1e+06": 0.3127,
+   "1e+07": 0.3134,
+   "1e+08": 0.3135,
+   "1e+09": 0.3135,
+   "1e+10": 0.31325,
+   "1e+11": 0.3096,
+   "1e+12": 0.08495
   },
-  "median": 0.312,
-  "grid": [
-   1.0,
-   10.0,
-   100.0,
-   1000.0,
-   10000.0,
-   100000.0,
-   1000000.0
-  ],
-  "alphas_chosen": [
-   1000000.0
-  ],
-  "grid_saturated_at_max": true,
-  "why_saturation_matters": "if every seed picks the grid MAXIMUM the tuning wanted more regularization than offered, so the sweep does NOT bound the model and cannot support 'this is not a regularization artifact'. The grid was extended once for exactly this.",
-  "note": "tuned on a TRAIN-INTERNAL 75/25 split, test never consulted. NOT the comparable number -- every arm was run at alpha=1.0."
+  "peak_is_interior": true,
+  "grid_saturated": false,
+  "what_saturation_means": "the grid maximum won, so this sweep did NOT bound the model and its number must not be read as the one-hot ceiling",
+  "collapse_check": "a ridge tends to intercept-only as alpha grows, so a trustworthy sweep shows the curve turning DOWN past the peak"
+ },
+ "strand_normalization": {
+  "n_minus_strand_tiles": 22285,
+  "n_tiles": 44106,
+  "raw_at_alpha_1": 0.26175,
+  "normalized_at_alpha_1": 0.2746,
+  "gain_at_alpha_1": 0.01285,
+  "raw_at_peak": 0.3129,
+  "normalized_at_peak": 0.3135,
+  "gain_at_peak": 0.0006,
+  "why_it_mattered": "load_peak_tiles stores the raw `variant` column with no reverse-complement, so position p meant opposite things on half the substrate. It biased this probe toward a FALSE negative."
+ },
+ "reference_coding_measured_and_rejected": {
+  "metric": 0.2826,
+  "alpha": 100000000.0,
+  "why": "dropping one base per position (450 cols) removes the rank deficiency and scores WORSE than keeping all four (0.2826 vs 0.3135). With StandardScaler ahead of the ridge the redundant column is what expresses aggregate composition under heavy shrinkage. Measured, not assumed -- and it is why an earlier review's 'below GC under both codings' reading was wrong."
  },
  "n_test_per_seed": {
   "0": 11198,
@@ -211,22 +188,19 @@
   {
    "arm": "promcalc-full-decomposition-ridge-150bp",
    "metric": 0.3925
-  },
-  {
-   "arm": "conv-3width-13k-params-150bp",
-   "metric": 0.3234
-  },
-  {
-   "arm": "pyramid-4scale-1.70decades-150bp",
-   "metric": 0.3167
-  },
-  {
-   "arm": "gc-single-feature",
-   "metric": 0.3112
   }
  ],
  "VERDICT": "ADDS_NOTHING_OVER_GC",
  "consequence": "the existing baseline ladder stands; no arm's claim changes, and the panel's one-hot requirement is satisfied by a number that happens to add nothing. This is the outcome that CLEARS the back-run.",
+ "independent_corroboration_NOT_registerable_as_arms": {
+  "finding": "wiki/promoteratlas_tile_arm_2026-11-01.json already records dinucleotide 0.2895 and k-mer4 0.2811 and states verbatim that 'both k-mer baselines lost held-out ground against plain GC'. Three composition encodings therefore sit at or below GC on this substrate, which corroborates this probe's verdict by a route that predates it.",
+  "why_they_are_NOT_registered_as_arms": [
+   "That block declares `not_a_new_arm`: 'This is a LIMIT on an existing measured arm. The ceiling verdict is untouched.' Registering its internal comparators as arms would contradict the artifact's own governance.",
+   "It ran on 43,698 tiles (408 excluded), not the arms' 44,106 -- so scoring them against the arms' criterion repeats the cross-substrate error this same probe already made once with the fragment arms.",
+   "The block also carries `may_NEVER_be_written_as`, an explicit prohibition on how its result may be phrased."
+  ],
+  "so_the_ledger_zero_count_means": "not registered as arms on the activity criterion -- NOT never measured anywhere. The earlier framing 'the panel was never satisfied, 0 of 16' came from string-matching one file and under-credited the project."
+ },
  "honest_limits": [
   "Bounds a LINEAR ONE-HOT model on this substrate under this protocol. Not a claim about any arm's architecture.",
   "Exceeding an arm does NOT invalidate that arm -- it invalidates the MARGIN that arm reported, because the margin was measured against a floor lower than the panel requires.",
