@@ -1,0 +1,61 @@
+{
+ "record": "glm-leak-did-synthesis-v1",
+ "date": "2026-11-28",
+ "question": "how much of a single-seed leak DiD is noise, and is the predicted leak real?",
+ "predicted_did_nats": -0.0054,
+ "prior_at_120_windows": {
+  "did_nats": -0.001897,
+  "ci95": [
+   -0.006801,
+   0.002813
+  ],
+  "verdict": "contained BOTH zero and the predicted size"
+ },
+ "inputs": [
+  "wiki\\glm_leak_did_n500_run1_representative_left_only_2026-11-28.json",
+  "wiki\\glm_leak_did_n500_run1_representative_bidirectional_2026-11-28.json",
+  "wiki\\glm_leak_did_n500_run2_reseed_seed1_left_only_2026-11-28.json",
+  "wiki\\glm_leak_did_n500_run2_reseed_seed1_bidirectional_2026-11-28.json"
+ ],
+ "synthesis": {
+  "n_cells": 4,
+  "did_nats": [
+   -0.000844,
+   -0.00197,
+   0.000824,
+   0.000922
+  ],
+  "mean_did_nats": -0.000267,
+  "signs_observed": [
+   "negative",
+   "positive"
+  ],
+  "signs_disagree": true,
+  "cross_seed_spread_nats_by_arm": {
+   "left_only": 0.001668,
+   "bidirectional": 0.002892
+  },
+  "noise_floor_nats": 0.00281,
+  "spread_is_comparable_to_the_estimates": true,
+  "verdicts": [
+   "LEAK_EXCLUDED_AT_PREDICTED_SIZE"
+  ],
+  "all_cells_exclude_predicted_size": true,
+  "any_cell_excludes_zero": false,
+  "envelope_over_all_cells": [
+   -0.004237,
+   0.003514
+  ],
+  "reading": "the predicted leak of -0.0054 nats is excluded in every cell, and no cell separates the DiD from zero; the two seeds of one recipe disagree on sign, so a single-seed DiD of this magnitude is not interpretable",
+  "what_this_does_NOT_show": [
+   "NOT that there is no leak. The predicted SIZE is excluded; the envelope still admits a leak anywhere inside [-0.004237, 0.003514] nats.",
+   "NOT that the true DiD is zero. Sign disagreement between seeds shows a single-seed estimate of this magnitude is uninterpretable, which is a statement about the measurement, not about the parameter.",
+   "NOT a generalisation beyond this corpus and this checkpoint family."
+  ]
+ },
+ "honest_limits": [
+  "Two seeds is the smallest set that can show disagreement; it bounds nothing tightly.",
+  "The DiD identifies a leak only under the design's assumption that cross-organism cost acts equally on both halves and cancels. Not testable from these numbers.",
+  "The clean half uses 500 of 519 available windows, so the bootstrap treats a near-exhaustive sample as an infinite population. That makes the intervals CONSERVATIVE: a finite-population correction would narrow them, never widen them."
+ ]
+}

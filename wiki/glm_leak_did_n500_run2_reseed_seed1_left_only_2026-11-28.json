@@ -1,0 +1,109 @@
+{
+ "record": "glm-leak-did-v1",
+ "arm": "left_only",
+ "assessed_label": "run2_reseed_seed1",
+ "PREREGISTERED": {
+  "quantity": "DiD = mean(delta on ortholog_bearing) - mean(delta on withheld_orthology_free), delta = committed_CE - assessed_CE per window (positive = assessed better)",
+  "predicted_nats": -0.0054,
+  "prior_measurement": {
+   "n_windows_per_set": 120,
+   "did_nats": -0.001897,
+   "ci95": [
+    -0.006801,
+    0.002813
+   ],
+   "noise_floor_nats": 0.00281,
+   "source": "wiki/glm_representative_repretrain_graded_2026-11-25.json"
+  },
+  "outcomes": {
+   "LEAK_RESOLVED_AT_PREDICTED_SIZE": "CI excludes zero AND contains the predicted -0.0054",
+   "LEAK_RESOLVED_BUT_SMALLER_THAN_PREDICTED": "CI excludes zero AND lies entirely between zero and the predicted size -- a real leak, smaller than the design expected",
+   "LEAK_EXCLUDED_AT_PREDICTED_SIZE": "CI contains zero AND excludes the predicted -0.0054 -- the predicted leak size is ruled out, which the 120-window run could not do",
+   "STILL_UNRESOLVED": "CI contains BOTH zero and the predicted size -- more windows did not settle it"
+  },
+  "resolution_rule": "a percentile bootstrap 95% CI, matching the committed scorer's convention",
+  "why_this_is_not_a_relabelled_null": "the 120-window interval contained both zero and the predicted size, so it distinguished nothing. An interval that contains zero while EXCLUDING -0.0054 is a different and stronger statement, and it is reachable only at larger n."
+ },
+ "geometry": {
+  "committed_bearing": {
+   "n_windows": 500,
+   "positions": 30,
+   "seed": 0,
+   "selection_seed": 0,
+   "eval_set": "ortholog_bearing",
+   "n_per_window_rows": 500
+  },
+  "committed_clean": {
+   "n_windows": 500,
+   "positions": 30,
+   "seed": 0,
+   "selection_seed": 0,
+   "eval_set": "withheld_orthology_free",
+   "n_per_window_rows": 500
+  },
+  "assessed_bearing": {
+   "n_windows": 500,
+   "positions": 30,
+   "seed": 0,
+   "selection_seed": 0,
+   "eval_set": "ortholog_bearing",
+   "n_per_window_rows": 500
+  },
+  "assessed_clean": {
+   "n_windows": 500,
+   "positions": 30,
+   "seed": 0,
+   "selection_seed": 0,
+   "eval_set": "withheld_orthology_free",
+   "n_per_window_rows": 500
+  }
+ },
+ "inputs": {
+  "committed_bearing": "wiki\\glm_leak_did_n500_2026-11-28\\committed_ortholog_bearing_500x30.json",
+  "committed_clean": "wiki\\glm_leak_did_n500_2026-11-28\\committed_withheld_orthology_free_500x30.json",
+  "assessed_bearing": "wiki\\glm_leak_did_n500_2026-11-28\\run2_reseed_seed1_ortholog_bearing_500x30.json",
+  "assessed_clean": "wiki\\glm_leak_did_n500_2026-11-28\\run2_reseed_seed1_withheld_orthology_free_500x30.json"
+ },
+ "checkpoint_steps": {
+  "committed_bearing": 6000,
+  "committed_clean": 6000,
+  "assessed_bearing": 6000,
+  "assessed_clean": 6000
+ },
+ "result": {
+  "did_nats": 0.000824,
+  "ci95": [
+   -0.001621,
+   0.003276
+  ],
+  "ci_width": 0.004898,
+  "excludes_zero": false,
+  "excludes_predicted": true,
+  "mean_delta_bearing": 0.001667,
+  "mean_delta_clean": 0.000842,
+  "n_bearing": 500,
+  "n_clean": 500,
+  "boot": 2000,
+  "seed": 1
+ },
+ "VERDICT": {
+  "VERDICT": "LEAK_EXCLUDED_AT_PREDICTED_SIZE",
+  "reading": "CI contains zero AND excludes the predicted -0.0054 -- the predicted leak size is ruled out, which the 120-window run could not do",
+  "excludes_zero": false,
+  "excludes_predicted_size": true
+ },
+ "comparison_to_120_windows": {
+  "prior_did_nats": -0.001897,
+  "prior_ci_width": 0.009614,
+  "this_ci_width": 0.004898,
+  "width_ratio": 0.509,
+  "n_per_set_now": 500,
+  "note": "a narrower interval is expected from n alone; the VERDICT, not the width, is what changed or did not"
+ },
+ "honest_limits": [
+  "The DiD identifies the leak only if cross-organism cost acts equally on both halves and cancels. That is the design's assumption and is not testable from these numbers.",
+  "Scoped to this corpus and this checkpoint pair; not a general claim about leakage.",
+  "An interval excluding the predicted size says the prediction was wrong, NOT that the true value is the new centre.",
+  "The two halves are disjoint, so the DiD is a difference of independent means; the within-set delta is paired per window and that pairing is preserved."
+ ]
+}
