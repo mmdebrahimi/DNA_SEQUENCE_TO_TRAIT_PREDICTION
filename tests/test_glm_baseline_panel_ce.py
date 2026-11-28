@@ -13,9 +13,13 @@ The panel's trustworthiness rests on three things that can each fail silently, s
 from __future__ import annotations
 
 import math
+import subprocess
 import sys
+from pathlib import Path
 
 import pytest
+
+REPO = Path(__file__).resolve().parent.parent
 
 from scripts.glm_baseline_panel_ce import (
     PanelError,
@@ -44,8 +48,27 @@ def _cells(comp: tuple, site: tuple, ctx: tuple, arm: str = "left_only") -> dict
 
 
 def test_importing_the_panel_does_not_load_torch():
-    """The whole point of the design: it runs beside the test suite without holding a model."""
-    assert "torch" not in sys.modules
+    """The whole point of the design: it runs beside the suite without holding a model.
+
+    Measured in a CLEAN SUBPROCESS, deliberately. An in-process `assert "torch" not in sys.modules`
+    tests the AMBIENT process, not this module: it passes when this file is run alone and fails
+    under the full suite, where an earlier test module has legitimately imported torch. The first
+    version of this test did exactly that, and its module-level twin in the script interrupted the
+    whole suite during collection.
+
+    A subprocess that imports ONLY this module isolates the real property -- that importing it does
+    not itself pull torch in -- and can never be broken by an unrelated module's imports.
+    """
+    code = (
+        "import sys;"
+        "sys.path.insert(0, r'" + str(REPO) + "');"
+        "import scripts.glm_baseline_panel_ce as m;"
+        "print('LOADED' if 'torch' in sys.modules else 'CLEAN')"
+    )
+    proc = subprocess.run([sys.executable, "-I", "-c", code],
+                          capture_output=True, text=True, cwd=REPO)
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout.strip().endswith("CLEAN"), proc.stdout + proc.stderr
 
 
 # --------------------------------------------------------------------------- the two new nulls

@@ -30,12 +30,21 @@ the corpus read, the eval-set reconstruction, the window selection, the position
 chain fit TOGETHER. A mismatch means the reconstruction is wrong and the script REFUSES (exit 2)
 rather than reporting a number against windows it cannot prove are the scored ones.
 
-WHAT THIS DELIBERATELY DOES NOT DO. It does NOT write `wiki/glm_generator_baseline_panel.json`.
-That path is the mission's live gating predicate for the budget-4 gap AND the self-firing expiry
-argument of `north-star-step4-animals-deferred` in `soraya_runs/constraint-expiry.json` AND one of
-the five non-vacuity fixtures in `tests/test_mission_gap_predicates.py`. Creating it would close a
-mission gap, re-open the north star's step 4, and flip a test fixture -- three authority calls, none
-of them mine. This writes a dated artifact and records the definability split as a PROPOSAL.
+WHAT THIS DELIBERATELY DOES NOT DO. It does NOT write the panel artifact named by the FIRST
+`file-exists` predicate of the `generator-beats-its-baseline-panel` gap in
+`project_state/trait-to-edit/big-idea.md`. That same path is the self-firing expiry argument of
+`north-star-step4-animals-deferred` in `soraya_runs/constraint-expiry.json` and one of the five
+non-vacuity fixtures in `tests/test_mission_gap_predicates.py`, so creating it would close a mission
+gap, re-open the north star's step 4 and flip a test fixture -- three authority calls, none of them
+mine. This writes a dated artifact and records the definability split as a PROPOSAL.
+
+The path is POINTED AT rather than restated, and that is deliberate twice over. The mission file is
+the authority, so duplicating the name here would be a second place to go stale. More concretely,
+`tests/test_mission_gap_predicates.py` builds its producer corpus by concatenating every `*.py`
+under `dna_decode/` and `scripts/` and asking whether a predicate's basename appears ANYWHERE in it.
+Prose counts as code to that search, so merely naming the file in this docstring -- in the very
+sentence promising not to write it -- makes the census report the gap as reachable. The first draft
+of this module did exactly that and broke two tests.
 
 HONEST LIMITS, stated here rather than discovered later.
 * Two of the five mandated baselines (mutation-count, BLOSUM62) are NOT defined on this readout and
@@ -77,9 +86,22 @@ from scripts.glm_beyond_kmer import (  # noqa: E402
     select_eval_windows,
 )
 
-if "torch" in sys.modules:  # pragma: no cover - a guard on an import-time property
-    raise RuntimeError(
-        "torch was imported; this script must stay torch-free so it can run beside the test suite")
+def assert_torch_free() -> None:
+    """Checked in `main` only -- NEVER at import time, and that distinction is load-bearing.
+
+    The property worth protecting is "importing this module does not CAUSE torch to load". A
+    module-level `if "torch" in sys.modules: raise` does NOT test that: it tests whether the
+    AMBIENT process has torch loaded, which is a fact about the caller. Under the full test suite an
+    earlier module legitimately imports torch, so the module-level form raised during COLLECTION and
+    interrupted the entire suite -- a guard strictly worse than the thing it guarded.
+
+    So the assertion lives on the standalone run, where torch's absence is genuinely this script's
+    own property, and the real invariant is pinned instead by a clean-subprocess test.
+    """
+    if "torch" in sys.modules:  # pragma: no cover - standalone-only path
+        raise RuntimeError(
+            "torch is loaded in this process; the panel must stay torch-free so it can run beside "
+            "a test suite. Run it as a standalone script.")
 
 MG1655_DIR = ROOT / "data" / "cache" / "refseq" / "GCF_000005845.2"
 SCORED_DIR = ROOT / "wiki" / "glm_repretrain_scored_2026-11-25"
@@ -285,6 +307,7 @@ def main() -> int:
     ap.add_argument("--out", type=Path, default=OUT)
     ap.add_argument("--boot", type=int, default=2000)
     a = ap.parse_args()
+    assert_torch_free()
 
     corpus = load_corpus_windows()
     if not corpus:
@@ -467,7 +490,11 @@ def main() -> int:
         },
         "arms": results,
         "does_NOT_write_the_mission_gate": {
-            "path": "wiki/glm_generator_baseline_panel.json",
+            "path": ("the FIRST file-exists predicate of the `generator-beats-its-baseline-panel` "
+                     "gap in project_state/trait-to-edit/big-idea.md -- pointed at, not restated, "
+                     "because tests/test_mission_gap_predicates.py treats any mention of that "
+                     "basename in dna_decode/ or scripts/ as a producer and would then report the "
+                     "gap reachable"),
             "why": ("that path is the live `file-exists` predicate of the budget-4 mission gap, the "
                     "self-firing expiry argument of `north-star-step4-animals-deferred`, and one of "
                     "five non-vacuity fixtures in tests/test_mission_gap_predicates.py. Writing it "
